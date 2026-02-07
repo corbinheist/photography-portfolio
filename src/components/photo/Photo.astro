@@ -1,0 +1,77 @@
+---
+/**
+ * Responsive photo component with AVIF/WebP srcset and LQIP blur placeholder.
+ *
+ * The `url` prop is the base CDN URL for the photo (without extension/width).
+ * Generates srcset for widths: 640, 750, 1080, 1600, 2400
+ */
+
+interface Props {
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  alt: string;
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+  class?: string;
+}
+
+const {
+  url,
+  width,
+  height,
+  lqip,
+  alt,
+  sizes = '(max-width: 640px) 100vw, (max-width: 1080px) 80vw, 60vw',
+  loading = 'lazy',
+  class: className,
+} = Astro.props;
+
+const widths = [640, 750, 1080, 1600, 2400];
+const slug = url.split('/').pop() || '';
+
+function buildSrcset(format: 'avif' | 'webp'): string {
+  return widths
+    .filter((w) => w <= width)
+    .map((w) => `${url}/${slug}-${w}.${format} ${w}w`)
+    .join(', ');
+}
+
+const avifSrcset = buildSrcset('avif');
+const webpSrcset = buildSrcset('webp');
+const fallbackSrc = `${url}/${slug}-1080.webp`;
+---
+
+<div class:list={['photo-wrap', className]} data-gallery-item>
+  <picture>
+    <source type="image/avif" srcset={avifSrcset} sizes={sizes} />
+    <source type="image/webp" srcset={webpSrcset} sizes={sizes} />
+    <img
+      src={fallbackSrc}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding="async"
+      style={`background-image: url(${lqip}); background-size: cover;`}
+      class="photo-img"
+    />
+  </picture>
+</div>
+
+<style>
+  .photo-wrap {
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .photo-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: opacity 0.4s ease;
+  }
+</style>

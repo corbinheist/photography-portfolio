@@ -1,0 +1,101 @@
+---
+import Photo from './Photo.astro';
+
+interface Props {
+  href: string;
+  title: string;
+  description?: string;
+  location?: string;
+  date?: string;
+  coverPhoto: {
+    url: string;
+    width: number;
+    height: number;
+    lqip: string;
+    title: string;
+  };
+  photoCount: number;
+}
+
+const { href, title, description, location, date, coverPhoto, photoCount } = Astro.props;
+---
+
+<a href={href} class="album-card reveal" data-gallery-item>
+  <div class="album-card-image">
+    <Photo
+      url={coverPhoto.url}
+      width={coverPhoto.width}
+      height={coverPhoto.height}
+      lqip={coverPhoto.lqip}
+      alt={coverPhoto.title}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+    />
+  </div>
+  <div class="album-card-info">
+    <h3 class="album-card-title">{title}</h3>
+    <div class="album-card-meta">
+      {location && <span>{location}</span>}
+      {date && <span>{date}</span>}
+      <span>{photoCount} photos</span>
+    </div>
+    {description && <p class="album-card-desc">{description}</p>}
+  </div>
+</a>
+
+<style>
+  .album-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .album-card-image {
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+  }
+
+  .album-card-image :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  .album-card:hover .album-card-image :global(.photo-img) {
+    transform: scale(1.03);
+  }
+
+  .album-card-info {
+    padding-top: var(--space-sm);
+  }
+
+  .album-card-title {
+    font-size: var(--text-lg);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  .album-card-meta {
+    display: flex;
+    gap: var(--space-sm);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+  }
+
+  .album-card-meta span:not(:last-child)::after {
+    content: '·';
+    margin-left: var(--space-sm);
+  }
+
+  .album-card-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

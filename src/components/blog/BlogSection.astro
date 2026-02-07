@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import Container from '@components/ui/Container.astro';
+import BlogCard from './BlogCard.astro';
+
+interface Props {
+  limit?: number;
+  showHeader?: boolean;
+}
+
+const { limit = 3, showHeader = true } = Astro.props;
+
+let posts: any[] = [];
+try {
+  const allPosts = await getCollection('blog');
+  posts = allPosts
+    .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+    .slice(0, limit);
+} catch {
+  // Blog collection might be empty if no Substack URL configured
+}
+---
+
+{posts.length > 0 && (
+  <section class="blog-section">
+    <Container>
+      {showHeader && (
+        <div class="blog-header reveal">
+          <h2>Writing</h2>
+          <p class="blog-subtitle">Longer thoughts, published on Substack.</p>
+        </div>
+      )}
+      <div class="blog-grid">
+        {posts.map((post) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            link={post.data.link}
+            pubDate={post.data.pubDate}
+            thumbnail={post.data.thumbnail}
+          />
+        ))}
+      </div>
+    </Container>
+  </section>
+)}
+
+<style>
+  .blog-section {
+    padding: var(--space-3xl) 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .blog-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .blog-header h2 {
+    font-weight: 300;
+  }
+
+  .blog-subtitle {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .blog-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .blog-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

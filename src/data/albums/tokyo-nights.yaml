@@ -1,0 +1,11 @@
+title: Tokyo Nights
+description: Neon-soaked streets and quiet moments in the world's largest metropolis.
+coverPhoto: street-001
+photos:
+  - street-001
+  - street-002
+date: "2024-11"
+location: Tokyo, Japan
+layout: horizontal-scroll
+draft: false
+sortOrder: 2

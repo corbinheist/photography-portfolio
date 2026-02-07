@@ -1,0 +1,125 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import Container from '@components/ui/Container.astro';
+import Photo from '@components/photo/Photo.astro';
+
+const collections = await getCollection('photoCollections');
+const allPhotos = await getCollection('photos');
+
+const sortedCollections = collections.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+
+function findPhoto(id: string) {
+  return allPhotos.find((p) => p.id === id);
+}
+---
+
+<PageLayout title="Work" description="Photography collections">
+  <Container>
+    <section class="work-page">
+      <div class="work-header reveal">
+        <h1>Work</h1>
+      </div>
+
+      <div class="collections-grid">
+        {sortedCollections.map((collection) => {
+          const cover = collection.data.coverPhoto ? findPhoto(collection.data.coverPhoto) : null;
+
+          return (
+            <a href={`/work/${collection.id}`} class="collection-card reveal" data-gallery-item>
+              {cover && (
+                <div class="collection-image">
+                  <Photo
+                    url={cover.data.url}
+                    width={cover.data.width}
+                    height={cover.data.height}
+                    lqip={cover.data.lqip}
+                    alt={collection.data.title}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                  />
+                </div>
+              )}
+              <div class="collection-info">
+                <h2 class="collection-title">{collection.data.title}</h2>
+                {collection.data.description && (
+                  <p class="collection-desc">{collection.data.description}</p>
+                )}
+                <span class="collection-count">{collection.data.albums.length} albums</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </section>
+  </Container>
+</PageLayout>
+
+<style>
+  .work-page {
+    padding: var(--space-xl) 0 var(--space-3xl);
+  }
+
+  .work-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .work-header h1 {
+    font-weight: 300;
+  }
+
+  .collections-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 768px) {
+    .collections-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .collection-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .collection-image {
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+  }
+
+  .collection-image :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  .collection-card:hover .collection-image :global(.photo-img) {
+    transform: scale(1.03);
+  }
+
+  .collection-info {
+    padding-top: var(--space-sm);
+  }
+
+  .collection-title {
+    font-size: var(--text-xl);
+    font-weight: 400;
+  }
+
+  .collection-desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+  }
+
+  .collection-count {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+    display: block;
+  }
+</style>

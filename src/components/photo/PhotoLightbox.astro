@@ -1,0 +1,158 @@
+---
+/**
+ * PhotoLightbox — client-side fullscreen image viewer.
+ * Triggered by clicking on gallery items.
+ */
+
+interface PhotoInfo {
+  url: string;
+  width: number;
+  height: number;
+  title: string;
+  exif?: {
+    camera?: string;
+    lens?: string;
+    focalLength?: string;
+    aperture?: string;
+    shutter?: string;
+    iso?: number;
+  };
+}
+
+interface Props {
+  photos: PhotoInfo[];
+}
+
+const { photos } = Astro.props;
+---
+
+<div class="lightbox" data-lightbox aria-hidden="true" role="dialog" aria-label="Photo viewer">
+  <button class="lightbox-close" data-lightbox-close aria-label="Close viewer">&times;</button>
+
+  <button class="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="Previous photo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </button>
+
+  <div class="lightbox-image-wrap">
+    <img class="lightbox-img" data-lightbox-img src="" alt="" />
+  </div>
+
+  <button class="lightbox-nav lightbox-next" data-lightbox-next aria-label="Next photo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+  </button>
+
+  <div class="lightbox-info" data-lightbox-info></div>
+</div>
+
+<!-- Pass photo data via a hidden element -->
+<template data-lightbox-data>{JSON.stringify(photos)}</template>
+
+<script>
+  import { initLightbox } from '@scripts/lightbox';
+
+  document.addEventListener('astro:page-load', initLightbox);
+</script>
+
+<style>
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-lightbox);
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-normal) ease;
+  }
+
+  .lightbox[aria-hidden='false'] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity var(--duration-fast) ease;
+    z-index: 1;
+    line-height: 1;
+  }
+
+  .lightbox-close:hover {
+    opacity: 1;
+  }
+
+  .lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    opacity: 0.4;
+    transition: opacity var(--duration-fast) ease;
+    padding: var(--space-md);
+    z-index: 1;
+  }
+
+  .lightbox-nav:hover {
+    opacity: 1;
+  }
+
+  .lightbox-prev {
+    left: var(--space-sm);
+  }
+
+  .lightbox-next {
+    right: var(--space-sm);
+  }
+
+  .lightbox-image-wrap {
+    max-width: 90vw;
+    max-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lightbox-img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+  }
+
+  .lightbox-info {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: white;
+  }
+
+  .lightbox-info :global(.lightbox-title) {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-xs);
+  }
+
+  .lightbox-info :global(.lightbox-exif) {
+    font-size: var(--text-xs);
+    opacity: 0.6;
+  }
+
+  .lightbox-info :global(.lightbox-counter) {
+    font-size: var(--text-xs);
+    opacity: 0.4;
+    margin-top: var(--space-xs);
+  }
+</style>

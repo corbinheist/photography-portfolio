@@ -1,0 +1,37 @@
+---
+import Container from '@components/ui/Container.astro';
+import Button from '@components/ui/Button.astro';
+---
+
+<section class="about-teaser">
+  <Container narrow>
+    <div class="about-content reveal">
+      <p class="about-text">
+        I'm a photographer driven by light, texture, and the quiet moments most people walk past.
+        Whether it's the raw edge of an Icelandic coastline or the neon glow of a Tokyo alley,
+        I look for images that make you pause.
+      </p>
+      <Button href="/about" variant="ghost">More About Me &rarr;</Button>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .about-teaser {
+    padding: var(--space-3xl) 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .about-content {
+    text-align: center;
+  }
+
+  .about-text {
+    font-size: var(--text-xl);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    max-width: 700px;
+    margin: 0 auto var(--space-lg);
+  }
+</style>

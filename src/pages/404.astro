@@ -1,0 +1,37 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Container from '@components/ui/Container.astro';
+import Button from '@components/ui/Button.astro';
+---
+
+<PageLayout title="Not Found" noindex>
+  <Container>
+    <section class="not-found">
+      <h1>404</h1>
+      <p>This page doesn't exist.</p>
+      <Button href="/">Back Home</Button>
+    </section>
+  </Container>
+</PageLayout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+    text-align: center;
+    gap: var(--space-md);
+  }
+
+  .not-found h1 {
+    font-size: var(--text-4xl);
+    font-weight: 200;
+    color: var(--color-text-muted);
+  }
+
+  .not-found p {
+    color: var(--color-text-muted);
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import BlogSection from '@components/blog/BlogSection.astro';
+import Container from '@components/ui/Container.astro';
+---
+
+<PageLayout title="Blog" description="Photography writing and stories">
+  <Container>
+    <section class="blog-page">
+      <div class="blog-header reveal">
+        <h1>Blog</h1>
+        <p class="blog-subtitle">
+          Longer thoughts on photography, travel, and the creative process.
+          Published on Substack.
+        </p>
+      </div>
+    </section>
+  </Container>
+  <BlogSection limit={20} showHeader={false} />
+</PageLayout>
+
+<style>
+  .blog-page {
+    padding: var(--space-xl) 0 0;
+  }
+
+  .blog-header {
+    margin-bottom: var(--space-md);
+  }
+
+  .blog-header h1 {
+    font-weight: 300;
+  }
+
+  .blog-subtitle {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin-top: var(--space-sm);
+    font-weight: 300;
+  }
+</style>

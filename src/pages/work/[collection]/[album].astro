@@ -1,0 +1,135 @@
+---
+import { getCollection } from 'astro:content';
+import GalleryLayout from '@layouts/GalleryLayout.astro';
+import Container from '@components/ui/Container.astro';
+import PhotoGrid from '@components/photo/PhotoGrid.astro';
+import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
+
+export async function getStaticPaths() {
+  const collections = await getCollection('photoCollections');
+  const albums = await getCollection('albums');
+  const photos = await getCollection('photos');
+
+  const paths: any[] = [];
+
+  for (const collection of collections) {
+    for (const albumId of collection.data.albums) {
+      const album = albums.find((a) => a.id === albumId);
+      if (!album || album.data.draft) continue;
+
+      const albumPhotos = album.data.photos
+        .map((photoId: string) => photos.find((p) => p.id === photoId))
+        .filter(Boolean);
+
+      paths.push({
+        params: { collection: collection.id, album: album.id },
+        props: { collection, album, photos: albumPhotos },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { collection, album, photos } = Astro.props;
+
+// Build lightbox data
+const lightboxPhotos = photos.map((p: any) => ({
+  url: p.data.url,
+  width: p.data.width,
+  height: p.data.height,
+  title: p.data.title,
+  exif: p.data.exif,
+}));
+---
+
+<GalleryLayout
+  title={album.data.title}
+  description={album.data.description}
+>
+  <Container>
+    <div class="album-header reveal">
+      <nav class="breadcrumb">
+        <a href="/work">Work</a>
+        <span>/</span>
+        <a href={`/work/${collection.id}`}>{collection.data.title}</a>
+        <span>/</span>
+        <span>{album.data.title}</span>
+      </nav>
+      <h1>{album.data.title}</h1>
+      <div class="album-meta">
+        {album.data.location && <span>{album.data.location}</span>}
+        {album.data.date && <span>{album.data.date}</span>}
+        <span>{photos.length} photos</span>
+      </div>
+      {album.data.description && (
+        <p class="album-desc">{album.data.description}</p>
+      )}
+    </div>
+  </Container>
+
+  {album.data.layout === 'horizontal-scroll' ? (
+    <PhotoGrid
+      photos={photos}
+      layout="horizontal-scroll"
+    />
+  ) : (
+    <Container>
+      <PhotoGrid
+        photos={photos}
+        layout={album.data.layout}
+        gridAspectRatio={album.data.gridAspectRatio}
+      />
+    </Container>
+  )}
+
+  <PhotoLightbox photos={lightboxPhotos} />
+</GalleryLayout>
+
+<style>
+  .album-header {
+    padding: var(--space-xl) 0 var(--space-md);
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: var(--space-xs);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .breadcrumb a {
+    transition: color var(--duration-fast) ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-text);
+  }
+
+  .album-header h1 {
+    font-weight: 300;
+  }
+
+  .album-meta {
+    display: flex;
+    gap: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-sm);
+  }
+
+  .album-meta span:not(:last-child)::after {
+    content: '·';
+    margin-left: var(--space-sm);
+  }
+
+  .album-desc {
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    margin-top: var(--space-sm);
+    max-width: 700px;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+</style>

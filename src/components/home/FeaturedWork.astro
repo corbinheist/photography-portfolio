@@ -1,0 +1,99 @@
+---
+import { getCollection } from 'astro:content';
+import Container from '@components/ui/Container.astro';
+import AlbumCard from '@components/photo/AlbumCard.astro';
+import Button from '@components/ui/Button.astro';
+
+// Get all albums, sorted by sortOrder, take first 3
+const allAlbums = await getCollection('albums');
+const allPhotos = await getCollection('photos');
+const allCollections = await getCollection('photoCollections');
+
+const featuredAlbums = allAlbums
+  .filter((a) => !a.data.draft)
+  .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
+  .slice(0, 3);
+
+// Helper to find a photo by ID
+function findPhoto(id: string) {
+  return allPhotos.find((p) => p.id === id);
+}
+
+// Helper to find which collection an album belongs to
+function findCollectionForAlbum(albumId: string) {
+  return allCollections.find((c) => c.data.albums.includes(albumId));
+}
+---
+
+<section class="featured-work">
+  <Container>
+    <div class="featured-header reveal">
+      <h2>Selected Work</h2>
+    </div>
+    <div class="featured-grid">
+      {featuredAlbums.map((album) => {
+        const cover = findPhoto(album.data.coverPhoto);
+        const collection = findCollectionForAlbum(album.id);
+        if (!cover || !collection) return null;
+
+        return (
+          <AlbumCard
+            href={`/work/${collection.id}/${album.id}`}
+            title={album.data.title}
+            description={album.data.description}
+            location={album.data.location}
+            date={album.data.date}
+            coverPhoto={{
+              url: cover.data.url,
+              width: cover.data.width,
+              height: cover.data.height,
+              lqip: cover.data.lqip,
+              title: cover.data.title,
+            }}
+            photoCount={album.data.photos.length}
+          />
+        );
+      })}
+    </div>
+    <div class="featured-cta reveal">
+      <Button href="/work">View All Work</Button>
+    </div>
+  </Container>
+</section>
+
+<style>
+  .featured-work {
+    padding: var(--space-3xl) 0;
+  }
+
+  .featured-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .featured-header h2 {
+    font-weight: 300;
+  }
+
+  .featured-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 768px) {
+    .featured-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .featured-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .featured-cta {
+    margin-top: var(--space-xl);
+    text-align: center;
+  }
+</style>

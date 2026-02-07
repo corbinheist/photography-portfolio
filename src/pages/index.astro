@@ -1,0 +1,14 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import HeroSection from '@components/home/HeroSection.astro';
+import FeaturedWork from '@components/home/FeaturedWork.astro';
+import AboutTeaser from '@components/home/AboutTeaser.astro';
+import BlogSection from '@components/blog/BlogSection.astro';
+---
+
+<PageLayout title="Photography Portfolio">
+  <HeroSection />
+  <FeaturedWork />
+  <AboutTeaser />
+  <BlogSection limit={3} />
+</PageLayout>

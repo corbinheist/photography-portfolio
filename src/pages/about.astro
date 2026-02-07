@@ -1,0 +1,103 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import Container from '@components/ui/Container.astro';
+---
+
+<PageLayout title="About" description="About the photographer">
+  <Container narrow>
+    <section class="about-page">
+      <div class="about-header reveal">
+        <h1>About</h1>
+      </div>
+
+      <div class="about-body">
+        <div class="about-text reveal">
+          <p>
+            I'm a photographer based in [Your City], drawn to landscapes that feel
+            untouched and streets that pulse with life. My work sits at the intersection
+            of patience and instinct — waiting for the right light, then reacting in
+            a fraction of a second.
+          </p>
+          <p>
+            I shoot primarily with Sony and Fujifilm systems. For landscapes, I favor
+            the Sony A7IV for its dynamic range. For street work, the Fujifilm X-T5
+            for its discreet size and film simulations.
+          </p>
+          <p>
+            When I'm not behind a camera, I write about the creative process on
+            <a href="/blog">my blog</a>, exploring the intersection of photography,
+            travel, and intentional observation.
+          </p>
+        </div>
+
+        <div class="about-contact reveal">
+          <h2>Get in Touch</h2>
+          <p>
+            For prints, collaborations, or commissions —
+            <a href="mailto:hello@example.com">hello@example.com</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </Container>
+</PageLayout>
+
+<style>
+  .about-page {
+    padding: var(--space-xl) 0 var(--space-3xl);
+  }
+
+  .about-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .about-header h1 {
+    font-weight: 300;
+  }
+
+  .about-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .about-text p {
+    font-size: var(--text-lg);
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+  }
+
+  .about-text a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .about-text a:hover {
+    color: var(--color-interactive-hover);
+  }
+
+  .about-contact {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .about-contact h2 {
+    font-weight: 300;
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-sm);
+  }
+
+  .about-contact p {
+    color: var(--color-text-muted);
+  }
+
+  .about-contact a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+</style>

@@ -1,0 +1,132 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import Container from '@components/ui/Container.astro';
+import AlbumCard from '@components/photo/AlbumCard.astro';
+
+export async function getStaticPaths() {
+  const collections = await getCollection('photoCollections');
+  const albums = await getCollection('albums');
+  const photos = await getCollection('photos');
+
+  return collections.map((collection) => ({
+    params: { collection: collection.id },
+    props: {
+      collection,
+      albums: albums
+        .filter((a) => collection.data.albums.includes(a.id))
+        .sort((a, b) => a.data.sortOrder - b.data.sortOrder),
+      photos,
+    },
+  }));
+}
+
+const { collection, albums, photos } = Astro.props;
+
+function findPhoto(id: string) {
+  return photos.find((p: any) => p.id === id);
+}
+---
+
+<PageLayout
+  title={collection.data.title}
+  description={collection.data.description}
+>
+  <Container>
+    <section class="collection-page">
+      <div class="collection-header reveal">
+        <nav class="breadcrumb">
+          <a href="/work">Work</a>
+          <span>/</span>
+          <span>{collection.data.title}</span>
+        </nav>
+        <h1>{collection.data.title}</h1>
+        {collection.data.description && (
+          <p class="collection-desc">{collection.data.description}</p>
+        )}
+      </div>
+
+      <div class="albums-grid">
+        {albums
+          .filter((a: any) => !a.data.draft)
+          .map((album: any) => {
+            const cover = findPhoto(album.data.coverPhoto);
+            if (!cover) return null;
+
+            return (
+              <AlbumCard
+                href={`/work/${collection.id}/${album.id}`}
+                title={album.data.title}
+                description={album.data.description}
+                location={album.data.location}
+                date={album.data.date}
+                coverPhoto={{
+                  url: cover.data.url,
+                  width: cover.data.width,
+                  height: cover.data.height,
+                  lqip: cover.data.lqip,
+                  title: cover.data.title,
+                }}
+                photoCount={album.data.photos.length}
+              />
+            );
+          })}
+      </div>
+    </section>
+  </Container>
+</PageLayout>
+
+<style>
+  .collection-page {
+    padding: var(--space-xl) 0 var(--space-3xl);
+  }
+
+  .collection-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: var(--space-xs);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .breadcrumb a {
+    transition: color var(--duration-fast) ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-text);
+  }
+
+  .collection-header h1 {
+    font-weight: 300;
+  }
+
+  .collection-desc {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin-top: var(--space-sm);
+    font-weight: 300;
+  }
+
+  .albums-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 768px) {
+    .albums-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .albums-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

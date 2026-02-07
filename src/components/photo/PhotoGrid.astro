@@ -1,0 +1,182 @@
+---
+/**
+ * PhotoGrid — renders photos in the album's chosen layout:
+ * - masonry: Pinterest-style, natural aspect ratios
+ * - grid: Uniform aspect ratio grid
+ * - horizontal-scroll: Lando Norris-style horizontal strip (GSAP ScrollTrigger)
+ */
+
+import Photo from './Photo.astro';
+
+interface PhotoData {
+  id: string;
+  data: {
+    title: string;
+    url: string;
+    width: number;
+    height: number;
+    lqip: string;
+  };
+}
+
+interface Props {
+  photos: PhotoData[];
+  layout?: 'masonry' | 'grid' | 'horizontal-scroll';
+  gridAspectRatio?: string;
+}
+
+const { photos, layout = 'masonry', gridAspectRatio = '3:2' } = Astro.props;
+
+// Parse aspect ratio for grid layout
+const [arW, arH] = gridAspectRatio.split(':').map(Number);
+const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
+---
+
+{layout === 'masonry' && (
+  <div class="masonry-grid stagger-children">
+    {photos.map((photo) => (
+      <div class="masonry-item">
+        <Photo
+          url={photo.data.url}
+          width={photo.data.width}
+          height={photo.data.height}
+          lqip={photo.data.lqip}
+          alt={photo.data.title}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+      </div>
+    ))}
+  </div>
+)}
+
+{layout === 'grid' && (
+  <div class="uniform-grid stagger-children">
+    {photos.map((photo) => (
+      <div class="grid-item" style={`--aspect-padding: ${aspectPadding}%`}>
+        <Photo
+          url={photo.data.url}
+          width={photo.data.width}
+          height={photo.data.height}
+          lqip={photo.data.lqip}
+          alt={photo.data.title}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
+      </div>
+    ))}
+  </div>
+)}
+
+{layout === 'horizontal-scroll' && (
+  <div class="horizontal-scroll" data-horizontal-scroll>
+    <div class="scroll-track" data-scroll-track>
+      {photos.map((photo, i) => (
+        <div class="scroll-item">
+          <Photo
+            url={photo.data.url}
+            width={photo.data.width}
+            height={photo.data.height}
+            lqip={photo.data.lqip}
+            alt={photo.data.title}
+            sizes="80vw"
+            loading={i === 0 ? 'eager' : 'lazy'}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  /* ==========================================
+     Masonry Layout
+     ========================================== */
+  .masonry-grid {
+    columns: 1;
+    column-gap: var(--space-sm);
+    padding: var(--space-md) 0;
+  }
+
+  @media (min-width: 640px) {
+    .masonry-grid {
+      columns: 2;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .masonry-grid {
+      columns: 3;
+    }
+  }
+
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: var(--space-sm);
+  }
+
+  /* ==========================================
+     Uniform Grid Layout
+     ========================================== */
+  .uniform-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    padding: var(--space-md) 0;
+  }
+
+  @media (min-width: 640px) {
+    .uniform-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .uniform-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .grid-item {
+    position: relative;
+    padding-bottom: var(--aspect-padding);
+    overflow: hidden;
+  }
+
+  .grid-item :global(.photo-wrap) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .grid-item :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* ==========================================
+     Horizontal Scroll Layout
+     ========================================== */
+  .horizontal-scroll {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .scroll-track {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    height: 100%;
+    padding: var(--space-xl);
+    width: max-content;
+  }
+
+  .scroll-item {
+    flex-shrink: 0;
+    height: 80vh;
+  }
+
+  .scroll-item :global(.photo-img) {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+</style>
