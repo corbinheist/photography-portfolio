@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 _raw/
+_processed/
 .env
 .env.*
 !.env.example

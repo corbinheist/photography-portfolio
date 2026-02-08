@@ -132,7 +132,16 @@ async function main() {
       photoData.exif = exif;
     }
 
-    const yamlStr = YAML.stringify(photoData, { lineWidth: 0 });
+    const doc = new YAML.Document(photoData);
+    // Force date strings to be quoted so YAML doesn't parse them as Date objects
+    YAML.visit(doc, {
+      Scalar(_, node) {
+        if (typeof node.value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(node.value)) {
+          node.type = YAML.Scalar.QUOTE_DOUBLE;
+        }
+      },
+    });
+    const yamlStr = doc.toString({ lineWidth: 0 });
     fs.writeFileSync(yamlPath, yamlStr);
     console.log(`  Created: ${entry.slug}.yaml`);
   }
