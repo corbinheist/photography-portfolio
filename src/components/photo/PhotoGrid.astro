@@ -23,9 +23,10 @@ interface Props {
   photos: PhotoData[];
   layout?: 'masonry' | 'grid' | 'horizontal-scroll';
   gridAspectRatio?: string;
+  sizes?: string;
 }
 
-const { photos, layout = 'masonry', gridAspectRatio = '3:2' } = Astro.props;
+const { photos, layout = 'masonry', gridAspectRatio = '3:2', sizes } = Astro.props;
 
 // Parse aspect ratio for grid layout
 const [arW, arH] = gridAspectRatio.split(':').map(Number);
@@ -42,7 +43,7 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
           height={photo.data.height}
           lqip={photo.data.lqip}
           alt={photo.data.title}
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          sizes={sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 25vw"}
         />
       </div>
     ))}
@@ -105,6 +106,12 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
   @media (min-width: 1024px) {
     .masonry-grid {
       columns: 3;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .masonry-grid {
+      columns: 4;
     }
   }
 

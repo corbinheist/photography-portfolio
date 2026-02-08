@@ -24,8 +24,10 @@ const lightboxPhotos = photos.map((p) => ({
       <h1>Gallery</h1>
       <span class="photo-count">{photos.length} photos</span>
     </div>
-    <PhotoGrid photos={photos} layout="masonry" />
   </Container>
+  <div class="gallery-grid-wrap">
+    <PhotoGrid photos={photos} layout="masonry" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, (max-width: 1920px) 25vw, 20vw" />
+  </div>
   <PhotoLightbox photos={lightboxPhotos} />
 </PageLayout>
 
@@ -39,5 +41,15 @@ const lightboxPhotos = photos.map((p) => ({
     color: var(--color-warm);
     margin-top: var(--space-sm);
     display: block;
+  }
+
+  .gallery-grid-wrap {
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 1920px) {
+    .gallery-grid-wrap :global(.masonry-grid) {
+      columns: 5;
+    }
   }
 </style>
