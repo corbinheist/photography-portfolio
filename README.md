@@ -275,9 +275,10 @@ Enable with `ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled
 The workflow at `.github/workflows/deploy.yml` runs on every push to `main`:
 
 1. Installs dependencies with pnpm
-2. Runs `astro check` (type checking) and `astro build`
-3. SCPs the `dist/` directory to the droplet
-4. Reloads Nginx
+2. Attempts to fetch fresh Substack RSS (falls back to cached file if blocked)
+3. Runs `astro check` (type checking) and `astro build`
+4. SCPs the `dist/` directory to the droplet
+5. Reloads Nginx
 
 Deploy steps are skipped if secrets aren't configured yet.
 
@@ -291,7 +292,23 @@ Required GitHub repository secrets:
 | `SUBSTACK_RSS_URL` | Substack RSS feed URL (optional) |
 | `SITE_URL` | Production URL |
 
-The workflow also triggers on `repository_dispatch` events of type `substack-update`, so you can set up a cron job or webhook to rebuild when new Substack posts are published.
+The workflow also triggers on `repository_dispatch` events of type `substack-update` and on manual `workflow_dispatch`.
+
+### Updating Blog Posts
+
+Substack blocks RSS requests from cloud CI runners. The workflow attempts to fetch fresh content but falls back to a cached feed file committed to the repo. To update blog posts:
+
+```sh
+# Fetch the latest RSS feed locally
+pnpm fetch-rss
+
+# Commit the updated cache and push — triggers a deploy
+git add src/data/substack-feed.xml
+git commit -m "Update Substack feed"
+git push
+```
+
+This can also be scripted as a cron job or triggered after publishing a new Substack post.
 
 ### Droplet Setup (Quick Reference)
 

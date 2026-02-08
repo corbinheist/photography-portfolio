@@ -23,6 +23,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Fetch Substack RSS feed
+        continue-on-error: true
+        run: pnpm fetch-rss
+        env:
+          SUBSTACK_RSS_URL: ${{ secrets.SUBSTACK_RSS_URL }}
+
       - name: Type check & build
         run: pnpm build
         env:
