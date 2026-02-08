@@ -35,8 +35,10 @@ export function initLightbox() {
     if (!photo) return;
 
     const slug = photo.url.split('/').pop() || '';
-    const widths = [2400, 1600, 1080, 750, 640];
-    const bestWidth = widths.find(w => w <= photo.width) || widths[widths.length - 1];
+    // Use native width if it falls between standard breakpoints, otherwise largest standard width
+    const standardWidths = [2400, 1600, 1080, 750, 640];
+    const maxStandard = standardWidths.find(w => w <= photo.width);
+    const bestWidth = (maxStandard && maxStandard < photo.width) ? photo.width : maxStandard || 640;
     img!.src = `${photo.url}/${slug}-${bestWidth}.webp`;
     img!.alt = photo.title;
 

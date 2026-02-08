@@ -3,7 +3,7 @@
  * Responsive photo component with AVIF/WebP srcset and LQIP blur placeholder.
  *
  * The `url` prop is the base CDN URL for the photo (without extension/width).
- * Generates srcset for widths: 640, 750, 1080, 1600, 2400
+ * Generates srcset for widths: 640, 750, 1080, 1600, 2400 (plus native width if between breakpoints)
  */
 
 interface Props {
@@ -28,12 +28,17 @@ const {
   class: className,
 } = Astro.props;
 
-const widths = [640, 750, 1080, 1600, 2400];
+const standardWidths = [640, 750, 1080, 1600, 2400];
 const slug = url.split('/').pop() || '';
+
+// Include native width if it falls between standard breakpoints
+const maxStandard = Math.max(...standardWidths.filter((w) => w <= width));
+const widths = width > maxStandard
+  ? standardWidths.filter((w) => w <= width)
+  : [...new Set([...standardWidths.filter((w) => w < width), width])].sort((a, b) => a - b);
 
 function buildSrcset(format: 'avif' | 'webp'): string {
   return widths
-    .filter((w) => w <= width)
     .map((w) => `${url}/${slug}-${w}.${format} ${w}w`)
     .join(', ');
 }

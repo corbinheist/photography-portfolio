@@ -77,10 +77,17 @@ async function processImage(filename: string): Promise<ProcessedImage> {
   // Generate responsive variants
   const variants: ProcessedImage['variants'] = [];
 
+  // Build width list: standard widths + native width if it falls between breakpoints
+  const maxStandard = Math.max(...WIDTHS.filter((w) => w <= originalWidth));
+  const targetWidths =
+    originalWidth > maxStandard
+      ? [...WIDTHS.filter((w) => w <= originalWidth)]
+      : [...WIDTHS.filter((w) => w < originalWidth), originalWidth];
+  // Deduplicate in case native width exactly matches a standard width
+  const uniqueWidths = [...new Set(targetWidths)].sort((a, b) => a - b);
+
   for (const format of FORMATS) {
-    for (const targetWidth of WIDTHS) {
-      // Skip widths larger than original
-      if (targetWidth > originalWidth) continue;
+    for (const targetWidth of uniqueWidths) {
 
       const outputFilename = `${slug}-${targetWidth}.${format}`;
       const outputPath = path.join(outputSubdir, outputFilename);
