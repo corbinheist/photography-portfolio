@@ -35,7 +35,9 @@ export function initLightbox() {
     if (!photo) return;
 
     const slug = photo.url.split('/').pop() || '';
-    img!.src = `${photo.url}/${slug}-2400.webp`;
+    const widths = [2400, 1600, 1080, 750, 640];
+    const bestWidth = widths.find(w => w <= photo.width) || widths[widths.length - 1];
+    img!.src = `${photo.url}/${slug}-${bestWidth}.webp`;
     img!.alt = photo.title;
 
     const exifParts: string[] = [];
