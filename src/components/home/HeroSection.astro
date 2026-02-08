@@ -98,10 +98,10 @@ const heroData = photos.map((p) => {
     const content = document.querySelector<HTMLElement>('[data-hero-content]');
     const scroll = document.querySelector<HTMLElement>('[data-hero-scroll]');
     if (content) {
-      setTimeout(() => content.classList.add('visible'), 600);
+      setTimeout(() => content.classList.add('visible'), 1500);
     }
     if (scroll) {
-      setTimeout(() => scroll.classList.add('visible'), 1200);
+      setTimeout(() => scroll.classList.add('visible'), 3000);
     }
   }
 
@@ -151,7 +151,7 @@ const heroData = photos.map((p) => {
     max-width: 900px;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition: opacity 1.6s ease, transform 1.6s ease;
   }
 
   .hero-content.visible {
@@ -187,7 +187,7 @@ const heroData = photos.map((p) => {
 
   .hero-scroll-indicator {
     opacity: 0;
-    transition: opacity 0.8s ease;
+    transition: opacity 1.6s ease;
     position: absolute;
     bottom: var(--space-xl);
     left: 50%;
