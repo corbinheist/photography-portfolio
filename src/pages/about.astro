@@ -8,32 +8,33 @@ import PageLayout from '@layouts/PageLayout.astro';
       <h1>About</h1>
     </div>
 
-      <div class="about-body">
-        <div class="about-intro reveal">
-          <div class="about-portrait">
-            <picture>
-              <source
-                type="image/avif"
-                srcset="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-640.avif 640w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-750.avif 750w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.avif 1080w"
-                sizes="(max-width: 768px) 100vw, 40vw"
-              />
-              <source
-                type="image/webp"
-                srcset="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-640.webp 640w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-750.webp 750w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.webp 1080w"
-                sizes="(max-width: 768px) 100vw, 40vw"
-              />
-              <img
-                src="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.webp"
-                alt="Corbin Heist"
-                width="1366"
-                height="2048"
-                loading="eager"
-                decoding="async"
-                class="portrait-img"
-                style={`background-image: url(data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=); background-size: cover;`}
-              />
-            </picture>
-          </div>
+      <div class="about-layout reveal">
+        <div class="about-portrait">
+          <picture>
+            <source
+              type="image/avif"
+              srcset="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-640.avif 640w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-750.avif 750w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.avif 1080w"
+              sizes="(max-width: 768px) 100vw, 30vw"
+            />
+            <source
+              type="image/webp"
+              srcset="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-640.webp 640w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-750.webp 750w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.webp 1080w"
+              sizes="(max-width: 768px) 100vw, 30vw"
+            />
+            <img
+              src="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.webp"
+              alt="Corbin Heist"
+              width="1366"
+              height="2048"
+              loading="eager"
+              decoding="async"
+              class="portrait-img"
+              style={`background-image: url(data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=); background-size: cover;`}
+            />
+          </picture>
+        </div>
+
+        <div class="about-body">
           <div class="about-text">
             <p>
               I photograph people in landscapes. The intersection matters more to me
@@ -57,35 +58,35 @@ import PageLayout from '@layouts/PageLayout.astro';
               <a href="/blog">Notes</a>.
             </p>
           </div>
-        </div>
 
-        <div class="about-gear reveal">
-          <h2>Kit</h2>
-          <ul class="gear-list">
-            <li>Canon EOS R5 Mark II</li>
-            <li>Canon RF 35mm f/1.4 L VCM</li>
-            <li>Canon RF 24-70mm f/2.8 L IS</li>
-            <li>Canon RF 70-200mm f/2.8 L IS</li>
-            <li>Leica Q2</li>
-            <li>DJI Mavic 3 Pro</li>
-            <li>Canon EOS 3 (film)</li>
-          </ul>
-        </div>
+          <div class="about-gear">
+            <h2>Kit</h2>
+            <ul class="gear-list">
+              <li>Canon EOS R5 Mark II</li>
+              <li>Canon RF 35mm f/1.4 L VCM</li>
+              <li>Canon RF 24-70mm f/2.8 L IS</li>
+              <li>Canon RF 70-200mm f/2.8 L IS</li>
+              <li>Leica Q2</li>
+              <li>DJI Mavic 3 Pro</li>
+              <li>Canon EOS 3 (film)</li>
+            </ul>
+          </div>
 
-        <div class="about-socials reveal">
-          <h2>Elsewhere</h2>
-          <ul class="social-list">
-            <li><a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a></li>
-            <li><a href="https://corbinheist.substack.com" target="_blank" rel="noopener">Substack</a></li>
-          </ul>
-        </div>
+          <div class="about-socials">
+            <h2>Elsewhere</h2>
+            <ul class="social-list">
+              <li><a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a></li>
+              <li><a href="https://corbinheist.substack.com" target="_blank" rel="noopener">Substack</a></li>
+            </ul>
+          </div>
 
-        <div class="about-contact reveal">
-          <h2>Get in Touch</h2>
-          <p>
-            For prints, collaborations, or commissions —
-            <a href="mailto:corbin@heist.studio">corbin@heist.studio</a>
-          </p>
+          <div class="about-contact">
+            <h2>Get in Touch</h2>
+            <p>
+              For prints, collaborations, or commissions —
+              <a href="mailto:corbin@heist.studio">corbin@heist.studio</a>
+            </p>
+          </div>
         </div>
       </div>
   </section>
@@ -100,16 +101,17 @@ import PageLayout from '@layouts/PageLayout.astro';
     margin-bottom: var(--space-xl);
   }
 
-  .about-intro {
+  .about-layout {
     display: flex;
     flex-direction: column;
     gap: var(--space-xl);
   }
 
   @media (min-width: 768px) {
-    .about-intro {
+    .about-layout {
       flex-direction: row;
       align-items: flex-start;
+      gap: var(--space-2xl);
     }
   }
 
@@ -119,8 +121,9 @@ import PageLayout from '@layouts/PageLayout.astro';
 
   @media (min-width: 768px) {
     .about-portrait {
-      width: 28%;
-      max-width: 360px;
+      position: sticky;
+      top: calc(65px + var(--space-xl));
+      width: 30%;
     }
   }
 
@@ -131,12 +134,15 @@ import PageLayout from '@layouts/PageLayout.astro';
     background-position: center;
   }
 
+  .about-body {
+    flex: 1;
+    min-width: 0;
+  }
+
   .about-text {
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
-    flex: 1;
-    min-width: 0;
   }
 
   .about-text p {
@@ -182,9 +188,8 @@ import PageLayout from '@layouts/PageLayout.astro';
   }
 
   .about-socials {
-    margin-top: var(--space-2xl);
-    padding-top: var(--space-xl);
-    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
   }
 
   .about-socials h2 {
@@ -208,9 +213,8 @@ import PageLayout from '@layouts/PageLayout.astro';
   }
 
   .about-contact {
-    margin-top: var(--space-2xl);
-    padding-top: var(--space-xl);
-    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
   }
 
   .about-contact h2 {
