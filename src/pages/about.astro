@@ -30,8 +30,8 @@ import Container from '@components/ui/Container.astro';
             commit to the frame.
           </p>
           <p>
-            I write about photography and process on
-            <a href="/blog">Substack</a>.
+            I write about photography and process in
+            <a href="/blog">Notes</a>.
           </p>
         </div>
 
@@ -45,6 +45,14 @@ import Container from '@components/ui/Container.astro';
             <li>Leica Q2</li>
             <li>DJI Mavic 3 Pro</li>
             <li>Canon EOS 3 (film)</li>
+          </ul>
+        </div>
+
+        <div class="about-socials reveal">
+          <h2>Elsewhere</h2>
+          <ul class="social-list">
+            <li><a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a></li>
+            <li><a href="https://corbinheist.substack.com" target="_blank" rel="noopener">Substack</a></li>
           </ul>
         </div>
 
@@ -115,6 +123,32 @@ import Container from '@components/ui/Container.astro';
     .gear-list {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+
+  .about-socials {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .about-socials h2 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--space-sm);
+  }
+
+  .social-list {
+    display: flex;
+    gap: var(--space-md);
+  }
+
+  .social-list a {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .social-list a:hover {
+    color: var(--color-accent);
   }
 
   .about-contact {
