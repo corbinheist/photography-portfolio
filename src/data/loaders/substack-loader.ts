@@ -23,7 +23,12 @@ export function substackLoader(): Loader {
         return;
       }
 
-      const parser = new RSSParser();
+      const parser = new RSSParser({
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; AstroSSG/1.0)',
+          Accept: 'application/rss+xml, application/xml, text/xml',
+        },
+      });
 
       try {
         const feed = await parser.parseURL(rssUrl);
