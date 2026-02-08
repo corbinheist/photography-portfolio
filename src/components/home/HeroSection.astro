@@ -29,6 +29,7 @@ const heroData = photos.map((p) => {
     fallback: `${p.url}/${slug}-2400.webp`,
     lqip: p.lqip,
     link: p.link,
+    landscape: p.width >= p.height,
   };
 });
 ---
@@ -62,10 +63,14 @@ const heroData = photos.map((p) => {
     const dataEl = document.querySelector<HTMLTemplateElement>('[data-hero-photos]');
     if (!dataEl) return;
 
-    const photos = JSON.parse(dataEl.innerHTML || '[]');
-    if (!photos.length) return;
+    const allPhotos = JSON.parse(dataEl.innerHTML || '[]');
+    if (!allPhotos.length) return;
 
-    const photo = photos[Math.floor(Math.random() * photos.length)];
+    // Pick landscape photos for wide screens, portrait for narrow
+    const isLandscape = window.innerWidth > window.innerHeight;
+    const filtered = allPhotos.filter((p: any) => p.landscape === isLandscape);
+    const pool = filtered.length ? filtered : allPhotos;
+    const photo = pool[Math.floor(Math.random() * pool.length)];
 
     const avifSource = document.querySelector<HTMLSourceElement>('[data-hero-avif]');
     const webpSource = document.querySelector<HTMLSourceElement>('[data-hero-webp]');
