@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,8 +29,25 @@ jobs:
           SUBSTACK_RSS_URL: ${{ secrets.SUBSTACK_RSS_URL }}
           SITE_URL: ${{ secrets.SITE_URL }}
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
       - name: Deploy to droplet
-        if: ${{ secrets.DROPLET_HOST != '' }}
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -41,7 +58,6 @@ jobs:
           strip_components: 1
 
       - name: Reload Nginx
-        if: ${{ secrets.DROPLET_HOST != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DROPLET_HOST }}
