@@ -11,28 +11,54 @@ import Container from '@components/ui/Container.astro';
       </div>
 
       <div class="about-body">
-        <div class="about-text reveal">
-          <p>
-            I photograph people in landscapes. The intersection matters more to me
-            than either subject alone — a figure on a ridgeline changes the scale of
-            everything around it. Most of my work happens in mountains, coastlines,
-            and terrain that takes planning to reach.
-          </p>
-          <p>
-            I look for textures, leading lines, and light that reveals structure.
-            I shoot deliberately. Fewer frames, more time reading a scene before
-            picking up the camera. The goal is images that hold specific information:
-            where this was, what it felt like to stand there, why it mattered.
-          </p>
-          <p>
-            Workshops in Montana, the Pyrenees, and the Dolomites sharpened how I
-            think about composition and story. The consistent lesson: get closer,
-            commit to the frame.
-          </p>
-          <p>
-            I write about photography and process in
-            <a href="/blog">Notes</a>.
-          </p>
+        <div class="about-intro reveal">
+          <div class="about-portrait">
+            <picture>
+              <source
+                type="image/avif"
+                srcset="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-640.avif 640w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-750.avif 750w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.avif 1080w"
+                sizes="(max-width: 768px) 100vw, 40vw"
+              />
+              <source
+                type="image/webp"
+                srcset="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-640.webp 640w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-750.webp 750w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.webp 1080w"
+                sizes="(max-width: 768px) 100vw, 40vw"
+              />
+              <img
+                src="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.webp"
+                alt="Corbin Heist"
+                width="1366"
+                height="2048"
+                loading="eager"
+                decoding="async"
+                class="portrait-img"
+                style={`background-image: url(data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=); background-size: cover;`}
+              />
+            </picture>
+          </div>
+          <div class="about-text">
+            <p>
+              I photograph people in landscapes. The intersection matters more to me
+              than either subject alone — a figure on a ridgeline changes the scale of
+              everything around it. Most of my work happens in mountains, coastlines,
+              and terrain that takes planning to reach.
+            </p>
+            <p>
+              I look for textures, leading lines, and light that reveals structure.
+              I shoot deliberately. Fewer frames, more time reading a scene before
+              picking up the camera. The goal is images that hold specific information:
+              where this was, what it felt like to stand there, why it mattered.
+            </p>
+            <p>
+              Workshops in Montana, the Pyrenees, and the Dolomites sharpened how I
+              think about composition and story. The consistent lesson: get closer,
+              commit to the frame.
+            </p>
+            <p>
+              I write about photography and process in
+              <a href="/blog">Notes</a>.
+            </p>
+          </div>
         </div>
 
         <div class="about-gear reveal">
@@ -75,6 +101,36 @@ import Container from '@components/ui/Container.astro';
 
   .about-header {
     margin-bottom: var(--space-xl);
+  }
+
+  .about-intro {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  @media (min-width: 768px) {
+    .about-intro {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+  }
+
+  .about-portrait {
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 768px) {
+    .about-portrait {
+      width: 40%;
+    }
+  }
+
+  .portrait-img {
+    width: 100%;
+    height: auto;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
   .about-text {
