@@ -34,7 +34,7 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
 ---
 
 {layout === 'masonry' && (
-  <div class="masonry-grid stagger-children">
+  <div class="masonry-grid" data-masonry-grid>
     {photos.map((photo) => (
       <div class="masonry-item">
         <Photo
@@ -187,3 +187,51 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
     object-fit: contain;
   }
 </style>
+
+<script>
+  /**
+   * Reorder masonry items so CSS columns (which fill top→bottom)
+   * produce left→right reading order instead of column-by-column.
+   *
+   * CSS columns place items sequentially down each column. To get L→R order,
+   * we "deal" items like cards: item 0→col1, item 1→col2, etc. then wrap.
+   * This means we need to reorder the DOM so that positions 0, numCols, 2*numCols...
+   * come first (they'll fill column 1), then 1, numCols+1, 2*numCols+1... (column 2), etc.
+   */
+  function reorderMasonry() {
+    document.querySelectorAll<HTMLElement>('[data-masonry-grid]').forEach((grid) => {
+      const items = Array.from(grid.children) as HTMLElement[];
+      if (items.length <= 1) return;
+
+      const numCols = Math.round(grid.offsetWidth / items[0].offsetWidth) || 1;
+      if (numCols <= 1) return;
+
+      // Calculate how many items per column
+      const rows = Math.ceil(items.length / numCols);
+
+      // Build new order: for L→R reading, item at visual position (row, col)
+      // needs to be at DOM index (col * rows + row) so CSS columns places it correctly.
+      // Inverse: DOM index i should show the item from visual position:
+      //   col = i / rows, row = i % rows → visual index = row * numCols + col
+      const reordered: HTMLElement[] = [];
+      for (let i = 0; i < rows * numCols; i++) {
+        const col = Math.floor(i / rows);
+        const row = i % rows;
+        const visualIndex = row * numCols + col;
+        if (visualIndex < items.length) {
+          reordered.push(items[visualIndex]);
+        }
+      }
+
+      // Apply reorder
+      reordered.forEach((item) => grid.appendChild(item));
+    });
+  }
+
+  // Run after page loads and layout is computed
+  if (document.readyState === 'complete') {
+    reorderMasonry();
+  } else {
+    window.addEventListener('load', reorderMasonry);
+  }
+</script>
