@@ -9,7 +9,8 @@
     "astro": "astro",
     "process-images": "tsx scripts/process-images.ts",
     "upload-images": "tsx scripts/upload-to-spaces.ts",
-    "generate-yaml": "tsx scripts/generate-photo-yaml.ts"
+    "generate-yaml": "tsx scripts/generate-photo-yaml.ts",
+    "fetch-rss": "tsx scripts/fetch-rss.ts"
   },
   "packageManager": "pnpm@10.29.1",
   "pnpm": {
