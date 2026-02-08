@@ -1,13 +1,13 @@
-siteName: Photography Portfolio
+siteName: Corbin Heist
 author:
-  name: Your Name
-  bio: Photographer & visual storyteller based in [Your City]. Capturing moments in landscapes, portraits, and street photography.
+  name: Corbin Heist
+  bio: Adventure photographer. Textures, leading lines, and the juxtaposition of humankind against the most ambivalent landscapes the earth has to offer.
   avatar: ""
 substackUrl: https://corbinheist.substack.com
 socialLinks:
   - platform: instagram
-    url: https://instagram.com/yourhandle
+    url: https://instagram.com/corbinheist
     label: Instagram
-  - platform: twitter
-    url: https://twitter.com/yourhandle
-    label: Twitter
+  - platform: substack
+    url: https://corbinheist.substack.com
+    label: Substack
