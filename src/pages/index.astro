@@ -1,13 +1,22 @@
 ---
+import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import HeroSection from '@components/home/HeroSection.astro';
 import FeaturedWork from '@components/home/FeaturedWork.astro';
 import AboutTeaser from '@components/home/AboutTeaser.astro';
 import BlogSection from '@components/blog/BlogSection.astro';
+
+const photos = await getCollection('photos');
+const heroPhotos = photos.map((p) => ({
+  url: p.data.url,
+  width: p.data.width,
+  height: p.data.height,
+  lqip: p.data.lqip,
+}));
 ---
 
 <PageLayout title="Corbin Heist">
-  <HeroSection />
+  <HeroSection photos={heroPhotos} />
   <FeaturedWork />
   <AboutTeaser />
   <BlogSection limit={3} />
