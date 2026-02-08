@@ -13,7 +13,7 @@ A minimalist, image-first photography portfolio built with [Astro](https://astro
 | Image Processing | Sharp (offline scripts) |
 | Content | Astro Content Collections (YAML + Zod schemas) |
 | Blog | Substack RSS feed, parsed at build time |
-| Server | Caddy on a DO Droplet |
+| Server | Nginx on a DO Droplet |
 | CI/CD | GitHub Actions → SCP to droplet |
 | Package Manager | pnpm |
 
@@ -223,24 +223,52 @@ photography-portfolio/
 │       └── animations.css      # Animation initial states + reduced motion
 ├── _raw/                       # Drop raw photos here (gitignored)
 ├── astro.config.mjs
-├── Caddyfile                   # Production Caddy config
+├── Caddyfile                   # Caddy config (unused — using Nginx)
 ├── tsconfig.json
 └── package.json
 ```
 
 ## Deployment
 
-### Caddy Server
+### Nginx
 
-The included `Caddyfile` configures:
-- Automatic HTTPS via Let's Encrypt
-- Brotli/gzip compression
-- 1-year cache for static assets (fonts, images, CSS, JS)
-- 1-hour cache for HTML
-- Security headers
-- 404 fallback page
+The site is served by Nginx on the droplet. The config lives at `/etc/nginx/sites-available/portfolio`:
 
-Copy it to `/etc/caddy/Caddyfile` on your droplet and update the domain.
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+
+    root /var/www/portfolio/dist;
+    index index.html;
+
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 256;
+
+    location ~* \.(css|js|woff2|avif|webp|jpg|png|svg|ico)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    location ~* \.html$ {
+        expires 1h;
+        add_header Cache-Control "public, must-revalidate";
+    }
+
+    add_header X-Content-Type-Options nosniff;
+    add_header X-Frame-Options DENY;
+    add_header Referrer-Policy strict-origin-when-cross-origin;
+
+    location / {
+        try_files $uri $uri/ $uri.html =404;
+    }
+
+    error_page 404 /404.html;
+}
+```
+
+Enable with `ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/` and add HTTPS via `certbot --nginx -d yourdomain.com`.
 
 ### GitHub Actions
 
@@ -249,7 +277,9 @@ The workflow at `.github/workflows/deploy.yml` runs on every push to `main`:
 1. Installs dependencies with pnpm
 2. Runs `astro check` (type checking) and `astro build`
 3. SCPs the `dist/` directory to the droplet
-4. Reloads Caddy
+4. Reloads Nginx
+
+Deploy steps are skipped if secrets aren't configured yet.
 
 Required GitHub repository secrets:
 
@@ -258,7 +288,7 @@ Required GitHub repository secrets:
 | `DROPLET_HOST` | Droplet IP or hostname |
 | `DROPLET_USER` | SSH username (e.g. `deploy`) |
 | `DROPLET_SSH_KEY` | Private SSH key for the deploy user |
-| `SUBSTACK_RSS_URL` | Substack RSS feed URL |
+| `SUBSTACK_RSS_URL` | Substack RSS feed URL (optional) |
 | `SITE_URL` | Production URL |
 
 The workflow also triggers on `repository_dispatch` events of type `substack-update`, so you can set up a cron job or webhook to rebuild when new Substack posts are published.
@@ -266,20 +296,30 @@ The workflow also triggers on `repository_dispatch` events of type `substack-upd
 ### Droplet Setup (Quick Reference)
 
 ```sh
-# Install Caddy
-sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-sudo apt update && sudo apt install caddy
+# Create deploy user
+adduser --disabled-password --gecos "" deploy
+mkdir -p /var/www/portfolio/dist
+chown -R deploy:deploy /var/www/portfolio
 
-# Create deploy directory
-sudo mkdir -p /var/www/portfolio/dist
-sudo chown -R deploy:deploy /var/www/portfolio
+# Allow deploy user to reload nginx
+echo "deploy ALL=(ALL) NOPASSWD: /usr/bin/systemctl reload nginx" >> /etc/sudoers.d/deploy
+chmod 440 /etc/sudoers.d/deploy
 
-# Copy Caddyfile and start
-sudo cp Caddyfile /etc/caddy/Caddyfile
-sudo systemctl enable caddy
-sudo systemctl start caddy
+# Generate deploy key (as deploy user)
+su - deploy
+ssh-keygen -t ed25519 -C "github-actions-deploy" -f ~/.ssh/deploy_key -N ""
+cat ~/.ssh/deploy_key.pub >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+cat ~/.ssh/deploy_key  # copy this into DROPLET_SSH_KEY secret
+exit
+
+# Set up nginx site (as root)
+# paste config above into /etc/nginx/sites-available/portfolio
+ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled/
+nginx -t && systemctl reload nginx
+
+# HTTPS
+certbot --nginx -d yourdomain.com
 ```
 
 ## Adding Content

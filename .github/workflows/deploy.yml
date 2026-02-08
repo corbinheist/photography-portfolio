@@ -30,6 +30,7 @@ jobs:
           SITE_URL: ${{ secrets.SITE_URL }}
 
       - name: Deploy to droplet
+        if: ${{ secrets.DROPLET_HOST != '' }}
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -39,10 +40,11 @@ jobs:
           target: /var/www/portfolio/
           strip_components: 1
 
-      - name: Reload Caddy
+      - name: Reload Nginx
+        if: ${{ secrets.DROPLET_HOST != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
-          script: sudo systemctl reload caddy
+          script: sudo systemctl reload nginx
