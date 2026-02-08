@@ -4,6 +4,7 @@ interface HeroPhoto {
   width: number;
   height: number;
   lqip: string;
+  link?: string;
 }
 
 interface Props {
@@ -27,19 +28,20 @@ const heroData = photos.map((p) => {
     webpSrcset: widths.map((w) => `${p.url}/${slug}-${w}.webp ${w}w`).join(', '),
     fallback: `${p.url}/${slug}-2400.webp`,
     lqip: p.lqip,
+    link: p.link,
   };
 });
 ---
 
 <section class="hero">
-  <div class="hero-image" aria-hidden="true">
+  <a class="hero-image" data-hero-link href="/gallery" aria-label="View this photo">
     <picture>
       <source type="image/avif" data-hero-avif sizes="100vw" />
       <source type="image/webp" data-hero-webp sizes="100vw" />
       <img class="hero-img" data-hero-img src="" alt="" loading="eager" decoding="async" />
     </picture>
     <div class="hero-overlay"></div>
-  </div>
+  </a>
 
   <div class="hero-content">
     <h1 class="hero-title mask-reveal">{title}</h1>
@@ -80,6 +82,12 @@ const heroData = photos.map((p) => {
     avifSource.srcset = photo.avifSrcset;
     webpSource.srcset = photo.webpSrcset;
     img.src = photo.fallback;
+
+    // Link to the photo's album
+    if (photo.link) {
+      const link = document.querySelector<HTMLAnchorElement>('[data-hero-link]');
+      if (link) link.href = photo.link;
+    }
   }
 
   document.addEventListener('astro:page-load', initHero);
@@ -98,6 +106,8 @@ const heroData = photos.map((p) => {
   .hero-image {
     position: absolute;
     inset: 0;
+    display: block;
+    cursor: pointer;
   }
 
   .hero-img {

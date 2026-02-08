@@ -7,11 +7,24 @@ import AboutTeaser from '@components/home/AboutTeaser.astro';
 import BlogSection from '@components/blog/BlogSection.astro';
 
 const photos = await getCollection('photos');
+const albums = await getCollection('albums');
+const collections = await getCollection('photoCollections');
+
+// Build a map from photo ID → album page URL
+function getPhotoLink(photoId: string): string | undefined {
+  for (const album of albums) {
+    if (album.data.draft || !album.data.photos.includes(photoId)) continue;
+    const collection = collections.find((c) => c.data.albums.includes(album.id));
+    if (collection) return `/work/${collection.id}/${album.id}`;
+  }
+}
+
 const heroPhotos = photos.map((p) => ({
   url: p.data.url,
   width: p.data.width,
   height: p.data.height,
   lqip: p.data.lqip,
+  link: getPhotoLink(p.id),
 }));
 ---
 
