@@ -74,13 +74,13 @@ const lightboxPhotos = photos.map((p: any) => ({
       layout="horizontal-scroll"
     />
   ) : (
-    <Container>
+    <div class="album-grid-wrap">
       <PhotoGrid
         photos={photos}
         layout={album.data.layout}
         gridAspectRatio={album.data.gridAspectRatio}
       />
-    </Container>
+    </div>
   )}
 
   <PhotoLightbox photos={lightboxPhotos} />
@@ -118,6 +118,10 @@ const lightboxPhotos = photos.map((p: any) => ({
   .album-meta span:not(:last-child)::after {
     content: '·';
     margin-left: var(--space-sm);
+  }
+
+  .album-grid-wrap {
+    padding-inline: var(--container-padding);
   }
 
   .album-desc {
