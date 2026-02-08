@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
-import Container from '@components/ui/Container.astro';
 import AlbumCard from '@components/photo/AlbumCard.astro';
 
 export async function getStaticPaths() {
@@ -32,19 +31,17 @@ function findPhoto(id: string) {
   title={collection.data.title}
   description={collection.data.description}
 >
-  <Container>
-    <div class="collection-header reveal">
-      <nav class="breadcrumb">
-        <a href="/work">Work</a>
-        <span>/</span>
-        <span>{collection.data.title}</span>
-      </nav>
-      <h1>{collection.data.title}</h1>
-      {collection.data.description && (
-        <p class="collection-desc">{collection.data.description}</p>
-      )}
-    </div>
-  </Container>
+  <div class="collection-header reveal">
+    <nav class="breadcrumb">
+      <a href="/work">Work</a>
+      <span>/</span>
+      <span>{collection.data.title}</span>
+    </nav>
+    <h1>{collection.data.title}</h1>
+    {collection.data.description && (
+      <p class="collection-desc">{collection.data.description}</p>
+    )}
+  </div>
   <div class="collection-grid-wrap">
     <div class="albums-grid">
       {albums
@@ -77,7 +74,7 @@ function findPhoto(id: string) {
 
 <style>
   .collection-header {
-    padding: var(--space-xl) 0 var(--space-md);
+    padding: var(--space-xl) var(--container-padding) var(--space-md);
   }
 
   .collection-grid-wrap {

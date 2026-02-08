@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
-import Container from '@components/ui/Container.astro';
 import Photo from '@components/photo/Photo.astro';
 
 const collections = await getCollection('photoCollections');
@@ -15,11 +14,9 @@ function findPhoto(id: string) {
 ---
 
 <PageLayout title="Work" description="Photography collections">
-  <Container>
-    <div class="work-header reveal">
-      <h1>Work</h1>
-    </div>
-  </Container>
+  <div class="work-header reveal">
+    <h1>Work</h1>
+  </div>
   <div class="work-grid-wrap">
     <div class="collections-grid">
       {sortedCollections.map((collection) => {
@@ -55,7 +52,7 @@ function findPhoto(id: string) {
 
 <style>
   .work-header {
-    padding: var(--space-xl) 0 var(--space-md);
+    padding: var(--space-xl) var(--container-padding) var(--space-md);
   }
 
   .work-grid-wrap {

@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import GalleryLayout from '@layouts/GalleryLayout.astro';
-import Container from '@components/ui/Container.astro';
 import PhotoGrid from '@components/photo/PhotoGrid.astro';
 import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
 
@@ -47,26 +46,24 @@ const lightboxPhotos = photos.map((p: any) => ({
   title={album.data.title}
   description={album.data.description}
 >
-  <Container>
-    <div class="album-header reveal">
-      <nav class="breadcrumb">
-        <a href="/work">Work</a>
-        <span>/</span>
-        <a href={`/work/${collection.id}`}>{collection.data.title}</a>
-        <span>/</span>
-        <span>{album.data.title}</span>
-      </nav>
-      <h1>{album.data.title}</h1>
-      <div class="album-meta">
-        {album.data.location && <span>{album.data.location}</span>}
-        {album.data.date && <span>{album.data.date}</span>}
-        <span>{photos.length} photos</span>
-      </div>
-      {album.data.description && (
-        <p class="album-desc">{album.data.description}</p>
-      )}
+  <div class="album-header reveal">
+    <nav class="breadcrumb">
+      <a href="/work">Work</a>
+      <span>/</span>
+      <a href={`/work/${collection.id}`}>{collection.data.title}</a>
+      <span>/</span>
+      <span>{album.data.title}</span>
+    </nav>
+    <h1>{album.data.title}</h1>
+    <div class="album-meta">
+      {album.data.location && <span>{album.data.location}</span>}
+      {album.data.date && <span>{album.data.date}</span>}
+      <span>{photos.length} photos</span>
     </div>
-  </Container>
+    {album.data.description && (
+      <p class="album-desc">{album.data.description}</p>
+    )}
+  </div>
 
   {album.data.layout === 'horizontal-scroll' ? (
     <PhotoGrid
@@ -88,7 +85,7 @@ const lightboxPhotos = photos.map((p: any) => ({
 
 <style>
   .album-header {
-    padding: var(--space-xl) 0 var(--space-md);
+    padding: var(--space-xl) var(--container-padding) var(--space-md);
   }
 
   .breadcrumb {

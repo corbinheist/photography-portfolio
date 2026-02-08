@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
-import Container from '@components/ui/Container.astro';
 import PhotoGrid from '@components/photo/PhotoGrid.astro';
 import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
 
@@ -19,12 +18,10 @@ const lightboxPhotos = photos.map((p) => ({
 ---
 
 <PageLayout title="Gallery" description="All photos">
-  <Container>
-    <div class="gallery-header reveal">
-      <h1>Gallery</h1>
-      <span class="photo-count">{photos.length} photos</span>
-    </div>
-  </Container>
+  <div class="gallery-header reveal">
+    <h1>Gallery</h1>
+    <span class="photo-count">{photos.length} photos</span>
+  </div>
   <div class="gallery-grid-wrap">
     <PhotoGrid photos={photos} layout="masonry" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, (max-width: 1920px) 25vw, 20vw" />
   </div>
@@ -33,7 +30,7 @@ const lightboxPhotos = photos.map((p) => ({
 
 <style>
   .gallery-header {
-    padding: var(--space-xl) 0 var(--space-md);
+    padding: var(--space-xl) var(--container-padding) var(--space-md);
   }
 
   .photo-count {

@@ -1,6 +1,5 @@
 ---
 import { getCollection } from 'astro:content';
-import Container from '@components/ui/Container.astro';
 import AlbumCard from '@components/photo/AlbumCard.astro';
 import Button from '@components/ui/Button.astro';
 
@@ -26,11 +25,9 @@ function findCollectionForAlbum(albumId: string) {
 ---
 
 <section class="featured-work">
-  <Container>
-    <div class="featured-header reveal">
-      <h2>Selected Work</h2>
-    </div>
-  </Container>
+  <div class="featured-header reveal">
+    <h2>Selected Work</h2>
+  </div>
   <div class="featured-grid-wrap">
     <div class="featured-grid">
       {featuredAlbums.map((album) => {
@@ -69,6 +66,7 @@ function findCollectionForAlbum(albumId: string) {
   }
 
   .featured-header {
+    padding-inline: var(--container-padding);
     margin-bottom: var(--space-md);
   }
 
