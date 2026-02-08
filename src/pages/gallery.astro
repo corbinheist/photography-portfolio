@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import Container from '@components/ui/Container.astro';
+import PhotoGrid from '@components/photo/PhotoGrid.astro';
+import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
+
+const photos = (await getCollection('photos')).sort(
+  (a, b) => a.data.sortOrder - b.data.sortOrder,
+);
+
+const lightboxPhotos = photos.map((p) => ({
+  url: p.data.url,
+  width: p.data.width,
+  height: p.data.height,
+  title: p.data.title,
+  exif: p.data.exif,
+}));
+---
+
+<PageLayout title="Gallery" description="All photos">
+  <Container>
+    <div class="gallery-header reveal">
+      <h1>Gallery</h1>
+      <span class="photo-count">{photos.length} photos</span>
+    </div>
+    <PhotoGrid photos={photos} layout="masonry" />
+  </Container>
+  <PhotoLightbox photos={lightboxPhotos} />
+</PageLayout>
+
+<style>
+  .gallery-header {
+    padding: var(--space-xl) 0 var(--space-md);
+  }
+
+  .photo-count {
+    font-size: var(--text-sm);
+    color: var(--color-warm);
+    margin-top: var(--space-sm);
+    display: block;
+  }
+</style>
