@@ -82,14 +82,14 @@ import Container from '@components/ui/Container.astro';
   }
 
   .about-text a {
-    color: var(--color-text);
+    color: var(--color-accent);
     text-decoration: underline;
     text-underline-offset: 3px;
     transition: color var(--duration-fast) ease;
   }
 
   .about-text a:hover {
-    color: var(--color-interactive-hover);
+    color: var(--color-accent-hover);
   }
 
   .about-gear {
@@ -133,8 +133,13 @@ import Container from '@components/ui/Container.astro';
   }
 
   .about-contact a {
-    color: var(--color-text);
+    color: var(--color-accent);
     text-decoration: underline;
     text-underline-offset: 3px;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .about-contact a:hover {
+    color: var(--color-accent-hover);
   }
 </style>

@@ -66,18 +66,81 @@ ol {
    ========================================== */
 
 :root {
-  /* Dark theme (default) — influenced by Flexoki's inky base scale */
-  --color-bg: #100F0F;
-  --color-surface: #1C1B1A;
-  --color-text: #FFFCF0;
-  --color-text-muted: #878580;
-  --color-border: rgba(255, 252, 240, 0.06);
-  --color-interactive: #CECDC3;
-  --color-interactive-hover: #FFFCF0;
+  /* ═══════════════════════════════════════
+     FLEXOKI BASE
+     Warm paper-to-black scale by Steph Ango
+     ═══════════════════════════════════════ */
+  --fx-paper:    #FFFCF0;
+  --fx-black:    #100F0F;
+  --fx-base-50:  #F2F0E5;
+  --fx-base-100: #E6E4D9;
+  --fx-base-150: #DAD8CE;
+  --fx-base-200: #CECDC3;
+  --fx-base-300: #B7B5AC;
+  --fx-base-500: #6F6E69;
+  --fx-base-600: #575653;
+  --fx-base-700: #403E3C;
+  --fx-base-800: #343331;
+  --fx-base-850: #282726;
+  --fx-base-900: #1C1B1A;
+
+  /* ═══════════════════════════════════════
+     HEIST STUDIO PALETTE
+     ═══════════════════════════════════════ */
+
+  /* ── Greens · Primary Accent ── */
+  --hs-pine:     #081A0F;
+  --hs-racing:   #0F3D24;
+  --hs-bottle:   #1B6B3A;
+  --hs-forest:   #2E8B57;
+  --hs-moss:     #5CC37E;
+  --hs-sage:     #A3E4BA;
+
+  /* ── Warm · Unified Scale ── */
+  --hs-umber:    #1A0E06;
+  --hs-walnut:   #3D2412;
+  --hs-saddle:   #7A4E2D;
+  --hs-oxide:    #BC5215;
+  --hs-rust:     #DA702C;
+  --hs-ember:    #E8934A;
+  --hs-clay:     #F0B884;
+
+  /* ── Kiln · Reserved ── */
+  --hs-kiln-deep:  #8B2520;
+  --hs-kiln:       #AF3029;
+  --hs-kiln-light: #D14D41;
+
+  /* ═══════════════════════════════════════
+     SEMANTIC TOKENS · DARK (DEFAULT)
+     ═══════════════════════════════════════ */
+  --color-bg:          var(--fx-black);
+  --color-surface:     var(--fx-base-900);
+  --color-elevated:    var(--fx-base-850);
+  --color-surface-alt: var(--fx-base-800);
+
+  --color-text:       var(--fx-base-100);
+  --color-text-muted: var(--fx-base-300);
+  --color-text-faint: var(--fx-base-500);
+
+  --color-accent:       var(--hs-forest);
+  --color-accent-hover: var(--hs-moss);
+  --color-accent-deep:  var(--hs-bottle);
+  --color-accent-muted: var(--hs-racing);
+
+  --color-warm:       var(--hs-rust);
+  --color-warm-deep:  var(--hs-oxide);
+  --color-warm-light: var(--hs-ember);
+
+  --color-border:        var(--fx-base-700);
+  --color-border-subtle: var(--fx-base-850);
+
+  /* Backward-compatible aliases */
+  --color-interactive:       var(--color-accent);
+  --color-interactive-hover: var(--color-accent-hover);
 
   /* Typography — fluid clamp scales */
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Instrument Serif', serif;
 
   --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
   --text-sm: clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem);
@@ -120,13 +183,29 @@ ol {
 
 /* Light theme */
 [data-theme='light'] {
-  --color-bg: #FFFCF0;
-  --color-surface: #F2F0E5;
-  --color-text: #100F0F;
-  --color-text-muted: #6F6E69;
-  --color-border: rgba(16, 15, 15, 0.06);
-  --color-interactive: #403E3C;
-  --color-interactive-hover: #100F0F;
+  --color-bg:          var(--fx-paper);
+  --color-surface:     var(--fx-base-50);
+  --color-elevated:    #fff;
+  --color-surface-alt: var(--fx-base-100);
+
+  --color-text:       var(--fx-base-900);
+  --color-text-muted: var(--fx-base-600);
+  --color-text-faint: var(--fx-base-500);
+
+  --color-accent:       var(--hs-bottle);
+  --color-accent-hover: var(--hs-racing);
+  --color-accent-deep:  var(--hs-racing);
+  --color-accent-muted: var(--hs-forest);
+
+  --color-warm:       var(--hs-oxide);
+  --color-warm-deep:  var(--hs-saddle);
+  --color-warm-light: var(--hs-rust);
+
+  --color-border:        var(--fx-base-200);
+  --color-border-subtle: var(--fx-base-100);
+
+  --color-interactive:       var(--color-accent);
+  --color-interactive-hover: var(--color-accent-hover);
 }
 
 /* ==========================================
@@ -159,7 +238,7 @@ p {
    ========================================== */
 
 :focus-visible {
-  outline: 2px solid var(--color-interactive);
+  outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
 
