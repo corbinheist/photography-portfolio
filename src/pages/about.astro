@@ -1,14 +1,12 @@
 ---
 import PageLayout from '@layouts/PageLayout.astro';
-import Container from '@components/ui/Container.astro';
 ---
 
 <PageLayout title="About" description="About the photographer">
-  <Container narrow>
-    <section class="about-page">
-      <div class="about-header reveal">
-        <h1>About</h1>
-      </div>
+  <section class="about-page">
+    <div class="about-header reveal">
+      <h1>About</h1>
+    </div>
 
       <div class="about-body">
         <div class="about-intro reveal">
@@ -90,13 +88,12 @@ import Container from '@components/ui/Container.astro';
           </p>
         </div>
       </div>
-    </section>
-  </Container>
+  </section>
 </PageLayout>
 
 <style>
   .about-page {
-    padding: var(--space-xl) 0 var(--space-3xl);
+    padding: var(--space-xl) var(--container-padding) var(--space-3xl);
   }
 
   .about-header {
