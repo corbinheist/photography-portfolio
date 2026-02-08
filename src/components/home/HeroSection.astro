@@ -44,13 +44,13 @@ const heroData = photos.map((p) => {
     <div class="hero-overlay"></div>
   </a>
 
-  <div class="hero-content">
-    <h1 class="hero-title mask-reveal">{title}</h1>
-    <p class="hero-subtitle reveal">{subtitle}</p>
-    <a href="/work" class="hero-cta reveal">View Selected Work &rarr;</a>
+  <div class="hero-content" data-hero-content>
+    <h1 class="hero-title">{title}</h1>
+    <p class="hero-subtitle">{subtitle}</p>
+    <a href="/work" class="hero-cta">View Selected Work &rarr;</a>
   </div>
 
-  <div class="hero-scroll-indicator fade-in">
+  <div class="hero-scroll-indicator" data-hero-scroll>
     <span>Scroll</span>
     <div class="scroll-line"></div>
   </div>
@@ -92,6 +92,16 @@ const heroData = photos.map((p) => {
     if (photo.link) {
       const link = document.querySelector<HTMLAnchorElement>('[data-hero-link]');
       if (link) link.href = photo.link;
+    }
+
+    // Fade in hero content after a short delay
+    const content = document.querySelector<HTMLElement>('[data-hero-content]');
+    const scroll = document.querySelector<HTMLElement>('[data-hero-scroll]');
+    if (content) {
+      setTimeout(() => content.classList.add('visible'), 600);
+    }
+    if (scroll) {
+      setTimeout(() => scroll.classList.add('visible'), 1200);
     }
   }
 
@@ -139,6 +149,14 @@ const heroData = photos.map((p) => {
     z-index: 1;
     padding: var(--space-3xl) var(--container-padding) var(--space-2xl);
     max-width: 900px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .hero-content.visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   .hero-title {
@@ -168,6 +186,8 @@ const heroData = photos.map((p) => {
   }
 
   .hero-scroll-indicator {
+    opacity: 0;
+    transition: opacity 0.8s ease;
     position: absolute;
     bottom: var(--space-xl);
     left: 50%;
@@ -181,6 +201,10 @@ const heroData = photos.map((p) => {
     letter-spacing: 0.1em;
     text-transform: uppercase;
     z-index: 1;
+  }
+
+  .hero-scroll-indicator.visible {
+    opacity: 1;
   }
 
   .scroll-line {
