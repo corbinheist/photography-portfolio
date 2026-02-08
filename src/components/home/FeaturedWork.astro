@@ -30,6 +30,8 @@ function findCollectionForAlbum(albumId: string) {
     <div class="featured-header reveal">
       <h2>Selected Work</h2>
     </div>
+  </Container>
+  <div class="featured-grid-wrap">
     <div class="featured-grid">
       {featuredAlbums.map((album) => {
         const cover = findPhoto(album.data.coverPhoto);
@@ -55,10 +57,10 @@ function findCollectionForAlbum(albumId: string) {
         );
       })}
     </div>
-    <div class="featured-cta reveal">
-      <Button href="/work">View All Work</Button>
-    </div>
-  </Container>
+  </div>
+  <div class="featured-cta reveal">
+    <Button href="/work">View All Work</Button>
+  </div>
 </section>
 
 <style>
@@ -67,7 +69,11 @@ function findCollectionForAlbum(albumId: string) {
   }
 
   .featured-header {
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-md);
+  }
+
+  .featured-grid-wrap {
+    padding-inline: var(--container-padding);
   }
 
   .featured-grid {
@@ -91,5 +97,6 @@ function findCollectionForAlbum(albumId: string) {
   .featured-cta {
     margin-top: var(--space-xl);
     text-align: center;
+    padding-inline: var(--container-padding);
   }
 </style>

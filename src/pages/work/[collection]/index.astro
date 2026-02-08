@@ -33,56 +33,56 @@ function findPhoto(id: string) {
   description={collection.data.description}
 >
   <Container>
-    <section class="collection-page">
-      <div class="collection-header reveal">
-        <nav class="breadcrumb">
-          <a href="/work">Work</a>
-          <span>/</span>
-          <span>{collection.data.title}</span>
-        </nav>
-        <h1>{collection.data.title}</h1>
-        {collection.data.description && (
-          <p class="collection-desc">{collection.data.description}</p>
-        )}
-      </div>
-
-      <div class="albums-grid">
-        {albums
-          .filter((a: any) => !a.data.draft)
-          .map((album: any) => {
-            const cover = findPhoto(album.data.coverPhoto);
-            if (!cover) return null;
-
-            return (
-              <AlbumCard
-                href={`/work/${collection.id}/${album.id}`}
-                title={album.data.title}
-                description={album.data.description}
-                location={album.data.location}
-                date={album.data.date}
-                coverPhoto={{
-                  url: cover.data.url,
-                  width: cover.data.width,
-                  height: cover.data.height,
-                  lqip: cover.data.lqip,
-                  title: cover.data.title,
-                }}
-                photoCount={album.data.photos.length}
-              />
-            );
-          })}
-      </div>
-    </section>
+    <div class="collection-header reveal">
+      <nav class="breadcrumb">
+        <a href="/work">Work</a>
+        <span>/</span>
+        <span>{collection.data.title}</span>
+      </nav>
+      <h1>{collection.data.title}</h1>
+      {collection.data.description && (
+        <p class="collection-desc">{collection.data.description}</p>
+      )}
+    </div>
   </Container>
+  <div class="collection-grid-wrap">
+    <div class="albums-grid">
+      {albums
+        .filter((a: any) => !a.data.draft)
+        .map((album: any) => {
+          const cover = findPhoto(album.data.coverPhoto);
+          if (!cover) return null;
+
+          return (
+            <AlbumCard
+              href={`/work/${collection.id}/${album.id}`}
+              title={album.data.title}
+              description={album.data.description}
+              location={album.data.location}
+              date={album.data.date}
+              coverPhoto={{
+                url: cover.data.url,
+                width: cover.data.width,
+                height: cover.data.height,
+                lqip: cover.data.lqip,
+                title: cover.data.title,
+              }}
+              photoCount={album.data.photos.length}
+            />
+          );
+        })}
+    </div>
+  </div>
 </PageLayout>
 
 <style>
-  .collection-page {
-    padding: var(--space-xl) 0 var(--space-3xl);
+  .collection-header {
+    padding: var(--space-xl) 0 var(--space-md);
   }
 
-  .collection-header {
-    margin-bottom: var(--space-xl);
+  .collection-grid-wrap {
+    padding-inline: var(--container-padding);
+    padding-bottom: var(--space-3xl);
   }
 
   .breadcrumb {

@@ -16,51 +16,51 @@ function findPhoto(id: string) {
 
 <PageLayout title="Work" description="Photography collections">
   <Container>
-    <section class="work-page">
-      <div class="work-header reveal">
-        <h1>Work</h1>
-      </div>
-
-      <div class="collections-grid">
-        {sortedCollections.map((collection) => {
-          const cover = collection.data.coverPhoto ? findPhoto(collection.data.coverPhoto) : null;
-
-          return (
-            <a href={`/work/${collection.id}`} class="collection-card reveal" data-gallery-item>
-              {cover && (
-                <div class="collection-image">
-                  <Photo
-                    url={cover.data.url}
-                    width={cover.data.width}
-                    height={cover.data.height}
-                    lqip={cover.data.lqip}
-                    alt={collection.data.title}
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                  />
-                </div>
-              )}
-              <div class="collection-info">
-                <h2 class="collection-title">{collection.data.title}</h2>
-                {collection.data.description && (
-                  <p class="collection-desc">{collection.data.description}</p>
-                )}
-                <span class="collection-count">{collection.data.albums.length} albums</span>
-              </div>
-            </a>
-          );
-        })}
-      </div>
-    </section>
+    <div class="work-header reveal">
+      <h1>Work</h1>
+    </div>
   </Container>
+  <div class="work-grid-wrap">
+    <div class="collections-grid">
+      {sortedCollections.map((collection) => {
+        const cover = collection.data.coverPhoto ? findPhoto(collection.data.coverPhoto) : null;
+
+        return (
+          <a href={`/work/${collection.id}`} class="collection-card reveal" data-gallery-item>
+            {cover && (
+              <div class="collection-image">
+                <Photo
+                  url={cover.data.url}
+                  width={cover.data.width}
+                  height={cover.data.height}
+                  lqip={cover.data.lqip}
+                  alt={collection.data.title}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
+            )}
+            <div class="collection-info">
+              <h2 class="collection-title">{collection.data.title}</h2>
+              {collection.data.description && (
+                <p class="collection-desc">{collection.data.description}</p>
+              )}
+              <span class="collection-count">{collection.data.albums.length} albums</span>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
 </PageLayout>
 
 <style>
-  .work-page {
-    padding: var(--space-xl) 0 var(--space-3xl);
+  .work-header {
+    padding: var(--space-xl) 0 var(--space-md);
   }
 
-  .work-header {
-    margin-bottom: var(--space-xl);
+  .work-grid-wrap {
+    padding-inline: var(--container-padding);
+    padding-bottom: var(--space-3xl);
   }
 
   .collections-grid {
