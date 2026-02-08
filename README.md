@@ -239,7 +239,7 @@ server {
     listen 80;
     server_name yourdomain.com;
 
-    root /var/www/portfolio/dist;
+    root /var/www/portfolio;
     index index.html;
 
     gzip on;
