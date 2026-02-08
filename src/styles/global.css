@@ -162,7 +162,7 @@ ol {
 
   /* Layout */
   --container-max: 1440px;
-  --container-padding: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  --container-padding: clamp(1.25rem, 0.75rem + 3vw, 4rem);
 
   /* Easing */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
