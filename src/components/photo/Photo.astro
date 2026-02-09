@@ -3,7 +3,7 @@
  * Responsive photo component with AVIF/WebP srcset and LQIP blur placeholder.
  *
  * The `url` prop is the base CDN URL for the photo (without extension/width).
- * Generates srcset for widths: 640, 750, 1080, 1600, 2400 (plus native width if between breakpoints)
+ * Generates srcset for standard widths: 640, 750, 1080, 1600, 2400 (capped at native width)
  */
 import { buildWidthList } from '../../scripts/utils/photo-widths';
 

@@ -77,14 +77,8 @@ async function processImage(filename: string): Promise<ProcessedImage> {
   // Generate responsive variants
   const variants: ProcessedImage['variants'] = [];
 
-  // Build width list: standard widths that fit + native width if between breakpoints
-  const fitting = WIDTHS.filter((w) => w <= originalWidth);
-  const maxFitting = fitting.length ? Math.max(...fitting) : 0;
-  // Add native width when it's larger than the biggest standard width that fits
-  const withNative = maxFitting < originalWidth
-    ? [...fitting, originalWidth]
-    : fitting;
-  const uniqueWidths = [...new Set(withNative)].sort((a, b) => a - b);
+  // Build width list: standard widths that fit within the native width
+  const uniqueWidths = WIDTHS.filter((w) => w <= originalWidth);
 
   for (const format of FORMATS) {
     for (const targetWidth of uniqueWidths) {
