@@ -51,7 +51,13 @@ const { href, title, description, location, date, coverPhoto, photoCount } = Ast
 
   .album-card-image {
     overflow: hidden;
-    aspect-ratio: 3 / 2;
+    aspect-ratio: 3 / 4;
+  }
+
+  @media (min-width: 640px) {
+    .album-card-image {
+      aspect-ratio: 3 / 2;
+    }
   }
 
   .album-card-image :global(.photo-img) {
