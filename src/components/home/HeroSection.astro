@@ -56,14 +56,14 @@ const heroData = photos.map((p) => {
   </div>
 </section>
 
-<template data-hero-photos>{JSON.stringify(heroData)}</template>
+<script type="application/json" data-hero-photos set:html={JSON.stringify(heroData)}></script>
 
 <script>
   function initHero() {
-    const dataEl = document.querySelector<HTMLTemplateElement>('[data-hero-photos]');
+    const dataEl = document.querySelector<HTMLScriptElement>('[data-hero-photos]');
     if (!dataEl) return;
 
-    const allPhotos = JSON.parse(dataEl.innerHTML || '[]');
+    const allPhotos = JSON.parse(dataEl.textContent || '[]');
     if (!allPhotos.length) return;
 
     // Pick landscape photos for wide screens, portrait for narrow
