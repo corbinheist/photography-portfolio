@@ -28,6 +28,16 @@ import Container from '@components/ui/Container.astro';
     margin-bottom: 0;
   }
 
+  @media (min-width: 768px) {
+    .blog-header {
+      display: none;
+    }
+
+    .blog-page {
+      padding-top: var(--space-lg);
+    }
+  }
+
   .blog-subtitle {
     font-size: var(--text-lg);
     color: var(--color-text-muted);

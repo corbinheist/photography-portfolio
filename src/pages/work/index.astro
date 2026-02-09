@@ -55,6 +55,16 @@ function findPhoto(id: string) {
     padding: var(--space-xl) var(--container-padding) var(--space-md);
   }
 
+  @media (min-width: 768px) {
+    .work-header {
+      display: none;
+    }
+
+    .work-grid-wrap {
+      padding-top: var(--space-lg);
+    }
+  }
+
   .work-grid-wrap {
     padding-inline: var(--container-padding);
     padding-bottom: var(--space-3xl);

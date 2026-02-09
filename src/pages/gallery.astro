@@ -40,6 +40,16 @@ const lightboxPhotos = photos.map((p) => ({
     display: block;
   }
 
+  @media (min-width: 768px) {
+    .gallery-header {
+      display: none;
+    }
+
+    .gallery-grid-wrap {
+      padding-top: var(--space-lg);
+    }
+  }
+
   .gallery-grid-wrap {
     padding-inline: var(--container-padding);
   }
