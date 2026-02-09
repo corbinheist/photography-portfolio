@@ -6,10 +6,10 @@ import BlogCard from './BlogCard.astro';
 interface Props {
   limit?: number;
   showHeader?: boolean;
-  singleRow?: boolean;
+  responsive?: boolean;
 }
 
-const { limit = 3, showHeader = true, singleRow = false } = Astro.props;
+const { limit = 3, showHeader = true, responsive = false } = Astro.props;
 
 let posts: any[] = [];
 try {
@@ -31,7 +31,7 @@ try {
           <p class="blog-subtitle">Longer thoughts, published on Substack.</p>
         </div>
       )}
-      <div class={`blog-grid ${singleRow ? 'blog-grid--single-row' : ''}`} style={singleRow ? `--blog-col-count: ${posts.length}` : undefined}>
+      <div class={`blog-grid ${responsive ? 'blog-grid--responsive' : ''}`}>
         {posts.map((post) => (
           <BlogCard
             title={post.data.title}
@@ -80,9 +80,45 @@ try {
     }
   }
 
-  @media (min-width: 768px) {
-    .blog-grid--single-row {
-      grid-template-columns: repeat(var(--blog-col-count), 1fr);
+  /* Responsive mode: show 1→2→3→4 cards based on viewport */
+  .blog-grid--responsive {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-grid--responsive > :global(:nth-child(n+2)) {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .blog-grid--responsive {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .blog-grid--responsive > :global(:nth-child(n+2)) {
+      display: block;
+    }
+    .blog-grid--responsive > :global(:nth-child(n+3)) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .blog-grid--responsive {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .blog-grid--responsive > :global(:nth-child(n+3)) {
+      display: block;
+    }
+    .blog-grid--responsive > :global(:nth-child(n+4)) {
+      display: none;
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .blog-grid--responsive {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .blog-grid--responsive > :global(:nth-child(n+4)) {
+      display: block;
     }
   }
 </style>
