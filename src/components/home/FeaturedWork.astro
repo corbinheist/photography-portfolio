@@ -29,7 +29,7 @@ function findCollectionForAlbum(albumId: string) {
     <h2>Selected Work</h2>
   </div>
   <div class="featured-grid-wrap">
-    <div class="featured-grid">
+    <div class="featured-grid stagger-children">
       {featuredAlbums.map((album) => {
         const cover = findPhoto(album.data.coverPhoto);
         const collection = findCollectionForAlbum(album.id);

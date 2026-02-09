@@ -20,7 +20,7 @@ interface Props {
 const { href, title, description, location, date, coverPhoto, photoCount } = Astro.props;
 ---
 
-<a href={href} class="album-card reveal" data-gallery-item>
+<a href={href} class="album-card" data-gallery-item>
   <div class="album-card-image">
     <Photo
       url={coverPhoto.url}
