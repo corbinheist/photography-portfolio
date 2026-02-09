@@ -21,6 +21,7 @@ const photos = defineCollection({
         date: z.string().optional(),
       })
       .optional(),
+    featured: z.boolean().default(false),
     tags: z.array(z.string()).default([]),
     sortOrder: z.number().default(0),
   }),

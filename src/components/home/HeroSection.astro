@@ -5,6 +5,7 @@ interface HeroPhoto {
   height: number;
   lqip: string;
   link?: string;
+  featured?: boolean;
 }
 
 interface Props {
@@ -29,6 +30,7 @@ const heroData = photos.map((p) => {
     fallback: `${p.url}/${slug}-2400.webp`,
     lqip: p.lqip,
     link: p.link,
+    featured: p.featured ?? false,
     landscape: p.width >= p.height,
   };
 });
@@ -66,11 +68,13 @@ const heroData = photos.map((p) => {
     const allPhotos = JSON.parse(dataEl.textContent || '[]');
     if (!allPhotos.length) return;
 
-    // Pick landscape photos for wide screens, portrait for narrow
+    // Prefer featured photos, then match orientation, with graceful fallbacks
     const isLandscape = window.innerWidth > window.innerHeight;
-    const filtered = allPhotos.filter((p: any) => p.landscape === isLandscape);
-    const pool = filtered.length ? filtered : allPhotos;
-    const photo = pool[Math.floor(Math.random() * pool.length)];
+    const featured = allPhotos.filter((p: any) => p.featured);
+    const pool = featured.length ? featured : allPhotos;
+    const oriented = pool.filter((p: any) => p.landscape === isLandscape);
+    const final = oriented.length ? oriented : pool;
+    const photo = final[Math.floor(Math.random() * final.length)];
 
     const avifSource = document.querySelector<HTMLSourceElement>('[data-hero-avif]');
     const webpSource = document.querySelector<HTMLSourceElement>('[data-hero-webp]');
