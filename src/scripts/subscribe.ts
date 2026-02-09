@@ -1,8 +1,8 @@
-const DISMISSED_KEY = 'subscribe-banner-dismissed';
-const SUBSCRIBED_KEY = 'subscribe-subscribed';
-const DISMISS_DAYS = 30;
+export const DISMISSED_KEY = 'subscribe-banner-dismissed';
+export const SUBSCRIBED_KEY = 'subscribe-subscribed';
+export const DISMISS_DAYS = 30;
 
-function isDismissed(): boolean {
+export function isDismissed(): boolean {
   if (localStorage.getItem(SUBSCRIBED_KEY)) return true;
   const dismissed = localStorage.getItem(DISMISSED_KEY);
   if (!dismissed) return false;

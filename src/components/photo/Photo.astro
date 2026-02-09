@@ -5,6 +5,7 @@
  * The `url` prop is the base CDN URL for the photo (without extension/width).
  * Generates srcset for widths: 640, 750, 1080, 1600, 2400 (plus native width if between breakpoints)
  */
+import { buildWidthList } from '../../scripts/utils/photo-widths';
 
 interface Props {
   url: string;
@@ -30,14 +31,8 @@ const {
   lightboxIndex,
 } = Astro.props;
 
-const standardWidths = [640, 750, 1080, 1600, 2400];
 const slug = url.split('/').pop() || '';
-
-// Include native width if it falls between standard breakpoints
-const maxStandard = Math.max(...standardWidths.filter((w) => w <= width));
-const widths = width > maxStandard
-  ? standardWidths.filter((w) => w <= width)
-  : [...new Set([...standardWidths.filter((w) => w < width), width])].sort((a, b) => a - b);
+const widths = buildWidthList(width);
 
 function buildSrcset(format: 'avif' | 'webp'): string {
   return widths

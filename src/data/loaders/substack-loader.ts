@@ -87,7 +87,7 @@ interface RSSItem {
   thumbnail?: string;
 }
 
-function parseRSSItems(xml: string): RSSItem[] {
+export function parseRSSItems(xml: string): RSSItem[] {
   const items: RSSItem[] = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
   let match;
@@ -108,7 +108,7 @@ function parseRSSItems(xml: string): RSSItem[] {
   return items;
 }
 
-function extractTag(xml: string, tag: string): string {
+export function extractTag(xml: string, tag: string): string {
   const cdataRegex = new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]></${tag}>`);
   const cdataMatch = cdataRegex.exec(xml);
   if (cdataMatch) return cdataMatch[1].trim();
@@ -120,7 +120,7 @@ function extractTag(xml: string, tag: string): string {
   return '';
 }
 
-function extractEnclosureUrl(xml: string): string | undefined {
+export function extractEnclosureUrl(xml: string): string | undefined {
   const match = /url="([^"]+)"/.exec(/<enclosure[^>]*>/.exec(xml)?.[0] || '');
   return match?.[1];
 }

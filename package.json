@@ -10,7 +10,11 @@
     "process-images": "tsx scripts/process-images.ts",
     "upload-images": "tsx scripts/upload-to-spaces.ts",
     "generate-yaml": "tsx scripts/generate-photo-yaml.ts",
-    "fetch-rss": "tsx scripts/fetch-rss.ts"
+    "fetch-rss": "tsx scripts/fetch-rss.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:all": "vitest run && playwright test"
   },
   "packageManager": "pnpm@10.29.1",
   "pnpm": {
@@ -32,6 +36,9 @@
     "yaml": "^2.8.2"
   },
   "devDependencies": {
-    "@types/node": "^25.2.1"
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.2.1",
+    "happy-dom": "^20.5.3",
+    "vitest": "^4.0.18"
   }
 }

@@ -13,6 +13,12 @@ interface LightboxPhoto {
   };
 }
 
+const STANDARD_WIDTHS = [2400, 1600, 1080, 750, 640];
+
+export function selectBestWidth(nativeWidth: number): number {
+  return STANDARD_WIDTHS.find((w) => w <= nativeWidth) || 640;
+}
+
 export function initLightbox() {
   const dataEl = document.querySelector('[data-lightbox-data]');
   if (!dataEl) return;
@@ -35,9 +41,7 @@ export function initLightbox() {
     if (!photo) return;
 
     const slug = photo.url.split('/').pop() || '';
-    // Use the largest standard width that doesn't exceed the photo's native width
-    const standardWidths = [2400, 1600, 1080, 750, 640];
-    const bestWidth = standardWidths.find(w => w <= photo.width) || 640;
+    const bestWidth = selectBestWidth(photo.width);
     img!.src = `${photo.url}/${slug}-${bestWidth}.webp`;
     img!.alt = photo.title;
 
