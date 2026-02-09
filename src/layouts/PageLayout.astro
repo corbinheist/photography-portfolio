@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Header from '@components/global/Header.astro';
 import Footer from '@components/global/Footer.astro';
+import SubscribeBanner from '@components/global/SubscribeBanner.astro';
 
 interface Props {
   title: string;
@@ -20,6 +21,7 @@ const { title, description, image, type, noindex } = Astro.props;
     <slot />
   </main>
   <Footer />
+  <SubscribeBanner />
 </BaseLayout>
 
 <style>

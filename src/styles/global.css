@@ -178,6 +178,7 @@ ol {
   --z-base: 1;
   --z-header: 100;
   --z-overlay: 200;
+  --z-banner: 250;
   --z-lightbox: 300;
 }
 
@@ -270,4 +271,20 @@ p {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
+}
+
+/* ==========================================
+   Utilities
+   ========================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
