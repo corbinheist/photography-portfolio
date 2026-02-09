@@ -6,9 +6,10 @@ import BlogCard from './BlogCard.astro';
 interface Props {
   limit?: number;
   showHeader?: boolean;
+  singleRow?: boolean;
 }
 
-const { limit = 3, showHeader = true } = Astro.props;
+const { limit = 3, showHeader = true, singleRow = false } = Astro.props;
 
 let posts: any[] = [];
 try {
@@ -30,7 +31,7 @@ try {
           <p class="blog-subtitle">Longer thoughts, published on Substack.</p>
         </div>
       )}
-      <div class="blog-grid">
+      <div class={`blog-grid ${singleRow ? 'blog-grid--single-row' : ''}`} style={singleRow ? `--blog-col-count: ${posts.length}` : undefined}>
         {posts.map((post) => (
           <BlogCard
             title={post.data.title}
@@ -76,6 +77,12 @@ try {
   @media (min-width: 1024px) {
     .blog-grid {
       grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .blog-grid--single-row {
+      grid-template-columns: repeat(var(--blog-col-count), 1fr);
     }
   }
 </style>
