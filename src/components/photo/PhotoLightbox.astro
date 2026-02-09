@@ -44,8 +44,8 @@ const { photos } = Astro.props;
   <div class="lightbox-info" data-lightbox-info></div>
 </div>
 
-<!-- Pass photo data via a hidden element -->
-<template data-lightbox-data>{JSON.stringify(photos)}</template>
+<!-- Pass photo data via a hidden JSON script (avoids HTML-encoding issues with <template>) -->
+<script type="application/json" data-lightbox-data set:html={JSON.stringify(photos)}></script>
 
 <script>
   import { initLightbox } from '@scripts/lightbox';

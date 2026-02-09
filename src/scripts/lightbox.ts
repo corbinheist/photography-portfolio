@@ -14,10 +14,10 @@ interface LightboxPhoto {
 }
 
 export function initLightbox() {
-  const dataEl = document.querySelector<HTMLTemplateElement>('[data-lightbox-data]');
+  const dataEl = document.querySelector('[data-lightbox-data]');
   if (!dataEl) return;
 
-  const photos: LightboxPhoto[] = JSON.parse(dataEl.innerHTML || '[]');
+  const photos: LightboxPhoto[] = JSON.parse(dataEl.textContent || '[]');
   const lightbox = document.querySelector<HTMLElement>('[data-lightbox]');
   const img = document.querySelector<HTMLImageElement>('[data-lightbox-img]');
   const info = document.querySelector<HTMLElement>('[data-lightbox-info]');
