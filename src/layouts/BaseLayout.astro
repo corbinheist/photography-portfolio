@@ -43,6 +43,18 @@ const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').t
       noindex={noindex}
     />
 
+    <!-- Umami Analytics -->
+    <script
+      is:inline
+      defer
+      src="https://analytics.heist.studio/script.js"
+      data-website-id="WEBSITE-UUID-HERE"
+      data-domains="heist.studio"
+    ></script>
+
+    <!-- Umami Kit: time-on-page heartbeat + scroll depth -->
+    <script is:inline defer src="/scripts/umami-kit.js"></script>
+
     <ClientRouter />
 
     <!-- Inline theme script to prevent flash -->
@@ -64,6 +76,7 @@ const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').t
     <script>
       import '@scripts/theme';
       import '@scripts/animations/init';
+      import '@scripts/analytics';
     </script>
   </body>
 </html>
