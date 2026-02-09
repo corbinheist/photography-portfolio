@@ -31,7 +31,7 @@ try {
           <p class="blog-subtitle">Longer thoughts, published on Substack.</p>
         </div>
       )}
-      <div class={`blog-grid ${responsive ? 'blog-grid--responsive' : ''}`}>
+      <div class={`blog-grid stagger-children ${responsive ? 'blog-grid--responsive' : ''}`}>
         {posts.map((post) => (
           <BlogCard
             title={post.data.title}

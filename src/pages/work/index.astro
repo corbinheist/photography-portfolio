@@ -18,12 +18,12 @@ function findPhoto(id: string) {
     <h1>Work</h1>
   </div>
   <div class="work-grid-wrap">
-    <div class="collections-grid">
+    <div class="collections-grid stagger-children">
       {sortedCollections.map((collection) => {
         const cover = collection.data.coverPhoto ? findPhoto(collection.data.coverPhoto) : null;
 
         return (
-          <a href={`/work/${collection.id}`} class="collection-card reveal" data-gallery-item>
+          <a href={`/work/${collection.id}`} class="collection-card" data-gallery-item>
             {cover && (
               <div class="collection-image">
                 <Photo

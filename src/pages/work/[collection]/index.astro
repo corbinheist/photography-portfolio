@@ -43,7 +43,7 @@ function findPhoto(id: string) {
     )}
   </div>
   <div class="collection-grid-wrap">
-    <div class="albums-grid">
+    <div class="albums-grid stagger-children">
       {albums
         .filter((a: any) => !a.data.draft)
         .map((album: any) => {
