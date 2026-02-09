@@ -73,13 +73,14 @@ export function initLightbox() {
     show((currentIndex + 1) % photos.length);
   }
 
-  // Click on gallery items to open lightbox
-  const galleryItems = document.querySelectorAll<HTMLElement>('[data-gallery-item]');
-  galleryItems.forEach((item, i) => {
+  // Click on photos with lightbox index to open lightbox
+  const galleryItems = document.querySelectorAll<HTMLElement>('[data-lightbox-index]');
+  galleryItems.forEach((item) => {
+    const index = parseInt(item.getAttribute('data-lightbox-index') || '0', 10);
     item.style.cursor = 'pointer';
     item.addEventListener('click', (e) => {
       e.preventDefault();
-      show(i);
+      show(index);
     });
   });
 

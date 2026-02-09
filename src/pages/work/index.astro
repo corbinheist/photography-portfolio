@@ -23,7 +23,7 @@ function findPhoto(id: string) {
         const cover = collection.data.coverPhoto ? findPhoto(collection.data.coverPhoto) : null;
 
         return (
-          <a href={`/work/${collection.id}`} class="collection-card" data-gallery-item>
+          <a href={`/work/${collection.id}`} class="collection-card">
             {cover && (
               <div class="collection-image">
                 <Photo

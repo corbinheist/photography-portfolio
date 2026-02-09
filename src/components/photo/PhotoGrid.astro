@@ -35,7 +35,7 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
 
 {layout === 'masonry' && (
   <div class="masonry-grid" data-masonry-grid>
-    {photos.map((photo) => (
+    {photos.map((photo, i) => (
       <div class="masonry-item">
         <Photo
           url={photo.data.url}
@@ -44,6 +44,7 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
           lqip={photo.data.lqip}
           alt={photo.data.title}
           sizes={sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 25vw"}
+          lightboxIndex={i}
         />
       </div>
     ))}
@@ -52,7 +53,7 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
 
 {layout === 'grid' && (
   <div class="uniform-grid stagger-children">
-    {photos.map((photo) => (
+    {photos.map((photo, i) => (
       <div class="grid-item" style={`--aspect-padding: ${aspectPadding}%`}>
         <Photo
           url={photo.data.url}
@@ -61,6 +62,7 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
           lqip={photo.data.lqip}
           alt={photo.data.title}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          lightboxIndex={i}
         />
       </div>
     ))}
@@ -80,6 +82,7 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
             alt={photo.data.title}
             sizes="80vw"
             loading={i === 0 ? 'eager' : 'lazy'}
+            lightboxIndex={i}
           />
         </div>
       ))}

@@ -15,6 +15,7 @@ interface Props {
   sizes?: string;
   loading?: 'lazy' | 'eager';
   class?: string;
+  lightboxIndex?: number;
 }
 
 const {
@@ -26,6 +27,7 @@ const {
   sizes = '(max-width: 640px) 100vw, (max-width: 1080px) 80vw, 60vw',
   loading = 'lazy',
   class: className,
+  lightboxIndex,
 } = Astro.props;
 
 const standardWidths = [640, 750, 1080, 1600, 2400];
@@ -48,7 +50,7 @@ const webpSrcset = buildSrcset('webp');
 const fallbackSrc = `${url}/${slug}-1080.webp`;
 ---
 
-<div class:list={['photo-wrap', className]} data-gallery-item>
+<div class:list={['photo-wrap', className]} {...(lightboxIndex !== undefined ? { 'data-lightbox-index': lightboxIndex } : {})}>
   <picture>
     <source type="image/avif" srcset={avifSrcset} sizes={sizes} />
     <source type="image/webp" srcset={webpSrcset} sizes={sizes} />
