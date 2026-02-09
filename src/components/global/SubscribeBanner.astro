@@ -1,0 +1,114 @@
+---
+import SubscribeForm from './SubscribeForm.astro';
+---
+
+<aside class="subscribe-banner" aria-hidden="true" data-subscribe-banner>
+  <div class="subscribe-banner-inner">
+    <div class="subscribe-banner-content">
+      <p class="subscribe-banner-heading">Get new photo essays in your inbox</p>
+      <div class="subscribe-banner-form">
+        <SubscribeForm id="banner" />
+      </div>
+    </div>
+    <button
+      class="subscribe-banner-close"
+      aria-label="Dismiss subscribe banner"
+      data-subscribe-banner-close
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+</aside>
+
+<script>
+  import { initSubscribe } from '@scripts/subscribe';
+  document.addEventListener('astro:page-load', initSubscribe);
+</script>
+
+<style>
+  .subscribe-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--z-banner);
+    background: var(--color-elevated);
+    border-top: 1px solid var(--color-border);
+    transform: translateY(100%);
+    transition: transform var(--duration-slow) var(--ease-out-expo);
+  }
+
+  .subscribe-banner[aria-hidden='false'] {
+    transform: translateY(0);
+  }
+
+  .subscribe-banner-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-md) var(--container-padding);
+  }
+
+  .subscribe-banner-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .subscribe-banner-heading {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    white-space: nowrap;
+  }
+
+  .subscribe-banner-form {
+    flex: 1;
+    max-width: 400px;
+  }
+
+  .subscribe-banner-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: var(--space-xs);
+    border-radius: 4px;
+    transition: color var(--duration-fast) ease;
+    flex-shrink: 0;
+  }
+
+  .subscribe-banner-close:hover {
+    color: var(--color-text);
+  }
+
+  @media (max-width: 768px) {
+    .subscribe-banner-content {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-sm);
+    }
+
+    .subscribe-banner-heading {
+      white-space: normal;
+    }
+
+    .subscribe-banner-form {
+      max-width: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .subscribe-banner {
+      transition: none;
+    }
+  }
+</style>

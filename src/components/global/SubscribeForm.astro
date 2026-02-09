@@ -1,0 +1,104 @@
+---
+interface Props {
+  id: string;
+  compact?: boolean;
+}
+
+const { id, compact = false } = Astro.props;
+---
+
+<form
+  class:list={['subscribe-form', { compact }]}
+  action="https://corbinheist.substack.com/api/v1/free"
+  method="POST"
+  target={`substack-${id}`}
+  data-subscribe-form
+>
+  <input type="hidden" name="first_url" value="" />
+  <input type="hidden" name="first_referrer" value="" />
+  <input type="hidden" name="current_url" value="" />
+  <input type="hidden" name="current_referrer" value="" />
+  <input type="hidden" name="source" value="website" />
+
+  <div class="subscribe-fields">
+    <label for={`subscribe-email-${id}`} class="sr-only">Email address</label>
+    <input
+      id={`subscribe-email-${id}`}
+      type="email"
+      name="email"
+      placeholder="your@email.com"
+      required
+      autocomplete="email"
+      class="subscribe-input"
+    />
+    <button type="submit" class="subscribe-button">Subscribe</button>
+  </div>
+
+  <div class="subscribe-feedback" aria-live="polite" data-subscribe-feedback></div>
+</form>
+
+<iframe name={`substack-${id}`} style="display:none" tabindex="-1" aria-hidden="true"></iframe>
+
+<style>
+  .subscribe-form {
+    width: 100%;
+  }
+
+  .subscribe-fields {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .subscribe-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.625rem 0.875rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    color: var(--color-text);
+    font-size: var(--text-sm);
+    transition: border-color var(--duration-fast) ease;
+  }
+
+  .subscribe-input::placeholder {
+    color: var(--color-text-faint);
+  }
+
+  .subscribe-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+  }
+
+  .subscribe-button {
+    padding: 0.625rem 1.25rem;
+    background: var(--color-accent);
+    color: var(--fx-paper);
+    border: none;
+    border-radius: 4px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--duration-fast) ease;
+  }
+
+  .subscribe-button:hover {
+    background: var(--color-accent-hover);
+  }
+
+  .subscribe-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .subscribe-feedback {
+    font-size: var(--text-xs);
+    margin-top: var(--space-xs);
+    min-height: 1.25em;
+  }
+
+  .subscribe-feedback:empty {
+    display: none;
+  }
+</style>
