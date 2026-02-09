@@ -101,6 +101,12 @@ import PageLayout from '@layouts/PageLayout.astro';
     margin-bottom: var(--space-xl);
   }
 
+  @media (min-width: 768px) {
+    .about-header {
+      display: none;
+    }
+  }
+
   .about-layout {
     display: flex;
     flex-direction: column;
@@ -122,7 +128,7 @@ import PageLayout from '@layouts/PageLayout.astro';
   @media (min-width: 768px) {
     .about-portrait {
       position: sticky;
-      top: calc(65px + var(--space-xl));
+      top: calc(80px + var(--space-xl));
       width: 40%;
     }
   }
