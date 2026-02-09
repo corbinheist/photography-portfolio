@@ -1,4 +1,5 @@
 ---
+import { execSync } from 'node:child_process';
 import { ClientRouter } from 'astro:transitions';
 import SEO from '@components/global/SEO.astro';
 import '@styles/fonts.css';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 const { title, description, image, type, noindex } = Astro.props;
+const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').toString().trim(); } catch { return 'unknown'; } })();
 ---
 
 <!doctype html>
@@ -23,6 +25,7 @@ const { title, description, image, type, noindex } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="build-id" content={buildHash} />
 
     <!-- Google Fonts: Instrument Serif + IBM Plex Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
