@@ -46,36 +46,38 @@ const currentPath = Astro.url.pathname;
       </button>
     </div>
   </div>
-
-  <!-- Mobile menu -->
-  <div class="mobile-menu" data-mobile-menu aria-hidden="true">
-    <nav aria-label="Mobile navigation">
-      <ul class="mobile-nav-list">
-        {navLinks.map(({ href, label }) => (
-          <li>
-            <a
-              href={href}
-              class:list={['mobile-nav-link', { active: currentPath.startsWith(href) }]}
-            >
-              {label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  </div>
 </header>
+
+<!-- Mobile menu (outside header to avoid backdrop-filter inheritance) -->
+<div class="mobile-menu" data-mobile-menu aria-hidden="true">
+  <nav aria-label="Mobile navigation">
+    <ul class="mobile-nav-list">
+      {navLinks.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={['mobile-nav-link', { active: currentPath.startsWith(href) }]}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</div>
 
 <script>
   function initMobileMenu() {
     const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
     const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
-    if (!toggle || !menu) return;
+    const header = document.querySelector<HTMLElement>('.header');
+    if (!toggle || !menu || !header) return;
 
     toggle.addEventListener('click', () => {
       const isOpen = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!isOpen));
       menu.setAttribute('aria-hidden', String(isOpen));
+      header.classList.toggle('menu-open', !isOpen);
       document.body.style.overflow = isOpen ? '' : 'hidden';
     });
   }
@@ -184,42 +186,59 @@ const currentPath = Astro.url.pathname;
     transform: translateY(-3.25px) rotate(-45deg);
   }
 
-  /* Mobile menu */
-  .mobile-menu {
-    display: none;
+  /* Header opaque when mobile menu is open */
+  .header.menu-open {
+    background: var(--color-bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* Mobile menu (outside header, needs :global) */
+  :global(.mobile-menu) {
     position: fixed;
     inset: 0;
     top: 72px;
     background: var(--color-bg);
     padding: var(--space-xl) var(--container-padding);
     z-index: calc(var(--z-header) - 1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity var(--duration-normal) ease,
+                transform var(--duration-normal) var(--ease-out-quart),
+                visibility 0s linear var(--duration-normal);
   }
 
-  .mobile-menu[aria-hidden='false'] {
-    display: block;
+  :global(.mobile-menu[aria-hidden='false']) {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity var(--duration-normal) ease,
+                transform var(--duration-normal) var(--ease-out-quart),
+                visibility 0s;
   }
 
   @media (min-width: 768px) {
-    .mobile-menu {
+    :global(.mobile-menu) {
       display: none !important;
     }
   }
 
-  .mobile-nav-list {
+  :global(.mobile-nav-list) {
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
   }
 
-  .mobile-nav-link {
+  :global(.mobile-nav-link) {
     font-size: var(--text-2xl);
     font-weight: 300;
     color: var(--color-text-muted);
     transition: color var(--duration-fast) ease;
   }
 
-  .mobile-nav-link:hover,
-  .mobile-nav-link.active {
+  :global(.mobile-nav-link:hover),
+  :global(.mobile-nav-link.active) {
     color: var(--color-accent);
   }
 </style>
