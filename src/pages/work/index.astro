@@ -41,7 +41,7 @@ function findPhoto(id: string) {
               {collection.data.description && (
                 <p class="collection-desc">{collection.data.description}</p>
               )}
-              <span class="collection-count">{collection.data.albums.length} albums</span>
+              <span class="collection-count">{collection.data.albums.length} albums <span class="collection-arrow">&rarr;</span></span>
             </div>
           </a>
         );
@@ -91,6 +91,7 @@ function findPhoto(id: string) {
   .collection-image {
     overflow: hidden;
     aspect-ratio: 16 / 9;
+    border-radius: 4px;
   }
 
   .collection-image :global(.photo-img) {
@@ -111,6 +112,11 @@ function findPhoto(id: string) {
   .collection-title {
     font-size: var(--text-xl);
     font-weight: 400;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .collection-card:hover .collection-title {
+    color: var(--color-accent);
   }
 
   .collection-desc {
@@ -124,5 +130,17 @@ function findPhoto(id: string) {
     color: var(--color-warm);
     margin-top: var(--space-xs);
     display: block;
+  }
+
+  .collection-arrow {
+    display: inline-block;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity var(--duration-fast) ease, transform var(--duration-fast) ease;
+  }
+
+  .collection-card:hover .collection-arrow {
+    opacity: 1;
+    transform: translateX(0);
   }
 </style>

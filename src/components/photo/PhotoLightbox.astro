@@ -129,6 +129,22 @@ const { photos } = Astro.props;
     max-width: 100%;
     max-height: 85vh;
     object-fit: contain;
+    transition: opacity 150ms ease, transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .lightbox-img:global(.is-entering) {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  .lightbox-img:global(.is-transitioning) {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox-img {
+      transition: none;
+    }
   }
 
   .lightbox-info {
@@ -142,11 +158,14 @@ const { photos } = Astro.props;
 
   .lightbox-info :global(.lightbox-title) {
     font-size: var(--text-base);
-    margin-bottom: var(--space-xs);
+    font-weight: 500;
+    margin-bottom: var(--space-sm);
   }
 
   .lightbox-info :global(.lightbox-exif) {
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
+    letter-spacing: 0.02em;
     opacity: 0.6;
   }
 

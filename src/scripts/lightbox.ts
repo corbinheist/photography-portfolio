@@ -35,16 +35,9 @@ export function initLightbox() {
 
   let currentIndex = 0;
 
-  function show(index: number) {
-    currentIndex = index;
-    const photo = photos[index];
-    if (!photo) return;
+  let isOpen = false;
 
-    const slug = photo.url.split('/').pop() || '';
-    const bestWidth = selectBestWidth(photo.width);
-    img!.src = `${photo.url}/${slug}-${bestWidth}.webp`;
-    img!.alt = photo.title;
-
+  function updateInfo(photo: LightboxPhoto, index: number) {
     const exifParts: string[] = [];
     if (photo.exif?.camera) exifParts.push(photo.exif.camera);
     if (photo.exif?.lens) exifParts.push(photo.exif.lens);
@@ -58,14 +51,55 @@ export function initLightbox() {
       ${exifParts.length ? `<p class="lightbox-exif">${exifParts.join(' &middot; ')}</p>` : ''}
       <p class="lightbox-counter">${index + 1} / ${photos.length}</p>
     `;
+  }
 
-    lightbox!.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+  function show(index: number) {
+    const wasOpen = isOpen;
+    currentIndex = index;
+    const photo = photos[index];
+    if (!photo) return;
+
+    const slug = photo.url.split('/').pop() || '';
+    const bestWidth = selectBestWidth(photo.width);
+    const newSrc = `${photo.url}/${slug}-${bestWidth}.webp`;
+
+    if (!wasOpen) {
+      // Opening: scale-up entrance
+      img!.src = newSrc;
+      img!.alt = photo.title;
+      img!.classList.add('is-entering');
+      updateInfo(photo, index);
+      lightbox!.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      isOpen = true;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          img!.classList.remove('is-entering');
+        });
+      });
+    } else {
+      // Navigating: crossfade
+      img!.classList.add('is-transitioning');
+      updateInfo(photo, index);
+      setTimeout(() => {
+        img!.src = newSrc;
+        img!.alt = photo.title;
+        const onLoad = () => {
+          img!.classList.remove('is-transitioning');
+        };
+        if (img!.complete) {
+          onLoad();
+        } else {
+          img!.addEventListener('load', onLoad, { once: true });
+        }
+      }, 150);
+    }
   }
 
   function close() {
     lightbox!.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    isOpen = false;
   }
 
   function prev() {
@@ -80,7 +114,7 @@ export function initLightbox() {
   const galleryItems = document.querySelectorAll<HTMLElement>('[data-lightbox-index]');
   galleryItems.forEach((item) => {
     const index = parseInt(item.getAttribute('data-lightbox-index') || '0', 10);
-    item.style.cursor = 'pointer';
+    item.style.cursor = 'zoom-in';
     item.addEventListener('click', (e) => {
       e.preventDefault();
       show(index);

@@ -20,7 +20,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
 <a href={link} class="blog-card" target="_blank" rel="noopener noreferrer">
   {thumbnail && (
     <div class="blog-card-image">
-      <img src={thumbnail} alt="" loading="lazy" decoding="async" />
+      <img src={thumbnail} alt="" loading="lazy" decoding="async" width="800" height="450" />
     </div>
   )}
   <div class="blog-card-content">
@@ -37,6 +37,8 @@ const formattedDate = date.toLocaleDateString('en-US', {
     text-decoration: none;
     color: inherit;
     border: 1px solid var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
     transition: border-color var(--duration-fast) ease;
   }
 
@@ -46,7 +48,6 @@ const formattedDate = date.toLocaleDateString('en-US', {
 
   .blog-card-image {
     aspect-ratio: 16 / 9;
-    overflow: hidden;
   }
 
   .blog-card-image img {
