@@ -21,12 +21,7 @@ const lightboxPhotos = photos.map((p) => ({
 ---
 
 <section class="featured-gallery">
-  <div class="featured-header reveal">
-    <h2>Gallery</h2>
-  </div>
-  <div class="featured-grid-wrap">
-    <PhotoGrid photos={photos} layout="masonry" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, (max-width: 1920px) 25vw, 20vw" />
-  </div>
+  <PhotoGrid photos={photos} layout="masonry" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, (max-width: 1920px) 25vw, 20vw" />
   <div class="featured-cta reveal">
     <Button href="/gallery">View Full Gallery</Button>
   </div>
@@ -35,20 +30,20 @@ const lightboxPhotos = photos.map((p) => ({
 
 <style>
   .featured-gallery {
-    padding: var(--space-3xl) 0;
+    padding-bottom: var(--space-3xl);
   }
 
-  .featured-header {
-    padding-inline: var(--container-padding);
-    margin-bottom: var(--space-md);
+  .featured-gallery :global(.masonry-grid) {
+    padding: 0;
+    column-gap: 0;
   }
 
-  .featured-grid-wrap {
-    padding-inline: var(--container-padding);
+  .featured-gallery :global(.masonry-item) {
+    margin-bottom: 0;
   }
 
   @media (min-width: 1920px) {
-    .featured-grid-wrap :global(.masonry-grid) {
+    .featured-gallery :global(.masonry-grid) {
       columns: 5;
     }
   }
