@@ -248,7 +248,7 @@ const currentPath = Astro.url.pathname;
     overflow-y: auto;
     overscroll-behavior: contain;
 
-    clip-path: inset(0 0 0 100%);
+    clip-path: inset(0 100% 0 0);
     transition: clip-path 550ms var(--ease-out-expo);
   }
 
@@ -268,7 +268,7 @@ const currentPath = Astro.url.pathname;
   /* Nav sections — staggered entrance */
   .nav-section {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(-30px);
     transition:
       opacity 400ms var(--ease-out-expo),
       transform 400ms var(--ease-out-expo);
