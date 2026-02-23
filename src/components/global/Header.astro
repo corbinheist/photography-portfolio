@@ -249,10 +249,12 @@ const currentPath = Astro.url.pathname;
     position: fixed;
     inset: 0;
     z-index: var(--z-overlay);
+    --overlay-opacity-start: 88%;
+    --overlay-opacity-end: 72%;
     background: linear-gradient(
       to right,
-      color-mix(in srgb, var(--color-bg) 92%, transparent),
-      color-mix(in srgb, var(--color-bg) 80%, transparent)
+      color-mix(in srgb, var(--color-bg) var(--overlay-opacity-start), transparent),
+      color-mix(in srgb, var(--color-bg) var(--overlay-opacity-end), transparent)
     );
     backdrop-filter: blur(16px) saturate(1.2);
     -webkit-backdrop-filter: blur(16px) saturate(1.2);
@@ -268,6 +270,11 @@ const currentPath = Astro.url.pathname;
 
   .nav-overlay[aria-hidden='false'] {
     clip-path: inset(0);
+  }
+
+  :global([data-theme='light']) .nav-overlay {
+    --overlay-opacity-start: 82%;
+    --overlay-opacity-end: 65%;
   }
 
   .nav-overlay-inner {
