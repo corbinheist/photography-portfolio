@@ -13,27 +13,7 @@ const currentPath = Astro.url.pathname;
 
 <header class="header">
   <div class="header-inner">
-    <a href="/" class="logo" aria-label="Home">
-      Corbin Heist
-    </a>
-
-    <nav class="nav" aria-label="Main navigation">
-      <ul class="nav-list">
-        {navLinks.map(({ href, label }) => (
-          <li>
-            <a
-              href={href}
-              class:list={['nav-link', { active: currentPath.startsWith(href) }]}
-            >
-              {label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-
-    <div class="header-actions">
-      <ThemeToggle />
+    <div class="header-left">
       <button
         class="menu-toggle"
         type="button"
@@ -45,42 +25,87 @@ const currentPath = Astro.url.pathname;
         <span class="menu-bar"></span>
       </button>
     </div>
+
+    <a href="/" class="logo" aria-label="Home">
+      Corbin Heist
+    </a>
+
+    <div class="header-right">
+      <ThemeToggle />
+    </div>
   </div>
 
-  <!-- Mobile menu -->
-  <div class="mobile-menu" data-mobile-menu aria-hidden="true">
-    <nav aria-label="Mobile navigation">
-      <ul class="mobile-nav-list">
-        {navLinks.map(({ href, label }) => (
-          <li>
-            <a
-              href={href}
-              class:list={['mobile-nav-link', { active: currentPath.startsWith(href) }]}
-            >
-              {label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  </div>
+  <!-- Nav menu (slide-out panel) -->
+  <div class="nav-backdrop" data-nav-backdrop aria-hidden="true"></div>
+  <nav class="nav-menu" data-nav-menu aria-hidden="true" aria-label="Main navigation">
+    <ul class="nav-list">
+      {navLinks.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class:list={['nav-link', { active: currentPath.startsWith(href) }]}
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
 </header>
 
 <script>
-  function initMobileMenu() {
+  function initNavMenu() {
     const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-    const menu = document.querySelector<HTMLElement>('[data-mobile-menu]');
-    if (!toggle || !menu) return;
+    const menu = document.querySelector<HTMLElement>('[data-nav-menu]');
+    const backdrop = document.querySelector<HTMLElement>('[data-nav-backdrop]');
+    if (!toggle || !menu || !backdrop) return;
+
+    function openMenu() {
+      toggle!.setAttribute('aria-expanded', 'true');
+      menu!.setAttribute('aria-hidden', 'false');
+      backdrop!.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      toggle!.setAttribute('aria-expanded', 'false');
+      menu!.setAttribute('aria-hidden', 'true');
+      backdrop!.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function isOpen() {
+      return toggle!.getAttribute('aria-expanded') === 'true';
+    }
 
     toggle.addEventListener('click', () => {
-      const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!isOpen));
-      menu.setAttribute('aria-hidden', String(isOpen));
-      document.body.style.overflow = isOpen ? '' : 'hidden';
+      isOpen() ? closeMenu() : openMenu();
+    });
+
+    backdrop.addEventListener('click', closeMenu);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen()) closeMenu();
+    });
+
+    // Close on nav link click (SPA navigation)
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', closeMenu);
     });
   }
 
-  document.addEventListener('astro:page-load', initMobileMenu);
+  // Handle Astro page transitions
+  document.addEventListener('astro:before-preparation', () => {
+    const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+    if (toggle?.getAttribute('aria-expanded') === 'true') {
+      toggle.setAttribute('aria-expanded', 'false');
+      document.querySelector<HTMLElement>('[data-nav-menu]')?.setAttribute('aria-hidden', 'true');
+      document.querySelector<HTMLElement>('[data-nav-backdrop]')?.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+  });
+
+  document.addEventListener('astro:page-load', initNavMenu);
 </script>
 
 <style>
@@ -107,6 +132,17 @@ const currentPath = Astro.url.pathname;
     padding: var(--space-md) var(--container-padding);
   }
 
+  .header-left,
+  .header-right {
+    display: flex;
+    align-items: center;
+    min-width: 40px;
+  }
+
+  .header-right {
+    justify-content: flex-end;
+  }
+
   .logo {
     font-family: var(--font-heading);
     font-size: var(--text-xl);
@@ -115,38 +151,7 @@ const currentPath = Astro.url.pathname;
     text-transform: none;
   }
 
-  .nav {
-    display: none;
-  }
-
-  @media (min-width: 768px) {
-    .nav {
-      display: block;
-    }
-  }
-
-  .nav-list {
-    display: flex;
-    gap: var(--space-lg);
-  }
-
-  .nav-link {
-    font-size: var(--text-base);
-    color: var(--color-text-muted);
-    transition: color var(--duration-fast) ease;
-  }
-
-  .nav-link:hover,
-  .nav-link.active {
-    color: var(--color-accent);
-  }
-
-  .header-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
-  }
-
+  /* Hamburger button */
   .menu-toggle {
     display: flex;
     flex-direction: column;
@@ -160,12 +165,6 @@ const currentPath = Astro.url.pathname;
     border-radius: 50%;
     cursor: pointer;
     padding: 0;
-  }
-
-  @media (min-width: 768px) {
-    .menu-toggle {
-      display: none;
-    }
   }
 
   .menu-bar {
@@ -184,42 +183,58 @@ const currentPath = Astro.url.pathname;
     transform: translateY(-3.25px) rotate(-45deg);
   }
 
-  /* Mobile menu */
-  .mobile-menu {
-    display: none;
+  /* Backdrop overlay */
+  .nav-backdrop {
     position: fixed;
     inset: 0;
     top: 72px;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: calc(var(--z-header) - 2);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--duration-normal) ease, visibility var(--duration-normal) ease;
+  }
+
+  .nav-backdrop[aria-hidden='false'] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Slide-out nav panel */
+  .nav-menu {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    bottom: 0;
+    width: min(320px, 80vw);
     background: var(--color-bg);
-    padding: var(--space-xl) var(--container-padding);
+    border-right: 1px solid var(--color-border);
+    padding: var(--space-xl) var(--space-xl);
     z-index: calc(var(--z-header) - 1);
+    transform: translateX(-100%);
+    transition: transform var(--duration-normal) var(--ease-out-quart);
+    overflow-y: auto;
   }
 
-  .mobile-menu[aria-hidden='false'] {
-    display: block;
+  .nav-menu[aria-hidden='false'] {
+    transform: translateX(0);
   }
 
-  @media (min-width: 768px) {
-    .mobile-menu {
-      display: none !important;
-    }
-  }
-
-  .mobile-nav-list {
+  .nav-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
   }
 
-  .mobile-nav-link {
+  .nav-link {
     font-size: var(--text-2xl);
     font-weight: 300;
     color: var(--color-text-muted);
     transition: color var(--duration-fast) ease;
   }
 
-  .mobile-nav-link:hover,
-  .mobile-nav-link.active {
+  .nav-link:hover,
+  .nav-link.active {
     color: var(--color-accent);
   }
 </style>
