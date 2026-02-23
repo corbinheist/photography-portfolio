@@ -145,6 +145,13 @@ const currentPath = Astro.url.pathname;
     overlay.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', closeMenu);
     });
+
+    // Close when clicking the overlay background (not nav content)
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay || e.target === overlay.querySelector('.nav-overlay-inner')) {
+        closeMenu();
+      }
+    });
   }
 
   // Handle Astro page transitions
@@ -247,6 +254,7 @@ const currentPath = Astro.url.pathname;
     align-items: center;
     overflow-y: auto;
     overscroll-behavior: contain;
+    cursor: pointer;
 
     clip-path: inset(0 100% 0 0);
     transition: clip-path 550ms var(--ease-out-expo);
@@ -263,6 +271,7 @@ const currentPath = Astro.url.pathname;
     display: flex;
     flex-direction: column;
     gap: var(--space-lg);
+    cursor: default;
   }
 
   /* Nav sections — staggered entrance */
