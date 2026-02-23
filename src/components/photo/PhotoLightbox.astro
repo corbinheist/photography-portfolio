@@ -167,6 +167,7 @@ const { photos } = Astro.props;
     min-height: 3.5rem;
     display: flex;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
   }
 
@@ -176,6 +177,7 @@ const { photos } = Astro.props;
     font-style: italic;
     font-weight: 400;
     margin-bottom: var(--space-xs);
+    max-width: none;
   }
 
   .lightbox-info :global(.lightbox-exif) {
@@ -184,6 +186,7 @@ const { photos } = Astro.props;
     letter-spacing: 0.02em;
     opacity: 0.5;
     margin-bottom: var(--space-xs);
+    max-width: none;
   }
 
   .lightbox-info :global(.lightbox-exif-sep) {
@@ -194,5 +197,6 @@ const { photos } = Astro.props;
   .lightbox-info :global(.lightbox-counter) {
     font-size: var(--text-xs);
     opacity: 0.3;
+    max-width: none;
   }
 </style>
