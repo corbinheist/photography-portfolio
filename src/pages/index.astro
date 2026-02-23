@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import HeroSection from '@components/home/HeroSection.astro';
-import FeaturedWork from '@components/home/FeaturedWork.astro';
+import FeaturedGallery from '@components/home/FeaturedGallery.astro';
 import AboutTeaser from '@components/home/AboutTeaser.astro';
 import BlogSection from '@components/blog/BlogSection.astro';
 
@@ -31,7 +31,7 @@ const heroPhotos = photos.map((p) => ({
 
 <PageLayout title="Corbin Heist">
   <HeroSection photos={heroPhotos} />
-  <FeaturedWork />
+  <FeaturedGallery />
   <AboutTeaser />
   <BlogSection limit={4} responsive />
 </PageLayout>

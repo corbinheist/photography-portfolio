@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import PhotoGrid from '@components/photo/PhotoGrid.astro';
+import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
+import Button from '@components/ui/Button.astro';
+
+const allPhotos = (await getCollection('photos')).sort(
+  (a, b) => a.data.sortOrder - b.data.sortOrder,
+);
+
+const featured = allPhotos.filter((p) => p.data.featured);
+const photos = (featured.length > 0 ? featured : allPhotos).slice(0, 50);
+
+const lightboxPhotos = photos.map((p) => ({
+  url: p.data.url,
+  width: p.data.width,
+  height: p.data.height,
+  title: p.data.title,
+  exif: p.data.exif,
+}));
+---
+
+<section class="featured-gallery">
+  <div class="featured-header reveal">
+    <h2>Gallery</h2>
+  </div>
+  <div class="featured-grid-wrap">
+    <PhotoGrid photos={photos} layout="masonry" sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, (max-width: 1920px) 25vw, 20vw" />
+  </div>
+  <div class="featured-cta reveal">
+    <Button href="/gallery">View Full Gallery</Button>
+  </div>
+  <PhotoLightbox photos={lightboxPhotos} />
+</section>
+
+<style>
+  .featured-gallery {
+    padding: var(--space-3xl) 0;
+  }
+
+  .featured-header {
+    padding-inline: var(--container-padding);
+    margin-bottom: var(--space-md);
+  }
+
+  .featured-grid-wrap {
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 1920px) {
+    .featured-grid-wrap :global(.masonry-grid) {
+      columns: 5;
+    }
+  }
+
+  .featured-cta {
+    margin-top: var(--space-xl);
+    text-align: center;
+    padding-inline: var(--container-padding);
+  }
+</style>
