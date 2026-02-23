@@ -1,13 +1,9 @@
 ---
+import { getCollection } from 'astro:content';
 import ThemeToggle from './ThemeToggle.astro';
 
-const navLinks = [
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/work', label: 'Work' },
-  { href: '/blog', label: 'Notes' },
-  { href: '/about', label: 'About' },
-];
-
+const collections = (await getCollection('photoCollections'))
+  .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
 const currentPath = Astro.url.pathname;
 ---
 
@@ -34,44 +30,80 @@ const currentPath = Astro.url.pathname;
       <ThemeToggle />
     </div>
   </div>
-
-  <!-- Nav menu (slide-out panel) -->
-  <div class="nav-backdrop" data-nav-backdrop aria-hidden="true"></div>
-  <nav class="nav-menu" data-nav-menu aria-hidden="true" aria-label="Main navigation">
-    <ul class="nav-list">
-      {navLinks.map(({ href, label }) => (
-        <li>
-          <a
-            href={href}
-            class:list={['nav-link', { active: currentPath.startsWith(href) }]}
-          >
-            {label}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </nav>
 </header>
 
+<nav class="nav-overlay" data-nav-overlay aria-hidden="true" aria-label="Main navigation">
+  <div class="nav-overlay-inner">
+    <div class="nav-section" style="--i:0">
+      <a
+        href="/gallery"
+        class:list={['nav-heading', { active: currentPath.startsWith('/gallery') }]}
+      >Gallery</a>
+      <span class="nav-subtitle">All Photos</span>
+    </div>
+
+    <div class="nav-section" style="--i:1">
+      <a
+        href="/work"
+        class:list={['nav-heading', { active: currentPath === '/work' || currentPath === '/work/' }]}
+      >Work</a>
+      <ul class="nav-sublinks">
+        {collections.map((c) => (
+          <li>
+            <a
+              href={`/work/${c.id}`}
+              class:list={['nav-sublink', { active: currentPath.startsWith(`/work/${c.id}`) }]}
+            >{c.data.title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="nav-section" style="--i:2">
+      <a
+        href="/blog"
+        class:list={['nav-heading', { active: currentPath.startsWith('/blog') }]}
+      >Notes</a>
+      <span class="nav-subtitle">Writing & Reflections</span>
+    </div>
+
+    <div class="nav-section" style="--i:3">
+      <a
+        href="/about"
+        class:list={['nav-heading', { active: currentPath.startsWith('/about') }]}
+      >About</a>
+      <span class="nav-subtitle">The Photographer</span>
+    </div>
+  </div>
+</nav>
+
 <script>
-  function initNavMenu() {
+  function initNavOverlay() {
     const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
-    const menu = document.querySelector<HTMLElement>('[data-nav-menu]');
-    const backdrop = document.querySelector<HTMLElement>('[data-nav-backdrop]');
-    if (!toggle || !menu || !backdrop) return;
+    const overlay = document.querySelector<HTMLElement>('[data-nav-overlay]');
+    if (!toggle || !overlay) return;
+
+    const focusableSelector = 'a[href], button:not([disabled])';
 
     function openMenu() {
       toggle!.setAttribute('aria-expanded', 'true');
-      menu!.setAttribute('aria-hidden', 'false');
-      backdrop!.setAttribute('aria-hidden', 'false');
+      overlay!.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+
+      // Focus first link after wipe animation completes
+      overlay!.addEventListener('transitionend', function onWipe(e) {
+        if (e.propertyName !== 'clip-path') return;
+        overlay!.removeEventListener('transitionend', onWipe);
+        const firstLink = overlay!.querySelector<HTMLElement>(focusableSelector);
+        firstLink?.focus();
+      });
     }
 
     function closeMenu() {
       toggle!.setAttribute('aria-expanded', 'false');
-      menu!.setAttribute('aria-hidden', 'true');
-      backdrop!.setAttribute('aria-hidden', 'true');
+      overlay!.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
+      toggle!.focus();
     }
 
     function isOpen() {
@@ -82,14 +114,35 @@ const currentPath = Astro.url.pathname;
       isOpen() ? closeMenu() : openMenu();
     });
 
-    backdrop.addEventListener('click', closeMenu);
-
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen()) closeMenu();
+      if (!isOpen()) return;
+
+      if (e.key === 'Escape') {
+        closeMenu();
+        return;
+      }
+
+      // Focus trap
+      if (e.key === 'Tab') {
+        const focusable = [
+          toggle!,
+          ...Array.from(overlay!.querySelectorAll<HTMLElement>(focusableSelector)),
+        ];
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     });
 
-    // Close on nav link click (SPA navigation)
-    menu.querySelectorAll('a').forEach((link) => {
+    // Close on nav link click
+    overlay.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', closeMenu);
     });
   }
@@ -99,13 +152,12 @@ const currentPath = Astro.url.pathname;
     const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
     if (toggle?.getAttribute('aria-expanded') === 'true') {
       toggle.setAttribute('aria-expanded', 'false');
-      document.querySelector<HTMLElement>('[data-nav-menu]')?.setAttribute('aria-hidden', 'true');
-      document.querySelector<HTMLElement>('[data-nav-backdrop]')?.setAttribute('aria-hidden', 'true');
+      document.querySelector<HTMLElement>('[data-nav-overlay]')?.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
     }
   });
 
-  document.addEventListener('astro:page-load', initNavMenu);
+  document.addEventListener('astro:page-load', initNavOverlay);
 </script>
 
 <style>
@@ -165,6 +217,8 @@ const currentPath = Astro.url.pathname;
     border-radius: 50%;
     cursor: pointer;
     padding: 0;
+    z-index: calc(var(--z-overlay) + 1);
+    position: relative;
   }
 
   .menu-bar {
@@ -183,58 +237,112 @@ const currentPath = Astro.url.pathname;
     transform: translateY(-3.25px) rotate(-45deg);
   }
 
-  /* Backdrop overlay */
-  .nav-backdrop {
+  /* Full-screen overlay */
+  .nav-overlay {
     position: fixed;
     inset: 0;
-    top: 72px;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: calc(var(--z-header) - 2);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--duration-normal) ease, visibility var(--duration-normal) ease;
-  }
-
-  .nav-backdrop[aria-hidden='false'] {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  /* Slide-out nav panel */
-  .nav-menu {
-    position: fixed;
-    top: 72px;
-    left: 0;
-    bottom: 0;
-    width: min(280px, 75vw);
+    z-index: var(--z-overlay);
     background: var(--color-bg);
-    border-right: 1px solid var(--color-border);
-    padding: var(--space-lg) var(--space-lg);
-    z-index: calc(var(--z-header) - 1);
-    transform: translateX(-100%);
-    transition: transform var(--duration-normal) var(--ease-out-quart);
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+
+    clip-path: inset(0 0 0 100%);
+    transition: clip-path 550ms var(--ease-out-expo);
   }
 
-  .nav-menu[aria-hidden='false'] {
+  .nav-overlay[aria-hidden='false'] {
+    clip-path: inset(0);
+  }
+
+  .nav-overlay-inner {
+    width: 100%;
+    max-width: 720px;
+    padding: calc(80px + var(--space-xl)) var(--container-padding) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  /* Nav sections — staggered entrance */
+  .nav-section {
+    opacity: 0;
+    transform: translateX(30px);
+    transition:
+      opacity 400ms var(--ease-out-expo),
+      transform 400ms var(--ease-out-expo);
+    transition-delay: calc(150ms + var(--i, 0) * 70ms);
+  }
+
+  .nav-overlay[aria-hidden='false'] .nav-section {
+    opacity: 1;
     transform: translateX(0);
   }
 
-  .nav-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+  /* On close: no stagger, everything disappears together */
+  .nav-overlay[aria-hidden='true'] .nav-section {
+    transition-delay: 0ms;
+    transition-duration: 200ms;
   }
 
-  .nav-link {
-    font-size: var(--text-lg);
+  .nav-heading {
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
     font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    transition: color var(--duration-fast) ease;
+    display: inline-block;
+  }
+
+  .nav-heading:hover {
+    color: var(--color-accent);
+  }
+
+  .nav-heading.active {
+    color: var(--color-accent);
+  }
+
+  .nav-subtitle {
+    display: block;
+    font-size: var(--text-base);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+  }
+
+  .nav-sublinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-md);
+    margin-top: var(--space-xs);
+  }
+
+  .nav-sublink {
+    font-size: var(--text-lg);
     color: var(--color-text-muted);
     transition: color var(--duration-fast) ease;
   }
 
-  .nav-link:hover,
-  .nav-link.active {
+  .nav-sublink:hover {
     color: var(--color-accent);
+  }
+
+  .nav-sublink.active {
+    color: var(--color-accent);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .nav-overlay {
+      transition: none;
+    }
+
+    .nav-section {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 </style>
