@@ -141,6 +141,7 @@ ol {
   /* Typography — fluid clamp scales */
   --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-heading: 'Instrument Serif', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
 
   --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
   --text-sm: clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem);

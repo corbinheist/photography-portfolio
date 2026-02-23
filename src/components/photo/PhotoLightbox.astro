@@ -26,20 +26,22 @@ interface Props {
 const { photos } = Astro.props;
 ---
 
-<div class="lightbox" data-lightbox aria-hidden="true" role="dialog" aria-label="Photo viewer">
+<div class="lightbox" data-lightbox aria-hidden="true" aria-modal="true" role="dialog" aria-label="Photo viewer">
   <button class="lightbox-close" data-lightbox-close aria-label="Close viewer">&times;</button>
 
-  <button class="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="Previous photo">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-  </button>
+  <div class="lightbox-stage">
+    <button class="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="Previous photo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
 
-  <div class="lightbox-image-wrap">
-    <img class="lightbox-img" data-lightbox-img src="" alt="" />
+    <div class="lightbox-image-wrap">
+      <img class="lightbox-img" data-lightbox-img src="" alt="" />
+    </div>
+
+    <button class="lightbox-nav lightbox-next" data-lightbox-next aria-label="Next photo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
   </div>
-
-  <button class="lightbox-nav lightbox-next" data-lightbox-next aria-label="Next photo">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-  </button>
 
   <div class="lightbox-info" data-lightbox-info></div>
 </div>
@@ -60,8 +62,7 @@ const { photos } = Astro.props;
     z-index: var(--z-lightbox);
     background: rgba(0, 0, 0, 0.95);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--duration-normal) ease;
@@ -89,6 +90,16 @@ const { photos } = Astro.props;
 
   .lightbox-close:hover {
     opacity: 1;
+  }
+
+  .lightbox-stage {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    padding: var(--space-md);
   }
 
   .lightbox-nav {
@@ -119,7 +130,7 @@ const { photos } = Astro.props;
 
   .lightbox-image-wrap {
     max-width: 90vw;
-    max-height: 85vh;
+    max-height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -127,32 +138,61 @@ const { photos } = Astro.props;
 
   .lightbox-img {
     max-width: 100%;
-    max-height: 85vh;
+    max-height: 100%;
     object-fit: contain;
+    transition: opacity 150ms ease, transform var(--duration-normal) var(--ease-out-expo);
+  }
+
+  .lightbox-img:global(.is-entering) {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  .lightbox-img:global(.is-transitioning) {
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lightbox-img {
+      transition: none;
+    }
   }
 
   .lightbox-info {
-    position: absolute;
-    bottom: var(--space-lg);
-    left: 50%;
-    transform: translateX(-50%);
+    flex-shrink: 0;
+    padding: var(--space-sm) var(--space-xl);
     text-align: center;
     color: white;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    min-height: 3.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .lightbox-info :global(.lightbox-title) {
-    font-size: var(--text-base);
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-style: italic;
+    font-weight: 400;
     margin-bottom: var(--space-xs);
   }
 
   .lightbox-info :global(.lightbox-exif) {
+    font-family: var(--font-mono);
     font-size: var(--text-xs);
-    opacity: 0.6;
+    letter-spacing: 0.02em;
+    opacity: 0.5;
+    margin-bottom: var(--space-xs);
+  }
+
+  .lightbox-info :global(.lightbox-exif-sep) {
+    opacity: 0.3;
+    margin-inline: 0.5em;
   }
 
   .lightbox-info :global(.lightbox-counter) {
     font-size: var(--text-xs);
-    opacity: 0.4;
-    margin-top: var(--space-xs);
+    opacity: 0.3;
   }
 </style>

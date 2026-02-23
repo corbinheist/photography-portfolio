@@ -180,13 +180,17 @@ const heroData = photos.map((p) => {
     margin-top: var(--space-lg);
     font-size: var(--text-base);
     color: rgba(255, 255, 255, 0.85);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    transition: color var(--duration-fast) ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.625rem 1.25rem;
+    border-radius: 4px;
+    transition: background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
   }
 
   .hero-cta:hover {
     color: #fff;
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.35);
   }
 
   .hero-scroll-indicator {
