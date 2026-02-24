@@ -211,6 +211,22 @@ const heroData = photos.map((p) => {
     z-index: 1;
   }
 
+  @media (max-width: 639px) {
+    .hero-content {
+      text-align: center;
+      padding-bottom: var(--space-md);
+    }
+
+    .hero-scroll-indicator {
+      position: relative;
+      bottom: auto;
+      left: auto;
+      transform: none;
+      align-self: center;
+      margin-bottom: var(--space-xl);
+    }
+  }
+
   .hero-scroll-indicator.visible {
     opacity: 1;
   }

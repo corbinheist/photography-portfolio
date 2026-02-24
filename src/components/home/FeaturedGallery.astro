@@ -44,6 +44,12 @@ const lightboxPhotos = photos.map((p) => ({
     }
   }
 
+  @media (max-width: 639px) {
+    .featured-gallery :global(.masonry-grid > *:nth-child(n+11)) {
+      display: none;
+    }
+  }
+
   .featured-cta {
     margin-top: var(--space-xl);
     text-align: center;
