@@ -170,7 +170,7 @@ const currentPath = Astro.url.pathname;
     top: 0;
     left: 0;
     right: 0;
-    z-index: var(--z-header);
+    z-index: calc(var(--z-overlay) + 1);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     background: color-mix(in srgb, var(--color-bg) 80%, transparent);
@@ -218,11 +218,9 @@ const currentPath = Astro.url.pathname;
     height: 40px;
     background: none;
     border: 1px solid var(--color-border);
-    border-radius: 50%;
+    border-radius: 8px;
     cursor: pointer;
     padding: 0;
-    z-index: calc(var(--z-overlay) + 1);
-    position: relative;
   }
 
   .menu-bar {
