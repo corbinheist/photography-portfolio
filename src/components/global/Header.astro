@@ -185,7 +185,7 @@ const currentPath = Astro.url.pathname;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-md) var(--container-padding);
+    padding: var(--space-xs) var(--container-padding);
   }
 
   .header-left,
@@ -201,7 +201,7 @@ const currentPath = Astro.url.pathname;
 
   .logo {
     font-family: var(--font-heading);
-    font-size: var(--text-xl);
+    font-size: calc(var(--text-xl) * 1.15);
     font-weight: 400;
     letter-spacing: 0;
     text-transform: none;
