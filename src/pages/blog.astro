@@ -5,8 +5,8 @@ import Container from '@components/ui/Container.astro';
 ---
 
 <PageLayout title="Notes" description="Photography writing and stories">
-  <Container>
-    <section class="blog-page">
+  <div class="blog-page-header">
+    <Container>
       <div class="blog-header reveal">
         <h1>Notes</h1>
         <p class="blog-subtitle">
@@ -14,27 +14,19 @@ import Container from '@components/ui/Container.astro';
           Published on Substack.
         </p>
       </div>
-    </section>
-  </Container>
+    </Container>
+  </div>
   <BlogSection limit={20} showHeader={false} />
 </PageLayout>
 
 <style>
-  .blog-page {
-    padding: var(--space-xl) 0 0;
-  }
-
-  .blog-header {
-    margin-bottom: 0;
+  .blog-page-header {
+    padding-top: var(--space-xl);
   }
 
   @media (min-width: 768px) {
-    .blog-header {
+    .blog-page-header {
       display: none;
-    }
-
-    .blog-page {
-      padding-top: var(--space-xl);
     }
   }
 
