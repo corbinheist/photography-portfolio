@@ -37,55 +37,22 @@ import PageLayout from '@layouts/PageLayout.astro';
         <div class="about-body">
           <div class="about-text">
             <p>
-              I photograph people in landscapes. The intersection matters more to me
-              than either subject alone — a figure on a ridgeline changes the scale of
-              everything around it. Most of my work happens in mountains, coastlines,
-              and terrain that takes planning to reach.
+              I'm a photographer and engineer living in the Cascades outside Seattle. On a good day I'm up with first light through the Douglas firs, coffee by the fire on the balcony, and by afternoon I'm climbing the same ridge behind my home until the trees break and the whole Snoqualmie Valley opens up — Si in front of me, Baker and the high Cascades stretched out behind it.
             </p>
             <p>
-              I look for textures, leading lines, and light that reveals structure.
-              I shoot deliberately. Fewer frames, more time reading a scene before
-              picking up the camera. The goal is images that hold specific information:
-              where this was, what it felt like to stand there, why it mattered.
+              Sometimes I travel to industrial towns, port cities, the kind of nowhere that doesn't make anyone's must-visit list. Sometimes I'm in the French Pyrenees, the Dolomites, the Moroccan Atlas. Sometimes it's a skin track before dawn in January, a ridge run in August. The camera comes because I'm going anyway. The best photographs I've brought home started as a two-hour detour.
             </p>
             <p>
-              Workshops in Montana, the Pyrenees, and the Dolomites sharpened how I
-              think about composition and story. The consistent lesson: get closer,
-              commit to the frame.
+              Sometimes my path crosses yours. Same town, same trail, same morning. <a href="mailto:corbin@heist.studio">corbin@heist.studio</a> when it does. <a href="https://corbinheist.substack.com" target="_blank" rel="noopener">Substack</a> and <a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a> in the meantime.
             </p>
-            <p>
-              I write about photography and process in
-              <a href="/blog">Notes</a>.
-            </p>
-          </div>
-
-          <div class="about-gear">
-            <h2>Kit</h2>
-            <ul class="gear-list">
-              <li>Canon EOS R5 Mark II</li>
-              <li>Canon RF 35mm f/1.4 L VCM</li>
-              <li>Canon RF 24-70mm f/2.8 L IS</li>
-              <li>Canon RF 70-200mm f/2.8 L IS</li>
-              <li>Leica Q2</li>
-              <li>DJI Mavic 3 Pro</li>
-              <li>Canon EOS 3 (film)</li>
-            </ul>
           </div>
 
           <div class="about-socials">
-            <h2>Elsewhere</h2>
             <ul class="social-list">
-              <li><a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a></li>
+              <li><a href="mailto:corbin@heist.studio">corbin@heist.studio</a></li>
               <li><a href="https://corbinheist.substack.com" target="_blank" rel="noopener">Substack</a></li>
+              <li><a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a></li>
             </ul>
-          </div>
-
-          <div class="about-contact">
-            <h2>Get in Touch</h2>
-            <p>
-              For prints, collaborations, or commissions —
-              <a href="mailto:corbin@heist.studio">corbin@heist.studio</a>
-            </p>
           </div>
         </div>
       </div>
@@ -168,39 +135,10 @@ import PageLayout from '@layouts/PageLayout.astro';
     color: var(--color-accent-hover);
   }
 
-  .about-gear {
+  .about-socials {
     margin-top: var(--space-2xl);
     padding-top: var(--space-xl);
     border-top: 1px solid var(--color-border);
-  }
-
-  .about-gear h2 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-sm);
-  }
-
-  .gear-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-xs);
-    color: var(--color-text-muted);
-    font-size: var(--text-base);
-  }
-
-  @media (min-width: 640px) {
-    .gear-list {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .about-socials {
-    margin-top: var(--space-xl);
-    padding-top: var(--space-md);
-  }
-
-  .about-socials h2 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-sm);
   }
 
   .social-list {
@@ -216,30 +154,5 @@ import PageLayout from '@layouts/PageLayout.astro';
 
   .social-list a:hover {
     color: var(--color-accent);
-  }
-
-  .about-contact {
-    margin-top: var(--space-xl);
-    padding-top: var(--space-md);
-  }
-
-  .about-contact h2 {
-    font-size: var(--text-xl);
-    margin-bottom: var(--space-sm);
-  }
-
-  .about-contact p {
-    color: var(--color-text-muted);
-  }
-
-  .about-contact a {
-    color: var(--color-accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    transition: color var(--duration-fast) ease;
-  }
-
-  .about-contact a:hover {
-    color: var(--color-accent-hover);
   }
 </style>
