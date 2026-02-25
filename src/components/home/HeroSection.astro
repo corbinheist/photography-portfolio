@@ -15,8 +15,8 @@ interface Props {
 }
 
 const {
-  title = 'People in Landscapes',
-  subtitle = 'Textures, leading lines, and light that reveals structure — in mountains, coastlines, and terrain that takes planning to reach.',
+  title = '',
+  subtitle = 'Mountains, coastlines, and terrain that takes planning to reach.',
   photos = [],
 } = Astro.props;
 
@@ -47,7 +47,7 @@ const heroData = photos.map((p) => {
   </a>
 
   <div class="hero-content" data-hero-content>
-    <h1 class="hero-title">{title}</h1>
+    {title && <h1 class="hero-title">{title}</h1>}
     <p class="hero-subtitle">{subtitle}</p>
     <a href="/work" class="hero-cta">View Selected Work &rarr;</a>
   </div>
