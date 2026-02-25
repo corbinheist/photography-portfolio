@@ -46,14 +46,6 @@ import PageLayout from '@layouts/PageLayout.astro';
               Sometimes my path crosses yours. Same town, same trail, same morning. <a href="mailto:corbin@heist.studio">corbin@heist.studio</a> when it does. <a href="https://corbinheist.substack.com" target="_blank" rel="noopener">Substack</a> and <a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a> in the meantime.
             </p>
           </div>
-
-          <div class="about-socials">
-            <ul class="social-list">
-              <li><a href="mailto:corbin@heist.studio">corbin@heist.studio</a></li>
-              <li><a href="https://corbinheist.substack.com" target="_blank" rel="noopener">Substack</a></li>
-              <li><a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a></li>
-            </ul>
-          </div>
         </div>
       </div>
   </section>
@@ -135,24 +127,4 @@ import PageLayout from '@layouts/PageLayout.astro';
     color: var(--color-accent-hover);
   }
 
-  .about-socials {
-    margin-top: var(--space-2xl);
-    padding-top: var(--space-xl);
-    border-top: 1px solid var(--color-border);
-  }
-
-  .social-list {
-    display: flex;
-    gap: var(--space-md);
-  }
-
-  .social-list a {
-    color: var(--color-text-muted);
-    font-size: var(--text-base);
-    transition: color var(--duration-fast) ease;
-  }
-
-  .social-list a:hover {
-    color: var(--color-accent);
-  }
 </style>
