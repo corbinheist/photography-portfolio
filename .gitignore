@@ -10,3 +10,4 @@ _processed/
 .DS_Store
 test-results/
 playwright-report/
+.previews/

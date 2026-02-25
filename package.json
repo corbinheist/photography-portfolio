@@ -6,6 +6,11 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
+    "preview:start": "tsx scripts/preview.ts start",
+    "preview:list": "tsx scripts/preview.ts list",
+    "preview:stop": "tsx scripts/preview.ts stop",
+    "preview:stop-all": "tsx scripts/preview.ts stop-all",
+    "preview:clean": "tsx scripts/preview.ts clean",
     "astro": "astro",
     "process-images": "tsx scripts/process-images.ts",
     "upload-images": "tsx scripts/upload-to-spaces.ts",
@@ -39,6 +44,7 @@
     "@playwright/test": "^1.58.2",
     "@types/node": "^25.2.1",
     "happy-dom": "^20.5.3",
+    "serve": "^14.2.4",
     "vitest": "^4.0.18"
   }
 }
