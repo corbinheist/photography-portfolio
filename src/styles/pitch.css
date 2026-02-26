@@ -91,16 +91,45 @@ html:has([data-pitch]) {
 
 .slide--title {
   text-align: center;
+  background: url('/images/pitch/pc12-hero.webp') center / cover no-repeat;
+  background-color: var(--fx-base-800);
+}
+
+.slide--title::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+  z-index: 0;
+}
+
+.slide--title .slide__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.slide--title .slide__overline {
+  color: rgba(255, 252, 240, 0.6);
+}
+
+.slide--title .slide__heading {
+  color: var(--fx-paper);
 }
 
 .slide--title .slide__subtitle {
   margin-inline: auto;
+  color: rgba(255, 252, 240, 0.8);
 }
 
 .slide--title .slide__mark {
   font-family: var(--font-heading);
   font-size: var(--text-lg);
-  color: var(--color-text-faint);
+  color: rgba(255, 252, 240, 0.45);
   margin-top: var(--space-2xl);
   font-style: italic;
 }
@@ -114,11 +143,12 @@ html:has([data-pitch]) {
   flex-direction: column;
   align-items: center;
   gap: var(--space-xs);
-  color: var(--color-text-faint);
+  color: rgba(255, 252, 240, 0.5);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   letter-spacing: 0.06em;
   animation: scroll-hint-pulse 2s ease-in-out infinite;
+  z-index: 1;
 }
 
 .scroll-hint__arrow {
@@ -264,30 +294,57 @@ html:has([data-pitch]) {
   color: rgba(255, 252, 240, 0.9);
 }
 
-/* Location-specific backgrounds */
-.slide--switzerland  { background: linear-gradient(160deg, #2A3D2E 0%, #1A2B1E 60%, #132016 100%); }
-.slide--idaho        { background: linear-gradient(160deg, #3A2D1A 0%, #2A1F14 60%, #1A1308 100%); }
-.slide--patagonia    { background: linear-gradient(160deg, #2A3040 0%, #1A2030 60%, #101520 100%); }
-.slide--iceland      { background: linear-gradient(160deg, #28261E 0%, #1C1A15 60%, #12110E 100%); }
-.slide--canada       { background: linear-gradient(160deg, #1E2A35 0%, #152028 60%, #0E161E 100%); }
-.slide--colorado     { background: linear-gradient(160deg, #35301A 0%, #282214 60%, #1A1608 100%); }
-
-/* Future: swap to actual images
+/* Location slides — photo backgrounds with gradient scrim */
 .slide--location {
   background-size: cover;
   background-position: center;
 }
+
 .slide--location::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.45) 60%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  z-index: 0;
 }
+
 .slide--location .slide__inner {
   position: relative;
   z-index: 1;
 }
-*/
+
+/* Location-specific backgrounds — Unsplash placeholders (swap for CDN selects post-shoot) */
+.slide--switzerland {
+  background-image: url('https://images.unsplash.com/photo-1763914260112-ab72fb971cb5?w=1920&h=1080&fit=crop&q=80&auto=format');
+}
+.slide--idaho {
+  background-image: url('https://images.unsplash.com/photo-1719154883681-972deaa5472a?w=1920&h=1080&fit=crop&q=80&auto=format');
+}
+.slide--patagonia {
+  background-image: url('https://images.unsplash.com/photo-1510939859912-0e7e5904c400?w=1920&h=1080&fit=crop&q=80&auto=format');
+}
+.slide--iceland {
+  background-image: url('https://images.unsplash.com/photo-1758461479768-bdbce375e005?w=1920&h=1080&fit=crop&q=80&auto=format');
+}
+.slide--canada {
+  background-image: url('https://plus.unsplash.com/premium_photo-1669868115415-d4cb84c1bdab?w=1920&h=1080&fit=crop&q=80&auto=format');
+}
+.slide--colorado {
+  background-image: url('https://images.unsplash.com/photo-1761405378282-e819a65cb493?w=1920&h=1080&fit=crop&q=80&auto=format');
+}
+
+/* Fallback gradients (shown while images load) */
+.slide--switzerland  { background-color: #1A2B1E; }
+.slide--idaho        { background-color: #2A1F14; }
+.slide--patagonia    { background-color: #1A2030; }
+.slide--iceland      { background-color: #1C1A15; }
+.slide--canada       { background-color: #152028; }
+.slide--colorado     { background-color: #282214; }
 
 /* ==========================================
    Deliverables
