@@ -1,0 +1,27 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import '@styles/pitch.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} noindex={true}>
+  <script is:inline>
+    document.body.setAttribute('data-pitch', '');
+    document.documentElement.setAttribute('data-theme', 'light');
+  </script>
+  <slot />
+  <div class="pitch-counter" aria-hidden="true">
+    <span class="pitch-counter__current">1</span>
+    <span class="pitch-counter__sep"> / </span>
+    <span class="pitch-counter__total"></span>
+  </div>
+  <script>
+    import '@scripts/pitch-nav';
+  </script>
+</BaseLayout>

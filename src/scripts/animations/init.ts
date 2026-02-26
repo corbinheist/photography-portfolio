@@ -53,7 +53,10 @@ function initAnimations() {
 }
 
 function init() {
-  initLenis();
+  // Skip Lenis on pitch pages — native scroll-snap handles paging
+  if (!document.body.hasAttribute('data-pitch')) {
+    initLenis();
+  }
   initAnimations();
 }
 
