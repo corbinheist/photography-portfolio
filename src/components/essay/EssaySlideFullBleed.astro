@@ -1,0 +1,83 @@
+---
+/**
+ * Full-bleed image slide — image fills the viewport.
+ * Optional text overlay or caption bar.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface Props {
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  alt: string;
+  lightboxIndex?: number;
+  /** 'cover' (default) crops to fill; 'contain' shows full image with black bars */
+  fit?: 'cover' | 'contain';
+  /** Position of text overlay */
+  overlayPosition?: 'bottom-left' | 'bottom-center' | 'center';
+  /** Caption bar: title text */
+  captionTitle?: string;
+  /** Caption bar: EXIF or secondary text */
+  captionMeta?: string;
+  loading?: 'lazy' | 'eager';
+}
+
+const {
+  url,
+  width,
+  height,
+  lqip,
+  alt,
+  lightboxIndex,
+  fit = 'cover',
+  overlayPosition,
+  captionTitle,
+  captionMeta,
+  loading = 'lazy',
+} = Astro.props;
+
+const hasOverlay = Astro.slots.has('default');
+const hasCaption = captionTitle || captionMeta;
+---
+
+<section
+  class:list={[
+    'essay-slide',
+    'essay-full-bleed',
+    fit === 'contain' && 'essay-full-bleed--contain',
+    hasOverlay && 'essay-full-bleed--scrim',
+  ]}
+  data-essay-snap
+>
+  <div class="essay-full-bleed__img">
+    <Photo
+      url={url}
+      width={width}
+      height={height}
+      lqip={lqip}
+      alt={alt}
+      sizes="100vw"
+      loading={loading}
+      lightboxIndex={lightboxIndex}
+    />
+  </div>
+
+  {hasOverlay && (
+    <div
+      class:list={[
+        'essay-full-bleed__overlay',
+        overlayPosition && `essay-full-bleed__overlay--${overlayPosition}`,
+      ]}
+    >
+      <slot />
+    </div>
+  )}
+
+  {hasCaption && (
+    <div class="essay-full-bleed__caption">
+      {captionTitle && <span class="essay-full-bleed__caption-title">{captionTitle}</span>}
+      {captionMeta && <span>{captionMeta}</span>}
+    </div>
+  )}
+</section>

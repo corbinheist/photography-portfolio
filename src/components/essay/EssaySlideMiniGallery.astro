@@ -1,0 +1,43 @@
+---
+/**
+ * Mini gallery slide — masonry grid of 4-12 images within a single snap slide.
+ * For showing a collection of moments without giving each its own full-bleed pane.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface PhotoData {
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  alt: string;
+  lightboxIndex?: number;
+}
+
+interface Props {
+  photos: PhotoData[];
+  columns?: 2 | 3;
+  caption?: string;
+}
+
+const { photos, columns = 3, caption } = Astro.props;
+---
+
+<section class="essay-slide essay-mini-gallery" data-essay-snap>
+  <div class:list={['essay-mini-gallery__grid', columns === 2 && 'essay-mini-gallery__grid--cols-2']}>
+    {photos.map((photo) => (
+      <div class="essay-mini-gallery__item">
+        <Photo
+          url={photo.url}
+          width={photo.width}
+          height={photo.height}
+          lqip={photo.lqip}
+          alt={photo.alt}
+          sizes={`(max-width: 768px) 50vw, ${Math.round(100 / columns)}vw`}
+          lightboxIndex={photo.lightboxIndex}
+        />
+      </div>
+    ))}
+  </div>
+  {caption && <div class="essay-mini-gallery__caption">{caption}</div>}
+</section>

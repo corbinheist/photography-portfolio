@@ -1,0 +1,42 @@
+---
+/**
+ * Diptych slide — two images side by side, flex-ratio matched heights.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface PhotoData {
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  alt: string;
+  lightboxIndex?: number;
+}
+
+interface Props {
+  photos: [PhotoData, PhotoData];
+  gap?: 'none' | 'tight' | 'normal';
+  caption?: string;
+}
+
+const { photos, gap = 'tight', caption } = Astro.props;
+---
+
+<section class="essay-slide essay-diptych" data-essay-snap>
+  <div class:list={['essay-diptych__images', `essay-diptych__images--gap-${gap}`]}>
+    {photos.map((photo) => (
+      <div class="essay-diptych__item" style={`flex: ${photo.width / photo.height}`}>
+        <Photo
+          url={photo.url}
+          width={photo.width}
+          height={photo.height}
+          lqip={photo.lqip}
+          alt={photo.alt}
+          sizes="(max-width: 768px) 100vw, 50vw"
+          lightboxIndex={photo.lightboxIndex}
+        />
+      </div>
+    ))}
+  </div>
+  {caption && <div class="essay-diptych__caption">{caption}</div>}
+</section>

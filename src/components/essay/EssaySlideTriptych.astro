@@ -1,0 +1,43 @@
+---
+/**
+ * Triptych slide — three images side by side, flex-ratio matched heights.
+ * Wraps to 2+1 on mobile.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface PhotoData {
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  alt: string;
+  lightboxIndex?: number;
+}
+
+interface Props {
+  photos: [PhotoData, PhotoData, PhotoData];
+  gap?: 'none' | 'tight' | 'normal';
+  caption?: string;
+}
+
+const { photos, gap = 'tight', caption } = Astro.props;
+---
+
+<section class="essay-slide essay-triptych" data-essay-snap>
+  <div class:list={['essay-triptych__images', `essay-triptych__images--gap-${gap}`]}>
+    {photos.map((photo) => (
+      <div class="essay-triptych__item" style={`flex: ${photo.width / photo.height}`}>
+        <Photo
+          url={photo.url}
+          width={photo.width}
+          height={photo.height}
+          lqip={photo.lqip}
+          alt={photo.alt}
+          sizes="(max-width: 768px) 50vw, 33vw"
+          lightboxIndex={photo.lightboxIndex}
+        />
+      </div>
+    ))}
+  </div>
+  {caption && <div class="essay-triptych__caption">{caption}</div>}
+</section>
