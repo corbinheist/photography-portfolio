@@ -23,7 +23,7 @@ interface Props {
 const { photos, columns = 3, caption } = Astro.props;
 ---
 
-<section class="essay-slide essay-mini-gallery" data-essay-snap>
+<section class="essay-slide essay-mini-gallery">
   <div class:list={['essay-mini-gallery__grid', columns === 2 && 'essay-mini-gallery__grid--cols-2']}>
     {photos.map((photo) => (
       <div class="essay-mini-gallery__item">

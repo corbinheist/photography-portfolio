@@ -20,9 +20,12 @@ interface Props {
 }
 
 const { photos, gap = 'tight', caption } = Astro.props;
+
+const isPortrait = photos.every((p) => p.height > p.width);
+const orientation = isPortrait ? 'portrait' : 'landscape';
 ---
 
-<section class="essay-slide essay-diptych" data-essay-snap>
+<section class:list={['essay-slide', 'essay-diptych', `essay-diptych--${orientation}`]}>
   <div class:list={['essay-diptych__images', `essay-diptych__images--gap-${gap}`]}>
     {photos.map((photo) => (
       <div class="essay-diptych__item" style={`flex: ${photo.width / photo.height}`}>
@@ -32,7 +35,7 @@ const { photos, gap = 'tight', caption } = Astro.props;
           height={photo.height}
           lqip={photo.lqip}
           alt={photo.alt}
-          sizes="(max-width: 768px) 100vw, 50vw"
+          sizes={isPortrait ? '(max-width: 768px) 100vw, 40vw' : '(max-width: 768px) 100vw, 50vw'}
           lightboxIndex={photo.lightboxIndex}
         />
       </div>

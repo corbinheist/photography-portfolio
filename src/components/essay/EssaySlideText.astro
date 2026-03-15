@@ -5,10 +5,9 @@
 
 interface Props {
   align?: 'left' | 'center';
-  snap?: boolean;
 }
 
-const { align = 'center', snap = true } = Astro.props;
+const { align = 'center' } = Astro.props;
 ---
 
 <section
@@ -17,7 +16,6 @@ const { align = 'center', snap = true } = Astro.props;
     'essay-text',
     `essay-text--${align}`,
   ]}
-  {...(snap ? { 'data-essay-snap': '' } : {})}
 >
   <div class="essay-text__inner">
     <slot />

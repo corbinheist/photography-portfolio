@@ -11,3 +11,4 @@ _processed/
 test-results/
 playwright-report/
 .previews/
+.claude/

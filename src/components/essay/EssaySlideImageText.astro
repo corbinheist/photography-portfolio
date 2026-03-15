@@ -25,6 +25,8 @@ const {
   lightboxIndex,
   flip = false,
 } = Astro.props;
+
+const isPortrait = height > width;
 ---
 
 <section
@@ -32,8 +34,8 @@ const {
     'essay-slide',
     'essay-image-text',
     flip && 'essay-image-text--flip',
+    isPortrait && 'essay-image-text--portrait',
   ]}
-  data-essay-snap
 >
   <div class="essay-image-text__image">
     <Photo

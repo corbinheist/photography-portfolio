@@ -1,13 +1,18 @@
 /**
  * Essay navigation: progress bar, nav dots, keyboard navigation.
  * Only activates on pages with [data-essay] on the body.
+ *
+ * Keyboard acceleration: single arrow tap scrolls smoothly (400ms).
+ * Holding the key ramps up — each rapid repeat shortens the
+ * animation duration, bottoming out at 100ms for fast scrubbing
+ * that still feels continuous.
  */
 
 function initEssayNav() {
   if (!document.body.hasAttribute('data-essay')) return;
 
   const snapSlides = Array.from(
-    document.querySelectorAll<HTMLElement>('[data-essay-snap]'),
+    document.querySelectorAll<HTMLElement>('.essay-slide'),
   );
   const progressBar =
     document.querySelector<HTMLElement>('[data-essay-progress]');
@@ -22,7 +27,8 @@ function initEssayNav() {
     dot.className = 'essay-nav-dot';
     dot.setAttribute('aria-label', `Go to section ${i + 1}`);
     dot.addEventListener('click', () => {
-      slide.scrollIntoView({ behavior: 'smooth' });
+      targetIndex = i;
+      animateScrollTo(slide.offsetTop, 400);
     });
     dotsContainer?.appendChild(dot);
   });
@@ -31,7 +37,56 @@ function initEssayNav() {
     dotsContainer?.querySelectorAll<HTMLElement>('.essay-nav-dot') ?? [],
   );
 
-  function getActiveSnapIndex(): number {
+  // --- Smooth scroll with controllable duration ---
+  let scrollRaf = 0;
+  let isAnimating = false;
+  const htmlEl = document.documentElement;
+
+  function animateScrollTo(targetY: number, duration: number) {
+    cancelAnimationFrame(scrollRaf);
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    if (distance === 0) return;
+
+    // Disable snap during animation so the browser doesn't fight us
+    isAnimating = true;
+    htmlEl.style.scrollSnapType = 'none';
+
+    const startTime = performance.now();
+
+    function step(now: number) {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      // ease-out cubic
+      const ease = 1 - Math.pow(1 - t, 3);
+      window.scrollTo(0, startY + distance * ease);
+      if (t < 1) {
+        scrollRaf = requestAnimationFrame(step);
+      } else {
+        // Re-enable snap after landing on the target
+        htmlEl.style.scrollSnapType = '';
+        isAnimating = false;
+      }
+    }
+
+    scrollRaf = requestAnimationFrame(step);
+  }
+
+  // --- Navigation state ---
+  let targetIndex = 0;
+  let repeatCount = 0;
+  let lastKeyTime = 0;
+  let lastKeyDir: 'next' | 'prev' | null = null;
+  const REPEAT_WINDOW = 350;
+
+  function getDuration(): number {
+    if (repeatCount <= 0) return 400;
+    if (repeatCount === 1) return 250;
+    if (repeatCount === 2) return 150;
+    return 100;
+  }
+
+  function getVisibleIndex(): number {
     const scrollY = window.scrollY;
     const vh = window.innerHeight;
     for (let i = snapSlides.length - 1; i >= 0; i--) {
@@ -50,7 +105,7 @@ function initEssayNav() {
   }
 
   function updateDots() {
-    const active = getActiveSnapIndex();
+    const active = getVisibleIndex();
     dots.forEach((dot, i) => {
       dot.classList.toggle('essay-nav-dot--active', i === active);
     });
@@ -61,9 +116,36 @@ function initEssayNav() {
     updateDots();
   }
 
-  function scrollToSnapSlide(index: number) {
-    const clamped = Math.max(0, Math.min(index, snapSlides.length - 1));
-    snapSlides[clamped].scrollIntoView({ behavior: 'smooth' });
+  // Sync targetIndex when the user scrolls manually (mouse wheel, touch)
+  let scrollSyncTimer = 0;
+  function onScrollEnd() {
+    clearTimeout(scrollSyncTimer);
+    scrollSyncTimer = window.setTimeout(() => {
+      // Don't override targetIndex while we're animating programmatically
+      if (!isAnimating) {
+        targetIndex = getVisibleIndex();
+      }
+    }, 150);
+  }
+
+  function navigateToSlide(index: number, duration: number) {
+    targetIndex = Math.max(0, Math.min(index, snapSlides.length - 1));
+    animateScrollTo(snapSlides[targetIndex].offsetTop, duration);
+  }
+
+  function navigateDirection(dir: 'next' | 'prev') {
+    const now = performance.now();
+
+    if (dir === lastKeyDir && now - lastKeyTime < REPEAT_WINDOW) {
+      repeatCount++;
+    } else {
+      repeatCount = 0;
+    }
+    lastKeyDir = dir;
+    lastKeyTime = now;
+
+    const next = dir === 'next' ? targetIndex + 1 : targetIndex - 1;
+    navigateToSlide(next, getDuration());
   }
 
   function handleKeydown(e: KeyboardEvent) {
@@ -74,37 +156,39 @@ function initEssayNav() {
     const tag = (e.target as HTMLElement).tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
-    const current = getActiveSnapIndex();
-
     switch (e.key) {
       case 'ArrowDown':
       case 'ArrowRight':
         e.preventDefault();
-        scrollToSnapSlide(current + 1);
+        navigateDirection('next');
         break;
 
       case 'ArrowUp':
       case 'ArrowLeft':
         e.preventDefault();
-        scrollToSnapSlide(current - 1);
+        navigateDirection('prev');
         break;
 
       case 'Home':
         e.preventDefault();
-        scrollToSnapSlide(0);
+        navigateToSlide(0, 400);
         break;
 
       case 'End':
         e.preventDefault();
-        scrollToSnapSlide(snapSlides.length - 1);
+        navigateToSlide(snapSlides.length - 1, 400);
         break;
     }
   }
 
   document.addEventListener('keydown', handleKeydown);
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', () => {
+    onScroll();
+    onScrollEnd();
+  }, { passive: true });
 
   // Initial state
+  targetIndex = getVisibleIndex();
   onScroll();
 }
 

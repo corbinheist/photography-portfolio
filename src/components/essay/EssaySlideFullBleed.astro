@@ -30,12 +30,15 @@ const {
   lqip,
   alt,
   lightboxIndex,
-  fit = 'cover',
+  fit: fitProp,
   overlayPosition,
   captionTitle,
   captionMeta,
   loading = 'lazy',
 } = Astro.props;
+
+const isPortrait = height > width;
+const fit = fitProp ?? (isPortrait ? 'contain' : 'cover');
 
 const hasOverlay = Astro.slots.has('default');
 const hasCaption = captionTitle || captionMeta;
@@ -48,7 +51,6 @@ const hasCaption = captionTitle || captionMeta;
     fit === 'contain' && 'essay-full-bleed--contain',
     hasOverlay && 'essay-full-bleed--scrim',
   ]}
-  data-essay-snap
 >
   <div class="essay-full-bleed__img">
     <Photo

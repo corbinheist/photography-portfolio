@@ -1,10 +1,10 @@
 /* ==========================================
-   Photo Essay — Hybrid scroll-snap slides
+   Photo Essay — Snap-scroll slides
    ========================================== */
 
-/* Scroll-snap container — proximity snap on essay pages */
+/* Scroll-snap container — mandatory snap on essay pages */
 html:has([data-essay]) {
-  scroll-snap-type: y proximity;
+  scroll-snap-type: y mandatory;
 }
 
 /* ==========================================
@@ -18,9 +18,6 @@ html:has([data-essay]) {
   justify-content: center;
   position: relative;
   overflow: hidden;
-}
-
-.essay-slide[data-essay-snap] {
   scroll-snap-align: start;
 }
 
@@ -48,9 +45,30 @@ html:has([data-essay]) {
   object-fit: cover;
 }
 
+/* Portrait / contain — natural sizing, centered, no black bars */
+.essay-full-bleed--contain .essay-full-bleed__img {
+  position: relative;
+  inset: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.essay-full-bleed--contain .essay-full-bleed__img :global(.photo-wrap) {
+  width: auto;
+  height: auto;
+  max-height: 105dvh;
+  max-width: 2000px;
+}
+
 .essay-full-bleed--contain .essay-full-bleed__img :global(.photo-img) {
+  width: auto;
+  height: auto;
+  max-height: 105dvh;
+  max-width: 2000px;
   object-fit: contain;
-  background: #000;
 }
 
 /* Text overlay */
@@ -149,6 +167,11 @@ html:has([data-essay]) {
   object-fit: cover;
 }
 
+/* Portrait images in splits — anchor to top so faces aren't cropped */
+.essay-image-text--portrait .essay-image-text__image :global(.photo-img) {
+  object-position: top center;
+}
+
 .essay-image-text--flip .essay-image-text__image {
   order: 2;
 }
@@ -217,10 +240,9 @@ html:has([data-essay]) {
 
 .essay-diptych__images {
   display: flex;
-  align-items: stretch;
+  align-items: flex-end;
+  justify-content: center;
   width: 100%;
-  flex: 1;
-  min-height: 0;
 }
 
 .essay-diptych__images--gap-none {
@@ -228,12 +250,12 @@ html:has([data-essay]) {
 }
 
 .essay-diptych__images--gap-tight {
-  gap: 4px;
+  gap: var(--space-sm);
 }
 
 .essay-diptych__images--gap-normal {
-  gap: var(--space-md);
-  padding: 0 var(--space-md);
+  gap: var(--space-lg);
+  padding: 0 var(--space-lg);
 }
 
 .essay-diptych__item {
@@ -243,13 +265,31 @@ html:has([data-essay]) {
 
 .essay-diptych__item :global(.photo-wrap) {
   width: 100%;
-  height: 100%;
 }
 
 .essay-diptych__item :global(.photo-img) {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  display: block;
+}
+
+/* Landscape diptych — width-filling, height follows naturally */
+.essay-diptych--landscape .essay-diptych__item :global(.photo-img) {
+  height: auto;
+}
+
+/* Portrait diptych — height-constrained, centered horizontally */
+.essay-diptych--portrait .essay-diptych__images {
+  align-items: center;
+}
+
+.essay-diptych--portrait .essay-diptych__item {
+  flex: none !important;
+}
+
+.essay-diptych--portrait .essay-diptych__item :global(.photo-img) {
+  width: auto;
+  max-width: 100%;
+  height: 85dvh;
 }
 
 .essay-diptych__caption {
@@ -273,10 +313,9 @@ html:has([data-essay]) {
 
 .essay-triptych__images {
   display: flex;
-  align-items: stretch;
+  align-items: flex-end;
+  justify-content: center;
   width: 100%;
-  flex: 1;
-  min-height: 0;
 }
 
 .essay-triptych__images--gap-none {
@@ -284,12 +323,12 @@ html:has([data-essay]) {
 }
 
 .essay-triptych__images--gap-tight {
-  gap: 4px;
+  gap: var(--space-sm);
 }
 
 .essay-triptych__images--gap-normal {
-  gap: var(--space-md);
-  padding: 0 var(--space-md);
+  gap: var(--space-lg);
+  padding: 0 var(--space-lg);
 }
 
 .essay-triptych__item {
@@ -299,13 +338,31 @@ html:has([data-essay]) {
 
 .essay-triptych__item :global(.photo-wrap) {
   width: 100%;
-  height: 100%;
 }
 
 .essay-triptych__item :global(.photo-img) {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  display: block;
+}
+
+/* Landscape triptych — width-filling, height follows naturally */
+.essay-triptych--landscape .essay-triptych__item :global(.photo-img) {
+  height: auto;
+}
+
+/* Portrait triptych — height-constrained, centered */
+.essay-triptych--portrait .essay-triptych__images {
+  align-items: center;
+}
+
+.essay-triptych--portrait .essay-triptych__item {
+  flex: none !important;
+}
+
+.essay-triptych--portrait .essay-triptych__item :global(.photo-img) {
+  width: auto;
+  max-width: 100%;
+  height: 75dvh;
 }
 
 .essay-triptych__caption {
@@ -329,12 +386,14 @@ html:has([data-essay]) {
 
 .essay-mini-gallery__grid {
   columns: 3;
-  column-gap: 4px;
+  column-gap: var(--space-sm);
   width: 100%;
+  max-width: 2000px;
+  margin-inline: auto;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 4px;
+  padding: var(--space-sm);
 }
 
 .essay-mini-gallery__grid--cols-2 {
@@ -343,13 +402,15 @@ html:has([data-essay]) {
 
 .essay-mini-gallery__item {
   break-inside: avoid;
-  margin-bottom: 4px;
+  margin-bottom: var(--space-sm);
   line-height: 0;
 }
 
 .essay-mini-gallery__item :global(.photo-img) {
   width: 100%;
   height: auto;
+  max-height: 105dvh;
+  object-fit: cover;
 }
 
 .essay-mini-gallery__caption {
@@ -381,6 +442,10 @@ html:has([data-essay]) {
 }
 
 .essay-text--center .essay-text__inner {
+  margin-inline: auto;
+}
+
+.essay-text--center .essay-text__inner p {
   margin-inline: auto;
 }
 
@@ -440,8 +505,9 @@ html:has([data-essay]) {
    ========================================== */
 
 .essay-flow {
-  min-height: auto;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: var(--space-2xl) var(--container-padding);
 }
 
@@ -590,22 +656,32 @@ html:has([data-essay]) {
     padding: var(--space-xl) var(--container-padding);
   }
 
-  /* Diptychs compress */
-  .essay-diptych .essay-diptych__images {
-    max-height: 60dvh;
+  /* Landscape diptychs — limit height on small screens */
+  .essay-diptych--landscape .essay-diptych__images {
+    max-height: 40dvh;
   }
 
-  /* Triptych wraps 2+1 */
-  .essay-triptych__images {
+  /* Portrait diptychs — reduce height, keep side by side */
+  .essay-diptych--portrait .essay-diptych__item :global(.photo-img) {
+    height: 60dvh;
+  }
+
+  /* Landscape triptych wraps 2+1 */
+  .essay-triptych--landscape .essay-triptych__images {
     flex-wrap: wrap;
   }
 
-  .essay-triptych__item:last-child {
+  .essay-triptych--landscape .essay-triptych__item:last-child {
     flex-basis: 100%;
     max-height: 35dvh;
   }
 
-  /* Mini gallery drops to 2 columns */
+  /* Portrait triptych — reduce height */
+  .essay-triptych--portrait .essay-triptych__item :global(.photo-img) {
+    height: 50dvh;
+  }
+
+  /* Mini gallery — 2 columns on mobile */
   .essay-mini-gallery__grid {
     columns: 2;
   }
@@ -620,10 +696,12 @@ html:has([data-essay]) {
   }
 }
 
-/* Portrait devices — allow taller portrait images */
+/* Portrait devices — portrait images can fill more of the screen */
 @media (orientation: portrait) {
+  .essay-full-bleed--contain .essay-full-bleed__img :global(.photo-wrap),
   .essay-full-bleed--contain .essay-full-bleed__img :global(.photo-img) {
-    max-height: 85dvh;
+    max-height: 92dvh;
+    max-width: 100%;
   }
 }
 
@@ -677,10 +755,6 @@ html:has([data-essay]) {
    ========================================== */
 
 @media (prefers-reduced-motion: reduce) {
-  html:has([data-essay]) {
-    scroll-snap-type: y proximity;
-  }
-
   .essay-progress {
     transition: none;
   }
