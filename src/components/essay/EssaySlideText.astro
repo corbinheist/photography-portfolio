@@ -1,0 +1,23 @@
+---
+/**
+ * Text-only slide — centered prose for section transitions, titles, pull quotes.
+ */
+
+interface Props {
+  align?: 'left' | 'center';
+}
+
+const { align = 'center' } = Astro.props;
+---
+
+<section
+  class:list={[
+    'essay-slide',
+    'essay-text',
+    `essay-text--${align}`,
+  ]}
+>
+  <div class="essay-text__inner">
+    <slot />
+  </div>
+</section>

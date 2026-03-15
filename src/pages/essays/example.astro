@@ -1,0 +1,467 @@
+---
+/**
+ * Essay Layout Example — Kitchen sink demonstrating every slide type.
+ * Visit /essays/example to see all layouts with labels.
+ *
+ * This page reuses a subset of the Nomads photo set for demonstration.
+ * Each slide is labeled with its component name and key props.
+ */
+import EssayLayout from '@layouts/EssayLayout.astro';
+import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
+import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
+import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
+import EssaySlideTriptych from '@components/essay/EssaySlideTriptych.astro';
+import EssaySlideMiniGallery from '@components/essay/EssaySlideMiniGallery.astro';
+import EssaySlideText from '@components/essay/EssaySlideText.astro';
+import EssaySlideFlow from '@components/essay/EssaySlideFlow.astro';
+
+/**
+ * Sample photos — landscape and portrait mix for demonstrating orientation behavior.
+ */
+const photos = [
+  /* 0 — landscape hero */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912',
+    width: 6916, height: 4613,
+    lqip: 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA=',
+    title: 'Landscape — The Road to Saghro',
+  },
+  /* 1 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-075-cnh_1217',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJQBOgBFFP+L+SpzkQkAAA/p59TgGue3fmT63N4wMgHaC9bjsuN7SVS4wKdWCATY2otkAA',
+    title: 'Landscape — Preparing the Tea',
+  },
+  /* 2 — portrait */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-076-cnh_1237',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABwBQCdASoUAB4APzmEvVavJ6YjsBgIAeAnCUAWI+QwOHuT6N+kkrYT823tq2WQxfgNymdAAM3aqP7+27BKpKPz7mG4vZ+eWT4TbV/xdVl3W8lqvDemP25zLFxULTe9sN/JjWv7+afRNDea8xREJzKz0ZUv3QjUTBeMjJl2mO7chTYnF4yqhX0GxnMAPSJaKq6BLDKe9YYMgD7TFAAAAA==',
+    title: 'Portrait — Pouring Mint Tea',
+  },
+  /* 3 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-074-cnh_1169',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYgCdMoACLoDNBi4B+YAAzB5anIywYmzA2IYp5EF8TRiaY06aRVPwWgEz2PbinSEUCDED/A5XtwkDTcuTr7Sa7gA2vqvj0wuwAA==',
+    title: 'Landscape — Sugar for Tea',
+  },
+  /* 4 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-079-cnh_1105',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBOgA8vmStqCmIsQAAD+udyrX0jHYrMG+9gJbomD9pmbbmmtj2KG1iog5m6WSuxgYNsE34mYDL/cGAA=',
+    title: 'Landscape — Flour-Dusted Hands',
+  },
+  /* 5 — portrait */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-078-cnh_1097',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAACQBACdASoUAB4APzmMu1OvKiYisAgB4CcJQBTig2a47JTNn92kNiVqhI2T5oAA/uOErukgdTtgyvcvkXI482KNwMBYxBa0jIn16iz5YXfkXjBLQm1Jhd7+znRmEY/yll00n0D4KEHLdOk3zCBbdI74YhgUU+aSkcDYCTPlvUdrgAAA',
+    title: 'Portrait — Making Bread',
+  },
+  /* 6 — portrait */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-077-cnh_1243',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAACQBACdASoUAB4APzmQu1WvKqYjMBgIAeAnCUAVHoEPjANNzL52G94/PGmpWYAA+49NFMjvQ4LOaR2lUlS8GXq2fykA7zonb6y2m8x6jePF1W71UNhQue7VbhK2Shnp42ag2ZgimLEteVQ+p7dy604lVqkbWgvoZqoXsXf/EsuSt9UJff0CUTATnIRR956tRyXK/qSkwU80AA==',
+    title: 'Portrait — The Tea Maker',
+  },
+  /* 7 — portrait */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-081-cnh_1358',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAACQBQCdASoUAB4APzmQvFWvKiYjMBgIAeAnCWMAuxrgABuflil7QldgoNgRNJ/E1RVCTqmzAAD+dYykFy12XGYd04FjfQFC9IC/QyxWTKMSJzMW6KklbuCB+aJJM0m3Qsz10uGiLLerH8e1ErObjtRkGWLtjdvqghoV3xF1cZWh3at42jDncWU8tgkFe8MaHgx4/PieRg6fC2wAAAA=',
+    title: 'Portrait — Sharing Bread',
+  },
+  /* 8 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-080-cnh_1255',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQBACdASoUAA0APzmIuVQvKSWjMAgB4CcJZgCw7CBSv1q2JjRz//81wAD+H5oAyT/GKhQq5bIid1/m31MPM0eEzw6H46g2I0MDnf1F1Ft4EFfwn91OMt4ep6k8AA==',
+    title: 'Landscape — Bread Oven',
+  },
+  /* 9 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-083-cnh_1414',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYwAAVOvFb64Li5OBzoAA/tPoTysDmaEz7Oy3VhiMO5mk4b7zfqvyqumuAB0mZT8YBiMHubHZUb5HSlgVNILuM75+FIlh5C6VUAAA',
+    title: 'Landscape — Holding a Kid',
+  },
+  /* 10 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-086-cnh_3827',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAwBACdASoUAA0APzmEuVOvKKWisAgB4CcJYgCdMoGv/gPPzMYlaXoFxFAA/qFdSuhXLm9RtYbBHIq+m/NSyzzUfR0MCq7jLE9HEno71hzZfHNkqGcAAA==',
+    title: 'Landscape — Volcanic Pinnacles',
+  },
+  /* 11 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-090-cnh_3873',
+    width: 8044, height: 5366,
+    lqip: 'data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBWABZuCwwAA/uDoyhMwvh5sFNZUPZC4B9TBH8FjBsJ8YspaAAAA',
+    title: 'Landscape — Watching the Flock',
+  },
+  /* 12 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-092-cnh_1680',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACQAwCdASoUAA0APzmGulOvKSWisAgB4CcJYwCdACIftx5I9YiAAPKR6RsIgpD6okTi1UdN+g4g/jxFUQXNWxU4Gl99WE1VgAAAAA==',
+    title: 'Landscape — Below the Mesa',
+  },
+  /* 13 — landscape */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-093-cnh_1689',
+    width: 8095, height: 5399,
+    lqip: 'data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwCdMoADVQNQQ0uIAADLQzCAlqhnFGPFwY0udx+46RlsYEYXN9JXQktVnbyQ6AdQAAAA',
+    title: 'Landscape — Evening Gathering',
+  },
+  /* 14 — portrait */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-084-cnh_1463',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwBACdASoUAB4APzmKuVYvKSWjsBgIAeAnCWdkMwAUnkI9EMos7t9h2AAA/ucTtPa/Ah9E2wDqfyz15qyXAA4fpib/1a+/ZBKWzJ05x0fbersRuN+EUjhuNVFbsgAA',
+    title: 'Portrait — The Herder',
+  },
+  /* 15 — portrait */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-089-cnh_1676',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwBACdASoUAB4APzmIulOvKSWisAgB4CcJQBfJBEBEbvVoZ1nkGQWW3IvgJQREjQAA/t6TL5z6eKRdx6fK1WKQAlmZbKPD5oJt1CEqCjT+LFgHE0xap3tiy6Wrx+2O/yZXUQ3GjujcKzvA3+7Pd/DVhEJdiHqFtv2GKoBMRRfMpntCAAA=',
+    title: 'Portrait — With a Newborn Kid',
+  },
+  /* 16 — portrait */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-095-cnh_3954',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAwCdASoUAB4APzmEt1SvKCUkMBgMAeAnCWMAtsgE3Q/ElmWXSYAA0LJ5PuRIsDZuwaDlWF56mzEqNATSK8COPztQjOFs8P7T5+l8TZZmoJHnjBC4AAAA',
+    title: 'Portrait — Campfire Below the Cliffs',
+  },
+  /* 17 — portrait */
+  {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-097-cnh_1875',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACwBACdASoUAB4APzmEuFOvKKUisAgB4CcJZQDDrCIKEN/qPFswBoerPXrwyjtAAN5lAdRtX3b+7V8XloWJ8LUuTCv4OA1Q0NgLgoepfSI4SioVmsuc0Y7VI/KVfRBjitc9PEIT4JGEDGk7LfHkAAAA',
+    title: 'Portrait — Tending the Fire',
+  },
+];
+---
+
+<EssayLayout
+  title="Essay Layout Example"
+  description="Kitchen sink demonstrating every essay slide type with orientation behavior."
+  photos={photos}
+>
+
+  <!-- ============================================================
+       1. EssaySlideText — centered, with overline
+       ============================================================ -->
+  <EssaySlideText align="center">
+    <p class="overline">EssaySlideText &middot; align="center"</p>
+    <h1>Essay Layout Reference</h1>
+    <p>
+      Every slide type available for photo essays, shown with its component name
+      and key props. Scroll or use arrow keys to advance.
+    </p>
+  </EssaySlideText>
+
+
+  <!-- ============================================================
+       2. EssaySlideFullBleed — landscape, cover (default)
+       ============================================================ -->
+  <EssaySlideFullBleed
+    url={photos[0].url}
+    width={photos[0].width}
+    height={photos[0].height}
+    lqip={photos[0].lqip}
+    alt={photos[0].title}
+    lightboxIndex={0}
+    loading="eager"
+    overlayPosition="bottom-left"
+  >
+    <h2 style="font-family: var(--font-heading); font-size: var(--text-2xl); font-weight: 400; margin-bottom: var(--space-xs);">
+      EssaySlideFullBleed
+    </h2>
+    <p style="font-family: var(--font-mono); font-size: var(--text-xs); opacity: 0.7;">
+      Landscape &middot; fit="cover" (default) &middot; overlayPosition="bottom-left"
+    </p>
+  </EssaySlideFullBleed>
+
+
+  <!-- ============================================================
+       3. EssaySlideFullBleed — portrait, contain (auto-detected)
+       ============================================================ -->
+  <EssaySlideFullBleed
+    url={photos[14].url}
+    width={photos[14].width}
+    height={photos[14].height}
+    lqip={photos[14].lqip}
+    alt={photos[14].title}
+    lightboxIndex={14}
+    captionTitle="EssaySlideFullBleed — Portrait"
+    captionMeta="fit=contain (auto-detected) · captionTitle · captionMeta"
+  />
+
+
+  <!-- ============================================================
+       4. EssaySlideFullBleed — landscape with caption bar
+       ============================================================ -->
+  <EssaySlideFullBleed
+    url={photos[10].url}
+    width={photos[10].width}
+    height={photos[10].height}
+    lqip={photos[10].lqip}
+    alt={photos[10].title}
+    lightboxIndex={10}
+    captionTitle="EssaySlideFullBleed — Landscape with Caption"
+    captionMeta="captionTitle · captionMeta props"
+  />
+
+
+  <!-- ============================================================
+       5. EssaySlideImageText — default (image left)
+       ============================================================ -->
+  <EssaySlideImageText
+    url={photos[1].url}
+    width={photos[1].width}
+    height={photos[1].height}
+    lqip={photos[1].lqip}
+    alt={photos[1].title}
+    lightboxIndex={1}
+  >
+    <h3>EssaySlideImageText</h3>
+    <p>
+      Default layout: image left (55%), prose right (45%). The narrative workhorse
+      for pairing a single image with its story.
+    </p>
+    <p>
+      <strong>Props shown:</strong> default (no flip). Landscape image uses
+      object-fit: cover to fill the image panel.
+    </p>
+  </EssaySlideImageText>
+
+
+  <!-- ============================================================
+       6. EssaySlideImageText — flipped (image right)
+       ============================================================ -->
+  <EssaySlideImageText
+    url={photos[8].url}
+    width={photos[8].width}
+    height={photos[8].height}
+    lqip={photos[8].lqip}
+    alt={photos[8].title}
+    lightboxIndex={8}
+    flip
+  >
+    <h3>EssaySlideImageText — Flipped</h3>
+    <p>
+      With <strong>flip</strong> prop: image right (45%), prose left (55%).
+      Alternate flip across consecutive slides to create a zigzag reading pattern.
+    </p>
+  </EssaySlideImageText>
+
+
+  <!-- ============================================================
+       7. EssaySlideImageText — portrait image
+       ============================================================ -->
+  <EssaySlideImageText
+    url={photos[5].url}
+    width={photos[5].width}
+    height={photos[5].height}
+    lqip={photos[5].lqip}
+    alt={photos[5].title}
+    lightboxIndex={5}
+  >
+    <h3>EssaySlideImageText — Portrait</h3>
+    <p>
+      Portrait images auto-detect and use <strong>object-position: top center</strong>
+      so faces and heads aren't cropped by the cover fit.
+    </p>
+    <p>
+      The image panel still uses object-fit: cover, but the anchor point shifts
+      to the top of the frame.
+    </p>
+  </EssaySlideImageText>
+
+
+  <!-- ============================================================
+       8. EssaySlideDiptych — landscape pair
+       ============================================================ -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[3], alt: photos[3].title, lightboxIndex: 3 },
+      { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
+    ]}
+    gap="tight"
+    caption="EssaySlideDiptych — Landscape pair · gap=tight · width-filling"
+  />
+
+
+  <!-- ============================================================
+       9. EssaySlideDiptych — portrait pair
+       ============================================================ -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[6], alt: photos[6].title, lightboxIndex: 6 },
+      { ...photos[7], alt: photos[7].title, lightboxIndex: 7 },
+    ]}
+    gap="tight"
+    caption="EssaySlideDiptych — Portrait pair · gap=tight · height-constrained, centered"
+  />
+
+
+  <!-- ============================================================
+       10. EssaySlideDiptych — gap variants
+       ============================================================ -->
+  <EssaySlideText align="center">
+    <p class="overline">Diptych Gap Variants</p>
+    <h2>gap="none" | "tight" | "normal"</h2>
+    <p>
+      The next three slides show the same landscape pair with each gap setting.
+    </p>
+  </EssaySlideText>
+
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[3], alt: photos[3].title, lightboxIndex: 3 },
+      { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
+    ]}
+    gap="none"
+    caption="gap=none"
+  />
+
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[3], alt: photos[3].title, lightboxIndex: 3 },
+      { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
+    ]}
+    gap="tight"
+    caption="gap=tight (default, var(--space-sm))"
+  />
+
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[3], alt: photos[3].title, lightboxIndex: 3 },
+      { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
+    ]}
+    gap="normal"
+    caption="gap=normal (var(--space-lg))"
+  />
+
+
+  <!-- ============================================================
+       11. EssaySlideTriptych — landscape
+       ============================================================ -->
+  <EssaySlideTriptych
+    photos={[
+      { ...photos[11], alt: photos[11].title, lightboxIndex: 11 },
+      { ...photos[12], alt: photos[12].title, lightboxIndex: 12 },
+      { ...photos[13], alt: photos[13].title, lightboxIndex: 13 },
+    ]}
+    gap="tight"
+    caption="EssaySlideTriptych — Landscape · gap=tight · width-filling"
+  />
+
+
+  <!-- ============================================================
+       12. EssaySlideTriptych — portrait
+       ============================================================ -->
+  <EssaySlideTriptych
+    photos={[
+      { ...photos[14], alt: photos[14].title, lightboxIndex: 14 },
+      { ...photos[15], alt: photos[15].title, lightboxIndex: 15 },
+      { ...photos[16], alt: photos[16].title, lightboxIndex: 16 },
+    ]}
+    gap="tight"
+    caption="EssaySlideTriptych — Portrait · gap=tight · height-constrained"
+  />
+
+
+  <!-- ============================================================
+       13. EssaySlideMiniGallery — 3 columns
+       ============================================================ -->
+  <EssaySlideMiniGallery
+    photos={[
+      { ...photos[1], alt: photos[1].title, lightboxIndex: 1 },
+      { ...photos[5], alt: photos[5].title, lightboxIndex: 5 },
+      { ...photos[3], alt: photos[3].title, lightboxIndex: 3 },
+      { ...photos[6], alt: photos[6].title, lightboxIndex: 6 },
+      { ...photos[8], alt: photos[8].title, lightboxIndex: 8 },
+      { ...photos[7], alt: photos[7].title, lightboxIndex: 7 },
+      { ...photos[9], alt: photos[9].title, lightboxIndex: 9 },
+      { ...photos[14], alt: photos[14].title, lightboxIndex: 14 },
+      { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
+    ]}
+    columns={3}
+    caption="EssaySlideMiniGallery — columns=3 · 9 images · masonry layout"
+  />
+
+
+  <!-- ============================================================
+       14. EssaySlideMiniGallery — 2 columns
+       ============================================================ -->
+  <EssaySlideMiniGallery
+    photos={[
+      { ...photos[5], alt: photos[5].title, lightboxIndex: 5 },
+      { ...photos[8], alt: photos[8].title, lightboxIndex: 8 },
+      { ...photos[6], alt: photos[6].title, lightboxIndex: 6 },
+      { ...photos[9], alt: photos[9].title, lightboxIndex: 9 },
+      { ...photos[7], alt: photos[7].title, lightboxIndex: 7 },
+      { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
+    ]}
+    columns={2}
+    caption="EssaySlideMiniGallery — columns=2 · 6 images"
+  />
+
+
+  <!-- ============================================================
+       15. EssaySlideText — left aligned
+       ============================================================ -->
+  <EssaySlideText align="left">
+    <p class="overline">EssaySlideText &middot; align="left"</p>
+    <h2>Left-Aligned Text Slide</h2>
+    <p>
+      For section transitions or narrative beats where centered text feels too formal.
+      The overline class gives you small mono caps for labels.
+    </p>
+    <p>
+      Available elements: <strong>h1–h3</strong> headings, <strong>p</strong> body text,
+      <strong>strong</strong> emphasis, and <strong>overline</strong> labels.
+    </p>
+  </EssaySlideText>
+
+
+  <!-- ============================================================
+       16. EssaySlideFlow — prose section
+       ============================================================ -->
+  <EssaySlideFlow>
+    <h2>EssaySlideFlow</h2>
+    <p>
+      A prose-focused slide for longer narrative passages. Vertically centered within
+      the viewport, max-width 680px. Snaps like every other slide.
+    </p>
+    <p>
+      Use flow slides when the writing needs to stand alone without competing with
+      an image. Supports headings, paragraphs, blockquotes, and inline photos.
+    </p>
+    <blockquote>
+      Blockquotes render with an accent-colored left border and italic text.
+      Use them for direct quotes or emphasized passages.
+    </blockquote>
+  </EssaySlideFlow>
+
+
+  <!-- ============================================================
+       17. Credits
+       ============================================================ -->
+  <EssaySlideText align="center">
+    <p class="overline">End of Reference</p>
+    <h2>Essay Layout Example</h2>
+    <p>
+      18 slides &middot; 7 component types &middot; orientation-aware<br />
+      See <strong>docs/essay-guide.md</strong> for the full authoring guide.
+    </p>
+  </EssaySlideText>
+
+</EssayLayout>

@@ -1,0 +1,679 @@
+---
+/**
+ * Nomads of Djebel Saghro — Photo Essay
+ *
+ * A day with the Ait Atta: arrival, tea, bread, herders, and firelight
+ * in Morocco's Djebel Saghro massif. November 2025.
+ */
+import EssayLayout from '@layouts/EssayLayout.astro';
+import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
+import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
+import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
+import EssaySlideTriptych from '@components/essay/EssaySlideTriptych.astro';
+import EssaySlideText from '@components/essay/EssaySlideText.astro';
+import EssaySlideFlow from '@components/essay/EssaySlideFlow.astro';
+
+/**
+ * Photo data — ordered for the essay narrative.
+ * Each entry maps to a CDN-hosted image with AVIF/WebP srcset.
+ */
+const photos = [
+  /* 0 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912',
+    width: 6916, height: 4613,
+    lqip: 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA=',
+    title: 'The Road to Saghro',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/4', shutter: '1/2500s', iso: 400 },
+  },
+  /* 1 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-075-cnh_1217',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJQBOgBFFP+L+SpzkQkAAA/p59TgGue3fmT63N4wMgHaC9bjsuN7SVS4wKdWCATY2otkAA',
+    title: 'Preparing the Tea',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/14', shutter: '1/20s', iso: 400 },
+  },
+  /* 2 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-076-cnh_1237',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABwBQCdASoUAB4APzmEvVavJ6YjsBgIAeAnCUAWI+QwOHuT6N+kkrYT823tq2WQxfgNymdAAM3aqP7+27BKpKPz7mG4vZ+eWT4TbV/xdVl3W8lqvDemP25zLFxULTe9sN/JjWv7+afRNDea8xREJzKz0ZUv3QjUTBeMjJl2mO7chTYnF4yqhX0GxnMAPSJaKq6BLDKe9YYMgD7TFAAAAA==',
+    title: 'Pouring Mint Tea',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.6', shutter: '1/6400s', iso: 400 },
+  },
+  /* 3 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-074-cnh_1169',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYgCdMoACLoDNBi4B+YAAzB5anIywYmzA2IYp5EF8TRiaY06aRVPwWgEz2PbinSEUCDED/A5XtwkDTcuTr7Sa7gA2vqvj0wuwAA==',
+    title: 'Sugar for Tea',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/13', shutter: '1/40s', iso: 800 },
+  },
+  /* 4 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-079-cnh_1105',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBOgA8vmStqCmIsQAAD+udyrX0jHYrMG+9gJbomD9pmbbmmtj2KG1iog5m6WSuxgYNsE34mYDL/cGAA=',
+    title: 'Flour-Dusted Hands',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.8', shutter: '1/125s', iso: 800 },
+  },
+  /* 5 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-078-cnh_1097',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAACQBACdASoUAB4APzmMu1OvKiYisAgB4CcJQBTig2a47JTNn92kNiVqhI2T5oAA/uOErukgdTtgyvcvkXI482KNwMBYxBa0jIn16iz5YXfkXjBLQm1Jhd7+znRmEY/yll00n0D4KEHLdOk3zCBbdI74YhgUU+aSkcDYCTPlvUdrgAAA',
+    title: 'Making Bread',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/3.5', shutter: '1/125s', iso: 800 },
+  },
+  /* 6 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-077-cnh_1243',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAACQBACdASoUAB4APzmQu1WvKqYjMBgIAeAnCUAVHoEPjANNzL52G94/PGmpWYAA+49NFMjvQ4LOaR2lUlS8GXq2fykA7zonb6y2m8x6jePF1W71UNhQue7VbhK2Shnp42ag2ZgimLEteVQ+p7dy604lVqkbWgvoZqoXsXf/EsuSt9UJff0CUTATnIRR956tRyXK/qSkwU80AA==',
+    title: 'The Tea Maker',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.6', shutter: '1/4000s', iso: 400 },
+  },
+  /* 7 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-081-cnh_1358',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAACQBQCdASoUAB4APzmQvFWvKiYjMBgIAeAnCWMAuxrgABuflil7QldgoNgRNJ/E1RVCTqmzAAD+dYykFy12XGYd04FjfQFC9IC/QyxWTKMSJzMW6KklbuCB+aJJM0m3Qsz10uGiLLerH8e1ErObjtRkGWLtjdvqghoV3xF1cZWh3at42jDncWU8tgkFe8MaHgx4/PieRg6fC2wAAAA=',
+    title: 'Sharing Bread',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/3.2', shutter: '1/400s', iso: 320 },
+  },
+  /* 8 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-080-cnh_1255',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQBACdASoUAA0APzmIuVQvKSWjMAgB4CcJZgCw7CBSv1q2JjRz//81wAD+H5oAyT/GKhQq5bIid1/m31MPM0eEzw6H46g2I0MDnf1F1Ft4EFfwn91OMt4ep6k8AA==',
+    title: 'Bread Oven',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.6', shutter: '1/4000s', iso: 320 },
+  },
+  /* 9 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-082-cnh_3747',
+    width: 5366, height: 8044,
+    lqip: 'data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAABQBACdASoUAB4APzl8p1OvJyKit/VR4CcJZQDKAEVfxn6L/vEsFb4zFqKgAP7vss7pwJ2ivhgkaNwrJEXqIUrle8ebFAnsCXW6Y2UvMazZ6q8Ay+x0JKla0OEWu14zlfzpIaT2pAA32MGT2t/GR2f1OLaiZP/grYAAAA==',
+    title: 'Herder and Flock',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 70-200mm F2.8L IS USM', focalLength: '153mm', aperture: 'f/3.2', shutter: '1/1250s', iso: 400 },
+  },
+  /* 10 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-083-cnh_1414',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYwAAVOvFb64Li5OBzoAA/tPoTysDmaEz7Oy3VhiMO5mk4b7zfqvyqumuAB0mZT8YBiMHubHZUb5HSlgVNILuM75+FIlh5C6VUAAA',
+    title: 'Holding a Kid',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/4', shutter: '1/160s', iso: 400 },
+  },
+  /* 11 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-084-cnh_1463',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwBACdASoUAB4APzmKuVYvKSWjsBgIAeAnCWdkMwAUnkI9EMos7t9h2AAA/ucTtPa/Ah9E2wDqfyz15qyXAA4fpib/1a+/ZBKWzJ05x0fbersRuN+EUjhuNVFbsgAA',
+    title: 'The Herder',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.8', shutter: '1/640s', iso: 400 },
+  },
+  /* 12 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-089-cnh_1676',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwBACdASoUAB4APzmIulOvKSWisAgB4CcJQBfJBEBEbvVoZ1nkGQWW3IvgJQREjQAA/t6TL5z6eKRdx6fK1WKQAlmZbKPD5oJt1CEqCjT+LFgHE0xap3tiy6Wrx+2O/yZXUQ3GjujcKzvA3+7Pd/DVhEJdiHqFtv2GKoBMRRfMpntCAAA=',
+    title: 'With a Newborn Kid',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/3.2', shutter: '1/500s', iso: 800 },
+  },
+  /* 13 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-086-cnh_3827',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJZgCdABc62yqX1BjAAMqhHP7DntbCWR6k19D4ljMlXAJ6hPZKyVtxxqfqUEqcAJQepzgJ4PDMiLEGfEAAAA==',
+    title: 'Volcanic Pinnacles',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/6.3', shutter: '1/320s', iso: 400 },
+  },
+  /* 14 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-087-cnh_1644',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAACwBACdASoUAB4APzmMulOvKiWisAgB4CcJQBXDhDwjY7W1rSSSNuRb+On/JDUAAP5S63Xz+m1U1NyficsEqqS2H0dw++6Gy5JF2Kukw9i2PvB2G35YnppSK5K/u0iQFPFD8ms7oXjkP2BMAimG8/up27KScpJOpJgAAA==',
+    title: 'Two Herders Resting',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/4', shutter: '1/200s', iso: 800 },
+  },
+  /* 15 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-088-cnh_1647',
+    width: 4881, height: 6508,
+    lqip: 'data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwBACdASoUABsAPzmIvFUvKSYjKA1R4CcJZwDQGBEcMKLH6jh+Sm8bNrTTCsrkkAAA/tMKOksVBu4wgGB3mZ4lKEe/4b1pNO02kZqXAHMnGOPeaTDFkGxp4mpaZFjMWkuI0e/H9wwfxp1cdgUqoFuQVAA=',
+    title: 'Seated Among Pinnacles',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/4', shutter: '1/200s', iso: 800 },
+  },
+  /* 16 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-085-cnh_1493',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACQAwCdASoUAA0APzmEulOvKKWisAgB4CcJZQCdACFjilNu8nwAAP0w3RX6tzvHY4N2DWqaREeX5xHqpoJrVrnjZjtFWZFl1aAAAA==',
+    title: 'Carrying Water',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.2', shutter: '1/1000s', iso: 400 },
+  },
+  /* 17 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-090-cnh_3873',
+    width: 8044, height: 5366,
+    lqip: 'data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBWABZuCwwAA/uDoyhMwvh5sFNZUPZC4B9TBH8FjBsJ8YspaAAAA',
+    title: 'Watching the Flock',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 70-200mm F2.8L IS USM', focalLength: '200mm', aperture: 'f/3.2', shutter: '1/500s', iso: 400 },
+  },
+  /* 18 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-092-cnh_1680',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACQAwCdASoUAA0APzmGulOvKSWisAgB4CcJYwCdACIftx5I9YiAAPKR6RsIgpD6okTi1UdN+g4g/jxFUQXNWxU4Gl99WE1VgAAAAA==',
+    title: 'Below the Mesa',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/3.2', shutter: '1/500s', iso: 800 },
+  },
+  /* 19 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-093-cnh_1689',
+    width: 8095, height: 5399,
+    lqip: 'data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwCdMoADVQNQQ0uIAADLQzCAlqhnFGPFwY0udx+46RlsYEYXN9JXQktVnbyQ6AdQAAAA',
+    title: 'Evening Gathering',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/3.2', shutter: '1/500s', iso: 800 },
+  },
+  /* 20 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-091-cnh_3906',
+    width: 5375, height: 8059,
+    lqip: 'data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAADQAwCdASoUAB4APzmUwVmvKicjqAgB4CcJYwDE2A6/XvyHfNEFogAA8qH05WPVNw0S8iSJfrrni0BJhNuNnLdjjkYHekiJIQdm4i4BMMng2OMH0ZsYcF4akbiYZITafCdhqkte8AINdIRhDGDQv06PAAAAAA==',
+    title: 'Two Herders Walking',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 70-200mm F2.8L IS USM', focalLength: '135mm', aperture: 'f/3.2', shutter: '1/500s', iso: 400 },
+  },
+  /* 21 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-094-cnh_1711',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAwBACdASoUAA0APzmIuVQvKSWjMAgB4CcJYgCdMoGv/gPPzMYlaXoFxFAA/qFdSuhXLm9RtYbBHIq+m/NSyzzUfR0MCq7jLE9HEno71hzZfHNkqGcAAA==',
+    title: 'Flock at Sunset',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/3.5', shutter: '1/1600s', iso: 800 },
+  },
+  /* 22 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-095-cnh_3954',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAwCdASoUAB4APzmEt1SvKCUkMBgMAeAnCWMAtsgE3Q/ElmWXSYAA0LJ5PuRIsDZuwaDlWF56mzEqNATSK8COPztQjOFs8P7T5+l8TZZmoJHnjBC4AAAA',
+    title: 'Campfire Below the Cliffs',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/3.2', shutter: '1/125s', iso: 400 },
+  },
+  /* 23 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-096-cnh_3988',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQBACdASoUAB4APzmIu1avKKWjsBgIAeAnCWUAuDALLHIQbO5FPaPn+ADNidgC/XEeLnwBXKXly08sEYrPnxpdUiXt/5QT4V9EkwbySoNtS4CvNDCpf8rPDXCgAAAA',
+    title: 'Two at the Fire',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/1.4', shutter: '1/160s', iso: 400 },
+  },
+  /* 24 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-103-cnh_4028',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQBACdASoUAB4APyV+slOuKKSkN/qoAcAkiWUswAABgagWWDneKiifkAD+nJhXNGjI3Bn1Wsp9WtPn+TN5M2yTGGt8M++7UsE60uZW3AQAAA==',
+    title: 'Silhouettes at the Fire',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/1.4', shutter: '1/160s', iso: 400 },
+  },
+  /* 25 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-097-cnh_1875',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACwBACdASoUAB4APzmEuFOvKKUisAgB4CcJZQDDrCIKEN/qPFswBoerPXrwyjtAAN5lAdRtX3b+7V8XloWJ8LUuTCv4OA1Q0NgLgoepfSI4SioVmsuc0Y7VI/KVfRBjitc9PEIT4JGEDGk7LfHkAAAA',
+    title: 'Tending the Fire',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.2', shutter: '1/400s', iso: 1600 },
+  },
+  /* 26 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-098-cnh_1807',
+    width: 5281, height: 7918,
+    lqip: 'data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADQBACdASoUAB4APzmQvlevKaYjqAqp4CcJYgCo9DT3b+z+oFuEWA4wdu7A5UHiwAD+jc+j/cAhtAWg+ecF5UVGQLgvHEoBaydJW+EYIrsjwxBAgM5vYQGvxysiHIACy0sf4pu3SoANplLmhF1Oal0yiFbCmAU5Qg+fQWtQAAA=',
+    title: 'Kettle at Dusk',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.2', shutter: '1/1250s', iso: 1600 },
+  },
+  /* 27 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-099-cnh_1757',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAACwBACdASoUAB4APzl+uFOvJ6Uit/VYAeAnCWMAw6xRRyvesj9Zuj9MZ/4mklgAAP7sPQt53L6traxPQlc6vtSXTeuKIaMKVaRIy6aBSL/bj83dD9xLNuqz5HtLuJxFGdEVCOYTAV4fAAAA',
+    title: 'Tea on the Coals',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.8', shutter: '1/160s', iso: 1600 },
+  },
+  /* 28 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-100-cnh_4011',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAwAwCdASoUAA0APzmMvlUvKaajMAgB4CcJZwC+SCzcCtgAAP7utQDcLbe5v5R1ZL1n7ZDKOGvODDvetTP+Q5ItQkk0AA==',
+    title: 'Fire Among the Pinnacles',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/1.4', shutter: '1/160s', iso: 400 },
+  },
+  /* 29 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-101-cnh_4020',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAABQBACdASoUAB4APy2CtFOuqSUoN/VYAdAliWUAwCgQ0X4Ijfw90sGNeWngAP4UCj/wbBjtKf7wz3PUETUwYFE4EYiiZm48oTGo2LjW6gPdDwdLRjEAAA==',
+    title: 'Campfire and Cliffs',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/1.4', shutter: '1/160s', iso: 400 },
+  },
+  /* 30 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-104-cnh_1965',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAwCdASoUAB4APzmOwFcvKacuKAqp4CcJZQAAMWVdZREc8I25PJAA/nZo+nXukHZu/L9ODGrROgnL3Te83sRR57b1tTi+NtiOjoYdkAAAAA==',
+    title: 'Dusk Over Saghro',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.2', shutter: '1/200s', iso: 1600 },
+  },
+  /* 31 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-102-cnh_4025',
+    width: 8192, height: 5464,
+    lqip: 'data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAABwAwCdASoUAA0APzmEuVOvKKWsMAgB4CcJZQDImCHegIPYQAAA/hEovwIgYiz3QNrbjruDibTuSuIAAAA=',
+    title: 'Two at the Fire',
+    exif: { camera: 'Canon EOS R5', lens: 'RF 35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/1.4', shutter: '1/160s', iso: 400 },
+  },
+  /* 32 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-105-cnh_2042',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQBACdASoUAB4APx1yrlOtJqQit+gBoCOJZgDA3DJRQFTsbM+t0hAyAAD+7pJP+dnZBSTT0yMTS3LWcJgowLslTZhuFd1J9vFPSnC/OdC5Oc+tR4SjRYAAmHgAAA==',
+    title: 'Making Tea by Firelight',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.2', shutter: '1/160s', iso: 3200 },
+  },
+  /* 33 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-106-cnh_2132',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADwBACdASoUAB4APzmMulYvKSWjqA1R4CcJbADE2EXfvD6WmCyBR2UzhN3ZrjtmrQAA/vVldvtmPAsE5C/8wfOI+hEbvwv6b++eLP34NRXeL5UpQJ4j3VyK/0TDQmFJUhQgth5XWxWKgETqLsUTqCcxAL/wb1UoAAA=',
+    title: 'Embers and Kettle',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.2', shutter: '1/100s', iso: 3200 },
+  },
+  /* 34 */ {
+    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-107-cnh_2005',
+    width: 5464, height: 8192,
+    lqip: 'data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACwAwCdASoUAB4APzmOuVWvKiWjMBgIAeAnCWcAAJ7rh5CTDaG7AAD+790s9fP9Tx4VoADpYdKUJVEYjE2lNAAA',
+    title: 'Embers',
+    exif: { camera: 'Canon EOS R5m2', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.2', shutter: '1/100s', iso: 1600 },
+  },
+];
+---
+
+<EssayLayout
+  title="Nomads of Djebel Saghro"
+  description="A day with the Ait Atta — tea, bread, herds, and firelight in Morocco's volcanic highlands."
+  photos={photos}
+>
+
+  <!-- ======= I. ARRIVAL & CAMP ======= -->
+
+  <!-- 1. Hero — The road in -->
+  <EssaySlideFullBleed
+    url={photos[0].url}
+    width={photos[0].width}
+    height={photos[0].height}
+    lqip={photos[0].lqip}
+    alt={photos[0].title}
+    lightboxIndex={0}
+    fit="cover"
+    overlayPosition="bottom-left"
+    loading="eager"
+  >
+    <h1 style="font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 400; margin-bottom: var(--space-sm);">
+      Nomads of Djebel Saghro
+    </h1>
+    <p style="font-size: var(--text-lg); opacity: 0.8;">Morocco</p>
+    <p style="font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.06em; opacity: 0.5; margin-top: var(--space-sm);">31&deg;16&prime;N &ensp; 5&deg;59&prime;W &ensp; 2,100m</p>
+  </EssaySlideFullBleed>
+
+  <!-- 2. Opening text -->
+  <EssaySlideText align="center">
+    <p class="overline">Djebel Saghro &middot; Anti-Atlas &middot; 31&deg;16&prime;N 5&deg;59&prime;W</p>
+    <h2>Where the road ends, the camps begin</h2>
+    <p>
+      South of Ouarzazate, the paved road gives way to gravel, then to ruts cut
+      into volcanic rock. The Saghro massif rises from the desert floor&mdash;a plateau
+      of black pinnacles and dry riverbeds where the Ait Atta have kept their herds
+      for centuries. We drove in from the north, dust hanging behind the truck in
+      a slow column that took minutes to settle.
+    </p>
+  </EssaySlideText>
+
+  <!-- 3. Tea preparation — image + text -->
+  <EssaySlideImageText
+    url={photos[1].url}
+    width={photos[1].width}
+    height={photos[1].height}
+    lqip={photos[1].lqip}
+    alt={photos[1].title}
+    lightboxIndex={1}
+  >
+    <h3>The Tea Ritual</h3>
+    <p>
+      At the first camp, tea was already underway before we'd shut the engine off.
+      The kettle sat on a triangle of stones over scrub-brush coals, and the man
+      crouching beside it was measuring sugar into a Nestl&eacute; tin that had
+      clearly served this purpose for years.
+    </p>
+    <p>
+      Three pours. The first is for the tea, the second for the sugar, the third
+      for the mint. Each pour from waist height, a thin amber arc into the glass.
+      We drank it standing, burning our fingers on the glasses.
+    </p>
+  </EssaySlideImageText>
+
+  <!-- 4. Pouring tea — full bleed portrait -->
+  <EssaySlideFullBleed
+    url={photos[2].url}
+    width={photos[2].width}
+    height={photos[2].height}
+    lqip={photos[2].lqip}
+    alt={photos[2].title}
+    lightboxIndex={2}
+    fit="contain"
+  />
+
+  <!-- 5. Details diptych — sugar scoop + flour hands -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[3], alt: photos[3].title, lightboxIndex: 3 },
+      { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
+    ]}
+    gap="tight"
+  />
+
+  <!-- 6. Bread making — image + text (flipped) -->
+  <EssaySlideImageText
+    url={photos[5].url}
+    width={photos[5].width}
+    height={photos[5].height}
+    lqip={photos[5].lqip}
+    alt={photos[5].title}
+    lightboxIndex={5}
+    flip
+  >
+    <h3>Bread in the Dark</h3>
+    <p>
+      Inside the felt tent, a woman was making bread. The light came from a single
+      gap in the canvas above, falling on the dough and on her hands as she worked it
+      flat against a cloth laid on the ground. Two children sat behind her, watching
+      us watch her.
+    </p>
+    <p>
+      The bread would go into the ashes of the outdoor fire, buried under coals and
+      pulled out twenty minutes later with a crust like cracked earth. It tasted like
+      smoke and wheat and something chalky from the ash.
+    </p>
+  </EssaySlideImageText>
+
+  <!-- 7. Portraits diptych — tea maker + bread sharer -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[6], alt: photos[6].title, lightboxIndex: 6 },
+      { ...photos[7], alt: photos[7].title, lightboxIndex: 7 },
+    ]}
+    gap="tight"
+  />
+
+  <!-- 8. Bread oven fire — full bleed -->
+  <EssaySlideFullBleed
+    url={photos[8].url}
+    width={photos[8].width}
+    height={photos[8].height}
+    lqip={photos[8].lqip}
+    alt={photos[8].title}
+    lightboxIndex={8}
+    captionTitle={photos[8].title}
+  />
+
+  <!-- ======= II. THE HERDERS ======= -->
+
+  <!-- 9. Transition prose -->
+  <EssaySlideFlow>
+    <h2>The Herders of Saghro</h2>
+    <p>
+      After tea, we walked out from the camp toward the pinnacles. The landscape opened
+      up in every direction&mdash;flat gravel plains broken by columns of eroded volcanic
+      rock, black basalt worn into spires and doorways by wind and rain.
+    </p>
+    <p>
+      The herders appeared gradually. First a distant scatter of sheep on a hillside,
+      then the figure standing above them in a striped djellaba and white turban, one
+      hand on a stick, the other shielding his eyes. They moved their flocks between
+      the pinnacles at a pace set entirely by the animals. There was no urgency.
+    </p>
+  </EssaySlideFlow>
+
+  <!-- 10. Herder with flock — full bleed portrait -->
+  <EssaySlideFullBleed
+    url={photos[9].url}
+    width={photos[9].width}
+    height={photos[9].height}
+    lqip={photos[9].lqip}
+    alt={photos[9].title}
+    lightboxIndex={9}
+    fit="contain"
+  />
+
+  <!-- 11. Herder with kid — image + text -->
+  <EssaySlideImageText
+    url={photos[10].url}
+    width={photos[10].width}
+    height={photos[10].height}
+    lqip={photos[10].lqip}
+    alt={photos[10].title}
+    lightboxIndex={10}
+  >
+    <h3>The Flock</h3>
+    <p>
+      He held the kid the way you'd hold something both fragile and routine&mdash;one arm
+      under the belly, the other free. The flock numbered maybe sixty head, mostly sheep
+      with a handful of goats mixed in, and he knew them individually. A ewe with a torn
+      ear. A black goat that always wandered left.
+    </p>
+    <p>
+      The pinnacles behind him looked like a city from a distance. Up close they were
+      just rock. The herders paid them no attention. They were furniture.
+    </p>
+  </EssaySlideImageText>
+
+  <!-- 12. Two herder portraits diptych -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[11], alt: photos[11].title, lightboxIndex: 11 },
+      { ...photos[12], alt: photos[12].title, lightboxIndex: 12 },
+    ]}
+    gap="tight"
+  />
+
+  <!-- 13. Pinnacles landscape — full bleed -->
+  <EssaySlideFullBleed
+    url={photos[13].url}
+    width={photos[13].width}
+    height={photos[13].height}
+    lqip={photos[13].lqip}
+    alt={photos[13].title}
+    lightboxIndex={13}
+    captionTitle={photos[13].title}
+    captionMeta="35mm &middot; f/6.3 &middot; 1/320s"
+  />
+
+  <!-- 14. Two herders sitting diptych -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[14], alt: photos[14].title, lightboxIndex: 14 },
+      { ...photos[15], alt: photos[15].title, lightboxIndex: 15 },
+    ]}
+    gap="tight"
+  />
+
+  <!-- 15. Herder carrying water — image + text (flipped) -->
+  <EssaySlideImageText
+    url={photos[16].url}
+    width={photos[16].width}
+    height={photos[16].height}
+    lqip={photos[16].lqip}
+    alt={photos[16].title}
+    lightboxIndex={16}
+    flip
+  >
+    <h3>Between Water and Pasture</h3>
+    <p>
+      The nearest water source was a forty-minute walk. He carried it in a red jerry
+      can slung over one shoulder, the djellaba bunched around the strap. The route
+      hadn't changed in his lifetime, or in his father's.
+    </p>
+    <p>
+      In the Saghro, water determines everything: where you camp, how long you stay,
+      which direction you move next.
+    </p>
+  </EssaySlideImageText>
+
+  <!-- 16. Three wide herding landscapes — triptych -->
+  <EssaySlideTriptych
+    photos={[
+      { ...photos[17], alt: photos[17].title, lightboxIndex: 17 },
+      { ...photos[18], alt: photos[18].title, lightboxIndex: 18 },
+      { ...photos[19], alt: photos[19].title, lightboxIndex: 19 },
+    ]}
+    gap="tight"
+  />
+
+  <!-- 17. Two herders walking — full bleed portrait -->
+  <EssaySlideFullBleed
+    url={photos[20].url}
+    width={photos[20].width}
+    height={photos[20].height}
+    lqip={photos[20].lqip}
+    alt={photos[20].title}
+    lightboxIndex={20}
+    fit="contain"
+  />
+
+  <!-- 18. Flock at mesa sunset — full bleed landscape (transition to dusk) -->
+  <EssaySlideFullBleed
+    url={photos[21].url}
+    width={photos[21].width}
+    height={photos[21].height}
+    lqip={photos[21].lqip}
+    alt={photos[21].title}
+    lightboxIndex={21}
+  />
+
+  <!-- ======= III. DUSK & FIRELIGHT ======= -->
+
+  <!-- 19. Transition text -->
+  <EssaySlideText align="center">
+    <h2>When the light goes</h2>
+    <p>
+      The sun drops behind the western mesa and the
+      temperature follows it down&mdash;ten degrees in twenty minutes. The herders
+      pulled their hoods up and gathered scrub brush, and the first fire was lit
+      before the sky had finished turning.
+    </p>
+  </EssaySlideText>
+
+  <!-- 20. Campfire below cliffs — full bleed portrait -->
+  <EssaySlideFullBleed
+    url={photos[22].url}
+    width={photos[22].width}
+    height={photos[22].height}
+    lqip={photos[22].lqip}
+    alt={photos[22].title}
+    lightboxIndex={22}
+    fit="contain"
+  />
+
+  <!-- 21. Two campfire scenes diptych -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[23], alt: photos[23].title, lightboxIndex: 23 },
+      { ...photos[24], alt: photos[24].title, lightboxIndex: 24 },
+    ]}
+    gap="tight"
+  />
+
+  <!-- 22. Fire tender — image + text -->
+  <EssaySlideImageText
+    url={photos[25].url}
+    width={photos[25].width}
+    height={photos[25].height}
+    lqip={photos[25].lqip}
+    alt={photos[25].title}
+    lightboxIndex={25}
+  >
+    <h3>Fire and Tea Again</h3>
+    <p>
+      The fire served two purposes: warmth and tea. The kettle went on first, balanced
+      on the same arrangement of stones, and the scrub brush burned hot and fast. He
+      fed it in handfuls, leaning forward to blow on the coals when the flame dropped,
+      his djellaba hood pulled low against the wind that came up the valley after dark.
+    </p>
+    <p>
+      Nobody spoke much. The fire crackled. The kettle ticked as it heated. Somewhere
+      out in the dark, the sheep shifted and settled.
+    </p>
+  </EssaySlideImageText>
+
+  <!-- 23. Kettles diptych -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[26], alt: photos[26].title, lightboxIndex: 26 },
+      { ...photos[27], alt: photos[27].title, lightboxIndex: 27 },
+    ]}
+    gap="tight"
+  />
+
+  <!-- 24. Campfire among pinnacles — full bleed landscape -->
+  <EssaySlideFullBleed
+    url={photos[28].url}
+    width={photos[28].width}
+    height={photos[28].height}
+    lqip={photos[28].lqip}
+    alt={photos[28].title}
+    lightboxIndex={28}
+  />
+
+  <!-- 25. Campfire + dusk landscape diptych -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[29], alt: photos[29].title, lightboxIndex: 29 },
+      { ...photos[30], alt: photos[30].title, lightboxIndex: 30 },
+    ]}
+    gap="tight"
+  />
+
+  <!-- 26. Two at fire wide — full bleed landscape -->
+  <EssaySlideFullBleed
+    url={photos[31].url}
+    width={photos[31].width}
+    height={photos[31].height}
+    lqip={photos[31].lqip}
+    alt={photos[31].title}
+    lightboxIndex={31}
+  />
+
+  <!-- 27. Firelight portrait — image + text (flipped) -->
+  <EssaySlideImageText
+    url={photos[32].url}
+    width={photos[32].width}
+    height={photos[32].height}
+    lqip={photos[32].lqip}
+    alt={photos[32].title}
+    lightboxIndex={32}
+    flip
+  >
+    <h3>The Last Tea</h3>
+    <p>
+      By full dark, the cliffs were gone, the pinnacles were gone, the flock was
+      a sound in the darkness. Nothing left but the fire and the faces around it
+      and the kettle making its third round of the evening.
+    </p>
+    <p>
+      He poured the tea the same way he had that afternoon&mdash;high arc, steady
+      hand, the amber catching the light of the coals instead of the sun. The
+      gesture was identical. The light had changed completely.
+    </p>
+  </EssaySlideImageText>
+
+  <!-- 28. Embers close-up — full bleed portrait -->
+  <EssaySlideFullBleed
+    url={photos[33].url}
+    width={photos[33].width}
+    height={photos[33].height}
+    lqip={photos[33].lqip}
+    alt={photos[33].title}
+    lightboxIndex={33}
+    fit="contain"
+  />
+
+  <!-- 29. Closing — man by dying embers -->
+  <EssaySlideFullBleed
+    url={photos[34].url}
+    width={photos[34].width}
+    height={photos[34].height}
+    lqip={photos[34].lqip}
+    alt={photos[34].title}
+    lightboxIndex={34}
+    fit="contain"
+  />
+
+  <!-- 30. Credits -->
+  <EssaySlideText align="center">
+    <p class="overline">Heist Studio</p>
+    <h2>Nomads of Djebel Saghro</h2>
+    <p>
+      Djebel Saghro, Morocco.<br />
+      31&deg;16&prime;N &ensp; 5&deg;59&prime;W &ensp; 2,100m<br /><br />
+      RF 50mm f/1.2L &middot; RF 35mm f/1.4L &middot; RF 70-200mm f/2.8L
+    </p>
+  </EssaySlideText>
+
+</EssayLayout>

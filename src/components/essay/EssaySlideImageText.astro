@@ -1,0 +1,54 @@
+---
+/**
+ * Image + text split slide — 55/45 split with prose alongside image.
+ * `flip` reverses to 45/55 with image on the right.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface Props {
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  alt: string;
+  lightboxIndex?: number;
+  /** Reverse layout: image right, text left */
+  flip?: boolean;
+}
+
+const {
+  url,
+  width,
+  height,
+  lqip,
+  alt,
+  lightboxIndex,
+  flip = false,
+} = Astro.props;
+
+const isPortrait = height > width;
+---
+
+<section
+  class:list={[
+    'essay-slide',
+    'essay-image-text',
+    flip && 'essay-image-text--flip',
+    isPortrait && 'essay-image-text--portrait',
+  ]}
+>
+  <div class="essay-image-text__image">
+    <Photo
+      url={url}
+      width={width}
+      height={height}
+      lqip={lqip}
+      alt={alt}
+      sizes="(max-width: 768px) 100vw, 55vw"
+      lightboxIndex={lightboxIndex}
+    />
+  </div>
+  <div class="essay-image-text__prose">
+    <slot />
+  </div>
+</section>
