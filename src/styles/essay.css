@@ -71,6 +71,21 @@ html:has([data-essay]) {
   object-fit: contain;
 }
 
+/* Blurred LQIP backdrop for contain slides (portrait on landscape screens) */
+.essay-full-bleed__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(40px) brightness(0.4) saturate(1.2);
+  transform: scale(1.15);
+}
+
+.essay-full-bleed--contain .essay-full-bleed__img {
+  z-index: 1;
+}
+
 /* Text overlay */
 .essay-full-bleed__overlay {
   position: relative;
