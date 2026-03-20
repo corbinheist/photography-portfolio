@@ -47,24 +47,29 @@ const currentPath = Astro.url.pathname;
         class:list={['nav-heading', { active: currentPath === '/work' || currentPath === '/work/' }]}
       >Work</a>
       <ul class="nav-sublinks">
-        {collections.map((c) => (
-          <li>
-            <a
-              href={`/work/${c.id}`}
-              class:list={['nav-sublink', { active: currentPath.startsWith(`/work/${c.id}`) }]}
-            >{c.data.title}</a>
-          </li>
-        ))}
-        {collections.flatMap((c) =>
-          (c.data.essays ?? []).map((essay) => (
+        {collections.map((c) => {
+          const essays = c.data.essays ?? [];
+          return (
             <li>
               <a
-                href={`/work/${c.id}/${essay.slug}`}
-                class:list={['nav-sublink', { active: currentPath === `/work/${c.id}/${essay.slug}` || currentPath === `/work/${c.id}/${essay.slug}/` }]}
-              >{essay.title}</a>
+                href={`/work/${c.id}`}
+                class:list={['nav-sublink', { active: currentPath.startsWith(`/work/${c.id}`) }]}
+              >{c.data.title}</a>
+              {essays.length > 0 && (
+                <ul class="nav-essays">
+                  {essays.map((essay) => (
+                    <li>
+                      <a
+                        href={`/work/${c.id}/${essay.slug}`}
+                        class:list={['nav-sublink', { active: currentPath === `/work/${c.id}/${essay.slug}` || currentPath === `/work/${c.id}/${essay.slug}/` }]}
+                      >{essay.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
-          ))
-        )}
+          );
+        })}
       </ul>
     </div>
 
@@ -334,10 +339,22 @@ const currentPath = Astro.url.pathname;
 
   .nav-sublinks {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs) var(--space-md);
+    flex-direction: column;
+    gap: var(--space-xs);
     margin-top: var(--space-xs);
     padding-left: var(--space-md);
+  }
+
+  .nav-essays {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+    padding-left: var(--space-lg);
+  }
+
+  .nav-essays .nav-sublink {
+    font-size: var(--text-base);
   }
 
   .nav-sublink {
