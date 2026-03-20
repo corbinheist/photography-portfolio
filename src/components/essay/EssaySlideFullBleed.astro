@@ -52,6 +52,13 @@ const hasCaption = captionTitle || captionMeta;
     hasOverlay && 'essay-full-bleed--scrim',
   ]}
 >
+  {fit === 'contain' && (
+    <div
+      class="essay-full-bleed__backdrop"
+      style={`background-image: url(${lqip});`}
+    />
+  )}
+
   <div class="essay-full-bleed__img">
     <Photo
       url={url}
