@@ -68,6 +68,22 @@ function findPhoto(id: string) {
             />
           );
         })}
+      {collection.data.essays?.map((essay: any) => (
+        <AlbumCard
+          href={`/work/${collection.id}/${essay.slug}`}
+          title={essay.title}
+          description={essay.description}
+          location="Photo Essay"
+          coverPhoto={{
+            url: essay.coverImage.url,
+            width: essay.coverImage.width,
+            height: essay.coverImage.height,
+            lqip: essay.coverImage.lqip,
+            title: essay.title,
+          }}
+          photoCount={essay.photoCount}
+        />
+      ))}
     </div>
   </div>
 </PageLayout>

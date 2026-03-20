@@ -55,6 +55,16 @@ const currentPath = Astro.url.pathname;
             >{c.data.title}</a>
           </li>
         ))}
+        {collections.flatMap((c) =>
+          (c.data.essays ?? []).map((essay) => (
+            <li>
+              <a
+                href={`/work/${c.id}/${essay.slug}`}
+                class:list={['nav-sublink', { active: currentPath === `/work/${c.id}/${essay.slug}` || currentPath === `/work/${c.id}/${essay.slug}/` }]}
+              >{essay.title}</a>
+            </li>
+          ))
+        )}
       </ul>
     </div>
 
