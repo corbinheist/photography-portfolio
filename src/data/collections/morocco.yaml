@@ -2,5 +2,24 @@ title: Morocco
 description: Nomad camps, trail running, and the terrain between the Atlas and the Sahara.
 albums:
   - morocco
+essays:
+  - slug: nomads-essay
+    title: Nomads of Djebel Saghro
+    description: A day with the Ait Atta — tea, bread, herds, and firelight in Morocco's volcanic highlands.
+    coverImage:
+      url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912
+      width: 6916
+      height: 4613
+      lqip: "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA="
+    photoCount: 35
+  - slug: ksar-essay
+    title: Ksar Tamnougalt
+    description: Inside a fortified village in Morocco's Draa Valley.
+    coverImage:
+      url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-001-cnh_3628
+      width: 8192
+      height: 5464
+      lqip: "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA=="
+    photoCount: 11
 coverPhoto: cnh-all-images-0108
 sortOrder: 8

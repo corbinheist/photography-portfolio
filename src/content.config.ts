@@ -49,6 +49,22 @@ const photoCollections = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     albums: z.array(z.string()).describe('Ordered list of album IDs'),
+    essays: z
+      .array(
+        z.object({
+          slug: z.string(),
+          title: z.string(),
+          description: z.string().optional(),
+          coverImage: z.object({
+            url: z.string(),
+            width: z.number(),
+            height: z.number(),
+            lqip: z.string(),
+          }),
+          photoCount: z.number(),
+        }),
+      )
+      .optional(),
     coverPhoto: z.string().optional().describe('Reference to a photo ID'),
     sortOrder: z.number().default(0),
   }),
