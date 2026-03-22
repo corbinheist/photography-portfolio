@@ -51,19 +51,43 @@ function buildImageUrl(photo: LightboxPhoto): string {
   return `${photo.url}/${slug}-${bestWidth}.${getImageFormat()}`;
 }
 
+function getVisibleSequence(): HTMLElement | null {
+  const sequences = document.querySelectorAll<HTMLElement>('.essay-sequence');
+  if (sequences.length === 0) return null;
+
+  for (const seq of sequences) {
+    if (getComputedStyle(seq).display !== 'none') return seq;
+  }
+  return null;
+}
+
 // Module-level AbortController for listener cleanup across page transitions
 let controller: AbortController | null = null;
 
 export function initLightbox() {
-  const dataEl = document.querySelector('[data-lightbox-data]');
-  if (!dataEl) return;
-
-  // Abort previous listeners (view transitions re-init)
+  // Abort previous listeners (view transitions re-init or orientation change)
   if (controller) controller.abort();
   controller = new AbortController();
   const { signal } = controller;
 
-  const photos: LightboxPhoto[] = JSON.parse(dataEl.textContent || '[]');
+  // Determine photo data source: visible sequence or global lightbox data
+  let photos: LightboxPhoto[];
+  let clickScope: ParentNode;
+
+  const visibleSequence = getVisibleSequence();
+  if (visibleSequence) {
+    const seqDataEl = visibleSequence.querySelector('[data-sequence-photos]');
+    photos = seqDataEl ? JSON.parse(seqDataEl.textContent || '[]') : [];
+    clickScope = visibleSequence;
+  } else {
+    const dataEl = document.querySelector('[data-lightbox-data]');
+    if (!dataEl) return;
+    photos = JSON.parse(dataEl.textContent || '[]');
+    clickScope = document;
+  }
+
+  if (photos.length === 0) return;
+
   const lightbox = document.querySelector<HTMLElement>('[data-lightbox]');
   const img = document.querySelector<HTMLImageElement>('[data-lightbox-img]');
   const info = document.querySelector<HTMLElement>('[data-lightbox-info]');
@@ -238,8 +262,8 @@ export function initLightbox() {
     show((currentIndex + 1) % photos.length);
   }
 
-  // Click on photos with lightbox index to open lightbox
-  const galleryItems = document.querySelectorAll<HTMLElement>('[data-lightbox-index]');
+  // Click on photos with lightbox index — scoped to visible sequence
+  const galleryItems = clickScope.querySelectorAll<HTMLElement>('[data-lightbox-index]');
   galleryItems.forEach((item) => {
     const index = parseInt(item.getAttribute('data-lightbox-index') || '0', 10);
     item.style.cursor = 'zoom-in';
@@ -363,4 +387,17 @@ export function initLightbox() {
     },
     { signal },
   );
+
+  // Orientation change: reinitialize to bind to newly visible sequence
+  const orientationMql = window.matchMedia('(orientation: portrait)');
+  function onOrientationChange() {
+    if (isOpen) {
+      closingFromPopstate = true;
+      close();
+    }
+    requestAnimationFrame(() => {
+      initLightbox();
+    });
+  }
+  orientationMql.addEventListener('change', onOrientationChange, { signal });
 }

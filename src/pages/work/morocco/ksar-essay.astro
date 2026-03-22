@@ -4,8 +4,14 @@
  *
  * Inside a fortified village in Morocco's Draa Valley.
  * Alex Strohl Retreat, November 2025.
+ *
+ * Dual-sequence layout: landscape sequence for wide viewports,
+ * portrait sequence for tall viewports. CSS orientation media
+ * queries show the matching sequence; JS binds nav/lightbox
+ * to whichever is visible.
  */
 import EssayLayout from '@layouts/EssayLayout.astro';
+import EssaySequence from '@components/essay/EssaySequence.astro';
 import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
 import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
 import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
@@ -99,143 +105,318 @@ const photos = [
 <EssayLayout
   title="Ksar Tamnougalt"
   description="Inside a fortified village in Morocco's Draa Valley. November 2025."
-  photos={photos}
 >
 
-  <!-- ======= I. ARRIVAL & ENCOUNTER ======= -->
+  <!-- ============================================================
+       LANDSCAPE SEQUENCE — optimized for wide viewports (desktop)
+       ============================================================ -->
+  <EssaySequence orientation="landscape" photos={photos}>
 
-  <!-- 1. Cover — Figure along the ksar wall -->
-  <EssaySlideFullBleed
-    url={photos[0].url}
-    width={photos[0].width}
-    height={photos[0].height}
-    lqip={photos[0].lqip}
-    alt={photos[0].title}
-    lightboxIndex={0}
-    fit="cover"
-    loading="eager"
-  />
+    <!-- 1. Cover — Figure along the ksar wall -->
+    <EssaySlideFullBleed
+      url={photos[0].url}
+      width={photos[0].width}
+      height={photos[0].height}
+      lqip={photos[0].lqip}
+      alt={photos[0].title}
+      lightboxIndex={0}
+      fit="cover"
+      loading="eager"
+    />
 
-  <!-- 2. Title card -->
-  <EssaySlideText align="center">
-    <p class="overline">Ksar Tamnougalt &middot; Draa Valley &middot; 30&deg;41&prime;N &ensp; 6&deg;27&prime;W</p>
-    <h2>Ksar Tamnougalt</h2>
-    <p>
-      A fortified village on the edge of the Draa, half-collapsed and still
-      inhabited. Our guide grew up inside these walls. He walked us through
-      what remained.
-    </p>
-  </EssaySlideText>
+    <!-- 2. Title card -->
+    <EssaySlideText align="center">
+      <p class="overline">Ksar Tamnougalt &middot; Draa Valley &middot; 30&deg;41&prime;N &ensp; 6&deg;27&prime;W</p>
+      <h2>Ksar Tamnougalt</h2>
+      <p>
+        A fortified village on the edge of the Draa, half-collapsed and still
+        inhabited. Our guide grew up inside these walls. He walked us through
+        what remained.
+      </p>
+    </EssaySlideText>
 
-  <!-- 3. Entering the ksar — image + text -->
-  <EssaySlideImageText
-    url={photos[1].url}
-    width={photos[1].width}
-    height={photos[1].height}
-    lqip={photos[1].lqip}
-    alt={photos[1].title}
-    lightboxIndex={1}
-  >
-    <h3>Through the Door</h3>
-    <p>
-      He led us through a low doorway into a passage that turned twice before
-      opening to light. The ksar is built for defense&mdash;every entrance is
-      indirect, every corridor narrows before it widens. The air cooled
-      immediately. Outside it was forty degrees. In here, the walls held the
-      morning.
-    </p>
-  </EssaySlideImageText>
+    <!-- 3. Entering the ksar — image + text -->
+    <EssaySlideImageText
+      url={photos[1].url}
+      width={photos[1].width}
+      height={photos[1].height}
+      lqip={photos[1].lqip}
+      alt={photos[1].title}
+      lightboxIndex={1}
+    >
+      <h3>Through the Door</h3>
+      <p>
+        He led us through a low doorway into a passage that turned twice before
+        opening to light. The ksar is built for defense&mdash;every entrance is
+        indirect, every corridor narrows before it widens. The air cooled
+        immediately. Outside it was forty degrees. In here, the walls held the
+        morning.
+      </p>
+    </EssaySlideImageText>
 
-  <!-- 4. Portraits diptych — at the door + through arches -->
-  <EssaySlideDiptych
-    photos={[
-      { ...photos[2], alt: photos[2].title, lightboxIndex: 2 },
-      { ...photos[7], alt: photos[7].title, lightboxIndex: 7 },
-    ]}
-    gap="tight"
-  />
+    <!-- 4. Portraits diptych — at the door + through arches -->
+    <EssaySlideDiptych
+      photos={[
+        { ...photos[2], alt: photos[2].title, lightboxIndex: 2 },
+        { ...photos[7], alt: photos[7].title, lightboxIndex: 7 },
+      ]}
+      gap="tight"
+    />
 
-  <!-- ======= II. IMMERSION ======= -->
+    <!-- 5. The corridor — full bleed portrait -->
+    <EssaySlideFullBleed
+      url={photos[3].url}
+      width={photos[3].width}
+      height={photos[3].height}
+      lqip={photos[3].lqip}
+      alt={photos[3].title}
+      lightboxIndex={3}
+      fit="contain"
+    />
 
-  <!-- 5. The corridor — full bleed portrait -->
-  <EssaySlideFullBleed
-    url={photos[3].url}
-    width={photos[3].width}
-    height={photos[3].height}
-    lqip={photos[3].lqip}
-    alt={photos[3].title}
-    lightboxIndex={3}
-    fit="contain"
-  />
+    <!-- 6. Movement through space — image + text (flipped) -->
+    <EssaySlideImageText
+      url={photos[4].url}
+      width={photos[4].width}
+      height={photos[4].height}
+      lqip={photos[4].lqip}
+      alt={photos[4].title}
+      lightboxIndex={4}
+      flip
+    >
+      <h3>Room to Room</h3>
+      <p>
+        He moved quickly through the courtyards, pausing only when we fell behind.
+        Each room opened to another through arches that framed the next space before
+        you entered it. The light shifted with every turn&mdash;bright courtyards
+        giving way to corridors where the only illumination fell through cracks in
+        the ceiling above.
+      </p>
+    </EssaySlideImageText>
 
-  <!-- 6. Movement through space — image + text (flipped) -->
-  <EssaySlideImageText
-    url={photos[4].url}
-    width={photos[4].width}
-    height={photos[4].height}
-    lqip={photos[4].lqip}
-    alt={photos[4].title}
-    lightboxIndex={4}
-    flip
-  >
-    <h3>Room to Room</h3>
-    <p>
-      He moved quickly through the courtyards, pausing only when we fell behind.
-      Each room opened to another through arches that framed the next space before
-      you entered it. The light shifted with every turn&mdash;bright courtyards
-      giving way to corridors where the only illumination fell through cracks in
-      the ceiling above.
-    </p>
-  </EssaySlideImageText>
+    <!-- 7. Architecture diptych — ceiling up + courtyard down -->
+    <EssaySlideDiptych
+      photos={[
+        { ...photos[5], alt: photos[5].title, lightboxIndex: 5 },
+        { ...photos[6], alt: photos[6].title, lightboxIndex: 6 },
+      ]}
+      gap="tight"
+    />
 
-  <!-- 7. Architecture diptych — ceiling up + courtyard down -->
-  <EssaySlideDiptych
-    photos={[
-      { ...photos[5], alt: photos[5].title, lightboxIndex: 5 },
-      { ...photos[6], alt: photos[6].title, lightboxIndex: 6 },
-    ]}
-    gap="tight"
-  />
+    <!-- 8. Interior detail — image + text -->
+    <EssaySlideImageText
+      url={photos[8].url}
+      width={photos[8].width}
+      height={photos[8].height}
+      lqip={photos[8].lqip}
+      alt={photos[8].title}
+      lightboxIndex={8}
+    >
+      <h3>What Remains</h3>
+      <p>
+        A window with ironwork still intact. Cushions on the floor, a curtain
+        catching the light. Someone lived here recently enough to leave things
+        behind. The ksar is not a ruin. It is a place between states.
+      </p>
+    </EssaySlideImageText>
 
-  <!-- ======= III. EMERGENCE ======= -->
+    <!-- 9. The rooftop — full bleed portrait -->
+    <EssaySlideFullBleed
+      url={photos[9].url}
+      width={photos[9].width}
+      height={photos[9].height}
+      lqip={photos[9].lqip}
+      alt={photos[9].title}
+      lightboxIndex={9}
+      fit="contain"
+    />
 
-  <!-- 8. Interior detail — image + text -->
-  <EssaySlideImageText
-    url={photos[8].url}
-    width={photos[8].width}
-    height={photos[8].height}
-    lqip={photos[8].lqip}
-    alt={photos[8].title}
-    lightboxIndex={8}
-  >
-    <h3>What Remains</h3>
-    <p>
-      A window with ironwork still intact. Cushions on the floor, a curtain
-      catching the light. Someone lived here recently enough to leave things
-      behind. The ksar is not a ruin. It is a place between states.
-    </p>
-  </EssaySlideImageText>
+    <!-- 10. Departure — full bleed portrait -->
+    <EssaySlideFullBleed
+      url={photos[10].url}
+      width={photos[10].width}
+      height={photos[10].height}
+      lqip={photos[10].lqip}
+      alt={photos[10].title}
+      lightboxIndex={10}
+      fit="contain"
+    />
 
-  <!-- 9. The rooftop — full bleed portrait -->
-  <EssaySlideFullBleed
-    url={photos[9].url}
-    width={photos[9].width}
-    height={photos[9].height}
-    lqip={photos[9].lqip}
-    alt={photos[9].title}
-    lightboxIndex={9}
-    fit="contain"
-  />
+  </EssaySequence>
 
-  <!-- 10. Departure — full bleed portrait, no text -->
-  <EssaySlideFullBleed
-    url={photos[10].url}
-    width={photos[10].width}
-    height={photos[10].height}
-    lqip={photos[10].lqip}
-    alt={photos[10].title}
-    lightboxIndex={10}
-    fit="contain"
-  />
+  <!-- ============================================================
+       PORTRAIT SEQUENCE — optimized for tall viewports (mobile)
+       Uses same photos but adapted slide types:
+       - Landscape covers → full-bleed cover (still works on tall screens)
+       - Image-text splits → stacked (CSS handles this at 768px anyway)
+       - Diptychs with mixed orientations → single full-bleed
+       - Portrait images → full-bleed cover (native orientation match)
+       ============================================================ -->
+  <EssaySequence orientation="portrait" photos={photos}>
+
+    <!-- 1. Cover — Figure along the ksar wall (landscape on portrait = cover crop) -->
+    <EssaySlideFullBleed
+      url={photos[0].url}
+      width={photos[0].width}
+      height={photos[0].height}
+      lqip={photos[0].lqip}
+      alt={photos[0].title}
+      lightboxIndex={0}
+      fit="cover"
+      loading="lazy"
+    />
+
+    <!-- 2. Title card -->
+    <EssaySlideText align="center">
+      <p class="overline">Ksar Tamnougalt &middot; Draa Valley &middot; 30&deg;41&prime;N &ensp; 6&deg;27&prime;W</p>
+      <h2>Ksar Tamnougalt</h2>
+      <p>
+        A fortified village on the edge of the Draa, half-collapsed and still
+        inhabited. Our guide grew up inside these walls. He walked us through
+        what remained.
+      </p>
+    </EssaySlideText>
+
+    <!-- 3. Entering the ksar — portrait image fills beautifully on tall screens -->
+    <EssaySlideFullBleed
+      url={photos[1].url}
+      width={photos[1].width}
+      height={photos[1].height}
+      lqip={photos[1].lqip}
+      alt={photos[1].title}
+      lightboxIndex={1}
+      fit="cover"
+    />
+
+    <!-- 4. Through the Door — text slide -->
+    <EssaySlideText align="left">
+      <h3>Through the Door</h3>
+      <p>
+        He led us through a low doorway into a passage that turned twice before
+        opening to light. The ksar is built for defense&mdash;every entrance is
+        indirect, every corridor narrows before it widens. The air cooled
+        immediately. Outside it was forty degrees. In here, the walls held the
+        morning.
+      </p>
+    </EssaySlideText>
+
+    <!-- 5. The Guide — landscape cover crop works on portrait -->
+    <EssaySlideFullBleed
+      url={photos[2].url}
+      width={photos[2].width}
+      height={photos[2].height}
+      lqip={photos[2].lqip}
+      alt={photos[2].title}
+      lightboxIndex={2}
+      fit="cover"
+    />
+
+    <!-- 6. The corridor — portrait on portrait = perfect cover -->
+    <EssaySlideFullBleed
+      url={photos[3].url}
+      width={photos[3].width}
+      height={photos[3].height}
+      lqip={photos[3].lqip}
+      alt={photos[3].title}
+      lightboxIndex={3}
+      fit="cover"
+    />
+
+    <!-- 7. Through the Courtyard — landscape cover crop -->
+    <EssaySlideFullBleed
+      url={photos[4].url}
+      width={photos[4].width}
+      height={photos[4].height}
+      lqip={photos[4].lqip}
+      alt={photos[4].title}
+      lightboxIndex={4}
+      fit="cover"
+    />
+
+    <!-- 8. Room to Room — text -->
+    <EssaySlideText align="left">
+      <h3>Room to Room</h3>
+      <p>
+        He moved quickly through the courtyards, pausing only when we fell behind.
+        Each room opened to another through arches that framed the next space before
+        you entered it. The light shifted with every turn&mdash;bright courtyards
+        giving way to corridors where the only illumination fell through cracks in
+        the ceiling above.
+      </p>
+    </EssaySlideText>
+
+    <!-- 9. Ceiling geometry — landscape cover crop -->
+    <EssaySlideFullBleed
+      url={photos[5].url}
+      width={photos[5].width}
+      height={photos[5].height}
+      lqip={photos[5].lqip}
+      alt={photos[5].title}
+      lightboxIndex={5}
+      fit="cover"
+    />
+
+    <!-- 10. Courtyard from above — portrait on portrait = cover -->
+    <EssaySlideFullBleed
+      url={photos[6].url}
+      width={photos[6].width}
+      height={photos[6].height}
+      lqip={photos[6].lqip}
+      alt={photos[6].title}
+      lightboxIndex={6}
+      fit="cover"
+    />
+
+    <!-- 11. Through the Arches — landscape cover crop -->
+    <EssaySlideFullBleed
+      url={photos[7].url}
+      width={photos[7].width}
+      height={photos[7].height}
+      lqip={photos[7].lqip}
+      alt={photos[7].title}
+      lightboxIndex={7}
+      fit="cover"
+    />
+
+    <!-- 12. Interior detail — image + text (stacks on mobile CSS) -->
+    <EssaySlideImageText
+      url={photos[8].url}
+      width={photos[8].width}
+      height={photos[8].height}
+      lqip={photos[8].lqip}
+      alt={photos[8].title}
+      lightboxIndex={8}
+    >
+      <h3>What Remains</h3>
+      <p>
+        A window with ironwork still intact. Cushions on the floor, a curtain
+        catching the light. Someone lived here recently enough to leave things
+        behind. The ksar is not a ruin. It is a place between states.
+      </p>
+    </EssaySlideImageText>
+
+    <!-- 13. The rooftop — portrait on portrait = cover -->
+    <EssaySlideFullBleed
+      url={photos[9].url}
+      width={photos[9].width}
+      height={photos[9].height}
+      lqip={photos[9].lqip}
+      alt={photos[9].title}
+      lightboxIndex={9}
+      fit="cover"
+    />
+
+    <!-- 14. Departure — portrait on portrait = cover -->
+    <EssaySlideFullBleed
+      url={photos[10].url}
+      width={photos[10].width}
+      height={photos[10].height}
+      lqip={photos[10].lqip}
+      alt={photos[10].title}
+      lightboxIndex={10}
+      fit="cover"
+    />
+
+  </EssaySequence>
 
 </EssayLayout>

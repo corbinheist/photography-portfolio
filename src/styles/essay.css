@@ -645,6 +645,18 @@ html:has([data-essay]) {
 }
 
 /* ==========================================
+   Orientation-Adaptive Sequences
+   ========================================== */
+
+@media (orientation: landscape) {
+  .essay-sequence--portrait { display: none; }
+}
+
+@media (orientation: portrait) {
+  .essay-sequence--landscape { display: none; }
+}
+
+/* ==========================================
    Responsive
    ========================================== */
 
