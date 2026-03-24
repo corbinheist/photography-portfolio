@@ -1,0 +1,46 @@
+---
+import PitchLayout from '@layouts/PitchLayout.astro';
+---
+
+<PitchLayout
+  title="Pitch"
+  description="A creative pitch from Heist Studio."
+>
+
+  <!-- ======= 1. Title ======= -->
+  <section class="slide slide--title" id="slide-1">
+    <div class="slide__inner">
+      <p class="slide__overline reveal">Heist Studio</p>
+      <h1 class="slide__heading slide__heading--large reveal">Title</h1>
+      <p class="slide__subtitle reveal">Subtitle goes here</p>
+      <p class="slide__mark fade-in">heist.studio</p>
+    </div>
+    <div class="scroll-hint fade-in">
+      <div class="scroll-hint__arrow"></div>
+    </div>
+  </section>
+
+  <!-- ======= 2. Slide ======= -->
+  <section class="slide" id="slide-2">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">Section Two</h2>
+      <p class="slide__text">
+        Content goes here.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 3. Contact ======= -->
+  <section class="slide slide--contact" id="slide-3">
+    <div class="slide__inner">
+      <h2 class="slide__heading slide__heading--large reveal">Let's talk.</h2>
+      <div class="contact-info fade-in">
+        <p><strong>Corbin Heist</strong></p>
+        <p>Heist Studio</p>
+        <p><a href="https://heist.studio">heist.studio</a></p>
+        <p><a href="mailto:corbin@heist.studio">corbin@heist.studio</a></p>
+      </div>
+    </div>
+  </section>
+
+</PitchLayout>
