@@ -1,0 +1,35 @@
+---
+/**
+ * EssaySequence — wraps a set of slides for a specific viewport orientation.
+ * CSS media queries hide the non-matching sequence; JS reads photo data
+ * from the visible sequence for lightbox binding and nav dots.
+ */
+
+interface PhotoInfo {
+  url: string;
+  width: number;
+  height: number;
+  title: string;
+  lqip: string;
+  exif?: {
+    camera?: string;
+    lens?: string;
+    focalLength?: string;
+    aperture?: string;
+    shutter?: string;
+    iso?: number;
+  };
+}
+
+interface Props {
+  orientation: 'landscape' | 'portrait';
+  photos: PhotoInfo[];
+}
+
+const { orientation, photos } = Astro.props;
+---
+
+<div class={`essay-sequence essay-sequence--${orientation}`}>
+  <script type="application/json" data-sequence-photos set:html={JSON.stringify(photos)}></script>
+  <slot />
+</div>

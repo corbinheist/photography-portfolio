@@ -2,17 +2,41 @@
  * Essay navigation: progress bar, nav dots, keyboard navigation.
  * Only activates on pages with [data-essay] on the body.
  *
+ * Sequence-aware: when EssaySequence wrappers exist, only observes
+ * slides within the visible (orientation-matched) sequence.
+ * Falls back to all .essay-slide elements for backward compat.
+ *
  * Keyboard acceleration: single arrow tap scrolls smoothly (400ms).
  * Holding the key ramps up — each rapid repeat shortens the
  * animation duration, bottoming out at 100ms for fast scrubbing
  * that still feels continuous.
  */
 
+let cleanupFn: (() => void) | null = null;
+
+function getVisibleSequence(): HTMLElement | null {
+  const sequences = document.querySelectorAll<HTMLElement>('.essay-sequence');
+  if (sequences.length === 0) return null;
+
+  for (const seq of sequences) {
+    if (getComputedStyle(seq).display !== 'none') return seq;
+  }
+  return null;
+}
+
 function initEssayNav() {
   if (!document.body.hasAttribute('data-essay')) return;
 
+  // Clean up previous init (orientation change or page transition)
+  if (cleanupFn) {
+    cleanupFn();
+    cleanupFn = null;
+  }
+
+  const visibleSequence = getVisibleSequence();
+  const slideRoot = visibleSequence || document;
   const snapSlides = Array.from(
-    document.querySelectorAll<HTMLElement>('.essay-slide'),
+    slideRoot.querySelectorAll<HTMLElement>('.essay-slide'),
   );
   const progressBar =
     document.querySelector<HTMLElement>('[data-essay-progress]');
@@ -20,6 +44,9 @@ function initEssayNav() {
     document.querySelector<HTMLElement>('[data-essay-dots]');
 
   if (snapSlides.length === 0) return;
+
+  // Clear existing dots
+  if (dotsContainer) dotsContainer.innerHTML = '';
 
   // Build nav dots
   snapSlides.forEach((slide, i) => {
@@ -181,15 +208,36 @@ function initEssayNav() {
     }
   }
 
-  document.addEventListener('keydown', handleKeydown);
-  window.addEventListener('scroll', () => {
+  function handleScroll() {
     onScroll();
     onScrollEnd();
-  }, { passive: true });
+  }
+
+  document.addEventListener('keydown', handleKeydown);
+  window.addEventListener('scroll', handleScroll, { passive: true });
 
   // Initial state
   targetIndex = getVisibleIndex();
   onScroll();
+
+  // Orientation change: reinitialize for the newly visible sequence
+  const orientationMql = window.matchMedia('(orientation: portrait)');
+  function onOrientationChange() {
+    // Defer to let CSS display changes apply
+    requestAnimationFrame(() => {
+      initEssayNav();
+    });
+  }
+  orientationMql.addEventListener('change', onOrientationChange);
+
+  // Cleanup function for reinit
+  cleanupFn = () => {
+    document.removeEventListener('keydown', handleKeydown);
+    window.removeEventListener('scroll', handleScroll);
+    orientationMql.removeEventListener('change', onOrientationChange);
+    cancelAnimationFrame(scrollRaf);
+    clearTimeout(scrollSyncTimer);
+  };
 }
 
 document.addEventListener('astro:page-load', initEssayNav);

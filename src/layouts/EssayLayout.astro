@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Header from '@components/global/Header.astro';
 import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
 import '@styles/essay.css';
 
@@ -22,16 +23,19 @@ interface PhotoInfo {
 interface Props {
   title: string;
   description?: string;
-  photos: PhotoInfo[];
+  /** Photos for lightbox — optional when using EssaySequence (sequences provide their own) */
+  photos?: PhotoInfo[];
 }
 
-const { title, description, photos } = Astro.props;
+const { title, description, photos = [] } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
   <script is:inline>
     document.body.setAttribute('data-essay', '');
   </script>
+
+  <Header minimal />
 
   <div class="essay-progress" data-essay-progress aria-hidden="true"></div>
 
