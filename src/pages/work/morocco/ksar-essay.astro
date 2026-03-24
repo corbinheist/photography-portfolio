@@ -277,7 +277,7 @@ const photos = [
       </p>
     </EssaySlideText>
 
-    <!-- 3. Entering the ksar — portrait image fills beautifully on tall screens -->
+    <!-- 3. Entering the ksar — portrait on portrait = cover -->
     <EssaySlideFullBleed
       url={photos[1].url}
       width={photos[1].width}
@@ -311,7 +311,7 @@ const photos = [
       fit="cover"
     />
 
-    <!-- 6. The corridor — portrait on portrait = perfect cover -->
+    <!-- 6. The corridor — portrait on portrait = cover -->
     <EssaySlideFullBleed
       url={photos[3].url}
       width={photos[3].width}
@@ -395,7 +395,7 @@ const photos = [
       </p>
     </EssaySlideImageText>
 
-    <!-- 13. The rooftop — portrait on portrait = cover -->
+    <!-- 13. The rooftop — full image with blurred backdrop -->
     <EssaySlideFullBleed
       url={photos[9].url}
       width={photos[9].width}
@@ -403,7 +403,7 @@ const photos = [
       lqip={photos[9].lqip}
       alt={photos[9].title}
       lightboxIndex={9}
-      fit="cover"
+      fit="contain"
     />
 
     <!-- 14. Departure — portrait on portrait = cover -->

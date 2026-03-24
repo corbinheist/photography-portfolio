@@ -34,12 +34,12 @@ html:has([data-essay]) {
   inset: 0;
 }
 
-.essay-full-bleed__img :global(.photo-wrap) {
+.essay-full-bleed__img .photo-wrap {
   width: 100%;
   height: 100%;
 }
 
-.essay-full-bleed__img :global(.photo-img) {
+.essay-full-bleed__img .photo-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -56,18 +56,18 @@ html:has([data-essay]) {
   height: 100%;
 }
 
-.essay-full-bleed--contain .essay-full-bleed__img :global(.photo-wrap) {
+.essay-full-bleed--contain .essay-full-bleed__img .photo-wrap {
   width: auto;
   height: auto;
-  max-height: 105dvh;
-  max-width: 2000px;
+  max-height: 100dvh;
+  max-width: 100%;
 }
 
-.essay-full-bleed--contain .essay-full-bleed__img :global(.photo-img) {
+.essay-full-bleed--contain .essay-full-bleed__img .photo-img {
   width: auto;
   height: auto;
-  max-height: 105dvh;
-  max-width: 2000px;
+  max-height: 100dvh;
+  max-width: 100%;
   object-fit: contain;
 }
 
@@ -171,19 +171,19 @@ html:has([data-essay]) {
   overflow: hidden;
 }
 
-.essay-image-text__image :global(.photo-wrap) {
+.essay-image-text__image .photo-wrap {
   position: absolute;
   inset: 0;
 }
 
-.essay-image-text__image :global(.photo-img) {
+.essay-image-text__image .photo-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* Portrait images in splits — anchor to top so faces aren't cropped */
-.essay-image-text--portrait .essay-image-text__image :global(.photo-img) {
+.essay-image-text--portrait .essay-image-text__image .photo-img {
   object-position: top center;
 }
 
@@ -278,17 +278,17 @@ html:has([data-essay]) {
   min-width: 0;
 }
 
-.essay-diptych__item :global(.photo-wrap) {
+.essay-diptych__item .photo-wrap {
   width: 100%;
 }
 
-.essay-diptych__item :global(.photo-img) {
+.essay-diptych__item .photo-img {
   width: 100%;
   display: block;
 }
 
 /* Landscape diptych — width-filling, height follows naturally */
-.essay-diptych--landscape .essay-diptych__item :global(.photo-img) {
+.essay-diptych--landscape .essay-diptych__item .photo-img {
   height: auto;
 }
 
@@ -301,7 +301,7 @@ html:has([data-essay]) {
   flex: none !important;
 }
 
-.essay-diptych--portrait .essay-diptych__item :global(.photo-img) {
+.essay-diptych--portrait .essay-diptych__item .photo-img {
   width: auto;
   max-width: 100%;
   height: 85dvh;
@@ -351,17 +351,17 @@ html:has([data-essay]) {
   min-width: 0;
 }
 
-.essay-triptych__item :global(.photo-wrap) {
+.essay-triptych__item .photo-wrap {
   width: 100%;
 }
 
-.essay-triptych__item :global(.photo-img) {
+.essay-triptych__item .photo-img {
   width: 100%;
   display: block;
 }
 
 /* Landscape triptych — width-filling, height follows naturally */
-.essay-triptych--landscape .essay-triptych__item :global(.photo-img) {
+.essay-triptych--landscape .essay-triptych__item .photo-img {
   height: auto;
 }
 
@@ -374,7 +374,7 @@ html:has([data-essay]) {
   flex: none !important;
 }
 
-.essay-triptych--portrait .essay-triptych__item :global(.photo-img) {
+.essay-triptych--portrait .essay-triptych__item .photo-img {
   width: auto;
   max-width: 100%;
   height: 75dvh;
@@ -421,7 +421,7 @@ html:has([data-essay]) {
   line-height: 0;
 }
 
-.essay-mini-gallery__item :global(.photo-img) {
+.essay-mini-gallery__item .photo-img {
   width: 100%;
   height: auto;
   max-height: 105dvh;
@@ -574,11 +574,11 @@ html:has([data-essay]) {
 }
 
 /* Inline photos within flow sections */
-.essay-flow__inner :global(.photo-wrap) {
+.essay-flow__inner .photo-wrap {
   margin: var(--space-xl) 0;
 }
 
-.essay-flow__inner :global(.photo-wrap + .essay-flow__caption) {
+.essay-flow__inner .photo-wrap + .essay-flow__caption {
   margin-top: calc(-1 * var(--space-xl) + var(--space-sm));
   margin-bottom: var(--space-xl);
 }
@@ -689,7 +689,7 @@ html:has([data-essay]) {
   }
 
   /* Portrait diptychs — reduce height, keep side by side */
-  .essay-diptych--portrait .essay-diptych__item :global(.photo-img) {
+  .essay-diptych--portrait .essay-diptych__item .photo-img {
     height: 60dvh;
   }
 
@@ -704,7 +704,7 @@ html:has([data-essay]) {
   }
 
   /* Portrait triptych — reduce height */
-  .essay-triptych--portrait .essay-triptych__item :global(.photo-img) {
+  .essay-triptych--portrait .essay-triptych__item .photo-img {
     height: 50dvh;
   }
 
@@ -725,8 +725,8 @@ html:has([data-essay]) {
 
 /* Portrait devices — portrait images can fill more of the screen */
 @media (orientation: portrait) {
-  .essay-full-bleed--contain .essay-full-bleed__img :global(.photo-wrap),
-  .essay-full-bleed--contain .essay-full-bleed__img :global(.photo-img) {
+  .essay-full-bleed--contain .essay-full-bleed__img .photo-wrap,
+  .essay-full-bleed--contain .essay-full-bleed__img .photo-img {
     max-height: 92dvh;
     max-width: 100%;
   }

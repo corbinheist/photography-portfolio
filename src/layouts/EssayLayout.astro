@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import Header from '@components/global/Header.astro';
 import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
 import '@styles/essay.css';
 
@@ -33,6 +34,8 @@ const { title, description, photos = [] } = Astro.props;
   <script is:inline>
     document.body.setAttribute('data-essay', '');
   </script>
+
+  <Header minimal />
 
   <div class="essay-progress" data-essay-progress aria-hidden="true"></div>
 
