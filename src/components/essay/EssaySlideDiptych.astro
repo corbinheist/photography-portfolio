@@ -3,6 +3,7 @@
  * Diptych slide — two images side by side, flex-ratio matched heights.
  */
 import Photo from '@components/photo/Photo.astro';
+import EssayPlaceholder from './EssayPlaceholder.astro';
 
 interface PhotoData {
   url: string;
@@ -11,6 +12,8 @@ interface PhotoData {
   lqip: string;
   alt: string;
   lightboxIndex?: number;
+  /** When set, renders a placeholder wireframe instead of a Photo */
+  placeholder?: { id: string; title: string };
 }
 
 interface Props {
@@ -29,15 +32,19 @@ const orientation = isPortrait ? 'portrait' : 'landscape';
   <div class:list={['essay-diptych__images', `essay-diptych__images--gap-${gap}`]}>
     {photos.map((photo) => (
       <div class="essay-diptych__item" style={`flex: ${photo.width / photo.height}`}>
-        <Photo
-          url={photo.url}
-          width={photo.width}
-          height={photo.height}
-          lqip={photo.lqip}
-          alt={photo.alt}
-          sizes={isPortrait ? '(max-width: 768px) 100vw, 40vw' : '(max-width: 768px) 100vw, 50vw'}
-          lightboxIndex={photo.lightboxIndex}
-        />
+        {photo.placeholder ? (
+          <EssayPlaceholder id={photo.placeholder.id} title={photo.placeholder.title} layout="diptych" />
+        ) : (
+          <Photo
+            url={photo.url}
+            width={photo.width}
+            height={photo.height}
+            lqip={photo.lqip}
+            alt={photo.alt}
+            sizes={isPortrait ? '(max-width: 768px) 100vw, 40vw' : '(max-width: 768px) 100vw, 50vw'}
+            lightboxIndex={photo.lightboxIndex}
+          />
+        )}
       </div>
     ))}
   </div>

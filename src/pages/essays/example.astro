@@ -456,13 +456,116 @@ const photos = [
 
 
   <!-- ============================================================
-       17. Credits
+       PLACEHOLDER MODE — wireframe demos (no CDN images)
+       ============================================================ -->
+  <EssaySlideText align="center">
+    <p class="overline">Placeholder Mode</p>
+    <h2>Wireframe Demos</h2>
+    <p>
+      Every layout below uses the <strong>placeholder</strong> prop instead of
+      real photo data. Useful for pitch decks and layout prototyping.
+    </p>
+  </EssaySlideText>
+
+
+  <!-- Placeholder: Full-bleed landscape -->
+  <EssaySlideFullBleed
+    url=""
+    width={3000}
+    height={2000}
+    alt="Placeholder landscape"
+    placeholder={{ id: "P1", title: "Landscape Hero" }}
+    captionTitle="EssaySlideFullBleed"
+    captionMeta="placeholder · landscape · cover"
+  />
+
+
+  <!-- Placeholder: Full-bleed portrait -->
+  <EssaySlideFullBleed
+    url=""
+    width={2000}
+    height={3000}
+    alt="Placeholder portrait"
+    placeholder={{ id: "P2", title: "Portrait Contain" }}
+    captionTitle="EssaySlideFullBleed"
+    captionMeta="placeholder · portrait · contain (auto)"
+  />
+
+
+  <!-- Placeholder: Image-text default -->
+  <EssaySlideImageText
+    url=""
+    width={3000}
+    height={2000}
+    alt="Placeholder image-text"
+    placeholder={{ id: "P3", title: "Image Left" }}
+  >
+    <h3>EssaySlideImageText</h3>
+    <p>
+      <strong>placeholder</strong> prop &middot; default (image left, prose right).
+      The wireframe box fills the image column.
+    </p>
+  </EssaySlideImageText>
+
+
+  <!-- Placeholder: Image-text flipped -->
+  <EssaySlideImageText
+    url=""
+    width={3000}
+    height={2000}
+    alt="Placeholder image-text flipped"
+    flip
+    placeholder={{ id: "P4", title: "Image Right" }}
+  >
+    <h3>EssaySlideImageText — Flipped</h3>
+    <p>
+      <strong>placeholder + flip</strong> &middot; image right, prose left.
+    </p>
+  </EssaySlideImageText>
+
+
+  <!-- Placeholder: Diptych landscape -->
+  <EssaySlideDiptych
+    photos={[
+      { url: '', width: 3000, height: 2000, lqip: '', alt: 'Placeholder L1', placeholder: { id: 'P5a', title: 'Left' } },
+      { url: '', width: 3000, height: 2000, lqip: '', alt: 'Placeholder L2', placeholder: { id: 'P5b', title: 'Right' } },
+    ]}
+    gap="tight"
+    caption="EssaySlideDiptych — placeholder · landscape pair · gap=tight"
+  />
+
+
+  <!-- Placeholder: Diptych portrait -->
+  <EssaySlideDiptych
+    photos={[
+      { url: '', width: 2000, height: 3000, lqip: '', alt: 'Placeholder P1', placeholder: { id: 'P6a', title: 'Left' } },
+      { url: '', width: 2000, height: 3000, lqip: '', alt: 'Placeholder P2', placeholder: { id: 'P6b', title: 'Right' } },
+    ]}
+    gap="tight"
+    caption="EssaySlideDiptych — placeholder · portrait pair · gap=tight"
+  />
+
+
+  <!-- Placeholder: Triptych portrait -->
+  <EssaySlideTriptych
+    photos={[
+      { url: '', width: 2000, height: 3000, lqip: '', alt: 'Placeholder T1', placeholder: { id: 'P7a', title: 'Left' } },
+      { url: '', width: 2000, height: 3000, lqip: '', alt: 'Placeholder T2', placeholder: { id: 'P7b', title: 'Center' } },
+      { url: '', width: 2000, height: 3000, lqip: '', alt: 'Placeholder T3', placeholder: { id: 'P7c', title: 'Right' } },
+    ]}
+    gap="tight"
+    caption="EssaySlideTriptych — placeholder · portrait triple · gap=tight"
+  />
+
+
+  <!-- ============================================================
+       Credits
        ============================================================ -->
   <EssaySlideText align="center">
     <p class="overline">End of Reference</p>
     <h2>Essay Layout Example</h2>
     <p>
-      18 slides &middot; 7 component types &middot; orientation-aware<br />
+      26 slides &middot; 7 component types &middot; placeholder mode &middot; orientation-aware<br />
       See <strong>docs/essay-guide.md</strong> for the full authoring guide.
     </p>
   </EssaySlideText>

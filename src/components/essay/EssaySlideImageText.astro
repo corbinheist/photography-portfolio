@@ -4,16 +4,19 @@
  * `flip` reverses to 45/55 with image on the right.
  */
 import Photo from '@components/photo/Photo.astro';
+import EssayPlaceholder from './EssayPlaceholder.astro';
 
 interface Props {
   url: string;
   width: number;
   height: number;
-  lqip: string;
+  lqip?: string;
   alt: string;
   lightboxIndex?: number;
   /** Reverse layout: image right, text left */
   flip?: boolean;
+  /** When set, renders a placeholder wireframe instead of a Photo */
+  placeholder?: { id: string; title: string };
 }
 
 const {
@@ -24,6 +27,7 @@ const {
   alt,
   lightboxIndex,
   flip = false,
+  placeholder,
 } = Astro.props;
 
 const isPortrait = height > width;
@@ -38,15 +42,19 @@ const isPortrait = height > width;
   ]}
 >
   <div class="essay-image-text__image">
-    <Photo
-      url={url}
-      width={width}
-      height={height}
-      lqip={lqip}
-      alt={alt}
-      sizes="(max-width: 768px) 100vw, 55vw"
-      lightboxIndex={lightboxIndex}
-    />
+    {placeholder ? (
+      <EssayPlaceholder id={placeholder.id} title={placeholder.title} layout={flip ? 'image-text (flip)' : 'image-text'} />
+    ) : (
+      <Photo
+        url={url}
+        width={width}
+        height={height}
+        lqip={lqip!}
+        alt={alt}
+        sizes="(max-width: 768px) 100vw, 55vw"
+        lightboxIndex={lightboxIndex}
+      />
+    )}
   </div>
   <div class="essay-image-text__prose">
     <slot />
