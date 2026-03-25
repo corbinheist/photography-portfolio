@@ -649,8 +649,8 @@ html:has([data-essay]) {
    ========================================== */
 
 .essay-placeholder {
-  background: linear-gradient(135deg, #1C1B1A 0%, #282726 100%);
-  border: 1px dashed rgba(255, 252, 240, 0.08);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-alt) 100%);
+  border: 1px dashed var(--color-border);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -666,7 +666,7 @@ html:has([data-essay]) {
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(255, 252, 240, 0.2);
+  color: var(--color-text-faint);
   text-transform: uppercase;
 }
 
@@ -675,7 +675,7 @@ html:has([data-essay]) {
   font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 252, 240, 0.3);
+  color: var(--color-text-muted);
 }
 
 .essay-placeholder__layout {
@@ -686,7 +686,7 @@ html:has([data-essay]) {
   font-size: 8px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 252, 240, 0.15);
+  color: var(--color-text-faint);
 }
 
 /* Layout-specific placeholder overrides */
