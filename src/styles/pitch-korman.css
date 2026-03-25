@@ -812,6 +812,10 @@ body[data-pitch-korman] .essay-full-bleed__img .km-placeholder {
   inset: 0;
 }
 
+body[data-pitch-korman] .essay-image-text {
+  align-items: stretch;
+}
+
 body[data-pitch-korman] .essay-image-text__image .km-placeholder {
   position: absolute;
   inset: 0;
