@@ -818,15 +818,27 @@ body[data-pitch-korman] .essay-image-text__image .km-placeholder {
 }
 
 body[data-pitch-korman] .essay-diptych__item .km-placeholder {
-  min-height: 280px;
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+
+body[data-pitch-korman] .essay-diptych--portrait .essay-diptych__item {
+  flex: 1 !important;
 }
 
 body[data-pitch-korman] .essay-diptych--portrait .essay-diptych__item .km-placeholder {
-  min-height: 70dvh;
+  aspect-ratio: 2 / 3;
+  max-height: 85dvh;
+}
+
+body[data-pitch-korman] .essay-triptych--portrait .essay-triptych__item {
+  flex: 1 !important;
 }
 
 body[data-pitch-korman] .essay-triptych__item .km-placeholder {
-  min-height: 60dvh;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  max-height: 75dvh;
 }
 
 /* Ensure essay slides have no padding when dual-classed with .slide */
@@ -1080,16 +1092,12 @@ body[data-pitch-korman] .km-matrix td:nth-child(2) {
     max-height: 70dvh;
   }
 
-  body[data-pitch-korman] .essay-diptych__item .km-placeholder {
-    min-height: 180px;
-  }
-
   body[data-pitch-korman] .essay-diptych--portrait .essay-diptych__item .km-placeholder {
-    min-height: 50dvh;
+    max-height: 60dvh;
   }
 
   body[data-pitch-korman] .essay-triptych__item .km-placeholder {
-    min-height: 40dvh;
+    max-height: 50dvh;
   }
 }
 
