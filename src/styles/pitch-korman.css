@@ -766,8 +766,8 @@ body[data-pitch-korman] .km-stripe-showcase {
    ========================================== */
 
 body[data-pitch-korman] .km-placeholder {
-  background: linear-gradient(135deg, #1C1B1A 0%, #282726 100%);
-  border: 1px dashed rgba(255, 252, 240, 0.08);
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-alt) 100%);
+  border: 1px dashed var(--color-border);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -783,7 +783,7 @@ body[data-pitch-korman] .km-placeholder__id {
   font-size: 2rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(255, 252, 240, 0.2);
+  color: var(--color-text-faint);
   text-transform: uppercase;
 }
 
@@ -792,7 +792,7 @@ body[data-pitch-korman] .km-placeholder__title {
   font-size: 0.75rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(255, 252, 240, 0.3);
+  color: var(--color-text-muted);
 }
 
 body[data-pitch-korman] .km-placeholder__layout {
@@ -803,7 +803,7 @@ body[data-pitch-korman] .km-placeholder__layout {
   font-size: 8px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 252, 240, 0.15);
+  color: var(--color-text-faint);
 }
 
 /* Essay layout overrides for placeholders */
@@ -843,6 +843,11 @@ body[data-pitch-korman] .essay-triptych__item .km-placeholder {
   height: auto;
   aspect-ratio: 2 / 3;
   max-height: 75dvh;
+}
+
+/* Spacing between slides so images don't touch during transitions */
+body[data-pitch-korman] .slide + .slide {
+  margin-top: var(--space-lg);
 }
 
 /* Ensure essay slides have no padding when dual-classed with .slide */
