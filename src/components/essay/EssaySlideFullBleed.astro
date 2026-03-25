@@ -4,12 +4,13 @@
  * Optional text overlay or caption bar.
  */
 import Photo from '@components/photo/Photo.astro';
+import EssayPlaceholder from './EssayPlaceholder.astro';
 
 interface Props {
   url: string;
   width: number;
   height: number;
-  lqip: string;
+  lqip?: string;
   alt: string;
   lightboxIndex?: number;
   /** 'cover' (default) crops to fill; 'contain' shows full image with black bars */
@@ -21,6 +22,8 @@ interface Props {
   /** Caption bar: EXIF or secondary text */
   captionMeta?: string;
   loading?: 'lazy' | 'eager';
+  /** When set, renders a placeholder wireframe instead of a Photo */
+  placeholder?: { id: string; title: string };
 }
 
 const {
@@ -35,6 +38,7 @@ const {
   captionTitle,
   captionMeta,
   loading = 'lazy',
+  placeholder,
 } = Astro.props;
 
 const isPortrait = height > width;
@@ -52,7 +56,7 @@ const hasCaption = captionTitle || captionMeta;
     hasOverlay && 'essay-full-bleed--scrim',
   ]}
 >
-  {fit === 'contain' && (
+  {fit === 'contain' && lqip && !placeholder && (
     <div
       class="essay-full-bleed__backdrop"
       style={`background-image: url(${lqip});`}
@@ -60,16 +64,20 @@ const hasCaption = captionTitle || captionMeta;
   )}
 
   <div class="essay-full-bleed__img">
-    <Photo
-      url={url}
-      width={width}
-      height={height}
-      lqip={lqip}
-      alt={alt}
-      sizes="100vw"
-      loading={loading}
-      lightboxIndex={lightboxIndex}
-    />
+    {placeholder ? (
+      <EssayPlaceholder id={placeholder.id} title={placeholder.title} layout="full-bleed" />
+    ) : (
+      <Photo
+        url={url}
+        width={width}
+        height={height}
+        lqip={lqip!}
+        alt={alt}
+        sizes="100vw"
+        loading={loading}
+        lightboxIndex={lightboxIndex}
+      />
+    )}
   </div>
 
   {hasOverlay && (

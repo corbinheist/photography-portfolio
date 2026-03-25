@@ -4,6 +4,7 @@
  * Wraps to 2+1 on mobile.
  */
 import Photo from '@components/photo/Photo.astro';
+import EssayPlaceholder from './EssayPlaceholder.astro';
 
 interface PhotoData {
   url: string;
@@ -12,6 +13,8 @@ interface PhotoData {
   lqip: string;
   alt: string;
   lightboxIndex?: number;
+  /** When set, renders a placeholder wireframe instead of a Photo */
+  placeholder?: { id: string; title: string };
 }
 
 interface Props {
@@ -30,15 +33,19 @@ const orientation = isPortrait ? 'portrait' : 'landscape';
   <div class:list={['essay-triptych__images', `essay-triptych__images--gap-${gap}`]}>
     {photos.map((photo) => (
       <div class="essay-triptych__item" style={`flex: ${photo.width / photo.height}`}>
-        <Photo
-          url={photo.url}
-          width={photo.width}
-          height={photo.height}
-          lqip={photo.lqip}
-          alt={photo.alt}
-          sizes={isPortrait ? '(max-width: 768px) 50vw, 28vw' : '(max-width: 768px) 50vw, 33vw'}
-          lightboxIndex={photo.lightboxIndex}
-        />
+        {photo.placeholder ? (
+          <EssayPlaceholder id={photo.placeholder.id} title={photo.placeholder.title} layout="triptych" />
+        ) : (
+          <Photo
+            url={photo.url}
+            width={photo.width}
+            height={photo.height}
+            lqip={photo.lqip}
+            alt={photo.alt}
+            sizes={isPortrait ? '(max-width: 768px) 50vw, 28vw' : '(max-width: 768px) 50vw, 33vw'}
+            lightboxIndex={photo.lightboxIndex}
+          />
+        )}
       </div>
     ))}
   </div>

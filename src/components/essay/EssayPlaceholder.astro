@@ -1,0 +1,20 @@
+---
+/**
+ * Placeholder wireframe box — renders in place of a <Photo> when
+ * a slide's `placeholder` prop is set.  Shows an ID label, title,
+ * and the layout name so the wireframe is self-documenting.
+ */
+interface Props {
+  id: string;
+  title: string;
+  layout: string;
+}
+
+const { id, title, layout } = Astro.props;
+---
+
+<div class="essay-placeholder">
+  <span class="essay-placeholder__id">{id}</span>
+  <span class="essay-placeholder__title">{title}</span>
+  <span class="essay-placeholder__layout">{layout}</span>
+</div>
