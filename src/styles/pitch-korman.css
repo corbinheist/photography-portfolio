@@ -1,0 +1,1129 @@
+/* ==========================================
+   Korman Autoworks — Pitch Brand Overrides
+   All selectors scoped under body[data-pitch-korman]
+   ========================================== */
+
+/* ==========================================
+   Custom Properties
+   ========================================== */
+
+body[data-pitch-korman] {
+  --km-blue: #0066B1;
+  --km-deep: #003D78;
+  --km-light: #4A9DD4;
+  --km-red: #C62828;
+  --km-red-lt: #E85545;
+  --km-violet: #2B115A;
+  --km-font-display: 'Barlow Condensed', sans-serif;
+}
+
+/* ==========================================
+   Slide Typography Overrides
+   ========================================== */
+
+body[data-pitch-korman] .slide__overline {
+  color: var(--km-blue);
+}
+
+body[data-pitch-korman] .slide__heading {
+  font-family: var(--km-font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+body[data-pitch-korman] .slide__heading--large {
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================
+   Slide Inner — wider for dense content
+   ========================================== */
+
+body[data-pitch-korman] .slide__inner {
+  max-width: 1080px;
+}
+
+/* ==========================================
+   M-Stripe Component
+   ========================================== */
+
+body[data-pitch-korman] .km-stripe {
+  display: flex;
+  width: 100%;
+}
+
+body[data-pitch-korman] .km-stripe span {
+  flex: 1;
+}
+
+body[data-pitch-korman] .km-stripe .km-s-b { background: var(--km-blue); }
+body[data-pitch-korman] .km-stripe .km-s-v { background: var(--km-violet); }
+body[data-pitch-korman] .km-stripe .km-s-r { background: var(--km-red); }
+
+body[data-pitch-korman] .km-stripe--full {
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+body[data-pitch-korman] .km-stripe--thin {
+  height: 3px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+body[data-pitch-korman] .km-stripe--hairline {
+  height: 1px;
+}
+
+/* Inline stripe for lockups */
+body[data-pitch-korman] .km-stripe--inline {
+  height: 3px;
+  width: 210px;
+  margin-top: 6px;
+}
+
+/* ==========================================
+   Color Swatches
+   ========================================== */
+
+body[data-pitch-korman] .km-swatch-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+}
+
+body[data-pitch-korman] .km-swatch {
+  width: 100px;
+  height: 80px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body[data-pitch-korman] .km-swatch--gap {
+  margin-left: 12px;
+}
+
+body[data-pitch-korman] .km-swatch__name {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+body[data-pitch-korman] .km-swatch__hex {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  opacity: 0.7;
+}
+
+body[data-pitch-korman] .km-swatch--lt .km-swatch__name,
+body[data-pitch-korman] .km-swatch--lt .km-swatch__hex {
+  color: var(--fx-base-100);
+}
+
+body[data-pitch-korman] .km-swatch--dk .km-swatch__name,
+body[data-pitch-korman] .km-swatch--dk .km-swatch__hex {
+  color: var(--fx-base-900);
+}
+
+/* ==========================================
+   Type Specimens
+   ========================================== */
+
+body[data-pitch-korman] .km-specimen {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 28px;
+  margin-bottom: 12px;
+}
+
+body[data-pitch-korman] .km-specimen__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--km-blue);
+  margin-bottom: 14px;
+}
+
+/* ==========================================
+   Mark Display Cells
+   ========================================== */
+
+body[data-pitch-korman] .km-mark-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: var(--space-lg);
+}
+
+body[data-pitch-korman] .km-mark-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+body[data-pitch-korman] .km-mark-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+body[data-pitch-korman] .km-mark-cell {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  min-height: 240px;
+  border: 1px solid var(--fx-base-850);
+  position: relative;
+}
+
+body[data-pitch-korman] .km-mark-cell--dk { background: var(--fx-base-900); }
+body[data-pitch-korman] .km-mark-cell--lt { background: var(--fx-base-50); }
+body[data-pitch-korman] .km-mark-cell--bl { background: var(--km-deep); }
+
+body[data-pitch-korman] .km-mark-cell__label {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+}
+
+/* ==========================================
+   Lockup Containers
+   ========================================== */
+
+body[data-pitch-korman] .km-lockup {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 28px;
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+body[data-pitch-korman] .km-lockup--lt {
+  background: var(--fx-base-50);
+}
+
+body[data-pitch-korman] .km-lockup__text {
+  font-family: var(--km-font-display);
+  font-weight: 900;
+  font-size: 36px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fx-paper);
+  line-height: 1;
+}
+
+body[data-pitch-korman] .km-lockup--lt .km-lockup__text {
+  color: var(--fx-black);
+}
+
+body[data-pitch-korman] .km-lockup__meta {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  color: var(--fx-base-500);
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+/* ==========================================
+   Livery Mock
+   ========================================== */
+
+body[data-pitch-korman] .km-livery {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 28px;
+}
+
+body[data-pitch-korman] .km-livery__panel {
+  position: relative;
+  background: var(--fx-paper);
+  height: 120px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+body[data-pitch-korman] .km-livery__stripe {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transform: skewX(-12deg);
+}
+
+body[data-pitch-korman] .km-livery__stripe--b { left: 160px; width: 18px; background: var(--km-blue); }
+body[data-pitch-korman] .km-livery__stripe--v { left: 182px; width: 14px; background: var(--km-violet); }
+body[data-pitch-korman] .km-livery__stripe--r { left: 200px; width: 18px; background: var(--km-red); }
+
+body[data-pitch-korman] .km-livery__number {
+  position: absolute;
+  left: 32px;
+  font-family: var(--km-font-display);
+  font-weight: 900;
+  font-size: 72px;
+  color: var(--fx-black);
+  letter-spacing: -0.02em;
+}
+
+body[data-pitch-korman] .km-livery__badge {
+  position: absolute;
+  right: 68px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+body[data-pitch-korman] .km-livery__name {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+  font-family: var(--km-font-display);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fx-black);
+}
+
+body[data-pitch-korman] .km-livery__caption {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--fx-base-500);
+  margin-top: 10px;
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================
+   Voice Do/Don't Cards
+   ========================================== */
+
+body[data-pitch-korman] .km-voice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: var(--space-lg);
+}
+
+body[data-pitch-korman] .km-voice {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+body[data-pitch-korman] .km-voice--do { border-left: 3px solid var(--km-blue); }
+body[data-pitch-korman] .km-voice--dont { border-left: 3px solid var(--km-red); }
+
+body[data-pitch-korman] .km-voice__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+body[data-pitch-korman] .km-voice--do .km-voice__label { color: var(--km-blue); }
+body[data-pitch-korman] .km-voice--dont .km-voice__label { color: var(--km-red); }
+
+body[data-pitch-korman] .km-voice__text {
+  font-size: var(--text-sm);
+  color: var(--fx-base-300);
+  line-height: 1.6;
+  max-width: none;
+}
+
+/* ==========================================
+   Rule / Principle Cards
+   ========================================== */
+
+body[data-pitch-korman] .km-card-grid {
+  display: grid;
+  gap: 12px;
+}
+
+body[data-pitch-korman] .km-card-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+body[data-pitch-korman] .km-card-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+body[data-pitch-korman] .km-rule {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+body[data-pitch-korman] .km-rule__title {
+  font-family: var(--km-font-display);
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fx-paper);
+  margin-bottom: 6px;
+}
+
+body[data-pitch-korman] .km-rule__text {
+  font-size: 12px;
+  color: var(--fx-base-500);
+  line-height: 1.5;
+  max-width: none;
+}
+
+/* ==========================================
+   Network Cards
+   ========================================== */
+
+body[data-pitch-korman] .km-net {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+body[data-pitch-korman] .km-net--highlight {
+  border-left: 3px solid var(--km-blue);
+}
+
+body[data-pitch-korman] .km-net__title {
+  font-family: var(--km-font-display);
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fx-paper);
+  margin-bottom: 2px;
+}
+
+body[data-pitch-korman] .km-net__sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--km-blue);
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+body[data-pitch-korman] .km-net__text {
+  font-size: 12px;
+  color: var(--fx-base-500);
+  line-height: 1.6;
+  margin-bottom: 8px;
+  max-width: none;
+}
+
+body[data-pitch-korman] .km-net__conn {
+  font-size: 12px;
+  color: var(--fx-base-300);
+  line-height: 1.6;
+  padding-top: 8px;
+  border-top: 1px solid var(--fx-base-850);
+}
+
+body[data-pitch-korman] .km-net__conn strong {
+  color: var(--fx-base-200);
+}
+
+/* ==========================================
+   Build Cards + Spec Tables
+   ========================================== */
+
+body[data-pitch-korman] .km-build {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 12px;
+}
+
+body[data-pitch-korman] .km-build__number {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--km-blue);
+  margin-bottom: 4px;
+}
+
+body[data-pitch-korman] .km-build__title {
+  font-family: var(--km-font-display);
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fx-paper);
+  margin-bottom: 4px;
+}
+
+body[data-pitch-korman] .km-build__sub {
+  font-size: 13px;
+  color: var(--fx-base-300);
+  margin-bottom: 16px;
+  line-height: 1.6;
+  max-width: none;
+}
+
+body[data-pitch-korman] .km-build__why {
+  font-size: 12px;
+  color: var(--fx-base-500);
+  line-height: 1.6;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--fx-base-850);
+  max-width: none;
+}
+
+/* Spec tables inside build cards */
+body[data-pitch-korman] .km-spec {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 12px 0;
+}
+
+body[data-pitch-korman] .km-spec td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--fx-base-850);
+  vertical-align: top;
+}
+
+body[data-pitch-korman] .km-spec td:first-child {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  width: 120px;
+  white-space: nowrap;
+}
+
+body[data-pitch-korman] .km-spec td:last-child {
+  color: var(--fx-base-300);
+}
+
+/* ==========================================
+   Racing Record Table
+   ========================================== */
+
+body[data-pitch-korman] .km-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: var(--space-md);
+}
+
+body[data-pitch-korman] .km-table th {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--fx-base-700);
+}
+
+body[data-pitch-korman] .km-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--fx-base-850);
+  color: var(--fx-base-300);
+  vertical-align: top;
+}
+
+body[data-pitch-korman] .km-table td:first-child {
+  color: var(--fx-base-500);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+body[data-pitch-korman] .km-table tr.km-table--hl td {
+  color: var(--fx-paper);
+  font-weight: 500;
+}
+
+/* Pattern table */
+body[data-pitch-korman] .km-pattern {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-left: 3px solid var(--km-blue);
+  border-radius: 8px;
+  padding: 20px;
+  margin: var(--space-lg) 0;
+}
+
+body[data-pitch-korman] .km-pattern .km-table {
+  margin: 0;
+}
+
+/* ==========================================
+   RK Placeholder Tags
+   ========================================== */
+
+body[data-pitch-korman] .rk {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--hs-ember);
+  background: rgba(224, 149, 72, 0.1);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid rgba(224, 149, 72, 0.2);
+}
+
+/* ==========================================
+   Section Label (overline for numbered sections)
+   ========================================== */
+
+body[data-pitch-korman] .km-section-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--km-blue);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+body[data-pitch-korman] .km-section-intro {
+  max-width: 620px;
+  color: var(--fx-base-300);
+  margin-bottom: var(--space-lg);
+  line-height: 1.7;
+}
+
+/* ==========================================
+   Positioning text
+   ========================================== */
+
+body[data-pitch-korman] .km-position-statement {
+  font-family: var(--km-font-display);
+  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--fx-base-100);
+  line-height: 1.25;
+  max-width: 680px;
+  margin-bottom: var(--space-lg);
+}
+
+body[data-pitch-korman] .km-position-statement .km-red {
+  color: var(--km-red);
+}
+
+body[data-pitch-korman] .km-backstory {
+  max-width: 600px;
+  color: var(--fx-base-500);
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: var(--space-lg);
+}
+
+/* ==========================================
+   Hero slide
+   ========================================== */
+
+body[data-pitch-korman] .slide--km-hero {
+  text-align: center;
+  background: var(--fx-black);
+}
+
+body[data-pitch-korman] .slide--km-hero .slide__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+body[data-pitch-korman] .km-hero-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--fx-base-500);
+  text-transform: uppercase;
+}
+
+body[data-pitch-korman] .km-hero-tag {
+  font-family: var(--km-font-display);
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fx-base-300);
+}
+
+/* ==========================================
+   Footer slide
+   ========================================== */
+
+body[data-pitch-korman] .slide--km-footer {
+  text-align: center;
+}
+
+body[data-pitch-korman] .km-footer-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fx-base-600);
+  margin-top: var(--space-lg);
+}
+
+/* ==========================================
+   Counter Override — light text for dark bg
+   ========================================== */
+
+body[data-pitch-korman] ~ .pitch-counter,
+body[data-pitch-korman] .pitch-counter {
+  color: var(--fx-base-500);
+  background: color-mix(in srgb, var(--fx-black) 80%, transparent);
+}
+
+/* ==========================================
+   Mark description text
+   ========================================== */
+
+body[data-pitch-korman] .km-mark-desc {
+  font-size: 12px;
+  color: var(--fx-base-500);
+  line-height: 1.5;
+  max-width: 540px;
+  margin-bottom: var(--space-md);
+}
+
+/* Scale sizes row */
+body[data-pitch-korman] .km-scale-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+body[data-pitch-korman] .km-scale-caption {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--fx-base-500);
+  margin-top: 8px;
+}
+
+/* Section label used inside slides */
+body[data-pitch-korman] .km-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  margin-bottom: 6px;
+}
+
+/* Two-column layout for positioning */
+body[data-pitch-korman] .km-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+body[data-pitch-korman] .km-two-col p {
+  font-size: 13px;
+  color: var(--fx-base-500);
+  line-height: 1.6;
+  max-width: none;
+}
+
+/* ==========================================
+   Stripe variant showcase
+   ========================================== */
+
+body[data-pitch-korman] .km-stripe-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* ==========================================
+   Placeholder Image Slots
+   ========================================== */
+
+body[data-pitch-korman] .km-placeholder {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-alt) 100%);
+  border: 1px dashed var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  gap: 6px;
+}
+
+body[data-pitch-korman] .km-placeholder__id {
+  font-family: var(--km-font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+}
+
+body[data-pitch-korman] .km-placeholder__title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+body[data-pitch-korman] .km-placeholder__layout {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+/* Essay layout overrides for placeholders */
+body[data-pitch-korman] .essay-full-bleed__img .km-placeholder {
+  position: absolute;
+  inset: 0;
+}
+
+body[data-pitch-korman] .essay-image-text {
+  align-items: stretch;
+}
+
+body[data-pitch-korman] .essay-image-text__image .km-placeholder {
+  position: absolute;
+  inset: 0;
+}
+
+body[data-pitch-korman] .essay-diptych__item .km-placeholder {
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+
+body[data-pitch-korman] .essay-diptych--portrait .essay-diptych__item {
+  flex: 1 !important;
+}
+
+body[data-pitch-korman] .essay-diptych--portrait .essay-diptych__item .km-placeholder {
+  aspect-ratio: 2 / 3;
+  max-height: 85dvh;
+}
+
+body[data-pitch-korman] .essay-triptych--portrait .essay-triptych__item {
+  flex: 1 !important;
+}
+
+body[data-pitch-korman] .essay-triptych__item .km-placeholder {
+  height: auto;
+  aspect-ratio: 2 / 3;
+  max-height: 75dvh;
+}
+
+/* Spacing between slides so images don't touch during transitions */
+body[data-pitch-korman] .slide + .slide {
+  margin-top: var(--space-lg);
+}
+
+/* Ensure essay slides have no padding when dual-classed with .slide */
+body[data-pitch-korman] .essay-slide {
+  padding: 0;
+}
+
+/* Korman typography overrides for essay prose panels */
+body[data-pitch-korman] .essay-image-text__prose h2,
+body[data-pitch-korman] .essay-image-text__prose h3 {
+  font-family: var(--km-font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+body[data-pitch-korman] .essay-full-bleed__overlay h3 {
+  font-family: var(--km-font-display);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fx-paper);
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  margin-bottom: var(--space-sm);
+}
+
+body[data-pitch-korman] .essay-full-bleed__overlay .km-section-num {
+  color: var(--km-light);
+  text-shadow: none;
+}
+
+body[data-pitch-korman] .essay-full-bleed__overlay p {
+  font-size: 13px;
+  color: rgba(255, 252, 240, 0.8);
+  line-height: 1.65;
+  max-width: 55ch;
+}
+
+/* ==========================================
+   Shot Metadata Tags
+   ========================================== */
+
+body[data-pitch-korman] .km-shot-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--space-sm) 0 var(--space-md);
+}
+
+body[data-pitch-korman] .km-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+body[data-pitch-korman] .km-tag--type {
+  color: var(--fx-paper);
+  background: rgba(0, 102, 177, 0.25);
+  border: 1px solid rgba(0, 102, 177, 0.4);
+}
+
+body[data-pitch-korman] .km-tag--tech {
+  color: var(--fx-paper);
+  background: rgba(43, 17, 90, 0.35);
+  border: 1px solid rgba(43, 17, 90, 0.5);
+}
+
+body[data-pitch-korman] .km-tag--lens {
+  color: var(--fx-base-400);
+  background: transparent;
+  border: 1px solid var(--fx-base-700);
+}
+
+/* ==========================================
+   Design Influence Cards
+   ========================================== */
+
+body[data-pitch-korman] .km-influence {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-top: 3px solid transparent;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+body[data-pitch-korman] .km-influence--b { border-top-color: var(--km-blue); }
+body[data-pitch-korman] .km-influence--v { border-top-color: var(--km-violet); }
+body[data-pitch-korman] .km-influence--r { border-top-color: var(--km-red); }
+
+body[data-pitch-korman] .km-influence__title {
+  font-family: var(--km-font-display);
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fx-paper);
+  margin-bottom: 4px;
+}
+
+body[data-pitch-korman] .km-influence__sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  margin-bottom: 10px;
+}
+
+body[data-pitch-korman] .km-influence__text {
+  font-size: 12px;
+  color: var(--fx-base-400);
+  line-height: 1.6;
+  max-width: none;
+}
+
+/* ==========================================
+   Framework Grid
+   ========================================== */
+
+body[data-pitch-korman] .km-framework-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+body[data-pitch-korman] .km-framework-item {
+  padding: 10px 14px;
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 6px;
+}
+
+body[data-pitch-korman] .km-framework-item__title {
+  font-family: var(--km-font-display);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fx-paper);
+  margin-bottom: 2px;
+}
+
+body[data-pitch-korman] .km-framework-item__text {
+  font-size: 11px;
+  color: var(--fx-base-500);
+  line-height: 1.4;
+  max-width: none;
+}
+
+/* ==========================================
+   Matrix Table (scrollable)
+   ========================================== */
+
+body[data-pitch-korman] .km-matrix-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+body[data-pitch-korman] .km-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+body[data-pitch-korman] .km-matrix th {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--fx-base-700);
+  position: sticky;
+  top: 0;
+  background: var(--fx-black);
+}
+
+body[data-pitch-korman] .km-matrix td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--fx-base-850);
+  color: var(--fx-base-300);
+  font-size: 10px;
+}
+
+body[data-pitch-korman] .km-matrix td:first-child {
+  font-family: var(--font-mono);
+  color: var(--fx-base-500);
+}
+
+body[data-pitch-korman] .km-matrix td:nth-child(2) {
+  color: var(--fx-paper);
+  font-weight: 500;
+}
+
+/* ==========================================
+   Responsive
+   ========================================== */
+
+@media (max-width: 768px) {
+  body[data-pitch-korman] .km-mark-grid--3,
+  body[data-pitch-korman] .km-mark-grid--4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  body[data-pitch-korman] .km-card-grid--2,
+  body[data-pitch-korman] .km-card-grid--3 {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-korman] .km-voice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-korman] .km-two-col {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-korman] .km-swatch {
+    width: 80px;
+    height: 64px;
+  }
+
+  body[data-pitch-korman] .km-lockup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  body[data-pitch-korman] .km-livery__panel {
+    height: 80px;
+  }
+
+  body[data-pitch-korman] .km-livery__number {
+    font-size: 48px;
+  }
+
+  body[data-pitch-korman] .km-position-statement {
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.5rem);
+  }
+
+  body[data-pitch-korman] .km-framework-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-korman] .km-matrix-wrap {
+    max-height: 70dvh;
+  }
+
+  body[data-pitch-korman] .essay-diptych--portrait .essay-diptych__item .km-placeholder {
+    max-height: 60dvh;
+  }
+
+  body[data-pitch-korman] .essay-triptych__item .km-placeholder {
+    max-height: 50dvh;
+  }
+}
+
+/* ==========================================
+   Print
+   ========================================== */
+
+@media print {
+  body[data-pitch-korman] .km-stripe { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-swatch { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-mark-cell { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-voice { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-rule { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-build { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-net { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-livery__panel { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-placeholder { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-influence { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-korman] .km-tag { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+}

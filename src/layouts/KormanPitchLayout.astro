@@ -1,0 +1,37 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import '@styles/pitch.css';
+import '@styles/pitch-korman.css';
+import '@styles/essay.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+  rel="stylesheet"
+/>
+
+<BaseLayout title={title} description={description} noindex={true}>
+  <script is:inline>
+    document.body.setAttribute('data-pitch', '');
+    document.body.setAttribute('data-pitch-korman', '');
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+  <slot />
+  <div class="pitch-counter" aria-hidden="true">
+    <span class="pitch-counter__current">1</span>
+    <span class="pitch-counter__sep"> / </span>
+    <span class="pitch-counter__total"></span>
+  </div>
+  <script>
+    import '@scripts/pitch-nav';
+  </script>
+</BaseLayout>
