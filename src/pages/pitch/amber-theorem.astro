@@ -1,46 +1,499 @@
 ---
-import PitchLayout from '@layouts/PitchLayout.astro';
+import KormanPitchLayout from '@layouts/KormanPitchLayout.astro';
 ---
 
-<PitchLayout
-  title="Pitch"
-  description="A creative pitch from Heist Studio."
+<KormanPitchLayout
+  title="Korman Autoworks — Brand Identity"
+  description="Brand identity guide for Korman Autoworks."
 >
 
-  <!-- ======= 1. Title ======= -->
-  <section class="slide slide--title" id="slide-1">
+  <!-- ======= 1. Hero ======= -->
+  <section class="slide slide--km-hero" id="slide-1">
     <div class="slide__inner">
-      <p class="slide__overline reveal">Heist Studio</p>
-      <h1 class="slide__heading slide__heading--large reveal">Title</h1>
-      <p class="slide__subtitle reveal">Subtitle goes here</p>
-      <p class="slide__mark fade-in">heist.studio</p>
+      <div class="km-hero-meta fade-in">Brand Identity · v2.0 · March 2026</div>
+      <svg viewBox="0 0 480 160" width="460" xmlns="http://www.w3.org/2000/svg" class="reveal" role="img" aria-label="Korman Autoworks wordmark">
+        <text x="240" y="60" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="72" letter-spacing="0.08em" fill="#FFFCF0">KORMAN</text>
+        <rect x="40" y="96" width="400" height="3" fill="#0066B1"/>
+        <rect x="40" y="99" width="400" height="3" fill="#2B115A"/>
+        <rect x="40" y="102" width="400" height="3" fill="#C62828"/>
+        <text x="240" y="135" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="10" letter-spacing="0.15em" fill="#6F6E69">AUTOWORKS · GREENSBORO, NC · EST. 1978</text>
+      </svg>
+      <div class="km-hero-tag fade-in">Motorsport Performance · Since 1978</div>
     </div>
     <div class="scroll-hint fade-in">
       <div class="scroll-hint__arrow"></div>
     </div>
   </section>
 
-  <!-- ======= 2. Slide ======= -->
+  <!-- ======= 2. 00 Positioning ======= -->
   <section class="slide" id="slide-2">
-    <div class="slide__inner stagger-children">
-      <h2 class="slide__heading">Section Two</h2>
-      <p class="slide__text">
-        Content goes here.
-      </p>
-    </div>
-  </section>
-
-  <!-- ======= 3. Contact ======= -->
-  <section class="slide slide--contact" id="slide-3">
     <div class="slide__inner">
-      <h2 class="slide__heading slide__heading--large reveal">Let's talk.</h2>
-      <div class="contact-info fade-in">
-        <p><strong>Corbin Heist</strong></p>
-        <p>Heist Studio</p>
-        <p><a href="https://heist.studio">heist.studio</a></p>
-        <p><a href="mailto:corbin@heist.studio">corbin@heist.studio</a></p>
+      <p class="km-section-num reveal">00</p>
+      <h2 class="slide__heading reveal">Positioning</h2>
+      <div class="km-position-statement reveal">
+        Not a BMW shop.<br>A motorsport shop that builds BMWs.<br><span class="km-red">The Ultimate Driving Machine. Finished.</span>
+      </div>
+      <p class="km-backstory fade-in">Korman Autoworks was founded in 1978 in Greensboro, North Carolina. Before the shop became synonymous with BMW performance, Ray Korman built and raced Lotus and Datsun. The motorsport DNA came first. BMW became the focus because the platform deserved better than the factory was willing to deliver&mdash;and Korman had the racing pedigree to deliver it. Two wins at the 24 Hours of Watkins Glen. IMSA Endurance Championship. Stage I through III packages that turned 2002s and E30s into legends. The identity isn't BMW-exclusive&mdash;it's motorsport-native.</p>
+      <div class="km-two-col fade-in">
+        <div>
+          <div class="km-label">Brand voice</div>
+          <p>Confident without arrogance. Technical without jargon. The voice of someone who has won endurance races and doesn't need to tell you unless you ask. Every claim is backed by a dyno sheet or a race result.</p>
+        </div>
+        <div>
+          <div class="km-label">Brand tension</div>
+          <p>Heritage form, modern execution. Oil-stained hands building precision instruments. A Southern speed shop with Group A pedigree. The warmth of a family business with the standards of a factory race team. Patina as proof of life.</p>
+        </div>
       </div>
     </div>
   </section>
 
-</PitchLayout>
+  <!-- ======= 3. 01 Mark — Wordmarks ======= -->
+  <section class="slide" id="slide-3">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">01</p>
+      <h2 class="slide__heading reveal">The Mark</h2>
+      <p class="km-section-intro fade-in">Three forms, one identity. The wordmark is the primary mark. The roundel is the companion icon. The M-stripe underline bridges them. Each works independently; together they're the full lockup.</p>
+      <div class="km-label">The wordmark</div>
+      <p class="km-mark-desc">The name IS the mark. Barlow Condensed Black, tracked out, M-stripe underline. Handles 80% of applications: signage, livery, apparel, web, print.</p>
+      <div class="km-mark-grid km-mark-grid--3 stagger-children">
+        <div class="km-mark-cell km-mark-cell--dk">
+          <span class="km-mark-cell__label">Dark</span>
+          <svg viewBox="0 0 360 120" width="300" xmlns="http://www.w3.org/2000/svg">
+            <text x="180" y="52" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="58" letter-spacing="0.12em" fill="#FFFCF0">KORMAN</text>
+            <rect x="32" y="80" width="296" height="3" fill="#0066B1"/><rect x="32" y="83" width="296" height="3" fill="#2B115A"/><rect x="32" y="86" width="296" height="3" fill="#C62828"/>
+            <text x="180" y="108" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9" letter-spacing="0.15em" fill="#6F6E69">AUTOWORKS · GREENSBORO, NC · EST. 1978</text>
+          </svg>
+        </div>
+        <div class="km-mark-cell km-mark-cell--lt">
+          <span class="km-mark-cell__label" style="color: var(--fx-base-700)">Light</span>
+          <svg viewBox="0 0 360 120" width="300" xmlns="http://www.w3.org/2000/svg">
+            <text x="180" y="52" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="58" letter-spacing="0.12em" fill="#100F0F">KORMAN</text>
+            <rect x="32" y="80" width="296" height="3" fill="#0066B1"/><rect x="32" y="83" width="296" height="3" fill="#2B115A"/><rect x="32" y="86" width="296" height="3" fill="#C62828"/>
+            <text x="180" y="108" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9" letter-spacing="0.15em" fill="#6F6E69">AUTOWORKS · GREENSBORO, NC · EST. 1978</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 4. 01 Mark — Roundel ======= -->
+  <section class="slide" id="slide-4">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">01</p>
+      <h2 class="slide__heading reveal">The Roundel</h2>
+      <p class="km-mark-desc fade-in">Four floating quarter-circle chambers separated by negative space&mdash;the metal wall between enamel cells. One blue (TL), one red (BR), two open. The asymmetry is the identity: BMW's roundel is symmetric, Korman's breaks that with a single red chamber. Orientation is fixed, never rotated.</p>
+      <div class="km-mark-grid km-mark-grid--4 stagger-children">
+        <div class="km-mark-cell km-mark-cell--dk">
+          <span class="km-mark-cell__label">Primary · Dark</span>
+          <svg viewBox="0 0 200 200" width="140" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#FFFCF0" stroke-width="1.5"/>
+            <g transform="translate(-2,-2)"><path d="M102,102 L102,24 A78,78 0 0,0 24,102 Z" fill="#0066B1"/></g>
+            <g transform="translate(2,-2)"><path d="M98,102 L176,102 A78,78 0 0,0 98,24 Z" fill="#FFFCF0"/></g>
+            <g transform="translate(-2,2)"><path d="M102,98 L24,98 A78,78 0 0,0 102,176 Z" fill="#FFFCF0"/></g>
+            <g transform="translate(2,2)"><path d="M98,98 L98,176 A78,78 0 0,0 176,98 Z" fill="#C62828"/></g>
+          </svg>
+        </div>
+        <div class="km-mark-cell km-mark-cell--lt">
+          <span class="km-mark-cell__label" style="color: var(--fx-base-700)">Primary · Light</span>
+          <svg viewBox="0 0 200 200" width="140" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#100F0F" stroke-width="1.5"/>
+            <g transform="translate(-2,-2)"><path d="M102,102 L102,24 A78,78 0 0,0 24,102 Z" fill="#003D78"/></g>
+            <g transform="translate(2,-2)"><path d="M98,102 L176,102 A78,78 0 0,0 98,24 Z" fill="#F2F0E5"/></g>
+            <g transform="translate(-2,2)"><path d="M102,98 L24,98 A78,78 0 0,0 102,176 Z" fill="#F2F0E5"/></g>
+            <g transform="translate(2,2)"><path d="M98,98 L98,176 A78,78 0 0,0 176,98 Z" fill="#C62828"/></g>
+          </svg>
+        </div>
+        <div class="km-mark-cell km-mark-cell--dk">
+          <span class="km-mark-cell__label">Monochrome</span>
+          <svg viewBox="0 0 200 200" width="140" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#FFFCF0" stroke-width="1.5"/>
+            <g transform="translate(-2,-2)"><path d="M102,102 L102,24 A78,78 0 0,0 24,102 Z" fill="#FFFCF0"/></g>
+            <g transform="translate(2,-2)"><path d="M98,102 L176,102 A78,78 0 0,0 98,24 Z" fill="rgba(255,252,240,0.1)"/></g>
+            <g transform="translate(-2,2)"><path d="M102,98 L24,98 A78,78 0 0,0 102,176 Z" fill="rgba(255,252,240,0.1)"/></g>
+            <g transform="translate(2,2)"><path d="M98,98 L98,176 A78,78 0 0,0 176,98 Z" fill="rgba(255,252,240,0.35)"/></g>
+          </svg>
+        </div>
+        <div class="km-mark-cell km-mark-cell--dk">
+          <span class="km-mark-cell__label">Scale</span>
+          <div class="km-scale-row">
+            <svg viewBox="0 0 200 200" width="80" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="92" fill="none" stroke="#FFFCF0" stroke-width="2"/><g transform="translate(-2,-2)"><path d="M102,102 L102,24 A78,78 0 0,0 24,102 Z" fill="#0066B1"/></g><g transform="translate(2,-2)"><path d="M98,102 L176,102 A78,78 0 0,0 98,24 Z" fill="#FFFCF0"/></g><g transform="translate(-2,2)"><path d="M102,98 L24,98 A78,78 0 0,0 102,176 Z" fill="#FFFCF0"/></g><g transform="translate(2,2)"><path d="M98,98 L98,176 A78,78 0 0,0 176,98 Z" fill="#C62828"/></g></svg>
+            <svg viewBox="0 0 200 200" width="48" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="92" fill="none" stroke="#FFFCF0" stroke-width="3"/><g transform="translate(-3,-3)"><path d="M103,103 L103,24 A79,79 0 0,0 24,103 Z" fill="#0066B1"/></g><g transform="translate(3,-3)"><path d="M97,103 L176,103 A79,79 0 0,0 97,24 Z" fill="#FFFCF0"/></g><g transform="translate(-3,3)"><path d="M103,97 L24,97 A79,79 0 0,0 103,176 Z" fill="#FFFCF0"/></g><g transform="translate(3,3)"><path d="M97,97 L97,176 A79,79 0 0,0 176,97 Z" fill="#C62828"/></g></svg>
+            <svg viewBox="0 0 200 200" width="24" xmlns="http://www.w3.org/2000/svg"><g transform="translate(-5,-5)"><path d="M105,105 L105,20 A85,85 0 0,0 20,105 Z" fill="#0066B1"/></g><g transform="translate(5,-5)"><path d="M95,105 L180,105 A85,85 0 0,0 95,20 Z" fill="#FFFCF0"/></g><g transform="translate(-5,5)"><path d="M105,95 L20,95 A85,85 0 0,0 105,180 Z" fill="#FFFCF0"/></g><g transform="translate(5,5)"><path d="M95,95 L95,180 A85,85 0 0,0 180,95 Z" fill="#C62828"/></g></svg>
+          </div>
+          <div class="km-scale-caption">80 · 48 · 24px &mdash; ring drops at smallest</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 5. 01 Mark — Lockup + Livery ======= -->
+  <section class="slide" id="slide-5">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">01</p>
+      <h2 class="slide__heading reveal">Lockup &amp; Livery</h2>
+
+      <div class="km-label">Lockup system</div>
+      <div class="stagger-children">
+        <div class="km-lockup">
+          <svg viewBox="0 0 200 200" width="52" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="92" fill="none" stroke="#FFFCF0" stroke-width="2"/><g transform="translate(-2,-2)"><path d="M102,102 L102,24 A78,78 0 0,0 24,102 Z" fill="#0066B1"/></g><g transform="translate(2,-2)"><path d="M98,102 L176,102 A78,78 0 0,0 98,24 Z" fill="#FFFCF0"/></g><g transform="translate(-2,2)"><path d="M102,98 L24,98 A78,78 0 0,0 102,176 Z" fill="#FFFCF0"/></g><g transform="translate(2,2)"><path d="M98,98 L98,176 A78,78 0 0,0 176,98 Z" fill="#C62828"/></g></svg>
+          <div>
+            <div class="km-lockup__text">KORMAN</div>
+            <div class="km-stripe km-stripe--inline"><span class="km-s-b"></span><span class="km-s-v"></span><span class="km-s-r"></span></div>
+            <div class="km-lockup__meta">Autoworks · Greensboro, NC · Est. 1978</div>
+          </div>
+        </div>
+        <div class="km-lockup km-lockup--lt">
+          <svg viewBox="0 0 200 200" width="52" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="92" fill="none" stroke="#100F0F" stroke-width="2"/><g transform="translate(-2,-2)"><path d="M102,102 L102,24 A78,78 0 0,0 24,102 Z" fill="#003D78"/></g><g transform="translate(2,-2)"><path d="M98,102 L176,102 A78,78 0 0,0 98,24 Z" fill="#F2F0E5"/></g><g transform="translate(-2,2)"><path d="M102,98 L24,98 A78,78 0 0,0 102,176 Z" fill="#F2F0E5"/></g><g transform="translate(2,2)"><path d="M98,98 L98,176 A78,78 0 0,0 176,98 Z" fill="#C62828"/></g></svg>
+          <div>
+            <div class="km-lockup__text">KORMAN</div>
+            <div class="km-stripe km-stripe--inline"><span class="km-s-b"></span><span class="km-s-v"></span><span class="km-s-r"></span></div>
+            <div class="km-lockup__meta">Autoworks · Greensboro, NC · Est. 1978</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="km-label" style="margin-top: var(--space-lg)">Livery application</div>
+      <div class="km-livery fade-in">
+        <div class="km-livery__panel">
+          <div class="km-livery__stripe km-livery__stripe--b"></div>
+          <div class="km-livery__stripe km-livery__stripe--v"></div>
+          <div class="km-livery__stripe km-livery__stripe--r"></div>
+          <div class="km-livery__number">28</div>
+          <div class="km-livery__badge">
+            <svg viewBox="0 0 200 200" width="36" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="none" stroke="#100F0F" stroke-width="4"/><g transform="translate(-3,-3)"><path d="M103,103 L103,26 A77,77 0 0,0 26,103 Z" fill="#003D78"/></g><g transform="translate(3,-3)"><path d="M97,103 L174,103 A77,77 0 0,0 97,26 Z" fill="#F2F0E5"/></g><g transform="translate(-3,3)"><path d="M103,97 L26,97 A77,77 0 0,0 103,174 Z" fill="#F2F0E5"/></g><g transform="translate(3,3)"><path d="M97,97 L97,174 A77,77 0 0,0 174,97 Z" fill="#C62828"/></g></svg>
+          </div>
+          <div class="km-livery__name">KORMAN</div>
+        </div>
+        <div class="km-livery__caption">#28 &mdash; historic Korman racing number. All numbers in brand imagery end in -8.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 6. 02 Color ======= -->
+  <section class="slide" id="slide-6">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">02</p>
+      <h2 class="slide__heading reveal">Color</h2>
+      <p class="km-section-intro fade-in">Three layers. Flexoki warm base is the workshop foundation. Motorsport accents are the identity colors&mdash;earned on track. The warm scale adds material texture. Photographs and the cars provide all other color.</p>
+
+      <div class="km-label">Flexoki base &mdash; workshop foundation</div>
+      <div class="km-swatch-row">
+        <div class="km-swatch km-swatch--lt" style="background:#100F0F"><span class="km-swatch__name">Black</span><span class="km-swatch__hex">#100F0F</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#1C1B1A"><span class="km-swatch__name">900</span><span class="km-swatch__hex">#1C1B1A</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#282726"><span class="km-swatch__name">850</span><span class="km-swatch__hex">#282726</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#343331"><span class="km-swatch__name">800</span><span class="km-swatch__hex">#343331</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#403E3C"><span class="km-swatch__name">700</span><span class="km-swatch__hex">#403E3C</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#575653"><span class="km-swatch__name">600</span><span class="km-swatch__hex">#575653</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#6F6E69"><span class="km-swatch__name">500</span><span class="km-swatch__hex">#6F6E69</span></div>
+        <div class="km-swatch km-swatch--dk" style="background:#B7B5AC"><span class="km-swatch__name">300</span><span class="km-swatch__hex">#B7B5AC</span></div>
+        <div class="km-swatch km-swatch--dk" style="background:#E6E4D9"><span class="km-swatch__name">100</span><span class="km-swatch__hex">#E6E4D9</span></div>
+        <div class="km-swatch km-swatch--dk" style="background:#FFFCF0"><span class="km-swatch__name">Paper</span><span class="km-swatch__hex">#FFFCF0</span></div>
+      </div>
+
+      <div class="km-label">Motorsport accent &mdash; heritage, not allegiance</div>
+      <div class="km-swatch-row">
+        <div class="km-swatch km-swatch--lt" style="background:#003D78"><span class="km-swatch__name">Deep Blue</span><span class="km-swatch__hex">#003D78</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#0066B1"><span class="km-swatch__name">Racing</span><span class="km-swatch__hex">#0066B1</span></div>
+        <div class="km-swatch km-swatch--dk" style="background:#4A9DD4"><span class="km-swatch__name">Livery</span><span class="km-swatch__hex">#4A9DD4</span></div>
+        <div class="km-swatch km-swatch--lt km-swatch--gap" style="background:#2B115A"><span class="km-swatch__name">Violet '73</span><span class="km-swatch__hex">#2B115A</span></div>
+        <div class="km-swatch km-swatch--lt km-swatch--gap" style="background:#C62828"><span class="km-swatch__name">Motorsport</span><span class="km-swatch__hex">#C62828</span></div>
+        <div class="km-swatch km-swatch--dk" style="background:#E85545"><span class="km-swatch__name">Livery Red</span><span class="km-swatch__hex">#E85545</span></div>
+      </div>
+
+      <div class="km-label">Warm scale &mdash; material texture</div>
+      <div class="km-swatch-row">
+        <div class="km-swatch km-swatch--lt" style="background:#4A2E1B"><span class="km-swatch__name">Walnut</span><span class="km-swatch__hex">#4A2E1B</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#7A4E2D"><span class="km-swatch__name">Saddle</span><span class="km-swatch__hex">#7A4E2D</span></div>
+        <div class="km-swatch km-swatch--lt" style="background:#B8652A"><span class="km-swatch__name">Oxide</span><span class="km-swatch__hex">#B8652A</span></div>
+        <div class="km-swatch km-swatch--dk" style="background:#CF7B36"><span class="km-swatch__name">Rust</span><span class="km-swatch__hex">#CF7B36</span></div>
+        <div class="km-swatch km-swatch--dk" style="background:#E09548"><span class="km-swatch__name">Ember</span><span class="km-swatch__hex">#E09548</span></div>
+        <div class="km-swatch km-swatch--dk" style="background:#D4A373"><span class="km-swatch__name">Clay</span><span class="km-swatch__hex">#D4A373</span></div>
+      </div>
+
+      <div class="km-card-grid km-card-grid--3 stagger-children">
+        <div class="km-rule"><div class="km-rule__title">Dark default</div><div class="km-rule__text">Dark mode is the default. The shop floor is lit by fluorescent tubes, not skylights. Light mode exists for print where dark backgrounds aren't practical.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Blue is earned</div><div class="km-rule__text">Racing blue is the primary interactive accent&mdash;links, CTAs, active states. Appears sparingly. Overuse dilutes the motorsport association.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Red is rare</div><div class="km-rule__text">Motorsport red appears in the roundel, the M-stripe, error states, and deliberate emphasis. It should feel like a redline indicator&mdash;urgent, purposeful, not decorative.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 7. 03 Typography ======= -->
+  <section class="slide" id="slide-7">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">03</p>
+      <h2 class="slide__heading reveal">Typography</h2>
+      <p class="km-section-intro fade-in">Three families. Barlow Condensed is the display face&mdash;the text on a homologation plate, a timing board, a manifold decal. IBM Plex Sans is the workhorse body face. IBM Plex Mono handles part numbers, specs, and technical data.</p>
+
+      <div class="stagger-children">
+        <div class="km-specimen">
+          <div class="km-specimen__label">Display &mdash; Barlow Condensed</div>
+          <div style="font-family:var(--km-font-display);color:var(--fx-paper);font-size:clamp(2rem,1.5rem+2vw,3.5rem);font-weight:700;letter-spacing:0.04em;text-transform:uppercase;line-height:1;margin-bottom:12px;">KORMAN AUTOWORKS</div>
+          <div style="font-family:var(--km-font-display);color:var(--fx-paper);font-size:clamp(1.25rem,1rem+1.5vw,2.25rem);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;line-height:1;margin-bottom:10px;">BMW PERFORMANCE &amp; RACING</div>
+          <div style="font-family:var(--km-font-display);color:var(--fx-base-300);font-size:clamp(0.875rem,0.75rem+0.5vw,1.375rem);font-weight:400;letter-spacing:0.12em;text-transform:uppercase;line-height:1;">SINCE 1978 · GREENSBORO, NC</div>
+        </div>
+
+        <div class="km-specimen">
+          <div class="km-specimen__label">Body &mdash; IBM Plex Sans</div>
+          <div style="font-family:var(--font-body);color:var(--fx-base-200);line-height:1.65;max-width:540px;">Racing at Korman Autoworks is not our primary activity, nor a mere hobby. Our racing activities profoundly improve our BMW provision. The technician working on your car may be the same one that prepared our entries that twice won the 24 Hours of Watkins Glen. Whether you drive on the track or the highway, we prepare your car for long-term satisfaction.</div>
+        </div>
+
+        <div class="km-specimen">
+          <div class="km-specimen__label">Technical &mdash; IBM Plex Mono</div>
+          <div style="font-family:var(--font-mono);color:var(--fx-base-300);font-size:13px;line-height:1.6;">ENGINE: M20B25 · DISPLACEMENT: 2494cc<br>BORE × STROKE: 84mm × 75mm<br>KORMAN STAGE II: +18HP / +12 lb-ft<br>PART NO: KAW-M20-STG2-R01<br>DYNO SHEET: 2026-03-15 · RUN 04 · PULL 3/3</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 8. 04 M-Stripe ======= -->
+  <section class="slide" id="slide-8">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">04</p>
+      <h2 class="slide__heading reveal">The M-Stripe</h2>
+      <p class="km-section-intro fade-in">The tri-stripe is the connective tissue across all touchpoints. Blue, violet, red&mdash;the original 1973 palette, before BMW replaced the violet with dark blue. It references motorsport heritage while being distinctly Korman. It appears as a thin accent, never as decoration.</p>
+
+      <div class="km-stripe-showcase stagger-children">
+        <div>
+          <div class="km-label">Full bar &mdash; page headers, livery</div>
+          <div class="km-stripe km-stripe--full"><span class="km-s-b"></span><span class="km-s-v"></span><span class="km-s-r"></span></div>
+        </div>
+        <div>
+          <div class="km-label">Thin rule &mdash; section dividers, card accents</div>
+          <div class="km-stripe km-stripe--thin"><span class="km-s-b"></span><span class="km-s-v"></span><span class="km-s-r"></span></div>
+        </div>
+        <div>
+          <div class="km-label">Hairline &mdash; subtle metadata accent</div>
+          <div class="km-stripe km-stripe--hairline"><span class="km-s-b"></span><span class="km-s-v"></span><span class="km-s-r"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 9. 05 Voice & Tone ======= -->
+  <section class="slide" id="slide-9">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">05</p>
+      <h2 class="slide__heading reveal">Voice &amp; Tone</h2>
+      <p class="km-section-intro fade-in">Korman's voice is the mechanic who hands you the keys after a rebuild and says "drive it hard, that's what it's for." Knowledgeable, direct, warm underneath. Never shouts. Never oversells. The work speaks.</p>
+
+      <div class="km-voice-grid stagger-children">
+        <div class="km-voice km-voice--do"><div class="km-voice__label">Do</div><p class="km-voice__text">"Stage II adds 18 horsepower and moves the torque peak 400rpm lower. You'll feel it exiting every corner."</p></div>
+        <div class="km-voice km-voice--dont"><div class="km-voice__label">Don't</div><p class="km-voice__text">"Our INCREDIBLE Stage II package delivers INSANE power gains for the ULTIMATE driving experience!!!"</p></div>
+        <div class="km-voice km-voice--do"><div class="km-voice__label">Do</div><p class="km-voice__text">"This engine has 180,000 miles on it. The bearings look like the day they were installed. That's what happens when you break it in right."</p></div>
+        <div class="km-voice km-voice--dont"><div class="km-voice__label">Don't</div><p class="km-voice__text">"Trust the experts at Korman Autoworks for all your BMW needs! We're passionate about performance!"</p></div>
+      </div>
+
+      <div class="km-card-grid km-card-grid--3 stagger-children">
+        <div class="km-rule"><div class="km-rule__title">Show the work</div><div class="km-rule__text">Dyno sheets, not adjectives. Race results, not testimonials. Part numbers, not promises. Let the evidence do the talking.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Respect the car</div><div class="km-rule__text">Never talk down about stock BMWs. Korman improves them. The car deserved better from the factory&mdash;that's why we're here.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Quiet confidence</div><div class="km-rule__text">Two Watkins Glen wins. IMSA championships. Lotus, Datsun, BMW. We don't lead with credentials&mdash;but they're there when you look.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 10. 06 Pedigree — Network ======= -->
+  <section class="slide" id="slide-10">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">06</p>
+      <h2 class="slide__heading reveal">Motorsport Pedigree</h2>
+      <p class="km-section-intro fade-in">Korman Autoworks didn't develop in isolation. The shop sits at the intersection of three lines of top-tier motorsport engineering&mdash;connections that would be equivalent to F1 pedigree today.</p>
+
+      <div class="km-label">The Knowledge Network</div>
+      <div class="stagger-children">
+        <div class="km-net">
+          <div class="km-net__title">Heidegger AG</div>
+          <div class="km-net__sub">Formula 2 Engines · Le Mans · Liechtenstein</div>
+          <p class="km-net__text">Max Heidegger specialized in BMW race cars and Formula 2 engines. At the 1975 24 Hours of Le Mans, a Heidegger-prepared BMW 2002 with an F2-spec engine&mdash;260hp at 8,500rpm, 1,000kg&mdash;won its class outright.</p>
+          <div class="km-net__conn"><strong>Korman connection:</strong> Korman's competition department trained at Heidegger AG directly. Following that training, the shop built BMW F2 and M1 engines in Greensboro. <span class="rk">RK &mdash; Who trained, when, how long?</span></div>
+        </div>
+        <div class="km-net">
+          <div class="km-net__title">Corky Bell</div>
+          <div class="km-net__sub">Cartech Racing · Maximum Boost · SCCA/IMSA</div>
+          <p class="km-net__text">Courtland "Corky" Bell. ME from Texas A&amp;M, 12 years at Bell Helicopter. Founded Cartech Racing (1977). Author of <em>Maximum Boost</em>&mdash;the definitive turbocharging text, still in print.</p>
+          <div class="km-net__conn"><strong>Korman connection:</strong> Direct collaboration on twin turbo M30/633 kits (20 made, Bell factory fire destroyed all tooling). Also consulted on Korman's 2002 Turbo rebuild. <span class="rk">RK &mdash; Broader collaboration scope?</span></div>
+        </div>
+        <div class="km-net">
+          <div class="km-net__title">Gerhard Schruf</div>
+          <div class="km-net__sub">Brown Boveri · Ferrari F1 · Bell Intercoolers</div>
+          <p class="km-net__text">Bell's engineering partner. Instrumental in developing the COMPREX pressure-wave supercharger at Brown Boveri. Provided forced induction expertise to Scuderia Ferrari&mdash;the 126CX tested by Villeneuve and Pironi.</p>
+          <div class="km-net__conn"><strong>Korman connection:</strong> Through Bell partnership. When Korman collaborated with Bell on turbo development, the technical depth included Schruf's F1-grade forced induction expertise. <span class="rk">RK &mdash; Direct contact with Schruf?</span></div>
+        </div>
+        <div class="km-net km-net--highlight">
+          <div class="km-net__title">BMW NA Motorsport</div>
+          <div class="km-net__sub">Factory Relationship · Direct</div>
+          <p class="km-net__text">Erik Wensberg, BMW North America Motorsports Manager: <em>"We chose Ray Korman to run the M3&hellip;more for his expertise in new car development, especially BMW development. That's his real forte."</em></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 11. 06 Pedigree — Racing ======= -->
+  <section class="slide" id="slide-11">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">06</p>
+      <h2 class="slide__heading reveal">Racing Record</h2>
+      <p class="km-mark-desc fade-in">All entries run #28. The original 1986 Watkins Glen 325e is still vintage raced by Ray. <span class="rk">RK &mdash; Lotus and Datsun racing history needed</span></p>
+
+      <div class="fade-in" style="overflow-x: auto;">
+        <table class="km-table">
+          <thead><tr><th>Year</th><th>Event</th><th>Car</th><th>Result</th></tr></thead>
+          <tbody>
+            <tr><td><span class="rk">RK</span></td><td>SE Asia National Championship (×2)</td><td>1800 TISA / FIA Grp 4 2002</td><td>1st (both)</td></tr>
+            <tr><td>1976</td><td>Daytona, IMSA WSCC</td><td>BMW 2002 TI</td><td>First IMSA entry</td></tr>
+            <tr><td>1982</td><td>SCCA SE Division Championship, GT-2</td><td>BMW 320i</td><td>Champion</td></tr>
+            <tr class="km-table--hl"><td>1986</td><td>Watkins Glen 24 Hours, IMSA Firehawk</td><td>BMW 325e #28</td><td>1st &mdash; started 34th, led 105 laps</td></tr>
+            <tr class="km-table--hl"><td>1987</td><td>Watkins Glen, IMSA Firehawk</td><td>BMW M3 #28</td><td>1st &mdash; from pole, led 63 laps</td></tr>
+            <tr class="km-table--hl"><td>1991</td><td>6 Horas de Bogotá</td><td>Korman/Autogermana E30 M3</td><td>1st &mdash; won 4 of 5 season races + 6-Hour</td></tr>
+            <tr class="km-table--hl"><td>1992</td><td>6 Horas de Bogotá</td><td>Korman/Autogermana E30 M3</td><td>1st &mdash; only car to win it twice</td></tr>
+            <tr><td>1993</td><td>SCCA Mid Atlantic ITS Championship</td><td>BMW 325iS</td><td>Won all but one race</td></tr>
+            <tr><td>1996</td><td>IMSA Endurance, Sears Point</td><td>E36 M3 (Korman engine/susp.)</td><td>Pole &mdash; first E36 M3 pole in GS</td></tr>
+            <tr class="km-table--hl"><td>1998</td><td>BMW CCA National Championship, I Prep</td><td>BMW 325iS → M3 spec</td><td>Champion</td></tr>
+            <tr><td>2000</td><td>Motorola Cup Championship</td><td>Korman E36 328</td><td>Champion + BMW Manufacturers' title</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="km-card-grid km-card-grid--3 stagger-children">
+        <div class="km-rule"><div class="km-rule__title">International Reach</div><div class="km-rule__text">Two SE Asian national championships during USAF service. Back-to-back wins in Bogotá against European factory entries. <span class="rk">RK</span></div></div>
+        <div class="km-rule"><div class="km-rule__title">The #28</div><div class="km-rule__text">Every Korman entry since 1981 carries #28. The number appears on the livery, in brand imagery, and in part numbering. All brand numbers end in -8.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Before BMW</div><div class="km-rule__text">Lotus and Datsun racing&mdash;models and results pending. This pre-BMW history is the foundation of the "motorsport shop, not BMW shop" positioning. <span class="rk">RK &mdash; Critical</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 12. 07 Builds — Personal ======= -->
+  <section class="slide" id="slide-12">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">07</p>
+      <h2 class="slide__heading reveal">Heritage Builds</h2>
+      <p class="km-section-intro fade-in">Every car on this list exists because BMW wouldn't build it&mdash;or hadn't built it yet. The pattern: take the best engine of its generation, put it in the chassis where it belongs.</p>
+
+      <div class="km-label">Ray Korman &mdash; Personal Builds</div>
+      <div class="stagger-children">
+        <div class="km-build">
+          <div class="km-build__number">Build 01</div>
+          <div class="km-build__title">S14-Swapped 2002</div>
+          <div class="km-build__sub">The M3 engine in the 2002 chassis&mdash;the car BMW never could have built because a decade separated the platform's death from the engine's birth.</div>
+          <table class="km-spec">
+            <tr><td>Base</td><td><span class="rk">RK &mdash; Year/spec of 2002</span></td></tr>
+            <tr><td>Engine</td><td>S14B23 &mdash; 2.3L DOHC 16v inline-four (E30 M3)</td></tr>
+            <tr><td>Power</td><td><span class="rk">RK &mdash; Output, modifications</span></td></tr>
+            <tr><td>Transmission</td><td><span class="rk">RK &mdash; Getrag model, final drive</span></td></tr>
+            <tr><td>Year Built</td><td><span class="rk">RK</span></td></tr>
+            <tr><td>Status</td><td><span class="rk">RK &mdash; Where is the car now?</span></td></tr>
+          </table>
+        </div>
+
+        <div class="km-build">
+          <div class="km-build__number">Build 02</div>
+          <div class="km-build__title">Stroker E30 M3</div>
+          <div class="km-build__sub">Beat BMW Motorsport to the 2.5L S14. Before the Sport Evolution existed.</div>
+          <table class="km-spec">
+            <tr><td>Base</td><td><span class="rk">RK &mdash; Year of E30 M3</span></td></tr>
+            <tr><td>Engine</td><td>S14, stroked &mdash; <span class="rk">RK &mdash; bore × stroke, final displacement</span></td></tr>
+            <tr><td>Power</td><td><span class="rk">RK &mdash; Output / dyno figures</span></td></tr>
+            <tr><td>Internals</td><td><span class="rk">RK &mdash; Crank, rods, pistons, head work, cams</span></td></tr>
+            <tr><td>Year Built</td><td><span class="rk">RK &mdash; CRITICAL: before or after Dec '89 Sport Evo announcement?</span></td></tr>
+            <tr><td>Status</td><td><span class="rk">RK</span></td></tr>
+          </table>
+          <div class="km-build__why">BMW announced the M3 Sport Evolution in December 1989&mdash;S14 bored to 95mm and stroked to 87mm for 2,467cc at 238hp. Paul Rosche's answer to the DTM arms race. Ray Korman had already built a stroked S14 in Greensboro. He independently arrived at the same conclusion as BMW's engine development chief&mdash;and got there first.</div>
+        </div>
+      </div>
+
+      <div class="km-pattern fade-in">
+        <div class="km-label" style="margin-bottom: 10px">The Pattern</div>
+        <table class="km-table">
+          <thead><tr><th>Build</th><th>What Korman Did</th><th>What BMW Didn't</th></tr></thead>
+          <tbody>
+            <tr><td>S14 2002</td><td>M3 engine in the 2002</td><td>The 2002 was dead a decade before the S14 existed</td></tr>
+            <tr><td>Stroker M3</td><td>2.5L S14</td><td>BMW took years longer to build the Sport Evolution</td></tr>
+            <tr><td>M635 TT</td><td>Force-fed the M1-derived engine with turbo carbs</td><td>BMW never turbocharged the M88</td></tr>
+            <tr><td>S50-B32 525</td><td>Euro M3 motor in the 5-series</td><td>BMW reserved the S50B32 for the 3-series</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 13. 07 Builds — Customer ======= -->
+  <section class="slide" id="slide-13">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">07</p>
+      <h2 class="slide__heading reveal">Customer &amp; Race Builds</h2>
+
+      <div class="stagger-children">
+        <div class="km-build">
+          <div class="km-build__number">Build 03</div>
+          <div class="km-build__title">M635 Twin Turbo &mdash; Mikuni Turbo Carbs</div>
+          <div class="km-build__sub">Forced induction on the M1's engine. With carburetors. The build where all three knowledge network threads converge.</div>
+          <table class="km-spec">
+            <tr><td>Base</td><td><span class="rk">RK &mdash; Year of M635 CSi</span></td></tr>
+            <tr><td>Engine</td><td>M88/3 &mdash; 3.5L DOHC 24v inline-six (M1-derived)</td></tr>
+            <tr><td>Turbo</td><td>Twin turbo &mdash; <span class="rk">RK &mdash; make/model, wastegate setup</span></td></tr>
+            <tr><td>Fuel</td><td>Mikuni-Solex blow-through turbo carburetors &mdash; <span class="rk">RK &mdash; model, barrel count</span></td></tr>
+            <tr><td>Power</td><td><span class="rk">RK &mdash; Output / boost pressure</span></td></tr>
+          </table>
+          <div class="km-build__why">Three knowledge lines converge: M88 engine built by a Heidegger-trained team. Mikuni carburetors from Japanese motorsport. Forced induction engineering through the Bell/Schruf collaboration&mdash;expertise tracing from Ferrari F1 turbo programs to a shop on Randleman Road.</div>
+        </div>
+
+        <div class="km-build">
+          <div class="km-build__number">Build 04</div>
+          <div class="km-build__title">S50-B32 Swapped 525</div>
+          <div class="km-build__sub">The Euro M3 engine in the chassis that actually needed it. The GT car BMW never made.</div>
+          <table class="km-spec">
+            <tr><td>Base</td><td><span class="rk">RK &mdash; Year/spec of E34 525</span></td></tr>
+            <tr><td>Engine</td><td>S50B32 &mdash; 3,201cc DOHC 24v inline-six, ITBs, 321hp (Euro E36 M3)</td></tr>
+            <tr><td>Power</td><td><span class="rk">RK &mdash; Stock 321hp or modified?</span></td></tr>
+            <tr><td>ECU</td><td><span class="rk">RK &mdash; Engine management solution</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="km-label" style="margin-top: var(--space-md)">Notable Customer Builds</div>
+      <div class="km-card-grid km-card-grid--2 stagger-children">
+        <div class="km-rule"><div class="km-rule__title">The "F1600"</div><div class="km-rule__text">S38 M6 engine in a 1968 1600ti. Built early 1990s for Joe Bill Dryden. Korman kevlar hood, Zender fenders/spoilers, Sparco Evo seats, Simpson harnesses, roll cage, Getrag five-speed, 3.45 LSD from a 530i. Later sold on Bring a Trailer.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Bell Twin Turbo M30 Kits</div><div class="km-rule__text">20 units produced. Cast iron twin turbo manifold, rotomaster turbos, liquid intercooled intake, BEGI RRFPR. Bell factory fire destroyed all tooling&mdash;no second production run.</div></div>
+        <div class="km-rule"><div class="km-rule__title">E28 M5 &mdash; 3.6L Stroker</div><div class="km-rule__text">North American M5's detuned M88/3 (256hp vs 286hp Euro). Korman rebuilt and enlarged to 3.6 liters, restoring and exceeding factory output.</div></div>
+        <div class="km-rule"><div class="km-rule__title">E34 535i Turbo Kit</div><div class="km-rule__text">Mollseman manifold, T25, BEGI FMU, top-mount intercooler, uprated fuel pump. "What BMW should have built."</div></div>
+        <div class="km-rule"><div class="km-rule__title">E21 323 &mdash; 2.9L Stroker</div><div class="km-rule__text">Built for Lou Mendola. Won the North Atlantic BMW CCA D Modified Championship. Ray co-drove to the 2005 South Atlantic D Mod title.</div></div>
+        <div class="km-rule"><div class="km-rule__title">2002 Turbo Rebuild</div><div class="km-rule__text">Garrett T03 replacing stock turbo (spool at 2,400rpm vs factory 4,000rpm). Fifth injector added. Consulted with Corky Bell and the original Kugelfischer injection engineer. +42 lb-ft over stock.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 14. 08 Design Principles ======= -->
+  <section class="slide" id="slide-14">
+    <div class="slide__inner">
+      <p class="km-section-num reveal">08</p>
+      <h2 class="slide__heading reveal">Design Principles</h2>
+      <p class="km-section-intro fade-in">Every design choice should pass the shop-floor test: would this look right hand-painted on a garage wall, stamped on an intake manifold, or printed on a timing sheet?</p>
+
+      <div class="km-card-grid km-card-grid--3 stagger-children" style="margin-bottom: 12px;">
+        <div class="km-rule"><div class="km-rule__title">Heritage form, modern execution</div><div class="km-rule__text">Classic shapes&mdash;the roundel, the stripe, the condensed sans&mdash;built with contemporary precision. The Heist principle applied to motorsport.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Patina is proof</div><div class="km-rule__text">Texture, grain, and wear are welcome. A logo that looks better scuffed into a toolbox lid than printed on a business card is the right logo.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Let the cars be the color</div><div class="km-rule__text">The brand system is deliberately restrained&mdash;warm neutrals, blue accent, red sparingly&mdash;because the BMWs themselves provide the color. Alpina Green, Dakar Yellow, Henna Red.</div></div>
+      </div>
+      <div class="km-card-grid km-card-grid--3 stagger-children">
+        <div class="km-rule"><div class="km-rule__title">Technical, not corporate</div><div class="km-rule__text">Part numbers over taglines. Dyno charts over hero images. Specifications over descriptions. The brand communicates like an engineer's notebook.</div></div>
+        <div class="km-rule"><div class="km-rule__title">Condensed is confident</div><div class="km-rule__text">Barlow Condensed at heavy weights is the visual signature. It takes up less space because it doesn't need to shout&mdash;the weight does the talking.</div></div>
+        <div class="km-rule"><div class="km-rule__title">The stripe earns its place</div><div class="km-rule__text">The M-stripe is a mark of motorsport legitimacy, not decoration. Use it once per layout, at the top or as a divider. Never as a pattern.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 15. Footer ======= -->
+  <section class="slide slide--km-footer" id="slide-15">
+    <div class="slide__inner">
+      <svg viewBox="0 0 480 160" width="360" xmlns="http://www.w3.org/2000/svg" class="reveal" role="img" aria-label="Korman Autoworks" style="margin: 0 auto;">
+        <text x="240" y="60" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed',sans-serif" font-weight="900" font-size="72" letter-spacing="0.08em" fill="#FFFCF0">KORMAN</text>
+        <rect x="40" y="96" width="400" height="3" fill="#0066B1"/>
+        <rect x="40" y="99" width="400" height="3" fill="#2B115A"/>
+        <rect x="40" y="102" width="400" height="3" fill="#C62828"/>
+        <text x="240" y="135" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="10" letter-spacing="0.15em" fill="#6F6E69">AUTOWORKS · GREENSBORO, NC · EST. 1978</text>
+      </svg>
+      <div class="km-footer-text fade-in">Korman Autoworks · 2629 Randleman Rd · Greensboro, NC 27406 · Est. 1978</div>
+    </div>
+  </section>
+
+</KormanPitchLayout>
