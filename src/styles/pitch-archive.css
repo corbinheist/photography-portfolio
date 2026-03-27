@@ -1,0 +1,1275 @@
+/* ==========================================
+   The Korman Archive — Pitch Brand Overrides
+   All selectors scoped under body[data-pitch-archive]
+   ========================================== */
+
+/* ==========================================
+   Custom Properties
+   ========================================== */
+
+body[data-pitch-archive] {
+  --ka-walnut:   #4A2E1B;
+  --ka-leather:  #6B4226;
+  --ka-tobacco:  #8B5E3C;
+  --ka-saddle:   #A67B5B;
+  --ka-honey:    #C4956A;
+  --ka-clay:     #D4A373;
+  --ka-font-display: 'Barlow Condensed', sans-serif;
+}
+
+/* ==========================================
+   Slide Typography Overrides
+   ========================================== */
+
+body[data-pitch-archive] .slide__overline {
+  color: var(--ka-honey);
+}
+
+body[data-pitch-archive] .slide__heading {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+body[data-pitch-archive] .slide__heading--large {
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================
+   Slide Inner — wider for dense content
+   ========================================== */
+
+body[data-pitch-archive] .slide__inner {
+  max-width: 1080px;
+}
+
+/* ==========================================
+   Section Number Label
+   ========================================== */
+
+body[data-pitch-archive] .ka-section-num {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ka-honey);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+}
+
+/* ==========================================
+   Section Intro
+   ========================================== */
+
+body[data-pitch-archive] .ka-section-intro {
+  max-width: 620px;
+  color: var(--fx-base-300);
+  margin-bottom: var(--space-lg);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+/* ==========================================
+   Micro-label
+   ========================================== */
+
+body[data-pitch-archive] .ka-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  margin-bottom: 6px;
+}
+
+/* ==========================================
+   Two-Column Layout
+   ========================================== */
+
+body[data-pitch-archive] .ka-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-lg);
+}
+
+body[data-pitch-archive] .ka-two-col p {
+  font-size: 13px;
+  color: var(--fx-base-500);
+  line-height: 1.6;
+  max-width: none;
+}
+
+/* ==========================================
+   Position Cards (Is / Is Not)
+   ========================================== */
+
+body[data-pitch-archive] .ka-position-card {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+body[data-pitch-archive] .ka-position-card--is {
+  border-left: 3px solid var(--ka-honey);
+}
+
+body[data-pitch-archive] .ka-position-card--isnot {
+  border-left: 3px solid var(--fx-base-600);
+}
+
+body[data-pitch-archive] .ka-position-card__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+body[data-pitch-archive] .ka-position-card--is .ka-position-card__label {
+  color: var(--ka-honey);
+}
+
+body[data-pitch-archive] .ka-position-card--isnot .ka-position-card__label {
+  color: var(--fx-base-600);
+}
+
+body[data-pitch-archive] .ka-position-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body[data-pitch-archive] .ka-position-card__list li {
+  font-size: 13px;
+  color: var(--fx-base-300);
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+
+body[data-pitch-archive] .ka-position-card--is .ka-position-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ka-honey);
+}
+
+body[data-pitch-archive] .ka-position-card--isnot .ka-position-card__list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 11px;
+  color: var(--fx-base-600);
+}
+
+/* ==========================================
+   Mark Display Grid
+   ========================================== */
+
+body[data-pitch-archive] .ka-mark-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: var(--space-lg);
+}
+
+body[data-pitch-archive] .ka-mark-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+body[data-pitch-archive] .ka-mark-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* ==========================================
+   Mark Cell
+   ========================================== */
+
+body[data-pitch-archive] .ka-mark-cell {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  min-height: 220px;
+  border: 1px solid var(--fx-base-850);
+  position: relative;
+}
+
+body[data-pitch-archive] .ka-mark-cell--dark  { background: var(--fx-base-900); }
+body[data-pitch-archive] .ka-mark-cell--light { background: var(--fx-base-50); }
+body[data-pitch-archive] .ka-mark-cell--warm  { background: var(--ka-walnut); }
+body[data-pitch-archive] .ka-mark-cell--mid   { background: var(--fx-base-700); }
+
+body[data-pitch-archive] .ka-mark-cell__label {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+}
+
+body[data-pitch-archive] .ka-mark-cell--light .ka-mark-cell__label {
+  color: var(--fx-base-600);
+}
+
+body[data-pitch-archive] .ka-mark-cell--warm .ka-mark-cell__label {
+  color: var(--ka-clay);
+}
+
+/* ==========================================
+   Primary Lockup — Stacked "The / KORMAN / Archive"
+   ========================================== */
+
+body[data-pitch-archive] .ka-lockup-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2px;
+}
+
+body[data-pitch-archive] .ka-lockup-primary__the {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+}
+
+body[data-pitch-archive] .ka-lockup-primary__korman {
+  font-family: var(--ka-font-display);
+  font-weight: 900;
+  font-size: 48px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fx-paper);
+  line-height: 1;
+}
+
+body[data-pitch-archive] .ka-lockup-primary__archive {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--ka-honey);
+}
+
+/* Light background variant */
+body[data-pitch-archive] .ka-mark-cell--light .ka-lockup-primary__the {
+  color: var(--fx-base-600);
+}
+
+body[data-pitch-archive] .ka-mark-cell--light .ka-lockup-primary__korman {
+  color: var(--fx-black);
+}
+
+body[data-pitch-archive] .ka-mark-cell--light .ka-lockup-primary__archive {
+  color: var(--ka-tobacco);
+}
+
+/* Warm background variant */
+body[data-pitch-archive] .ka-mark-cell--warm .ka-lockup-primary__the {
+  color: var(--ka-clay);
+}
+
+body[data-pitch-archive] .ka-mark-cell--warm .ka-lockup-primary__korman {
+  color: var(--fx-paper);
+}
+
+body[data-pitch-archive] .ka-mark-cell--warm .ka-lockup-primary__archive {
+  color: var(--ka-clay);
+}
+
+/* Cover lockup — larger */
+body[data-pitch-archive] .ka-lockup-primary--cover .ka-lockup-primary__the {
+  font-size: 16px;
+  letter-spacing: 0.3em;
+}
+
+body[data-pitch-archive] .ka-lockup-primary--cover .ka-lockup-primary__korman {
+  font-size: clamp(64px, 10vw, 96px);
+  letter-spacing: 0.14em;
+}
+
+body[data-pitch-archive] .ka-lockup-primary--cover .ka-lockup-primary__archive {
+  font-size: 16px;
+  letter-spacing: 0.35em;
+}
+
+/* Footer lockup — smaller */
+body[data-pitch-archive] .ka-lockup-primary--sm .ka-lockup-primary__the {
+  font-size: 10px;
+}
+
+body[data-pitch-archive] .ka-lockup-primary--sm .ka-lockup-primary__korman {
+  font-size: 32px;
+}
+
+body[data-pitch-archive] .ka-lockup-primary--sm .ka-lockup-primary__archive {
+  font-size: 10px;
+}
+
+/* ==========================================
+   Inline Lockup — "KORMAN | Archive"
+   ========================================== */
+
+body[data-pitch-archive] .ka-lockup-inline {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+body[data-pitch-archive] .ka-lockup-inline__korman {
+  font-family: var(--ka-font-display);
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fx-paper);
+  line-height: 1;
+}
+
+body[data-pitch-archive] .ka-lockup-inline__sep {
+  font-weight: 300;
+  font-size: 24px;
+  color: var(--fx-base-600);
+  line-height: 1;
+}
+
+body[data-pitch-archive] .ka-lockup-inline__archive {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ka-honey);
+}
+
+/* Inline lockup light background */
+body[data-pitch-archive] .ka-mark-cell--light .ka-lockup-inline__korman {
+  color: var(--fx-black);
+}
+
+body[data-pitch-archive] .ka-mark-cell--light .ka-lockup-inline__sep {
+  color: var(--fx-base-300);
+}
+
+body[data-pitch-archive] .ka-mark-cell--light .ka-lockup-inline__archive {
+  color: var(--ka-tobacco);
+}
+
+/* Inline lockup warm background */
+body[data-pitch-archive] .ka-mark-cell--warm .ka-lockup-inline__korman {
+  color: var(--fx-paper);
+}
+
+body[data-pitch-archive] .ka-mark-cell--warm .ka-lockup-inline__sep {
+  color: var(--ka-clay);
+}
+
+body[data-pitch-archive] .ka-mark-cell--warm .ka-lockup-inline__archive {
+  color: var(--ka-clay);
+}
+
+/* Small inline lockup */
+body[data-pitch-archive] .ka-lockup-inline--sm .ka-lockup-inline__korman {
+  font-size: 18px;
+}
+
+body[data-pitch-archive] .ka-lockup-inline--sm .ka-lockup-inline__sep {
+  font-size: 16px;
+}
+
+body[data-pitch-archive] .ka-lockup-inline--sm .ka-lockup-inline__archive {
+  font-size: 10px;
+}
+
+/* ==========================================
+   Document Stamp
+   ========================================== */
+
+body[data-pitch-archive] .ka-stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid var(--ka-honey);
+  padding: 10px 20px;
+  gap: 2px;
+}
+
+body[data-pitch-archive] .ka-stamp__line1 {
+  font-family: var(--ka-font-display);
+  font-weight: 900;
+  font-size: 16px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ka-honey);
+  line-height: 1.2;
+}
+
+body[data-pitch-archive] .ka-stamp__line2 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ka-honey);
+}
+
+/* Extended stamp — with catalog number */
+body[data-pitch-archive] .ka-stamp--extended {
+  gap: 4px;
+  padding: 12px 24px;
+}
+
+body[data-pitch-archive] .ka-stamp__catalog {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--ka-saddle);
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--ka-saddle);
+}
+
+/* Stamp on light background */
+body[data-pitch-archive] .ka-mark-cell--light .ka-stamp {
+  border-color: var(--ka-tobacco);
+}
+
+body[data-pitch-archive] .ka-mark-cell--light .ka-stamp__line1,
+body[data-pitch-archive] .ka-mark-cell--light .ka-stamp__line2 {
+  color: var(--ka-tobacco);
+}
+
+/* Stamp on warm background */
+body[data-pitch-archive] .ka-mark-cell--warm .ka-stamp {
+  border-color: var(--ka-clay);
+}
+
+body[data-pitch-archive] .ka-mark-cell--warm .ka-stamp__line1,
+body[data-pitch-archive] .ka-mark-cell--warm .ka-stamp__line2 {
+  color: var(--ka-clay);
+}
+
+/* Footer stamp — smaller */
+body[data-pitch-archive] .ka-stamp--sm {
+  padding: 6px 14px;
+}
+
+body[data-pitch-archive] .ka-stamp--sm .ka-stamp__line1 {
+  font-size: 12px;
+}
+
+body[data-pitch-archive] .ka-stamp--sm .ka-stamp__line2 {
+  font-size: 7px;
+}
+
+/* ==========================================
+   Color Swatches
+   ========================================== */
+
+body[data-pitch-archive] .ka-swatch-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+}
+
+body[data-pitch-archive] .ka-swatch {
+  width: 80px;
+  height: 72px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body[data-pitch-archive] .ka-swatch__name {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+body[data-pitch-archive] .ka-swatch__hex {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  opacity: 0.7;
+}
+
+body[data-pitch-archive] .ka-swatch--lt .ka-swatch__name,
+body[data-pitch-archive] .ka-swatch--lt .ka-swatch__hex {
+  color: var(--fx-base-100);
+}
+
+body[data-pitch-archive] .ka-swatch--dk .ka-swatch__name,
+body[data-pitch-archive] .ka-swatch--dk .ka-swatch__hex {
+  color: var(--fx-base-900);
+}
+
+body[data-pitch-archive] .ka-swatch--gap {
+  margin-left: 12px;
+}
+
+/* ==========================================
+   Exclusion Zone (color with X overlay)
+   ========================================== */
+
+body[data-pitch-archive] .ka-exclusion {
+  position: relative;
+  opacity: 0.6;
+}
+
+body[data-pitch-archive] .ka-exclusion::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background:
+    linear-gradient(to top right, transparent calc(50% - 1px), var(--fx-base-300) calc(50% - 1px), var(--fx-base-300) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(to bottom right, transparent calc(50% - 1px), var(--fx-base-300) calc(50% - 1px), var(--fx-base-300) calc(50% + 1px), transparent calc(50% + 1px));
+}
+
+/* ==========================================
+   Type Specimens
+   ========================================== */
+
+body[data-pitch-archive] .ka-specimen {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 10px;
+}
+
+body[data-pitch-archive] .ka-specimen__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ka-honey);
+  margin-bottom: 12px;
+}
+
+body[data-pitch-archive] .ka-specimen__sample {
+  line-height: 1.3;
+  color: var(--fx-paper);
+}
+
+body[data-pitch-archive] .ka-specimen__meta {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--fx-base-500);
+  margin-top: 10px;
+  letter-spacing: 0.04em;
+}
+
+/* Hierarchy demo card */
+body[data-pitch-archive] .ka-hierarchy-demo {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 32px;
+}
+
+body[data-pitch-archive] .ka-hierarchy-demo__section {
+  font-family: var(--ka-font-display);
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fx-paper);
+  margin-bottom: 4px;
+}
+
+body[data-pitch-archive] .ka-hierarchy-demo__technical {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--fx-base-300);
+  margin-bottom: 16px;
+}
+
+body[data-pitch-archive] .ka-hierarchy-demo__body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--fx-base-300);
+  margin-bottom: 16px;
+  max-width: 60ch;
+}
+
+body[data-pitch-archive] .ka-hierarchy-demo__caption {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: var(--fx-base-500);
+  margin-bottom: 12px;
+}
+
+body[data-pitch-archive] .ka-hierarchy-demo__speaker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ka-honey);
+}
+
+/* ==========================================
+   Voice Do/Don't Cards
+   ========================================== */
+
+body[data-pitch-archive] .ka-voice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: var(--space-lg);
+}
+
+body[data-pitch-archive] .ka-voice {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+body[data-pitch-archive] .ka-voice--do   { border-left: 3px solid var(--ka-honey); }
+body[data-pitch-archive] .ka-voice--dont { border-left: 3px solid var(--fx-base-600); }
+
+body[data-pitch-archive] .ka-voice__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+body[data-pitch-archive] .ka-voice--do .ka-voice__label   { color: var(--ka-honey); }
+body[data-pitch-archive] .ka-voice--dont .ka-voice__label { color: var(--fx-base-600); }
+
+body[data-pitch-archive] .ka-voice__text {
+  font-size: var(--text-sm);
+  color: var(--fx-base-300);
+  line-height: 1.6;
+  max-width: none;
+}
+
+/* ==========================================
+   "The Rule" Callout
+   ========================================== */
+
+body[data-pitch-archive] .ka-rule-callout {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+body[data-pitch-archive] .ka-rule-callout__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ka-honey);
+  margin-bottom: var(--space-md);
+}
+
+body[data-pitch-archive] .ka-rule-callout__text {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 300;
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  line-height: 1.5;
+  color: var(--fx-base-200);
+}
+
+body[data-pitch-archive] .ka-rule-callout__text em {
+  font-style: italic;
+  color: var(--ka-honey);
+}
+
+/* ==========================================
+   Application Cards
+   ========================================== */
+
+body[data-pitch-archive] .ka-app-card {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+body[data-pitch-archive] .ka-app-card__mockup {
+  background: var(--fx-base-800);
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--fx-base-850);
+}
+
+body[data-pitch-archive] .ka-app-card__mockup-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fx-base-600);
+}
+
+body[data-pitch-archive] .ka-app-card__body {
+  padding: 16px;
+}
+
+body[data-pitch-archive] .ka-app-card__title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--fx-paper);
+  margin-bottom: 4px;
+}
+
+body[data-pitch-archive] .ka-app-card__desc {
+  font-size: 12px;
+  color: var(--fx-base-500);
+  line-height: 1.5;
+  max-width: none;
+}
+
+/* ==========================================
+   Card Grid / Principle Cards
+   ========================================== */
+
+body[data-pitch-archive] .ka-card-grid {
+  display: grid;
+  gap: 12px;
+}
+
+body[data-pitch-archive] .ka-card-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+body[data-pitch-archive] .ka-card-grid--3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+body[data-pitch-archive] .ka-card {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+body[data-pitch-archive] .ka-card__title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--fx-paper);
+  margin-bottom: 6px;
+}
+
+body[data-pitch-archive] .ka-card__text {
+  font-size: 12px;
+  color: var(--fx-base-500);
+  line-height: 1.5;
+  max-width: none;
+}
+
+/* ==========================================
+   Archive → V2 Relationship Diagram
+   ========================================== */
+
+body[data-pitch-archive] .ka-relationship {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  margin: var(--space-xl) 0;
+}
+
+body[data-pitch-archive] .ka-relationship__box {
+  background: var(--fx-base-900);
+  border: 1px solid var(--fx-base-850);
+  border-radius: 8px;
+  padding: 24px 32px;
+  text-align: center;
+  min-width: 200px;
+}
+
+body[data-pitch-archive] .ka-relationship__box--archive {
+  border-color: var(--ka-honey);
+}
+
+body[data-pitch-archive] .ka-relationship__box--v2 {
+  border-color: var(--fx-base-600);
+}
+
+body[data-pitch-archive] .ka-relationship__box-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--fx-paper);
+  margin-bottom: 4px;
+}
+
+body[data-pitch-archive] .ka-relationship__box-sub {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+}
+
+body[data-pitch-archive] .ka-relationship__arrow {
+  font-size: 24px;
+  color: var(--fx-base-600);
+}
+
+body[data-pitch-archive] .ka-relationship__caption {
+  text-align: center;
+  font-size: 12px;
+  color: var(--fx-base-500);
+  line-height: 1.5;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ==========================================
+   Pills
+   ========================================== */
+
+body[data-pitch-archive] .ka-pill {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 3px;
+  margin: 2px;
+  background: var(--fx-base-850);
+  color: var(--fx-base-300);
+  border: 1px solid var(--fx-base-800);
+}
+
+body[data-pitch-archive] .ka-pill--warm {
+  background: rgba(196, 149, 106, 0.12);
+  color: var(--ka-honey);
+  border-color: rgba(196, 149, 106, 0.25);
+}
+
+/* ==========================================
+   Placeholder Image Slots
+   ========================================== */
+
+body[data-pitch-archive] .ka-placeholder {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-alt) 100%);
+  border: 1px dashed var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  gap: 6px;
+}
+
+body[data-pitch-archive] .ka-placeholder__id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+}
+
+body[data-pitch-archive] .ka-placeholder__title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+body[data-pitch-archive] .ka-placeholder__layout {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+/* Essay layout overrides for placeholders */
+body[data-pitch-archive] .essay-full-bleed__img .ka-placeholder {
+  position: absolute;
+  inset: 0;
+}
+
+body[data-pitch-archive] .essay-image-text {
+  align-items: stretch;
+}
+
+body[data-pitch-archive] .essay-image-text__image .ka-placeholder {
+  position: absolute;
+  inset: 0;
+}
+
+body[data-pitch-archive] .essay-diptych__item .ka-placeholder {
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+
+body[data-pitch-archive] .essay-diptych--portrait .essay-diptych__item {
+  flex: 1 !important;
+}
+
+body[data-pitch-archive] .essay-diptych--portrait .essay-diptych__item .ka-placeholder {
+  aspect-ratio: 2 / 3;
+  max-height: 85dvh;
+}
+
+/* ==========================================
+   Shot Metadata Tags
+   ========================================== */
+
+body[data-pitch-archive] .ka-shot-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--space-sm) 0 var(--space-md);
+}
+
+body[data-pitch-archive] .ka-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+body[data-pitch-archive] .ka-tag--type {
+  color: var(--fx-paper);
+  background: rgba(196, 149, 106, 0.2);
+  border: 1px solid rgba(196, 149, 106, 0.35);
+}
+
+body[data-pitch-archive] .ka-tag--tech {
+  color: var(--fx-paper);
+  background: rgba(139, 94, 60, 0.25);
+  border: 1px solid rgba(139, 94, 60, 0.4);
+}
+
+body[data-pitch-archive] .ka-tag--lens {
+  color: var(--fx-base-400);
+  background: transparent;
+  border: 1px solid var(--fx-base-700);
+}
+
+/* ==========================================
+   Spec Tables
+   ========================================== */
+
+body[data-pitch-archive] .ka-spec {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 12px 0;
+}
+
+body[data-pitch-archive] .ka-spec td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--fx-base-850);
+  vertical-align: top;
+}
+
+body[data-pitch-archive] .ka-spec td:first-child {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  width: 100px;
+  white-space: nowrap;
+}
+
+body[data-pitch-archive] .ka-spec td:last-child {
+  color: var(--fx-base-300);
+}
+
+/* ==========================================
+   Shot Matrix Table
+   ========================================== */
+
+body[data-pitch-archive] .ka-matrix-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+body[data-pitch-archive] .ka-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+body[data-pitch-archive] .ka-matrix th {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--fx-base-700);
+  position: sticky;
+  top: 0;
+  background: var(--fx-black);
+}
+
+body[data-pitch-archive] .ka-matrix td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--fx-base-850);
+  color: var(--fx-base-300);
+  font-size: 10px;
+}
+
+body[data-pitch-archive] .ka-matrix td:first-child {
+  font-family: var(--font-mono);
+  color: var(--ka-honey);
+}
+
+body[data-pitch-archive] .ka-matrix td:nth-child(2) {
+  color: var(--fx-paper);
+  font-weight: 500;
+}
+
+body[data-pitch-archive] .ka-matrix tr.ka-matrix--section td {
+  color: var(--fx-base-500);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--fx-base-700);
+  padding-top: 12px;
+}
+
+/* ==========================================
+   Essay Typography Overrides
+   ========================================== */
+
+body[data-pitch-archive] .essay-image-text__prose h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--fx-paper);
+  font-size: clamp(1.125rem, 0.9rem + 0.8vw, 1.5rem);
+  margin-bottom: var(--space-sm);
+}
+
+body[data-pitch-archive] .essay-full-bleed__overlay h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--fx-paper);
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  margin-bottom: var(--space-sm);
+}
+
+body[data-pitch-archive] .essay-full-bleed__overlay .ka-section-num {
+  color: var(--ka-clay);
+  text-shadow: none;
+}
+
+body[data-pitch-archive] .essay-full-bleed__overlay p {
+  font-size: 13px;
+  color: rgba(255, 252, 240, 0.8);
+  line-height: 1.65;
+  max-width: 55ch;
+}
+
+body[data-pitch-archive] .essay-image-text__prose p {
+  font-size: 13px;
+  color: var(--fx-base-300);
+  line-height: 1.65;
+  max-width: none;
+}
+
+body[data-pitch-archive] .essay-image-text__prose p + p {
+  margin-top: var(--space-sm);
+}
+
+/* ==========================================
+   Essay Slide Spacing
+   ========================================== */
+
+body[data-pitch-archive] .slide + .slide {
+  margin-top: var(--space-lg);
+}
+
+body[data-pitch-archive] .essay-slide {
+  padding: 0;
+}
+
+/* ==========================================
+   Hero Slide
+   ========================================== */
+
+body[data-pitch-archive] .slide--ka-hero {
+  text-align: center;
+  background: var(--fx-black);
+}
+
+body[data-pitch-archive] .slide--ka-hero .slide__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+body[data-pitch-archive] .ka-hero-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--fx-base-500);
+  text-transform: uppercase;
+}
+
+/* ==========================================
+   Footer Slide
+   ========================================== */
+
+body[data-pitch-archive] .slide--ka-footer {
+  text-align: center;
+}
+
+body[data-pitch-archive] .slide--ka-footer .slide__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+body[data-pitch-archive] .ka-footer-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--fx-base-600);
+}
+
+/* ==========================================
+   Counter Override — light text for dark bg
+   ========================================== */
+
+body[data-pitch-archive] ~ .pitch-counter,
+body[data-pitch-archive] .pitch-counter {
+  color: var(--fx-base-500);
+  background: color-mix(in srgb, var(--fx-black) 80%, transparent);
+}
+
+/* ==========================================
+   Responsive
+   ========================================== */
+
+@media (max-width: 768px) {
+  body[data-pitch-archive] .ka-mark-grid--4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  body[data-pitch-archive] .ka-mark-grid--2 {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-archive] .ka-card-grid--2,
+  body[data-pitch-archive] .ka-card-grid--3 {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-archive] .ka-voice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-archive] .ka-two-col {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-archive] .ka-swatch {
+    width: 64px;
+    height: 56px;
+  }
+
+  body[data-pitch-archive] .ka-relationship {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  body[data-pitch-archive] .ka-relationship__arrow {
+    transform: rotate(90deg);
+  }
+
+  body[data-pitch-archive] .ka-lockup-primary--cover .ka-lockup-primary__korman {
+    font-size: clamp(48px, 8vw, 72px);
+  }
+
+  body[data-pitch-archive] .ka-matrix-wrap {
+    max-height: 70dvh;
+  }
+
+  body[data-pitch-archive] .essay-diptych--portrait .essay-diptych__item .ka-placeholder {
+    max-height: 60dvh;
+  }
+}
+
+/* ==========================================
+   Print
+   ========================================== */
+
+@media print {
+  body[data-pitch-archive] .ka-swatch        { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-mark-cell      { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-voice          { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-card           { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-stamp          { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-app-card       { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-exclusion      { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-pill           { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-relationship__box { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-placeholder { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-tag { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-matrix td { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+}
+
+/* ==========================================
+   Reduced Motion
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-pitch-archive] .fade-in,
+  body[data-pitch-archive] .reveal {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}
