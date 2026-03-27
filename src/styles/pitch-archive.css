@@ -877,6 +877,264 @@ body[data-pitch-archive] .ka-pill--warm {
 }
 
 /* ==========================================
+   Placeholder Image Slots
+   ========================================== */
+
+body[data-pitch-archive] .ka-placeholder {
+  background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface-alt) 100%);
+  border: 1px dashed var(--color-border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  gap: 6px;
+}
+
+body[data-pitch-archive] .ka-placeholder__id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+}
+
+body[data-pitch-archive] .ka-placeholder__title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+body[data-pitch-archive] .ka-placeholder__layout {
+  position: absolute;
+  bottom: 10px;
+  right: 14px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+/* Essay layout overrides for placeholders */
+body[data-pitch-archive] .essay-full-bleed__img .ka-placeholder {
+  position: absolute;
+  inset: 0;
+}
+
+body[data-pitch-archive] .essay-image-text {
+  align-items: stretch;
+}
+
+body[data-pitch-archive] .essay-image-text__image .ka-placeholder {
+  position: absolute;
+  inset: 0;
+}
+
+body[data-pitch-archive] .essay-diptych__item .ka-placeholder {
+  height: auto;
+  aspect-ratio: 3 / 2;
+}
+
+body[data-pitch-archive] .essay-diptych--portrait .essay-diptych__item {
+  flex: 1 !important;
+}
+
+body[data-pitch-archive] .essay-diptych--portrait .essay-diptych__item .ka-placeholder {
+  aspect-ratio: 2 / 3;
+  max-height: 85dvh;
+}
+
+/* ==========================================
+   Shot Metadata Tags
+   ========================================== */
+
+body[data-pitch-archive] .ka-shot-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: var(--space-sm) 0 var(--space-md);
+}
+
+body[data-pitch-archive] .ka-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+body[data-pitch-archive] .ka-tag--type {
+  color: var(--fx-paper);
+  background: rgba(196, 149, 106, 0.2);
+  border: 1px solid rgba(196, 149, 106, 0.35);
+}
+
+body[data-pitch-archive] .ka-tag--tech {
+  color: var(--fx-paper);
+  background: rgba(139, 94, 60, 0.25);
+  border: 1px solid rgba(139, 94, 60, 0.4);
+}
+
+body[data-pitch-archive] .ka-tag--lens {
+  color: var(--fx-base-400);
+  background: transparent;
+  border: 1px solid var(--fx-base-700);
+}
+
+/* ==========================================
+   Spec Tables
+   ========================================== */
+
+body[data-pitch-archive] .ka-spec {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin: 12px 0;
+}
+
+body[data-pitch-archive] .ka-spec td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--fx-base-850);
+  vertical-align: top;
+}
+
+body[data-pitch-archive] .ka-spec td:first-child {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  width: 100px;
+  white-space: nowrap;
+}
+
+body[data-pitch-archive] .ka-spec td:last-child {
+  color: var(--fx-base-300);
+}
+
+/* ==========================================
+   Shot Matrix Table
+   ========================================== */
+
+body[data-pitch-archive] .ka-matrix-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+body[data-pitch-archive] .ka-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+body[data-pitch-archive] .ka-matrix th {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--fx-base-700);
+  position: sticky;
+  top: 0;
+  background: var(--fx-black);
+}
+
+body[data-pitch-archive] .ka-matrix td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--fx-base-850);
+  color: var(--fx-base-300);
+  font-size: 10px;
+}
+
+body[data-pitch-archive] .ka-matrix td:first-child {
+  font-family: var(--font-mono);
+  color: var(--ka-honey);
+}
+
+body[data-pitch-archive] .ka-matrix td:nth-child(2) {
+  color: var(--fx-paper);
+  font-weight: 500;
+}
+
+body[data-pitch-archive] .ka-matrix tr.ka-matrix--section td {
+  color: var(--fx-base-500);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--fx-base-700);
+  padding-top: 12px;
+}
+
+/* ==========================================
+   Essay Typography Overrides
+   ========================================== */
+
+body[data-pitch-archive] .essay-image-text__prose h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--fx-paper);
+  font-size: clamp(1.125rem, 0.9rem + 0.8vw, 1.5rem);
+  margin-bottom: var(--space-sm);
+}
+
+body[data-pitch-archive] .essay-full-bleed__overlay h3 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--fx-paper);
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  margin-bottom: var(--space-sm);
+}
+
+body[data-pitch-archive] .essay-full-bleed__overlay .ka-section-num {
+  color: var(--ka-clay);
+  text-shadow: none;
+}
+
+body[data-pitch-archive] .essay-full-bleed__overlay p {
+  font-size: 13px;
+  color: rgba(255, 252, 240, 0.8);
+  line-height: 1.65;
+  max-width: 55ch;
+}
+
+body[data-pitch-archive] .essay-image-text__prose p {
+  font-size: 13px;
+  color: var(--fx-base-300);
+  line-height: 1.65;
+  max-width: none;
+}
+
+body[data-pitch-archive] .essay-image-text__prose p + p {
+  margin-top: var(--space-sm);
+}
+
+/* ==========================================
+   Essay Slide Spacing
+   ========================================== */
+
+body[data-pitch-archive] .slide + .slide {
+  margin-top: var(--space-lg);
+}
+
+body[data-pitch-archive] .essay-slide {
+  padding: 0;
+}
+
+/* ==========================================
    Hero Slide
    ========================================== */
 
@@ -975,6 +1233,14 @@ body[data-pitch-archive] .pitch-counter {
   body[data-pitch-archive] .ka-lockup-primary--cover .ka-lockup-primary__korman {
     font-size: clamp(48px, 8vw, 72px);
   }
+
+  body[data-pitch-archive] .ka-matrix-wrap {
+    max-height: 70dvh;
+  }
+
+  body[data-pitch-archive] .essay-diptych--portrait .essay-diptych__item .ka-placeholder {
+    max-height: 60dvh;
+  }
 }
 
 /* ==========================================
@@ -991,6 +1257,9 @@ body[data-pitch-archive] .pitch-counter {
   body[data-pitch-archive] .ka-exclusion      { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
   body[data-pitch-archive] .ka-pill           { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
   body[data-pitch-archive] .ka-relationship__box { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-placeholder { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-tag { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
+  body[data-pitch-archive] .ka-matrix td { print-color-adjust: exact !important; -webkit-print-color-adjust: exact !important; }
 }
 
 /* ==========================================
