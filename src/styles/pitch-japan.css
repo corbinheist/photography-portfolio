@@ -175,6 +175,43 @@ body[data-pitch-japan] .jp-keywords {
 
 
 /* ==========================================
+   Color Palette
+   ========================================== */
+
+body[data-pitch-japan] .jp-palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+body[data-pitch-japan] .jp-palette__swatch {
+  aspect-ratio: 3 / 2;
+  border-radius: 4px;
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  color: var(--jp-washi);
+}
+
+body[data-pitch-japan] .jp-palette__name {
+  font-family: var(--jp-font-display);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+body[data-pitch-japan] .jp-palette__note {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+
+/* ==========================================
    Ink Rule
    ========================================== */
 
@@ -631,8 +668,8 @@ body[data-pitch-japan] .jp-route-card__detail {
 
 body[data-pitch-japan] .jp-crew-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xl);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
   margin-top: var(--space-xl);
 }
 
