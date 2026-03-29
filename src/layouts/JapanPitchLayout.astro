@@ -1,0 +1,54 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import '@styles/pitch.css';
+import '@styles/pitch-japan.css';
+import '@styles/essay.css';
+import '@styles/map.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700;800&display=swap"
+  rel="stylesheet"
+/>
+
+<BaseLayout title={title} description={description} noindex={true}>
+  <script is:inline>
+    document.body.setAttribute('data-pitch', '');
+    document.body.setAttribute('data-pitch-japan', '');
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+  <div class="jp-progress" aria-hidden="true">
+    <div class="jp-progress__bar"></div>
+  </div>
+  <slot />
+  <div class="pitch-counter" aria-hidden="true">
+    <span class="pitch-counter__current">1</span>
+    <span class="pitch-counter__sep"> / </span>
+    <span class="pitch-counter__total"></span>
+  </div>
+  <script>
+    import '@scripts/pitch-nav';
+  </script>
+  <script is:inline>
+    (function () {
+      var bar = document.querySelector('.jp-progress__bar');
+      if (!bar) return;
+      function update() {
+        var max = document.documentElement.scrollHeight - window.innerHeight;
+        var pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+        bar.style.width = pct + '%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+  </script>
+</BaseLayout>

@@ -1,0 +1,905 @@
+/* ==========================================
+   Japan Pitch Deck — Theme Override
+   Scoped under body[data-pitch-japan]
+   ========================================== */
+
+/* ── Custom Properties ── */
+
+body[data-pitch-japan] {
+  /* Sumi Ink Scale — mapped to Flexoki base */
+  --jp-sumi:        var(--fx-base-900);    /* #282726 — was #1A1A1E */
+  --jp-sumi-deep:   var(--fx-black);       /* #100F0F — was #121215 */
+  --jp-sumi-light:  var(--fx-base-850);    /* #343331 — was #2A2A30 */
+
+  /* 藍 Ai (Indigo) — Flexoki blue scale */
+  --jp-ai:          #4385BE;  /* flexoki-blue-400: dark theme primary */
+  --jp-ai-deep:     #163B66;  /* flexoki-blue-800 */
+  --jp-ai-light:    #66A0C8;  /* flexoki-blue-300 */
+
+  /* 朱 Shu (Vermillion) — Flexoki red scale */
+  --jp-shu:         #D14D41;  /* flexoki-red-400: dark theme primary */
+  --jp-shu-deep:    #AF3029;  /* flexoki-red-600 */
+  --jp-shu-light:   #E8705F;  /* flexoki-red-300 */
+
+  /* 苔 Koke (Moss) — Flexoki green scale */
+  --jp-moss:        #879A39;  /* flexoki-green-400: dark theme primary */
+  --jp-moss-deep:   #3D4C07;  /* flexoki-green-800 */
+  --jp-moss-light:  #A0AF54;  /* flexoki-green-300 */
+
+  /* 木 Ki (Hinoki Wood) — Flexoki orange scale */
+  --jp-hinoki:      #DA702C;  /* flexoki-orange-400: dark theme primary */
+  --jp-hinoki-light:#EC8B49;  /* flexoki-orange-300 */
+
+  /* 和紙 Washi — Flexoki paper/light end */
+  --jp-washi:       var(--fx-base-50);     /* #F2F0E5 — was #F5F0E8 */
+  --jp-washi-muted: rgba(242, 240, 229, 0.85);
+
+  /* 灰 Hai — Flexoki mid-tones (warm, not neutral) */
+  --jp-ash:         var(--fx-base-500);    /* #878580 — was #8A8A8A */
+  --jp-ash-light:   var(--fx-base-400);    /* #9F9D96 — was #A5A5A5 */
+
+  /* Typography */
+  --jp-font-display: 'Shippori Mincho', serif;
+  --jp-font-jp:      'Shippori Mincho', serif;
+
+  /* Base overrides */
+  background-color: var(--jp-sumi);
+}
+
+
+/* ==========================================
+   Global Overrides
+   ========================================== */
+
+body[data-pitch-japan] .slide {
+  background-color: var(--jp-sumi);
+}
+
+body[data-pitch-japan] .slide__inner {
+  max-width: 1080px;
+}
+
+
+/* ==========================================
+   Typography Overrides
+   ========================================== */
+
+body[data-pitch-japan] .slide__heading {
+  font-family: var(--jp-font-display);
+  color: var(--jp-washi);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+body[data-pitch-japan] .slide__heading--large {
+  letter-spacing: -0.02em;
+}
+
+body[data-pitch-japan] .slide__overline {
+  color: var(--jp-shu);
+}
+
+body[data-pitch-japan] .slide__subtitle {
+  color: var(--jp-washi-muted);
+}
+
+body[data-pitch-japan] .slide__text {
+  color: var(--jp-ash-light);
+}
+
+body[data-pitch-japan] .slide__text strong {
+  color: var(--jp-washi);
+}
+
+body[data-pitch-japan] .slide__mark {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  color: rgba(242, 240, 229, 0.35);
+  margin-top: var(--space-2xl);
+  font-style: italic;
+}
+
+
+/* ==========================================
+   Kanji Watermark
+   ========================================== */
+
+body[data-pitch-japan] .jp-watermark {
+  position: absolute;
+  font-family: var(--jp-font-jp);
+  font-size: clamp(12rem, 20vw, 28rem);
+  font-weight: 700;
+  color: rgba(242, 240, 229, 0.03);
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+
+body[data-pitch-japan] .jp-watermark--right {
+  right: -5%;
+  bottom: 10%;
+}
+
+body[data-pitch-japan] .jp-watermark--left {
+  left: -5%;
+  top: 15%;
+}
+
+body[data-pitch-japan] .jp-watermark--center {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+/* ==========================================
+   Vertical Text Marker
+   ========================================== */
+
+body[data-pitch-japan] .jp-tate {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-family: var(--jp-font-jp);
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  color: rgba(138, 138, 138, 0.4);
+  position: absolute;
+  right: var(--space-xl);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  white-space: nowrap;
+}
+
+
+/* ==========================================
+   Keywords
+   ========================================== */
+
+body[data-pitch-japan] .slide--jp-keywords {
+  text-align: center;
+}
+
+body[data-pitch-japan] .jp-keywords {
+  font-family: var(--jp-font-display);
+  font-size: clamp(var(--text-lg), 2.4vw, var(--text-2xl));
+  font-weight: 400;
+  line-height: 2.2;
+  letter-spacing: 0.04em;
+  color: var(--jp-ash-light);
+  max-width: 36ch;
+  margin-inline: auto;
+}
+
+
+/* ==========================================
+   Ink Rule
+   ========================================== */
+
+body[data-pitch-japan] .jp-rule {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--jp-ash) 15%,
+    var(--jp-ash) 85%,
+    transparent
+  );
+  margin: var(--space-xl) 0;
+  opacity: 0.3;
+}
+
+
+/* ==========================================
+   Enso Circle
+   ========================================== */
+
+body[data-pitch-japan] .jp-enso {
+  display: block;
+  margin: 0 auto var(--space-xl);
+  opacity: 0.15;
+}
+
+
+/* ==========================================
+   Hero Slide
+   ========================================== */
+
+body[data-pitch-japan] .slide--jp-hero {
+  text-align: center;
+  background: var(--jp-sumi-deep);
+}
+
+/* Ink wash vignette — subtle radial gradient */
+body[data-pitch-japan] .slide--jp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 70% at 50% 45%,
+    rgba(67, 133, 190, 0.06) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    ellipse 120% 100% at 50% 100%,
+    rgba(18, 18, 21, 0.6) 0%,
+    transparent 70%
+  );
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Washi paper grain texture */
+body[data-pitch-japan] .slide--jp-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+body[data-pitch-japan] .slide--jp-hero .slide__inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* Giant title typography */
+body[data-pitch-japan] .slide--jp-hero .jp-hero-title {
+  font-family: var(--jp-font-display);
+  font-size: clamp(6rem, 14vw, 16rem);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--jp-washi);
+  line-height: 0.9;
+  margin-bottom: var(--space-lg);
+}
+
+body[data-pitch-japan] .slide--jp-hero .slide__overline {
+  color: rgba(242, 240, 229, 0.45);
+  margin-bottom: var(--space-xl);
+}
+
+body[data-pitch-japan] .slide--jp-hero .slide__subtitle {
+  font-family: var(--jp-font-display);
+  font-size: var(--text-xl);
+  letter-spacing: 0.08em;
+  color: rgba(242, 240, 229, 0.6);
+  margin-inline: auto;
+}
+
+body[data-pitch-japan] .slide--jp-hero .slide__mark {
+  color: rgba(242, 240, 229, 0.25);
+  margin-top: var(--space-2xl);
+}
+
+body[data-pitch-japan] .slide--jp-hero .scroll-hint {
+  position: absolute;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  color: rgba(242, 240, 229, 0.3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  animation: scroll-hint-pulse 2s ease-in-out infinite;
+  z-index: 1;
+}
+
+
+/* ==========================================
+   Map
+   ========================================== */
+
+body[data-pitch-japan] .slide--jp-map {
+  background: var(--jp-sumi-deep);
+  padding: 0;
+  position: relative;
+}
+
+/* Subtle separation — top/bottom border lines */
+body[data-pitch-japan] .slide--jp-map::before,
+body[data-pitch-japan] .slide--jp-map::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(242, 240, 229, 0.08) 20%,
+    rgba(242, 240, 229, 0.08) 80%,
+    transparent
+  );
+  z-index: 1;
+}
+
+body[data-pitch-japan] .slide--jp-map::before { top: 0; }
+body[data-pitch-japan] .slide--jp-map::after { bottom: 0; }
+
+body[data-pitch-japan] .jp-map-full {
+  width: 100%;
+}
+
+
+/* ==========================================
+   Map + Timeline Split Layout
+   ========================================== */
+
+body[data-pitch-japan] .slide--jp-map-timeline {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  padding: 0;
+  background: var(--jp-sumi-deep);
+}
+
+body[data-pitch-japan] .jp-map-timeline__timeline {
+  width: 35%;
+  height: 100dvh;
+  padding: var(--space-xl) var(--space-2xl) var(--space-xl) var(--container-padding);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+body[data-pitch-japan] .jp-map-timeline__map {
+  width: 65%;
+  height: 100dvh;
+  position: relative;
+}
+
+/* Gradient blend — positioned on the slide to span the seam zone */
+body[data-pitch-japan] .slide--jp-map-timeline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28%;
+  width: 14%;
+  background: linear-gradient(
+    to right,
+    var(--jp-sumi-deep),
+    transparent
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+body[data-pitch-japan] .jp-map-timeline__timeline .slide__heading {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-md);
+}
+
+body[data-pitch-japan] .jp-map-timeline__timeline .jp-timeline {
+  margin-top: 0;
+}
+
+body[data-pitch-japan] .jp-timeline__subtitle {
+  font-size: var(--text-sm);
+  color: var(--jp-ash);
+  font-style: italic;
+  margin-bottom: var(--space-md);
+}
+
+body[data-pitch-japan] .jp-map-timeline__map .map-container {
+  width: 100%;
+  height: 100%;
+}
+
+/* Timeline phase hover highlight */
+body[data-pitch-japan] .jp-timeline__phase[data-region-num] {
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-radius: 4px;
+  margin-left: calc(-1 * var(--space-sm));
+  padding-left: calc(var(--space-lg) + var(--space-sm));
+}
+
+body[data-pitch-japan] .jp-timeline__phase[data-region-num]:hover,
+body[data-pitch-japan] .jp-timeline__phase--highlighted {
+  background: rgba(209, 77, 65, 0.06);
+}
+
+body[data-pitch-japan] .jp-timeline__phase--highlighted .jp-timeline__location {
+  color: var(--jp-washi);
+}
+
+
+/* ==========================================
+   Timeline
+   ========================================== */
+
+body[data-pitch-japan] .jp-timeline {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-lg);
+  border-left: 2px solid rgba(242, 240, 229, 0.08);
+  padding-left: 0;
+}
+
+body[data-pitch-japan] .jp-timeline__phase {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0 var(--space-sm) var(--space-lg);
+  position: relative;
+}
+
+/* Timeline dot */
+body[data-pitch-japan] .jp-timeline__phase::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: calc(var(--space-sm) + 6px);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jp-sumi-light);
+  border: 2px solid rgba(242, 240, 229, 0.15);
+}
+
+body[data-pitch-japan] .jp-timeline__phase--active::before {
+  background: var(--jp-shu);
+  border-color: var(--jp-shu);
+}
+
+/* Active phase left border highlight */
+body[data-pitch-japan] .jp-timeline__phase--active {
+  border-left: 2px solid var(--jp-shu);
+  margin-left: -2px;
+}
+
+body[data-pitch-japan] .jp-timeline__dates {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--jp-ash);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  min-width: 9ch;
+  padding-top: 2px;
+  flex-shrink: 0;
+}
+
+body[data-pitch-japan] .jp-timeline__content {
+  flex: 1;
+  min-width: 0;
+}
+
+body[data-pitch-japan] .jp-timeline__label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--jp-ash);
+  margin-bottom: 2px;
+}
+
+body[data-pitch-japan] .jp-timeline__phase--active .jp-timeline__label {
+  color: var(--jp-shu);
+}
+
+body[data-pitch-japan] .jp-timeline__location {
+  font-family: var(--jp-font-display);
+  font-size: var(--text-base);
+  color: var(--jp-washi);
+  margin-bottom: 2px;
+}
+
+body[data-pitch-japan] .jp-timeline__desc {
+  font-size: var(--text-sm);
+  color: var(--jp-ash);
+  line-height: 1.45;
+}
+
+
+/* ==========================================
+   Manifesto
+   ========================================== */
+
+body[data-pitch-japan] .jp-manifesto {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-xl) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+body[data-pitch-japan] .jp-manifesto li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid rgba(242, 240, 229, 0.06);
+}
+
+body[data-pitch-japan] .jp-manifesto li:last-child {
+  border-bottom: none;
+}
+
+body[data-pitch-japan] .jp-manifesto__num {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--jp-shu);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  min-width: 2.5ch;
+}
+
+body[data-pitch-japan] .jp-manifesto__rule {
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--jp-ash-light);
+}
+
+
+/* ==========================================
+   Three Lenses Grid
+   ========================================== */
+
+body[data-pitch-japan] .jp-lenses-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+body[data-pitch-japan] .jp-lens {
+  padding-right: var(--space-lg);
+  border-right: 1px solid rgba(242, 240, 229, 0.08);
+  position: relative;
+}
+
+body[data-pitch-japan] .jp-lens:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+body[data-pitch-japan] .jp-lens__kanji {
+  font-family: var(--jp-font-jp);
+  font-size: var(--text-3xl);
+  color: rgba(209, 77, 65, 0.2);
+  margin-bottom: var(--space-xs);
+  line-height: 1;
+}
+
+body[data-pitch-japan] .jp-lens__title {
+  font-family: var(--jp-font-display);
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-sm);
+  color: var(--jp-washi);
+}
+
+body[data-pitch-japan] .jp-lens__text {
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: var(--jp-ash-light);
+}
+
+
+/* ==========================================
+   Route Grid
+   ========================================== */
+
+body[data-pitch-japan] .jp-route-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  margin: var(--space-xl) 0;
+}
+
+body[data-pitch-japan] .jp-route-card {
+  background: var(--jp-sumi-light);
+  border: 1px solid rgba(242, 240, 229, 0.06);
+  border-radius: 4px;
+  padding: var(--space-md);
+  border-left: 2px solid var(--jp-shu);
+}
+
+body[data-pitch-japan] .jp-route-card__name {
+  font-family: var(--jp-font-display);
+  font-size: var(--text-lg);
+  color: var(--jp-washi);
+  margin-bottom: var(--space-xs);
+}
+
+body[data-pitch-japan] .jp-route-card__detail {
+  font-size: var(--text-sm);
+  color: var(--jp-ash);
+  line-height: 1.5;
+}
+
+
+/* ==========================================
+   Crew Grid
+   ========================================== */
+
+body[data-pitch-japan] .jp-crew-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+body[data-pitch-japan] .jp-crew-card {
+  text-align: center;
+}
+
+body[data-pitch-japan] .jp-crew-card__name {
+  font-family: var(--jp-font-display);
+  font-size: var(--text-xl);
+  color: var(--jp-washi);
+  margin-bottom: var(--space-xs);
+}
+
+body[data-pitch-japan] .jp-crew-card__role {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--jp-shu);
+  margin-bottom: var(--space-md);
+}
+
+body[data-pitch-japan] .jp-crew-card__text {
+  font-size: var(--text-sm);
+  color: var(--jp-ash);
+  line-height: 1.65;
+}
+
+
+/* ==========================================
+   Equipment List Override
+   ========================================== */
+
+body[data-pitch-japan] .equipment-list li {
+  border-left-color: var(--jp-shu);
+  color: var(--jp-ash-light);
+}
+
+body[data-pitch-japan] .equipment-list li strong {
+  color: var(--jp-washi);
+}
+
+
+/* ==========================================
+   Deliverables Override
+   ========================================== */
+
+body[data-pitch-japan] .deliverable__name {
+  color: var(--jp-washi);
+}
+
+body[data-pitch-japan] .deliverable__desc {
+  color: var(--jp-ash);
+}
+
+
+/* ==========================================
+   Partnership Grid Override
+   ========================================== */
+
+body[data-pitch-japan] .partner {
+  background: var(--jp-sumi-light);
+  border: 1px solid rgba(242, 240, 229, 0.06);
+  border-left: 2px solid var(--jp-ai);
+}
+
+body[data-pitch-japan] .partner__name {
+  color: var(--jp-washi);
+}
+
+body[data-pitch-japan] .partner__angle {
+  color: var(--jp-ash);
+}
+
+
+/* ==========================================
+   Location Slides
+   ========================================== */
+
+body[data-pitch-japan] .slide--location .location-meta {
+  border-top-color: rgba(242, 240, 229, 0.12);
+}
+
+body[data-pitch-japan] .slide--noto {
+  background-image: url('https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1920&h=1080&fit=crop&q=80&auto=format');
+  background-color: var(--jp-sumi);
+}
+
+body[data-pitch-japan] .slide--kii {
+  background-image: url('https://images.unsplash.com/photo-1478436127897-769e1b3f0f36?w=1920&h=1080&fit=crop&q=80&auto=format');
+  background-color: var(--jp-moss-deep);
+}
+
+body[data-pitch-japan] .slide--hokkaido {
+  background-image: url('https://images.unsplash.com/photo-1519326882524-15f4895468d0?w=1920&h=1080&fit=crop&q=80&auto=format');
+  background-color: var(--jp-ai-deep);
+}
+
+
+/* ==========================================
+   Contact Slide Override
+   ========================================== */
+
+body[data-pitch-japan] .slide--contact {
+  background: var(--jp-sumi-deep);
+}
+
+body[data-pitch-japan] .contact-info {
+  color: var(--jp-ash);
+}
+
+body[data-pitch-japan] .contact-info a {
+  color: var(--jp-shu);
+}
+
+body[data-pitch-japan] .contact-info a:hover {
+  color: var(--jp-shu-light);
+}
+
+body[data-pitch-japan] .contact-info strong {
+  color: var(--jp-washi);
+}
+
+
+/* ==========================================
+   Acts Coda Override
+   ========================================== */
+
+body[data-pitch-japan] .acts-coda {
+  color: var(--jp-ash);
+}
+
+
+/* ==========================================
+   Progress Bar
+   ========================================== */
+
+body[data-pitch-japan] .jp-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  z-index: calc(var(--z-header) + 1);
+  pointer-events: none;
+  background: transparent;
+}
+
+body[data-pitch-japan] .jp-progress__bar {
+  height: 100%;
+  width: 0%;
+  background: var(--jp-shu);
+  transition: width 0.15s ease-out;
+}
+
+
+/* ==========================================
+   Pitch Counter Override
+   ========================================== */
+
+body[data-pitch-japan] ~ .pitch-counter,
+body[data-pitch-japan] .pitch-counter {
+  color: var(--jp-ash);
+  background: color-mix(in srgb, var(--jp-sumi) 80%, transparent);
+}
+
+
+/* ==========================================
+   Responsive
+   ========================================== */
+
+@media (max-width: 768px) {
+  body[data-pitch-japan] .jp-lenses-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  body[data-pitch-japan] .jp-lens {
+    padding-right: 0;
+    border-right: none;
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid rgba(242, 240, 229, 0.08);
+  }
+
+  body[data-pitch-japan] .jp-lens:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  body[data-pitch-japan] .jp-route-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body[data-pitch-japan] .jp-crew-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  body[data-pitch-japan] .jp-tate {
+    display: none;
+  }
+
+  body[data-pitch-japan] .jp-watermark {
+    font-size: clamp(8rem, 30vw, 14rem);
+    opacity: 0.6;
+  }
+
+  body[data-pitch-japan] .slide--jp-map-timeline {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  body[data-pitch-japan] .jp-map-timeline__timeline {
+    border-right: none;
+    border-bottom: 1px solid rgba(242, 240, 229, 0.06);
+    padding: var(--space-md) var(--container-padding);
+  }
+
+  body[data-pitch-japan] .jp-timeline__phase {
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  body[data-pitch-japan] .jp-timeline__dates {
+    min-width: unset;
+  }
+
+  body[data-pitch-japan] .jp-hero-title {
+    font-size: clamp(4rem, 18vw, 8rem);
+    letter-spacing: 0.08em;
+  }
+
+  body[data-pitch-japan] .partnership-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ==========================================
+   Print
+   ========================================== */
+
+@media print {
+  body[data-pitch-japan] .jp-tate,
+  body[data-pitch-japan] .jp-watermark {
+    display: none !important;
+  }
+
+  body[data-pitch-japan] .slide {
+    background-color: var(--jp-sumi) !important;
+  }
+
+  body[data-pitch-japan] .slide--location {
+    print-color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+}
+
+
+/* ==========================================
+   Reduced Motion
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-pitch-japan] .jp-watermark,
+  body[data-pitch-japan] .jp-tate {
+    transition: none;
+  }
+}

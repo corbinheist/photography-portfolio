@@ -1,0 +1,79 @@
+---
+/**
+ * Reusable map component backed by MapLibre GL JS + Maptiler tiles.
+ *
+ * Usage:
+ *   <Map center={[lng, lat]} zoom={5} markers={[...]} regions={geoJson} route={geoJson} />
+ *
+ * Data generation:
+ *   - Regions: Fetch admin boundaries from OSM Nominatim (polygon_geojson=1),
+ *     extract largest polygon, simplify, compute centroid. Save as GeoJSON FeatureCollection.
+ *   - Routes: Fetch real driving directions from OSRM (router.project-osrm.org),
+ *     concatenate legs into a single GeoJSON LineString.
+ *   - Markers: Position at the centroid of each region polygon for alignment.
+ *   - See reference_map_system.md in Claude memory for full generation steps.
+ *
+ * Requires PUBLIC_MAPTILER_KEY in .env (free tier: https://cloud.maptiler.com)
+ */
+interface MarkerDef {
+  lng: number;
+  lat: number;
+  label: string;
+  num?: string;
+  target?: string;
+}
+
+interface Props {
+  id?: string;
+  center: [number, number];
+  zoom?: number;
+  markers?: MarkerDef[];
+  regions?: GeoJSON.FeatureCollection;
+  route?: GeoJSON.Feature;
+  interactive?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  center,
+  zoom = 5,
+  markers = [],
+  regions,
+  route,
+  interactive = false,
+  class: className,
+} = Astro.props;
+
+const maptilerKey = import.meta.env.PUBLIC_MAPTILER_KEY ?? '';
+---
+
+<div
+  id={id}
+  class:list={['map-container', className]}
+  data-map
+  data-center={JSON.stringify(center)}
+  data-zoom={String(zoom)}
+  data-markers={JSON.stringify(markers)}
+  data-interactive={String(interactive)}
+  data-maptiler-key={maptilerKey}
+>
+</div>
+{regions && (
+  <script
+    type="application/json"
+    data-map-regions
+    set:html={JSON.stringify(regions)}
+  />
+)}
+{route && (
+  <script
+    type="application/json"
+    data-map-route
+    set:html={JSON.stringify(route)}
+  />
+)}
+
+<script>
+  import '@scripts/map-init';
+</script>
