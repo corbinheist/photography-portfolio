@@ -37,6 +37,7 @@ jobs:
         env:
           SUBSTACK_RSS_URL: ${{ secrets.SUBSTACK_RSS_URL }}
           SITE_URL: ${{ secrets.SITE_URL }}
+          PUBLIC_MAPTILER_KEY: ${{ secrets.PUBLIC_MAPTILER_KEY }}
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
