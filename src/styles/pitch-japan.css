@@ -754,8 +754,13 @@ body[data-pitch-japan] .slide--location .location-meta {
   border-top-color: rgba(242, 240, 229, 0.12);
 }
 
-body[data-pitch-japan] .slide--noto {
+body[data-pitch-japan] .slide--kanazawa {
   background-image: url('https://images.unsplash.com/photo-1545569341-9eb8b30979d9?w=1920&h=1080&fit=crop&q=80&auto=format');
+  background-color: var(--jp-sumi);
+}
+
+body[data-pitch-japan] .slide--noto {
+  background-image: url('https://images.unsplash.com/photo-1590559899731-a382839e5549?w=1920&h=1080&fit=crop&q=80&auto=format');
   background-color: var(--jp-sumi);
 }
 
@@ -764,7 +769,11 @@ body[data-pitch-japan] .slide--kii {
   background-color: var(--jp-moss-deep);
 }
 
-body[data-pitch-japan] .slide--hokkaido {
+body[data-pitch-japan] .slide--echizen {
+  background-color: var(--jp-sumi-deep);
+}
+
+body[data-pitch-japan] .slide--kamikochi {
   background-image: url('https://images.unsplash.com/photo-1519326882524-15f4895468d0?w=1920&h=1080&fit=crop&q=80&auto=format');
   background-color: var(--jp-ai-deep);
 }

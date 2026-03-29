@@ -268,18 +268,50 @@ import japanRoute from '@data/japan-route.json';
         regions={japanRegions as any}
         route={japanRoute as any}
         markers={[
-          { lng: 136.969, lat: 37.228, label: 'Noto', num: '01', target: 'slide-9' },
-          { lng: 136.177, lat: 35.890, label: 'Echizen', num: '02', target: 'slide-11' },
-          { lng: 137.615, lat: 36.222, label: 'Kamikochi', num: '03', target: 'slide-8' },
-          { lng: 135.480, lat: 33.767, label: 'Kii Peninsula', num: '04', target: 'slide-10' },
-          { lng: 136.632, lat: 36.574, label: 'Kanazawa', num: '05', target: 'slide-8' },
+          { lng: 136.969, lat: 37.228, label: 'Noto', num: '01', target: 'slide-10' },
+          { lng: 136.177, lat: 35.890, label: 'Echizen', num: '02', target: 'slide-12' },
+          { lng: 137.615, lat: 36.222, label: 'Kamikochi', num: '03', target: 'slide-13' },
+          { lng: 135.480, lat: 33.767, label: 'Kii Peninsula', num: '04', target: 'slide-11' },
+          { lng: 136.632, lat: 36.574, label: 'Kanazawa', num: '05', target: 'slide-9' },
         ]}
       />
     </div>
   </section>
 
-  <!-- ======= 9. Location — Noto Peninsula ======= -->
-  <section class="slide slide--location slide--noto" id="slide-9">
+  <!-- ======= 9. Location — Kanazawa ======= -->
+  <section class="slide slide--location slide--kanazawa" id="slide-9">
+    <div class="slide__inner stagger-children">
+      <p class="slide__overline">Location</p>
+      <h2 class="slide__heading">Kanazawa</h2>
+      <p class="slide__text">
+        Kanazawa was spared the bombings. The samurai and geisha districts survive intact&mdash;wooden
+        machiya, lattice windows, stone-paved lanes that haven&rsquo;t been widened for cars. Kenrokuen
+        is one of Japan&rsquo;s three great gardens. The Higashi chaya district still serves tea in
+        rooms that predate the Meiji Restoration.
+      </p>
+      <p class="slide__text">
+        This is base camp. The city where craft and culture are not preserved in museums but still
+        in daily use&mdash;gold leaf, Kutani ceramics, Kaga yuzen silk dyeing. The fixer meets us here.
+      </p>
+      <div class="location-meta">
+        <div class="location-meta__item">
+          <div class="location-meta__key">Craft</div>
+          <div class="location-meta__value">Gold leaf, Kutani ceramics, Kaga yuzen</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">Stay</div>
+          <div class="location-meta__value">Ryokan &mdash; historic chaya district</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">The lens</div>
+          <div class="location-meta__value">Craft &amp; Chaos &mdash; preservation inside a living city</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 10. Location — Noto Peninsula ======= -->
+  <section class="slide slide--location slide--noto" id="slide-10">
     <div class="slide__inner stagger-children">
       <p class="slide__overline">Location</p>
       <h2 class="slide__heading">Noto Peninsula</h2>
@@ -310,8 +342,8 @@ import japanRoute from '@data/japan-route.json';
     </div>
   </section>
 
-  <!-- ======= 10. Location — Kii Peninsula ======= -->
-  <section class="slide slide--location slide--kii" id="slide-10">
+  <!-- ======= 11. Location — Kii Peninsula ======= -->
+  <section class="slide slide--location slide--kii" id="slide-11">
     <div class="slide__inner stagger-children">
       <p class="slide__overline">Location</p>
       <h2 class="slide__heading">Kii Peninsula &middot; Kumano Kod&#333;</h2>
@@ -342,8 +374,72 @@ import japanRoute from '@data/japan-route.json';
     </div>
   </section>
 
-  <!-- ======= 11. The Craftsmen ======= -->
-  <section class="slide" id="slide-11">
+  <!-- ======= 12. Location — Echizen ======= -->
+  <section class="slide slide--location slide--echizen" id="slide-12">
+    <div class="slide__inner stagger-children">
+      <p class="slide__overline">Location</p>
+      <h2 class="slide__heading">Echizen &middot; Takefu</h2>
+      <p class="slide__text">
+        Takefu has forged blades since the Muromachi period. The blacksmiths make sickles,
+        hoes, and kitchen knives in workshops that haven&rsquo;t changed floor plans in centuries.
+        Ten minutes away, Echizen&rsquo;s washi papermakers pull sheets from mountain water
+        the way they have for 1,500 years.
+      </p>
+      <p class="slide__text">
+        This is where the forge-to-table chain is shortest. The blacksmith, the farmer, the
+        kitchen, and the papermaker who wraps the product&mdash;all within cycling distance.
+      </p>
+      <div class="location-meta">
+        <div class="location-meta__item">
+          <div class="location-meta__key">Craft</div>
+          <div class="location-meta__value">Blade forging, washi papermaking</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">Stay</div>
+          <div class="location-meta__value">Ryokan &mdash; Fukui onsen town</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">The lens</div>
+          <div class="location-meta__value">Craft &amp; Chaos &mdash; fire, steel, water, paper</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 13. Location — Kamikochi ======= -->
+  <section class="slide slide--location slide--kamikochi" id="slide-13">
+    <div class="slide__inner stagger-children">
+      <p class="slide__overline">Location</p>
+      <h2 class="slide__heading">Kamikochi &middot; Kita Alps</h2>
+      <p class="slide__text">
+        The road from Matsumoto follows the Azusa River through a narrowing valley until it
+        ends and the mountains begin. Kamikochi sits at 1,500 meters&mdash;a flat river basin
+        ringed by 3,000-meter peaks. In early October the birches turn gold against granite
+        and the air is so clear that sound carries farther than it should.
+      </p>
+      <p class="slide__text">
+        This is the landscape half of the story. The mountains that isolate the craft villages
+        below are, from up here, the reason the light is the way it is.
+      </p>
+      <div class="location-meta">
+        <div class="location-meta__item">
+          <div class="location-meta__key">Craft</div>
+          <div class="location-meta__value">Mountain hut culture, alpine woodwork</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">Stay</div>
+          <div class="location-meta__value">Mountain lodge &mdash; Azusa River valley</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">The lens</div>
+          <div class="location-meta__value">Ma &mdash; the space between peaks</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 14. The Craftsmen ======= -->
+  <section class="slide" id="slide-14">
     <div class="slide__inner stagger-children">
       <h2 class="slide__heading">The Craftsmen</h2>
       <p class="slide__text">
@@ -365,8 +461,8 @@ import japanRoute from '@data/japan-route.json';
     </div>
   </section>
 
-  <!-- ======= 12. The Instruments ======= -->
-  <section class="slide" id="slide-12">
+  <!-- ======= 15. The Instruments ======= -->
+  <section class="slide" id="slide-15">
     <div class="slide__inner stagger-children">
       <h2 class="slide__heading">The Instruments</h2>
       <p class="slide__text">
@@ -404,8 +500,8 @@ import japanRoute from '@data/japan-route.json';
     </div>
   </section>
 
-  <!-- ======= 13. The Crew ======= -->
-  <section class="slide" id="slide-13">
+  <!-- ======= 16. The Crew ======= -->
+  <section class="slide" id="slide-16">
     <div class="slide__inner">
       <h2 class="slide__heading reveal">The Crew</h2>
       <p class="slide__text reveal">
@@ -450,8 +546,8 @@ import japanRoute from '@data/japan-route.json';
     </div>
   </section>
 
-  <!-- ======= 14. Deliverables ======= -->
-  <section class="slide" id="slide-14">
+  <!-- ======= 17. Deliverables ======= -->
+  <section class="slide" id="slide-17">
     <div class="slide__inner stagger-children">
       <h2 class="slide__heading">Deliverables</h2>
       <ul class="deliverables-list">
@@ -479,8 +575,8 @@ import japanRoute from '@data/japan-route.json';
     </div>
   </section>
 
-  <!-- ======= 15. Partnership Fit ======= -->
-  <section class="slide" id="slide-15">
+  <!-- ======= 18. Partnership Fit ======= -->
+  <section class="slide" id="slide-18">
     <div class="slide__inner">
       <h2 class="slide__heading reveal">Partnership Fit</h2>
       <p class="slide__text reveal">
@@ -520,8 +616,8 @@ import japanRoute from '@data/japan-route.json';
     </div>
   </section>
 
-  <!-- ======= 16. Close ======= -->
-  <section class="slide slide--contact" id="slide-16">
+  <!-- ======= 19. Close ======= -->
+  <section class="slide slide--contact" id="slide-19">
     <div class="slide__inner">
       <svg class="jp-enso" width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M40 6C58.778 6 74 21.222 74 40C74 58.778 58.778 74 40 74C21.222 74 6 58.778 6 40C6 28.954 11.432 19.18 19.6 13"
