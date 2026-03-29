@@ -1,0 +1,545 @@
+---
+import JapanPitchLayout from '@layouts/JapanPitchLayout.astro';
+import Map from '@components/Map.astro';
+import japanRegions from '@data/japan-regions.json';
+import japanRoute from '@data/japan-route.json';
+---
+
+<JapanPitchLayout
+  title="Japan — Landscape, Heritage, Craft"
+  description="A self-produced photography project. Autumn 2026."
+>
+
+  <!-- ======= 1. Cover ======= -->
+  <section class="slide slide--jp-hero" id="slide-1">
+    <div class="slide__inner">
+      <p class="slide__overline reveal">Heist Studio</p>
+      <h1 class="jp-hero-title reveal">Japan</h1>
+      <p class="slide__subtitle reveal">Landscape. Heritage. Craft.</p>
+      <p class="slide__mark fade-in">Autumn 2026</p>
+    </div>
+    <div class="scroll-hint fade-in">
+      <div class="scroll-hint__arrow"></div>
+    </div>
+  </section>
+
+  <!-- ======= 2. The Thesis ======= -->
+  <section class="slide" id="slide-2">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">The Thesis</h2>
+      <p class="slide__text">
+        A blacksmith forges a hoe. A farmer uses that hoe for forty years until the
+        handle is worn to the shape of her grip. The vegetables she grows are carried
+        to a kitchen where the same knife has prepared the same dish for three generations.
+        The meal arrives on lacquerware that took longer to make than the building it&rsquo;s
+        served in.
+      </p>
+      <p class="slide__text">
+        In rural Japan, this chain is unbroken. Forge to field to harvest to table.
+        Every link is visible, every hand known by name. <strong>This is a country where
+        craft is not separated from daily life</strong>&mdash;it is daily life. And the
+        landscape that makes these places hard to reach is the same landscape that
+        preserved them.
+      </p>
+      <p class="slide__text">
+        Three ideas recur everywhere we look. The <strong>deliberate act</strong>&mdash;craft
+        meeting chaos, precision existing inside disorder. The <strong>pause</strong>&mdash;ma,
+        the negative space that gives meaning to what surrounds it. And <strong>patina</strong>&mdash;wabi-sabi,
+        the beauty of surfaces shaped by age, weather, and use. Three lenses trained on the same
+        subject: <strong>a place that time forgot, and that forgot nothing.</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 3. Three Lenses ======= -->
+  <section class="slide" id="slide-3">
+    <div class="slide__inner">
+      <h2 class="slide__heading reveal">Three Lenses</h2>
+      <div class="jp-lenses-grid stagger-children">
+        <div class="jp-lens">
+
+          <div class="jp-lens__title">Craft &amp; Chaos</div>
+          <p class="jp-lens__text">
+            A blacksmith hammers a sickle blade in a forge that hasn&rsquo;t changed in
+            two centuries. A farmer sharpens it on a stone her grandmother used. The
+            same impulse that produces hand-forged steel produces neon-lit pachinko
+            parlors&mdash;obsessive precision applied to completely different ends. The
+            tension between them is the photograph.
+          </p>
+        </div>
+        <div class="jp-lens">
+
+          <div class="jp-lens__title">Ma (間)</div>
+          <p class="jp-lens__text">
+            Negative space as intention. The pause between brush strokes. The silence in
+            a temple garden that makes the birdsong louder. The 4am calm before the fish
+            market wakes. Ma is not emptiness&mdash;it is the interval that gives form to
+            everything around it.
+          </p>
+        </div>
+        <div class="jp-lens">
+
+          <div class="jp-lens__title">Patina</div>
+          <p class="jp-lens__text">
+            Wabi-sabi applied to the lens. A kitchen counter scored by sixty years of
+            the same knife. Noren curtains bleached by decades of sun. The worn handle
+            of a hoe that has turned the same soil since the war. Japan does not
+            restore&mdash;it lets time become part of the surface. The beauty is in the use.
+          </p>
+        </div>
+      </div>
+      <div class="jp-rule"></div>
+      <p class="acts-coda fade-in">Not three separate stories. Three ways of seeing the same one.</p>
+    </div>
+  </section>
+
+  <!-- ======= 4. Keywords ======= -->
+  <section class="slide slide--jp-keywords" id="slide-4">
+    <div class="slide__inner">
+      <p class="jp-keywords fade-in">
+        craft &middot; contrast &middot; stillness &middot; patina &middot;
+        steam &middot; rain &middot; texture &middot; intimate &middot;
+        precision &middot; harvest &middot; forge &middot;
+        pilgrimage &middot; neon &middot; moss &middot; iron
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 5. The Manifesto ======= -->
+  <section class="slide" id="slide-5">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">The Manifesto</h2>
+      <p class="slide__text">
+        Seven to ten days. Three photographers. One thesis. These are the rules
+        we hold ourselves to.
+      </p>
+      <ul class="jp-manifesto">
+        <li>
+          <span class="jp-manifesto__num">01</span>
+          <span class="jp-manifesto__rule">This is a photography project that happens in Japan. Not a trip with cameras. The distinction matters.</span>
+        </li>
+        <li>
+          <span class="jp-manifesto__num">02</span>
+          <span class="jp-manifesto__rule">Commit to the thesis before landing. Every frame serves the story or it doesn&rsquo;t get made.</span>
+        </li>
+        <li>
+          <span class="jp-manifesto__num">03</span>
+          <span class="jp-manifesto__rule">Slow glass, slow pace. Manual focus forces you to the rhythm of the subject. Match it.</span>
+        </li>
+        <li>
+          <span class="jp-manifesto__num">04</span>
+          <span class="jp-manifesto__rule">Move through the land to find the people. No fixers, no shortcuts. Earn access by showing up with intention and respect.</span>
+        </li>
+        <li>
+          <span class="jp-manifesto__num">05</span>
+          <span class="jp-manifesto__rule">Cull daily. Edit daily. Don&rsquo;t come home to three thousand unprocessed RAW files. The discipline is part of the craft.</span>
+        </li>
+        <li>
+          <span class="jp-manifesto__num">06</span>
+          <span class="jp-manifesto__rule">Build a rhythm. Morning golden hour. Midday interiors and details. Evening atmosphere. Repeat.</span>
+        </li>
+        <li>
+          <span class="jp-manifesto__num">07</span>
+          <span class="jp-manifesto__rule">Come back with a series, not a highlight reel. Twelve to twenty frames that tell one story in one visual language.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======= 6. Visual Direction ======= -->
+  <section class="slide" id="slide-6">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">Visual Direction</h2>
+      <p class="slide__text">
+        This is not the wide-landscape adventure photography aesthetic. No wide-with-subject-for-scale
+        hero shots of mountain ridges. Japan requires a different mode entirely&mdash;closer to
+        Masao Yamamoto than to National Geographic.
+      </p>
+      <ul class="equipment-list">
+        <li><strong>Intimate framing</strong> &mdash; hands, steam, texture, light through paper. Get close.</li>
+        <li><strong>Available light</strong> &mdash; neon bleed, paper lanterns, fluorescent kissaten interiors, overcast diffusion. The ambient light is the story.</li>
+        <li><strong>Reflections &amp; layers</strong> &mdash; rain on asphalt, neon in puddles, lacquer surfaces, glass and steel multiplying light sources.</li>
+        <li><strong>Natural framing</strong> &mdash; torii gates, machiya doorways, alley corridors. Japan builds its own compositions.</li>
+      </ul>
+      <p class="slide__text">
+        <strong>Color direction:</strong> deep blacks, neon cyan and magenta, warm wood tones,
+        the green of moss and bamboo, white paper and gray concrete. Move away from warm
+        desaturated palettes. Japan&rsquo;s color story is its own.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 7. The Route ======= -->
+  <section class="slide slide--jp-map-timeline" id="slide-7">
+    <div class="jp-map-timeline__timeline">
+      <h2 class="slide__heading">The Route</h2>
+      <p class="jp-timeline__subtitle">The Japan that requires asking for directions.</p>
+      <div class="jp-timeline">
+        <div class="jp-timeline__phase" data-region-num="01">
+          <div class="jp-timeline__dates">Sep 20&ndash;21</div>
+          <div class="jp-timeline__content">
+            <div class="jp-timeline__label">Travel</div>
+            <div class="jp-timeline__location">Hokkaido</div>
+            <div class="jp-timeline__desc">Fly to Asahikawa. Settle in. Scout Daisetsuzan trailheads.</div>
+          </div>
+        </div>
+        <div class="jp-timeline__phase jp-timeline__phase--active" data-region-num="01">
+          <div class="jp-timeline__dates">Sep 22&ndash;24</div>
+          <div class="jp-timeline__content">
+            <div class="jp-timeline__label">Shooting</div>
+            <div class="jp-timeline__location">Daisetsuzan</div>
+            <div class="jp-timeline__desc">Peak autumn color. Volcanic fumaroles, Ainu craft. First light on Asahidake.</div>
+          </div>
+        </div>
+        <div class="jp-timeline__phase">
+          <div class="jp-timeline__dates">Sep 25</div>
+          <div class="jp-timeline__content">
+            <div class="jp-timeline__label">Travel</div>
+            <div class="jp-timeline__location">Hokkaido &rarr; Noto</div>
+          </div>
+        </div>
+        <div class="jp-timeline__phase jp-timeline__phase--active" data-region-num="02">
+          <div class="jp-timeline__dates">Sep 26&ndash;28</div>
+          <div class="jp-timeline__content">
+            <div class="jp-timeline__label">Shooting</div>
+            <div class="jp-timeline__location">Noto Peninsula</div>
+            <div class="jp-timeline__desc">Wajima lacquerware, morning market, fishing villages. Terraced rice harvest.</div>
+          </div>
+        </div>
+        <div class="jp-timeline__phase jp-timeline__phase--active" data-region-num="03">
+          <div class="jp-timeline__dates">Sep 29&ndash;30</div>
+          <div class="jp-timeline__content">
+            <div class="jp-timeline__label">Shooting</div>
+            <div class="jp-timeline__location">Echizen &middot; Takefu</div>
+            <div class="jp-timeline__desc">Blacksmith forges, washi papermaking, farm-to-table chain.</div>
+          </div>
+        </div>
+        <div class="jp-timeline__phase jp-timeline__phase--active" data-region-num="04">
+          <div class="jp-timeline__dates">Oct 1&ndash;2</div>
+          <div class="jp-timeline__content">
+            <div class="jp-timeline__label">Shooting</div>
+            <div class="jp-timeline__location">Kamikochi &middot; Kita Alps</div>
+            <div class="jp-timeline__desc">Azusa River valley, autumn color, alpine clarity.</div>
+          </div>
+        </div>
+        <div class="jp-timeline__phase jp-timeline__phase--active" data-region-num="05">
+          <div class="jp-timeline__dates">Oct 3&ndash;5</div>
+          <div class="jp-timeline__content">
+            <div class="jp-timeline__label">Shooting</div>
+            <div class="jp-timeline__location">Kii Peninsula &middot; Kumano Kod&#333;</div>
+            <div class="jp-timeline__desc">Cedar pilgrimage trail. Shrine architecture, waterfall light.</div>
+          </div>
+        </div>
+        <div class="jp-timeline__phase">
+          <div class="jp-timeline__dates">Oct 6&ndash;7</div>
+          <div class="jp-timeline__content">
+            <div class="jp-timeline__label">Edit &middot; Buffer</div>
+            <div class="jp-timeline__location">Flexible</div>
+            <div class="jp-timeline__desc">Cull and edit. Revisit if needed. Begin sequencing.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-map-timeline__map">
+      <Map
+        center={[138.5, 38.0]}
+        zoom={5.5}
+        interactive={false}
+        class="jp-map-full"
+        regions={japanRegions as any}
+        route={japanRoute as any}
+        markers={[
+          { lng: 142.955, lat: 43.520, label: 'Daisetsuzan', num: '01', target: 'slide-10' },
+          { lng: 136.928, lat: 37.705, label: 'Noto', num: '02', target: 'slide-8' },
+          { lng: 136.177, lat: 35.890, label: 'Echizen', num: '03', target: 'slide-11' },
+          { lng: 137.615, lat: 36.222, label: 'Kamikochi', num: '04', target: 'slide-7' },
+          { lng: 135.569, lat: 33.823, label: 'Kii Peninsula', num: '05', target: 'slide-9' },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- ======= 8. Location — Noto Peninsula ======= -->
+  <section class="slide slide--location slide--noto" id="slide-8">
+    <div class="slide__inner stagger-children">
+      <p class="slide__overline">Location</p>
+      <h2 class="slide__heading">Noto Peninsula</h2>
+      <p class="slide__text">
+        The Noto Peninsula juts into the Japan Sea like a place that forgot to modernize.
+        Wajima&rsquo;s lacquerware artisans apply urushi in coats so thin they are measured in
+        fractions of a millimeter&mdash;thirty layers over thirty years. The morning market has
+        run without interruption for a thousand years. The fishing villages along the coast are
+        exactly as weathered and beautiful as they should be.
+      </p>
+      <p class="slide__text">
+        This is where craft and patina converge. The lacquer is precision. The village is time.
+      </p>
+      <div class="location-meta">
+        <div class="location-meta__item">
+          <div class="location-meta__key">Craft</div>
+          <div class="location-meta__value">Urushi lacquerware, Wajima</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">Season</div>
+          <div class="location-meta__value">Late October, harvest light</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">The lens</div>
+          <div class="location-meta__value">Patina &mdash; time on every surface</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 9. Location — Kii Peninsula ======= -->
+  <section class="slide slide--location slide--kii" id="slide-9">
+    <div class="slide__inner stagger-children">
+      <p class="slide__overline">Location</p>
+      <h2 class="slide__heading">Kii Peninsula &middot; Kumano Kod&#333;</h2>
+      <p class="slide__text">
+        The Kumano Kod&#333; is a UNESCO pilgrimage route through ancient cedar forest.
+        The trees are eight hundred years old and the trail has been walked for twelve hundred.
+        The light through the canopy falls in columns. The shrines at the trail&rsquo;s end exist
+        because a thousand years of walkers decided they should.
+      </p>
+      <p class="slide__text">
+        The villages along the Nakahechi survive because of pilgrims&mdash;the food, the inns,
+        the shrines. Walk slowly and they open.
+      </p>
+      <div class="location-meta">
+        <div class="location-meta__item">
+          <div class="location-meta__key">Craft</div>
+          <div class="location-meta__value">Cedar woodwork, shrine architecture</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">Season</div>
+          <div class="location-meta__value">Early November, cedar still green against autumn hillsides</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">The lens</div>
+          <div class="location-meta__value">Ma &mdash; silence between ancient trees</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 10. Location — Hokkaido ======= -->
+  <section class="slide slide--location slide--hokkaido" id="slide-10">
+    <div class="slide__inner stagger-children">
+      <p class="slide__overline">Location</p>
+      <h2 class="slide__heading">Hokkaido &middot; Daisetsuzan</h2>
+      <p class="slide__text">
+        Daisetsuzan is Japan&rsquo;s largest national park and the first place in the country
+        where autumn arrives. By mid-September the high plateaus burn red and gold while the rest
+        of Japan is still green. Asahidake&mdash;the highest peak in Hokkaido&mdash;rises above
+        volcanic fumaroles that send steam into cold morning air.
+      </p>
+      <p class="slide__text">
+        The Ainu called this mountain &ldquo;the place where gods play.&rdquo; The landscape is
+        vast, volcanic, and empty in a way that the rest of Japan never is.
+      </p>
+      <div class="location-meta">
+        <div class="location-meta__item">
+          <div class="location-meta__key">Craft</div>
+          <div class="location-meta__value">Ainu textile and carving traditions</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">Season</div>
+          <div class="location-meta__value">Mid-September, peak autumn</div>
+        </div>
+        <div class="location-meta__item">
+          <div class="location-meta__key">The lens</div>
+          <div class="location-meta__value">Craft &amp; Chaos &mdash; volcanic earth, delicate color</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 11. The Craftsmen ======= -->
+  <section class="slide" id="slide-11">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">The Craftsmen</h2>
+      <p class="slide__text">
+        The craftsmen are not in the cities. They are in Wajima because the climate is right for
+        lacquer. In Echizen because the water is right for paper. In Takefu because the steel is
+        right for knives. The geography that makes these places hard to reach is the same geography
+        that made the craft possible.
+      </p>
+      <p class="slide__text">
+        <strong>Follow one chain from forge to table and every link is a photograph.</strong>
+      </p>
+      <ul class="equipment-list">
+        <li><strong>Blacksmiths</strong> &mdash; Takefu, Echizen &middot; hand-forging sickles, hoes, and kitchen knives in the same workshops for generations. The implements that make the food chain possible.</li>
+        <li><strong>Farmers</strong> &mdash; terraced rice paddies, mountain vegetable plots &middot; maintaining crops with hand tools, harvesting by season. The landscape shaped by centuries of the same work.</li>
+        <li><strong>The table</strong> &mdash; farm-to-table is not a concept here, it&rsquo;s a geography &middot; the kitchen is minutes from the field, the knife was forged in the next village, the lacquerware was made down the road.</li>
+        <li><strong>Urushi lacquerware</strong> &mdash; Wajima, Noto Peninsula &middot; 0.1mm coats, climate-bound, thirty-year application. The vessel the meal arrives on.</li>
+        <li><strong>Echizen washi</strong> &mdash; Echizen, Fukui Prefecture &middot; handmade paper from 1,500 years of mountain water</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======= 12. The Instruments ======= -->
+  <section class="slide" id="slide-12">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">The Instruments</h2>
+      <p class="slide__text">
+        Two Canon R bodies. Two Leica Summicron-R primes adapted to RF mount.
+        Manual focus, manual intention. The slow glass forces the photographer
+        to the pace of the subject.
+      </p>
+      <ul class="equipment-list">
+        <li>
+          <strong>Canon EOS R5 Mark II + EOS R5</strong> &mdash; Two-body system. The R5 II
+          for primary work, the R5 as second angle or backup. Dual bodies mean no lens
+          swaps in the field&mdash;one wide, one standard, both ready.
+        </li>
+        <li>
+          <strong>Leica Summicron-R 35mm f/2 + 50mm f/2</strong> &mdash; Adapted to Canon RF.
+          Manual focus only. The Summicron rendering&mdash;controlled, precise, with a
+          character that modern autofocus glass doesn&rsquo;t reproduce&mdash;matches the
+          project&rsquo;s thesis. Craft tools for a craft story. The 35 for context, the 50
+          for portraits and detail.
+        </li>
+        <li>
+          <strong>RF 35mm f/1.4 L VCM</strong> &mdash; Native AF lens for when speed matters.
+          Night work, moving subjects, moments that won&rsquo;t wait for manual focus.
+        </li>
+        <li>
+          <strong>Leica Q2</strong> &mdash; 28mm compact. Personal camera, not the primary
+          instrument. For the moments between the moments.
+        </li>
+      </ul>
+      <p class="slide__text">
+        <strong>The slow glass is the point.</strong> Vintage Leica primes on modern bodies
+        enforce a deliberate pace&mdash;the same intentionality the craftsmen bring to their
+        own tools. No zooms on the primary kit. No drone.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 13. The Crew ======= -->
+  <section class="slide" id="slide-13">
+    <div class="slide__inner">
+      <h2 class="slide__heading reveal">The Crew</h2>
+      <p class="slide__text reveal">
+        Self-produced. No workshop. No retreat run by someone else. Three photographers
+        with complementary eyes and a shared thesis.
+      </p>
+      <div class="jp-crew-grid stagger-children">
+        <div class="jp-crew-card">
+          <div class="jp-crew-card__name">Corbin</div>
+          <div class="jp-crew-card__role">Director / Lead</div>
+          <p class="jp-crew-card__text">
+            Creative direction, primary shooter, editorial output, project architecture.
+            Second trip to Japan&mdash;first as producer.
+          </p>
+        </div>
+        <div class="jp-crew-card">
+          <div class="jp-crew-card__name">Kyle Tubbs</div>
+          <div class="jp-crew-card__role">Photographer / Producer</div>
+          <p class="jp-crew-card__text">
+            Production, logistics, second camera. Co-architect of the route and the thesis.
+          </p>
+        </div>
+        <div class="jp-crew-card">
+          <div class="jp-crew-card__name">Matthew James Price</div>
+          <div class="jp-crew-card__role">Photographer</div>
+          <p class="jp-crew-card__text">
+            Third eye. Different perspective on the same subject.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 14. Deliverables ======= -->
+  <section class="slide" id="slide-14">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">Deliverables</h2>
+      <ul class="deliverables-list">
+        <li>
+          <span class="deliverable__name">The Series</span>
+          <span class="deliverable__desc">12&ndash;20 final images, edited and sequenced as a cohesive body of work. One thesis. One visual language.</span>
+        </li>
+        <li>
+          <span class="deliverable__name">Zine Concept</span>
+          <span class="deliverable__desc">Self-published photo zine &mdash; layout, sequence, and print-ready design. Even if it doesn&rsquo;t print on this trip, design it.</span>
+        </li>
+        <li>
+          <span class="deliverable__name">Substack Series</span>
+          <span class="deliverable__desc">3&ndash;4 essays: the thesis, craft profiles, visual diary, production retrospective.</span>
+        </li>
+        <li>
+          <span class="deliverable__name">Print Candidates</span>
+          <span class="deliverable__desc">3&ndash;5 images suitable for large-format fine art printing.</span>
+        </li>
+        <li>
+          <span class="deliverable__name">Production Docs</span>
+          <span class="deliverable__desc">What worked, what didn&rsquo;t. Location research, contact sheets, process documentation. Feed back into the next project.</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ======= 15. Partnership Fit ======= -->
+  <section class="slide" id="slide-15">
+    <div class="slide__inner">
+      <h2 class="slide__heading reveal">Partnership Fit</h2>
+      <p class="slide__text reveal">
+        The project is self-funded and self-directed. But the structure is modular&mdash;each
+        element can align with a brand partner without compromising the thesis.
+      </p>
+      <div class="partnership-grid stagger-children">
+        <div class="partner">
+          <div class="partner__name">Canon</div>
+          <p class="partner__angle">
+            Two R5 bodies as the backbone. Vintage Leica glass adapted to RF&mdash;old
+            craft meeting new capability. A story about intentional tools.
+          </p>
+        </div>
+        <div class="partner">
+          <div class="partner__name">Hospitality &middot; Ryokan</div>
+          <p class="partner__angle">
+            Traditional inns as base camps. The architecture is the content&mdash;tatami,
+            fusuma, onsen steam. Coverage that opens rooms for years.
+          </p>
+        </div>
+        <div class="partner">
+          <div class="partner__name">Craft Brands</div>
+          <p class="partner__angle">
+            Artisan partnerships: lacquerware, washi, knives, ironware. Product as story.
+            The maker&rsquo;s hands are the photograph.
+          </p>
+        </div>
+        <div class="partner">
+          <div class="partner__name">Editorial &middot; Publishing</div>
+          <p class="partner__angle">
+            The craft essay, the pilgrimage series, the patina portfolio&mdash;each stands
+            alone as a feature commission for Monocle, Wallpaper*, or Cereal.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 16. Close ======= -->
+  <section class="slide slide--contact" id="slide-16">
+    <div class="slide__inner">
+      <svg class="jp-enso" width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 6C58.778 6 74 21.222 74 40C74 58.778 58.778 74 40 74C21.222 74 6 58.778 6 40C6 28.954 11.432 19.18 19.6 13"
+          stroke="#D14D41" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <h2 class="slide__heading slide__heading--large reveal">Autumn 2026.</h2>
+      <p class="slide__text fade-in" style="text-align: center; margin-inline: auto; max-width: 40ch;">
+        A place that time forgot. And that forgot nothing.
+      </p>
+      <div class="contact-info fade-in">
+        <p><strong>Corbin Heist</strong></p>
+        <p>Heist Studio</p>
+        <p><a href="https://heist.studio">heist.studio</a></p>
+        <p><a href="mailto:corbin@heist.studio">corbin@heist.studio</a></p>
+      </div>
+    </div>
+  </section>
+
+</JapanPitchLayout>
