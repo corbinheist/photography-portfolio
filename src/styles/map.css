@@ -43,7 +43,7 @@
 .map-section--full-bleed .map-container {
   border-radius: 0;
   max-height: none;
-  height: 70vh;
+  height: 100dvh;
 }
 
 
