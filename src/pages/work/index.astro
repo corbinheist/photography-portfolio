@@ -45,7 +45,7 @@ collectionsWithMaps.forEach((c, i) => {
 
 const worldRegions = worldRegionFeatures.length > 0
   ? { type: 'FeatureCollection' as const, features: worldRegionFeatures }
-  : null;
+  : undefined;
 
 function findPhoto(id: string) {
   return allPhotos.find((p) => p.id === id);
