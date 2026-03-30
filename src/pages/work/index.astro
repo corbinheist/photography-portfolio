@@ -80,6 +80,7 @@ function findPhoto(id: string) {
   /* Snap scrolling: map hero → content */
   :global(html:has(.map-hero)) {
     scroll-snap-type: y proximity;
+    scroll-behavior: smooth;
   }
 
   .map-hero {

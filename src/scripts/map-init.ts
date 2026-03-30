@@ -144,12 +144,12 @@ function init() {
       try { routeData = JSON.parse(routeEl.textContent); } catch { /* skip */ }
     }
 
-    const BASE_COLORS = getBaseColors();
-    const styleUrl = key
-      ? `https://api.maptiler.com/maps/${BASE_COLORS.style}/style.json?key=${key}`
-      : '';
+    function getStyleUrl() {
+      const base = getBaseColors();
+      return `https://api.maptiler.com/maps/${base.style}/style.json?key=${key}`;
+    }
 
-    if (!styleUrl) {
+    if (!key) {
       container.innerHTML =
         '<p style="color:var(--jp-ash,#878580);text-align:center;padding:2rem;">Map requires a Maptiler API key.<br>Set PUBLIC_MAPTILER_KEY in .env</p>';
       return;
@@ -157,7 +157,7 @@ function init() {
 
     const map = new maplibregl.Map({
       container,
-      style: styleUrl,
+      style: getStyleUrl(),
       center,
       zoom,
       attributionControl: false,
@@ -172,6 +172,7 @@ function init() {
     });
 
     map.on('style.load', () => {
+      const BASE_COLORS = getBaseColors(); // Fresh read each time style loads
       const style = map.getStyle();
       if (!style?.layers) return;
 
@@ -419,6 +420,17 @@ function init() {
           el.addEventListener('click', () => navigateTo(m.target!));
         }
       });
+
+      // ── Watch for site theme changes (light/dark toggle) ──
+      const observer = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+          if (m.attributeName === 'data-theme') {
+            map.setStyle(getStyleUrl());
+            break;
+          }
+        }
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     });
   });
 }
