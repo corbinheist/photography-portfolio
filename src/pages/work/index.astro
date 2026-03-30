@@ -2,11 +2,21 @@
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import Photo from '@components/photo/Photo.astro';
+import Map from '@components/Map.astro';
 
 const collections = await getCollection('photoCollections');
 const allPhotos = await getCollection('photos');
 
 const sortedCollections = collections.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+
+const worldMarkers = sortedCollections
+  .filter((c) => c.data.map)
+  .map((c) => ({
+    label: c.data.title,
+    lng: c.data.map!.center[0],
+    lat: c.data.map!.center[1],
+    target: `/work/${c.id}`,
+  }));
 
 function findPhoto(id: string) {
   return allPhotos.find((p) => p.id === id);
@@ -14,6 +24,17 @@ function findPhoto(id: string) {
 ---
 
 <PageLayout title="Work" description="Photography collections">
+  {worldMarkers.length > 0 && (
+    <div class="map-section map-section--full-bleed">
+      <Map
+        center={[50, 42]}
+        zoom={2.3}
+        markers={worldMarkers}
+        interactive={true}
+        theme="default"
+      />
+    </div>
+  )}
   <div class="work-header reveal">
     <h1>Work</h1>
   </div>
