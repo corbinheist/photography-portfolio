@@ -72,6 +72,7 @@ const photoCollections = defineCollection({
         center: z.tuple([z.number(), z.number()]),
         zoom: z.number().default(7),
         regionsFile: z.string().optional(),
+        routeFile: z.string().optional(),
         markers: z
           .array(
             z.object({

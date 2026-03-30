@@ -27,6 +27,7 @@ map:
   center: [-6.2, 31.3]
   zoom: 7.5
   regionsFile: morocco-regions.json
+  routeFile: morocco-route.json
   markers:
     - label: Djebel Saghro
       lng: -5.85

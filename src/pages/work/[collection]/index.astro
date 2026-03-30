@@ -25,10 +25,15 @@ const { collection, albums, photos } = Astro.props;
 
 // Load map regions if the collection defines map data
 let mapRegions: any = null;
-if (collection.data.map?.regionsFile) {
-  const modules = import.meta.glob<{ default: any }>('../../data/maps/*.json', { eager: true });
-  const key = `../../data/maps/${collection.data.map.regionsFile}`;
-  mapRegions = modules[key]?.default ?? null;
+let mapRoute: any = null;
+if (collection.data.map) {
+  const modules = import.meta.glob<{ default: any }>('/src/data/maps/*.json', { eager: true });
+  if (collection.data.map.regionsFile) {
+    mapRegions = modules[`/src/data/maps/${collection.data.map.regionsFile}`]?.default ?? null;
+  }
+  if (collection.data.map.routeFile) {
+    mapRoute = modules[`/src/data/maps/${collection.data.map.routeFile}`]?.default ?? null;
+  }
 }
 
 function findPhoto(id: string) {
@@ -52,12 +57,13 @@ function findPhoto(id: string) {
     )}
   </div>
   {collection.data.map && (
-    <div class="map-section">
+    <div class="map-section map-section--full-bleed">
       <Map
         center={collection.data.map.center}
         zoom={collection.data.map.zoom}
         markers={collection.data.map.markers}
         regions={mapRegions}
+        route={mapRoute}
         interactive={true}
         theme="default"
       />

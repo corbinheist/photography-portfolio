@@ -35,6 +35,17 @@
   overflow: hidden;
 }
 
+.map-section--full-bleed {
+  max-width: none;
+  padding-inline: 0;
+}
+
+.map-section--full-bleed .map-container {
+  border-radius: 0;
+  max-height: none;
+  height: 55vh;
+}
+
 
 /* ==========================================
    Map Markers — Label Only
