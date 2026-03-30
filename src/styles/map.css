@@ -43,7 +43,7 @@
 .map-section--full-bleed .map-container {
   border-radius: 0;
   max-height: none;
-  height: 55vh;
+  height: 70vh;
 }
 
 
@@ -83,7 +83,7 @@
   font-size: 11px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(242, 240, 229, 0.5);
+  color: rgba(242, 240, 229, 0.75);
   transition: color 0.2s ease;
   text-shadow: 0 1px 6px rgba(16, 15, 15, 0.9);
 }
