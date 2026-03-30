@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import AlbumCard from '@components/photo/AlbumCard.astro';
+import Map from '@components/Map.astro';
 
 export async function getStaticPaths() {
   const collections = await getCollection('photoCollections');
@@ -21,6 +22,14 @@ export async function getStaticPaths() {
 }
 
 const { collection, albums, photos } = Astro.props;
+
+// Load map regions if the collection defines map data
+let mapRegions: any = null;
+if (collection.data.map?.regionsFile) {
+  const modules = import.meta.glob<{ default: any }>('../../data/maps/*.json', { eager: true });
+  const key = `../../data/maps/${collection.data.map.regionsFile}`;
+  mapRegions = modules[key]?.default ?? null;
+}
 
 function findPhoto(id: string) {
   return photos.find((p: any) => p.id === id);
@@ -42,6 +51,18 @@ function findPhoto(id: string) {
       <p class="collection-desc">{collection.data.description}</p>
     )}
   </div>
+  {collection.data.map && (
+    <div class="map-section">
+      <Map
+        center={collection.data.map.center}
+        zoom={collection.data.map.zoom}
+        markers={collection.data.map.markers}
+        regions={mapRegions}
+        interactive={true}
+        theme="default"
+      />
+    </div>
+  )}
   <div class="collection-grid-wrap">
     <div class="albums-grid stagger-children">
       {albums

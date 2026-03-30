@@ -23,3 +23,23 @@ essays:
     photoCount: 11
 coverPhoto: cnh-all-images-0108
 sortOrder: 8
+map:
+  center: [-6.2, 31.3]
+  zoom: 7.5
+  regionsFile: morocco-regions.json
+  markers:
+    - label: Djebel Saghro
+      lng: -5.85
+      lat: 31.25
+      num: "01"
+      target: /work/morocco/nomads-essay
+    - label: Draa Valley
+      lng: -6.45
+      lat: 30.85
+      num: "02"
+      target: /work/morocco/ksar-essay
+    - label: High Atlas
+      lng: -7.20
+      lat: 31.50
+      num: "03"
+      target: /work/morocco/morocco

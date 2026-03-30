@@ -31,6 +31,7 @@ interface Props {
   regions?: GeoJSON.FeatureCollection;
   route?: GeoJSON.Feature;
   interactive?: boolean;
+  theme?: string;
   class?: string;
 }
 
@@ -42,6 +43,7 @@ const {
   regions,
   route,
   interactive = false,
+  theme = 'default',
   class: className,
 } = Astro.props;
 
@@ -56,6 +58,7 @@ const maptilerKey = import.meta.env.PUBLIC_MAPTILER_KEY ?? '';
   data-zoom={String(zoom)}
   data-markers={JSON.stringify(markers)}
   data-interactive={String(interactive)}
+  data-map-theme={theme}
   data-maptiler-key={maptilerKey}
 >
 </div>

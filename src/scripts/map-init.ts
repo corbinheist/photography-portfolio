@@ -28,17 +28,28 @@ interface MarkerDef {
   target?: string;
 }
 
-/** Flexoki-aligned colors for map layer overrides */
-const COLORS = {
+/** Flexoki-aligned base colors (shared across all themes) */
+const BASE_COLORS = {
   water: '#100F0F',
   land: '#1C1B1A',
   border: '#343331',
   textMajor: '#878580',
   textMinor: '#575653',
   road: '#343331',
-  regionFill: '#D14D41',    // flexoki-red-400
-  regionStroke: '#D14D41',
-  routeLine: '#4385BE',     // flexoki-blue-400
+};
+
+/** Theme-specific accent colors */
+const THEMES: Record<string, { regionFill: string; regionStroke: string; routeLine: string }> = {
+  default: {
+    regionFill: '#2E8B57',    // hs-forest (green accent)
+    regionStroke: '#2E8B57',
+    routeLine: '#DA702C',     // hs-rust
+  },
+  japan: {
+    regionFill: '#D14D41',    // flexoki-red-400
+    regionStroke: '#D14D41',
+    routeLine: '#4385BE',     // flexoki-blue-400
+  },
 };
 
 /** Compute the geometric centroid of a polygon ring using the shoelace/signed-area method. */
@@ -78,6 +89,15 @@ function geometryCentroid(geom: GeoJSON.Geometry): [number, number] {
   return [0, 0];
 }
 
+/** Navigate to a target — URL (starts with / or http) or element ID (scroll). */
+function navigateTo(target: string) {
+  if (target.startsWith('/') || target.startsWith('http')) {
+    window.location.href = target;
+  } else {
+    document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
 function init() {
   document.querySelectorAll<HTMLElement>('[data-map]').forEach((container) => {
     if (container.dataset.mapReady) return;
@@ -88,6 +108,8 @@ function init() {
     const markers: MarkerDef[] = JSON.parse(container.dataset.markers || '[]');
     const interactive = container.dataset.interactive === 'true';
     const key = container.dataset.maptilerKey || '';
+    const themeName = container.dataset.mapTheme || 'default';
+    const accent = THEMES[themeName] ?? THEMES.default;
 
     // Look for region and route GeoJSON in sibling script tags
     const regionsEl = container.parentElement?.querySelector('[data-map-regions]');
@@ -139,11 +161,11 @@ function init() {
 
         try {
           if (id.includes('water') && type === 'fill') {
-            map.setPaintProperty(id, 'fill-color', COLORS.water);
+            map.setPaintProperty(id, 'fill-color', BASE_COLORS.water);
           }
 
           if (type === 'background') {
-            map.setPaintProperty(id, 'background-color', COLORS.land);
+            map.setPaintProperty(id, 'background-color', BASE_COLORS.land);
           }
 
           if ((id.includes('landcover') || id.includes('landuse')) && type === 'fill') {
@@ -152,7 +174,7 @@ function init() {
 
           if (id.includes('road') || id.includes('highway') || id.includes('path') || id.includes('track')) {
             if (id.includes('major') || id.includes('motorway') || id.includes('trunk')) {
-              map.setPaintProperty(id, 'line-color', COLORS.road);
+              map.setPaintProperty(id, 'line-color', BASE_COLORS.road);
               map.setPaintProperty(id, 'line-opacity', 0.3);
             } else {
               map.setLayoutProperty(id, 'visibility', 'none');
@@ -160,7 +182,7 @@ function init() {
           }
 
           if (id.includes('boundary') || id.includes('border')) {
-            map.setPaintProperty(id, 'line-color', COLORS.border);
+            map.setPaintProperty(id, 'line-color', BASE_COLORS.border);
             map.setPaintProperty(id, 'line-opacity', 0.2);
           }
 
@@ -170,13 +192,13 @@ function init() {
 
           if (type === 'symbol') {
             if (id.includes('country') || id.includes('continent')) {
-              map.setPaintProperty(id, 'text-color', COLORS.textMajor);
+              map.setPaintProperty(id, 'text-color', BASE_COLORS.textMajor);
               map.setPaintProperty(id, 'text-opacity', 0.7);
             } else if (id.includes('city') || id.includes('capital') || id.includes('state') || id.includes('region')) {
-              map.setPaintProperty(id, 'text-color', COLORS.textMinor);
+              map.setPaintProperty(id, 'text-color', BASE_COLORS.textMinor);
               map.setPaintProperty(id, 'text-opacity', 0.5);
             } else if (id.includes('peak') || id.includes('mountain')) {
-              map.setPaintProperty(id, 'text-color', COLORS.textMinor);
+              map.setPaintProperty(id, 'text-color', BASE_COLORS.textMinor);
               map.setPaintProperty(id, 'text-opacity', 0.4);
             } else {
               map.setLayoutProperty(id, 'visibility', 'none');
@@ -207,7 +229,7 @@ function init() {
           type: 'fill',
           source: 'regions',
           paint: {
-            'fill-color': COLORS.regionFill,
+            'fill-color': accent.regionFill,
             'fill-opacity': 0.12,
           },
         });
@@ -217,7 +239,7 @@ function init() {
           type: 'line',
           source: 'regions',
           paint: {
-            'line-color': COLORS.regionStroke,
+            'line-color': accent.regionStroke,
             'line-width': 1.5,
             'line-opacity': 0.35,
           },
@@ -245,7 +267,7 @@ function init() {
           type: 'line',
           source: 'route',
           paint: {
-            'line-color': COLORS.routeLine,
+            'line-color': accent.routeLine,
             'line-width': 2.5,
             'line-dasharray': [4, 3],
             'line-opacity': 0.45,
@@ -302,10 +324,7 @@ function init() {
         const num = feat?.properties?.num;
         if (num) {
           const marker = markers.find((m) => m.num === num);
-          if (marker?.target) {
-            const target = document.getElementById(marker.target);
-            if (target) target.scrollIntoView({ behavior: 'smooth' });
-          }
+          if (marker?.target) navigateTo(marker.target);
         }
       });
 
@@ -336,10 +355,7 @@ function init() {
           });
           phase.addEventListener('click', () => {
             const targetId = numToTarget.get(num);
-            if (targetId) {
-              const el = document.getElementById(targetId);
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }
+            if (targetId) navigateTo(targetId);
           });
         });
       }
@@ -377,10 +393,7 @@ function init() {
         el.addEventListener('mouseleave', () => setHovered(null));
 
         if (m.target) {
-          el.addEventListener('click', () => {
-            const target = document.getElementById(m.target!);
-            if (target) target.scrollIntoView({ behavior: 'smooth' });
-          });
+          el.addEventListener('click', () => navigateTo(m.target!));
         }
       });
     });

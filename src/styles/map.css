@@ -17,6 +17,26 @@
 
 
 /* ==========================================
+   Map Section — Collection Pages
+   ========================================== */
+
+.map-section {
+  padding-inline: var(--container-padding);
+  padding-bottom: var(--space-xl);
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+.map-section .map-container {
+  height: 50vh;
+  min-height: 400px;
+  max-height: 600px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+
+/* ==========================================
    Map Markers — Label Only
    ========================================== */
 

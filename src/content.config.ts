@@ -67,6 +67,24 @@ const photoCollections = defineCollection({
       .optional(),
     coverPhoto: z.string().optional().describe('Reference to a photo ID'),
     sortOrder: z.number().default(0),
+    map: z
+      .object({
+        center: z.tuple([z.number(), z.number()]),
+        zoom: z.number().default(7),
+        regionsFile: z.string().optional(),
+        markers: z
+          .array(
+            z.object({
+              label: z.string(),
+              lng: z.number(),
+              lat: z.number(),
+              target: z.string(),
+              num: z.string().optional(),
+            }),
+          )
+          .default([]),
+      })
+      .optional(),
   }),
 });
 
