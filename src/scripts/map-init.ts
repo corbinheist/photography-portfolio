@@ -28,15 +28,35 @@ interface MarkerDef {
   target?: string;
 }
 
-/** Flexoki-aligned base colors (shared across all themes) */
-const BASE_COLORS = {
+/** Flexoki-aligned base colors — selected by site theme */
+const BASE_DARK = {
   water: '#100F0F',
   land: '#1C1B1A',
   border: '#343331',
   textMajor: '#878580',
   textMinor: '#575653',
   road: '#343331',
+  hillShadow: '#100F0F',
+  hillHighlight: '#343331',
+  style: 'dataviz-dark',
 };
+
+const BASE_LIGHT = {
+  water: '#DAD8CE',
+  land: '#F2F0E5',
+  border: '#E6E4D9',
+  textMajor: '#6F6E69',
+  textMinor: '#878580',
+  road: '#E6E4D9',
+  hillShadow: '#DAD8CE',
+  hillHighlight: '#FFFCF0',
+  style: 'dataviz-light',
+};
+
+function getBaseColors() {
+  const theme = document.documentElement.getAttribute('data-theme');
+  return theme === 'light' ? BASE_LIGHT : BASE_DARK;
+}
 
 /** Theme-specific accent colors */
 const THEMES: Record<string, { regionFill: string; regionStroke: string; routeLine: string }> = {
@@ -124,8 +144,9 @@ function init() {
       try { routeData = JSON.parse(routeEl.textContent); } catch { /* skip */ }
     }
 
+    const BASE_COLORS = getBaseColors();
     const styleUrl = key
-      ? `https://api.maptiler.com/maps/dataviz-dark/style.json?key=${key}`
+      ? `https://api.maptiler.com/maps/${BASE_COLORS.style}/style.json?key=${key}`
       : '';
 
     if (!styleUrl) {
@@ -213,8 +234,8 @@ function init() {
           }
 
           if (id.includes('hillshade') || id.includes('hillshading')) {
-            map.setPaintProperty(id, 'hillshade-shadow-color', '#100F0F');
-            map.setPaintProperty(id, 'hillshade-highlight-color', '#343331');
+            map.setPaintProperty(id, 'hillshade-shadow-color', BASE_COLORS.hillShadow);
+            map.setPaintProperty(id, 'hillshade-highlight-color', BASE_COLORS.hillHighlight);
             map.setPaintProperty(id, 'hillshade-exaggeration', 0.3);
           }
         } catch { /* skip unsupported properties */ }

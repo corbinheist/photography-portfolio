@@ -25,7 +25,7 @@ function findPhoto(id: string) {
 
 <PageLayout title="Work" description="Photography collections">
   {worldMarkers.length > 0 && (
-    <div class="map-section map-section--full-bleed">
+    <div class="map-hero" id="map-hero">
       <Map
         center={[50, 42]}
         zoom={2.3}
@@ -33,8 +33,12 @@ function findPhoto(id: string) {
         interactive={false}
         theme="default"
       />
+      <div class="map-hero__scroll-hint">
+        <div class="map-hero__arrow"></div>
+      </div>
     </div>
   )}
+  <div class="work-content" id="work-content">
   <div class="work-header reveal">
     <h1>Work</h1>
   </div>
@@ -69,9 +73,53 @@ function findPhoto(id: string) {
       })}
     </div>
   </div>
+  </div>
 </PageLayout>
 
 <style>
+  /* Snap scrolling: map hero → content */
+  :global(html:has(.map-hero)) {
+    scroll-snap-type: y proximity;
+  }
+
+  .map-hero {
+    position: relative;
+    height: 100dvh;
+    scroll-snap-align: start;
+  }
+
+  .map-hero .map-container {
+    height: 100%;
+  }
+
+  .map-hero__scroll-hint {
+    position: absolute;
+    bottom: var(--space-xl);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    animation: map-hint-pulse 2.5s ease-in-out infinite;
+    opacity: 0.35;
+  }
+
+  .map-hero__arrow {
+    width: 16px;
+    height: 16px;
+    border-right: 1.5px solid var(--color-text-muted);
+    border-bottom: 1.5px solid var(--color-text-muted);
+    transform: rotate(45deg);
+  }
+
+  @keyframes map-hint-pulse {
+    0%, 100% { opacity: 0.25; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 0.5; transform: translateX(-50%) translateY(6px); }
+  }
+
+  .work-content {
+    scroll-snap-align: start;
+    min-height: 100dvh;
+  }
+
   .work-header {
     padding: var(--space-xl) var(--container-padding) var(--space-md);
   }
