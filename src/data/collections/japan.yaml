@@ -4,3 +4,13 @@ albums:
   - tokyo-kissaten
 coverPhoto: l1000308-2
 sortOrder: 2
+map:
+  center: [139.72, 35.68]
+  zoom: 11
+  regionsFile: japan-collection-regions.json
+  markers:
+    - label: Tokyo
+      lng: 139.72
+      lat: 35.68
+      num: "01"
+      target: /work/japan/tokyo-kissaten

@@ -4,3 +4,19 @@ albums:
   - norway-test
 coverPhoto: 2025_c_n_wedding_0157
 sortOrder: 6
+map:
+  center: [12.5, 64.0]
+  zoom: 4.5
+  regionsFile: norway-regions.json
+  routeFile: norway-route.json
+  markers:
+    - label: Lofoten
+      lng: 14.40
+      lat: 68.20
+      num: "01"
+      target: /work/norway/norway-test
+    - label: Oslo
+      lng: 10.75
+      lat: 59.92
+      num: "02"
+      target: /work/norway/norway-test
