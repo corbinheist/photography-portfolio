@@ -320,7 +320,8 @@ function init() {
         }
       }
 
-      // ── Wire timeline phases to region highlights ──
+      // ── Wire timeline phases to region highlights + click navigation ──
+      const numToTarget = new Map(markers.map((m) => [m.num, m.target]));
       const slide = container.closest('.slide');
       if (slide) {
         slide.querySelectorAll<HTMLElement>('[data-region-num]').forEach((phase) => {
@@ -332,6 +333,13 @@ function init() {
           phase.addEventListener('mouseleave', () => {
             setHovered(null);
             phase.classList.remove('jp-timeline__phase--highlighted');
+          });
+          phase.addEventListener('click', () => {
+            const targetId = numToTarget.get(num);
+            if (targetId) {
+              const el = document.getElementById(targetId);
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }
           });
         });
       }
