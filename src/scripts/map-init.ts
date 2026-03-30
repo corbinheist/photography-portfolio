@@ -268,22 +268,11 @@ function init() {
         });
       }
 
-      // ── Route line (visually distinct: blue, dashed) ──
-      // Only fall back to straight-line route if regions exist (collection-level map).
-      // World-level maps (markers only, no regions) should not connect markers.
-      const routeFeature = routeData ?? (regions && markers.length > 1 ? {
-        type: 'Feature' as const,
-        properties: {},
-        geometry: {
-          type: 'LineString' as const,
-          coordinates: markers.map((m) => [m.lng, m.lat]),
-        },
-      } : null);
-
-      if (routeFeature) {
+      // ── Route line — only when explicit route data is provided ──
+      if (routeData) {
         map.addSource('route', {
           type: 'geojson',
-          data: routeFeature as GeoJSON.Feature,
+          data: routeData as GeoJSON.Feature,
         });
 
         map.addLayer({
