@@ -9,8 +9,8 @@ const allPhotos = await getCollection('photos');
 
 const sortedCollections = collections.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
 
-// Load all map region files
-const mapFiles = import.meta.glob<{ default: any }>('/src/data/maps/*-regions.json', { eager: true });
+// Load country-level outlines for the world map
+const countryFiles = import.meta.glob<{ default: any }>('/src/data/maps/*-country.json', { eager: true });
 
 // Build world markers + merged regions from all collections with map data
 const collectionsWithMaps = sortedCollections.filter((c) => c.data.map);
@@ -30,9 +30,8 @@ const worldMarkers = collectionsWithMaps.map((c) => {
 // Merge all region GeoJSON into one FeatureCollection with matching nums
 const worldRegionFeatures: any[] = [];
 collectionsWithMaps.forEach((c, i) => {
-  const file = c.data.map?.regionsFile;
-  if (!file) return;
-  const data = mapFiles[`/src/data/maps/${file}`]?.default;
+  const countryFile = `/src/data/maps/${c.id}-country.json`;
+  const data = countryFiles[countryFile]?.default;
   if (!data?.features) return;
   const num = String(i + 1).padStart(2, '0');
   for (const feat of data.features) {
