@@ -1,0 +1,14 @@
+title: Patagonia
+description: Wind, granite, and the end of the road.
+albums: []
+sortOrder: 7
+map:
+  center: [-72.5, -50.5]
+  zoom: 5.5
+  regionsFile: patagonia-regions.json
+  markers:
+    - label: Patagonia
+      lng: -72.5
+      lat: -50.5
+      num: "01"
+      target: /work/patagonia

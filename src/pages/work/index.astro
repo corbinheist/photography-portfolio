@@ -9,14 +9,43 @@ const allPhotos = await getCollection('photos');
 
 const sortedCollections = collections.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
 
-const worldMarkers = sortedCollections
-  .filter((c) => c.data.map)
-  .map((c) => ({
+// Load all map region files
+const mapFiles = import.meta.glob<{ default: any }>('/src/data/maps/*-regions.json', { eager: true });
+
+// Build world markers + merged regions from all collections with map data
+const collectionsWithMaps = sortedCollections.filter((c) => c.data.map);
+let markerNum = 0;
+
+const worldMarkers = collectionsWithMaps.map((c) => {
+  markerNum++;
+  return {
     label: c.data.title,
     lng: c.data.map!.center[0],
     lat: c.data.map!.center[1],
+    num: String(markerNum).padStart(2, '0'),
     target: `/work/${c.id}`,
-  }));
+  };
+});
+
+// Merge all region GeoJSON into one FeatureCollection with matching nums
+const worldRegionFeatures: any[] = [];
+collectionsWithMaps.forEach((c, i) => {
+  const file = c.data.map?.regionsFile;
+  if (!file) return;
+  const data = mapFiles[`/src/data/maps/${file}`]?.default;
+  if (!data?.features) return;
+  const num = String(i + 1).padStart(2, '0');
+  for (const feat of data.features) {
+    worldRegionFeatures.push({
+      ...feat,
+      properties: { ...feat.properties, num },
+    });
+  }
+});
+
+const worldRegions = worldRegionFeatures.length > 0
+  ? { type: 'FeatureCollection' as const, features: worldRegionFeatures }
+  : null;
 
 function findPhoto(id: string) {
   return allPhotos.find((p) => p.id === id);
@@ -27,9 +56,10 @@ function findPhoto(id: string) {
   {worldMarkers.length > 0 && (
     <div class="map-hero" id="map-hero">
       <Map
-        center={[50, 42]}
-        zoom={2.3}
+        center={[10, 25]}
+        zoom={1.8}
         markers={worldMarkers}
+        regions={worldRegions}
         interactive={false}
         theme="default"
       />

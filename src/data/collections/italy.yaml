@@ -1,0 +1,14 @@
+title: Italy
+description: Dolomites, lake towns, and the light that makes everything look ancient.
+albums: []
+sortOrder: 3
+map:
+  center: [11.5, 44.5]
+  zoom: 5.5
+  regionsFile: italy-regions.json
+  markers:
+    - label: Italy
+      lng: 11.5
+      lat: 44.5
+      num: "01"
+      target: /work/italy

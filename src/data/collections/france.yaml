@@ -1,0 +1,14 @@
+title: France
+description: Alpine retreats, Ardèche gorges, and the Pyrenees.
+albums: []
+sortOrder: 4
+map:
+  center: [2.2, 46.2]
+  zoom: 5.5
+  regionsFile: france-regions.json
+  markers:
+    - label: France
+      lng: 2.2
+      lat: 46.2
+      num: "01"
+      target: /work/france

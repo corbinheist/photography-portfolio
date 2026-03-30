@@ -1,0 +1,14 @@
+title: Montana
+description: Big sky, mountain light, and the American West.
+albums: []
+sortOrder: 10
+map:
+  center: [-110.5, 46.8]
+  zoom: 6
+  regionsFile: montana-regions.json
+  markers:
+    - label: Montana
+      lng: -110.5
+      lat: 46.8
+      num: "01"
+      target: /work/montana

@@ -1,0 +1,14 @@
+title: Pacific Northwest
+description: Moss, mist, and the volcanic spine of the Cascades.
+albums: []
+sortOrder: 11
+map:
+  center: [-122.3, 47.6]
+  zoom: 6
+  regionsFile: pnw-regions.json
+  markers:
+    - label: Pacific Northwest
+      lng: -122.3
+      lat: 47.6
+      num: "01"
+      target: /work/pnw

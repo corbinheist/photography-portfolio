@@ -1,0 +1,14 @@
+title: North Carolina
+description: Blue Ridge, Outer Banks, and the light between.
+albums: []
+sortOrder: 12
+map:
+  center: [-80.0, 35.6]
+  zoom: 6
+  regionsFile: north-carolina-regions.json
+  markers:
+    - label: North Carolina
+      lng: -80.0
+      lat: 35.6
+      num: "01"
+      target: /work/north-carolina
