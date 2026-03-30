@@ -44,3 +44,18 @@ map:
       lat: 31.50
       num: "03"
       target: /work/morocco/morocco
+    - label: Marrakech
+      lng: -7.98
+      lat: 31.63
+      num: "04"
+      target: /work/morocco/morocco
+    - label: Ait Ben Haddou
+      lng: -7.05
+      lat: 31.05
+      num: "05"
+      target: /work/morocco/morocco
+    - label: Ait Bougmez Valley
+      lng: -6.30
+      lat: 31.62
+      num: "06"
+      target: /work/morocco/morocco
