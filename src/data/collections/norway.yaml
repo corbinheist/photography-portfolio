@@ -8,7 +8,6 @@ map:
   center: [12.5, 64.0]
   zoom: 4.5
   regionsFile: norway-regions.json
-  routeFile: norway-route.json
   markers:
     - label: Lofoten
       lng: 14.40
