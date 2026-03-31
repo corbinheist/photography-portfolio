@@ -106,16 +106,9 @@ function findPhoto(id: string) {
 </PageLayout>
 
 <style>
-  /* Snap scrolling: map hero → content */
-  :global(html:has(.map-hero)) {
-    scroll-snap-type: y proximity;
-    scroll-behavior: smooth;
-  }
-
   .map-hero {
     position: relative;
     height: 100dvh;
-    scroll-snap-align: start;
   }
 
   .map-hero .map-container {
@@ -146,7 +139,6 @@ function findPhoto(id: string) {
   }
 
   .work-content {
-    scroll-snap-align: start;
     min-height: 100dvh;
   }
 
@@ -243,3 +235,38 @@ function findPhoto(id: string) {
     transform: translateX(0);
   }
 </style>
+
+<script>
+  function initMapHeroNav() {
+    const hero = document.getElementById('map-hero');
+    const content = document.getElementById('work-content');
+    if (!hero || !content) return;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+        // If we're still viewing the map hero, snap to content
+        if (window.scrollY < hero.offsetHeight * 0.5) {
+          e.preventDefault();
+          content.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+      if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        // If we're near the top of content, snap back to map
+        if (window.scrollY < hero.offsetHeight * 1.5) {
+          e.preventDefault();
+          hero.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
+    });
+
+    // Click scroll hint to snap down
+    const hint = hero.querySelector('.map-hero__scroll-hint');
+    if (hint) {
+      hint.addEventListener('click', () => {
+        content.scrollIntoView({ behavior: 'smooth' });
+      });
+    }
+  }
+
+  document.addEventListener('astro:page-load', initMapHeroNav);
+</script>
