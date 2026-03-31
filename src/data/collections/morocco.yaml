@@ -24,8 +24,8 @@ essays:
 coverPhoto: cnh-all-images-0108
 sortOrder: 8
 map:
-  center: [-6.2, 31.3]
-  zoom: 7.5
+  center: [-6.9, 31.2]
+  zoom: 7.8
   regionsFile: morocco-regions.json
   routeFile: morocco-route.json
   markers:
