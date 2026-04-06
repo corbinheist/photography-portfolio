@@ -86,11 +86,11 @@ body[data-pitch-brand] .slide__inner {
   background: var(--fx-black);
 }
 
-.hs-footer-wordmark {
-  font-family: var(--font-heading);
-  font-size: var(--text-3xl);
-  color: var(--fx-base-100);
-  margin-bottom: var(--space-xs);
+.slide--hs-footer .slide__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
 }
 
 .hs-footer-domain {
@@ -98,7 +98,6 @@ body[data-pitch-brand] .slide__inner {
   font-size: var(--text-sm);
   color: var(--fx-base-500);
   letter-spacing: 0.04em;
-  margin-bottom: var(--space-2xl);
 }
 
 .hs-footer-version {
@@ -106,6 +105,271 @@ body[data-pitch-brand] .slide__inner {
   font-size: var(--text-xs);
   color: var(--fx-base-700);
   letter-spacing: 0.06em;
+}
+
+/* ==========================================
+   Mark Display Grid
+   ========================================== */
+
+.hs-mark-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: var(--space-lg);
+}
+
+.hs-mark-grid--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.hs-mark-grid--2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* ==========================================
+   Mark Cell
+   ========================================== */
+
+.hs-mark-cell {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  min-height: 240px;
+  border: 1px solid var(--fx-base-850);
+  position: relative;
+}
+
+.hs-mark-cell--dark    { background: var(--fx-base-900); }
+.hs-mark-cell--light   { background: var(--fx-paper); }
+.hs-mark-cell--forest  { background: var(--hs-pine); }
+.hs-mark-cell--mid     { background: var(--fx-base-700); }
+
+.hs-mark-cell__label {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fx-base-500);
+}
+
+.hs-mark-cell--light .hs-mark-cell__label {
+  color: var(--fx-base-600);
+}
+
+.hs-mark-cell--forest .hs-mark-cell__label {
+  color: var(--hs-moss);
+}
+
+/* ==========================================
+   Wordmark — HEIST.STUDIO
+   ========================================== */
+
+.hs-wordmark {
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+}
+
+.hs-wordmark__heist {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  color: var(--fx-base-100);
+}
+
+.hs-wordmark__dot {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 36px;
+  color: var(--hs-bottle);
+}
+
+.hs-wordmark__studio {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 36px;
+  letter-spacing: 0.04em;
+  color: var(--fx-base-100);
+}
+
+/* Cover variant — large */
+.hs-wordmark--cover {
+  margin-bottom: var(--space-sm);
+}
+
+.hs-wordmark--cover .hs-wordmark__heist {
+  font-size: clamp(48px, 8vw, 80px);
+}
+
+.hs-wordmark--cover .hs-wordmark__dot {
+  font-size: clamp(48px, 8vw, 80px);
+}
+
+.hs-wordmark--cover .hs-wordmark__studio {
+  font-size: clamp(48px, 8vw, 80px);
+}
+
+/* Small variant */
+.hs-wordmark--sm .hs-wordmark__heist {
+  font-size: 18px;
+}
+
+.hs-wordmark--sm .hs-wordmark__dot {
+  font-size: 18px;
+}
+
+.hs-wordmark--sm .hs-wordmark__studio {
+  font-size: 18px;
+}
+
+/* Light background */
+.hs-mark-cell--light .hs-wordmark__heist {
+  color: var(--fx-black);
+}
+
+.hs-mark-cell--light .hs-wordmark__dot {
+  color: var(--hs-racing);
+}
+
+.hs-mark-cell--light .hs-wordmark__studio {
+  color: var(--fx-black);
+}
+
+/* Forest background */
+.hs-mark-cell--forest .hs-wordmark__heist {
+  color: var(--fx-paper);
+}
+
+.hs-mark-cell--forest .hs-wordmark__dot {
+  color: var(--hs-sage);
+}
+
+.hs-mark-cell--forest .hs-wordmark__studio {
+  color: var(--fx-paper);
+}
+
+/* ==========================================
+   Stacked Lockup — HEIST. / STUDIO
+   ========================================== */
+
+.hs-lockup-stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hs-lockup-stacked__heist {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 48px;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: var(--fx-base-100);
+}
+
+.hs-lockup-stacked__dot {
+  color: var(--hs-bottle);
+}
+
+.hs-lockup-stacked__studio {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 48px;
+  letter-spacing: 0.04em;
+  color: var(--fx-base-100);
+  line-height: 1;
+  margin-top: 0;
+}
+
+/* Light background */
+.hs-mark-cell--light .hs-lockup-stacked__heist {
+  color: var(--fx-black);
+}
+
+.hs-mark-cell--light .hs-lockup-stacked__dot {
+  color: var(--hs-racing);
+}
+
+.hs-mark-cell--light .hs-lockup-stacked__studio {
+  color: var(--fx-black);
+}
+
+/* Forest background */
+.hs-mark-cell--forest .hs-lockup-stacked__heist {
+  color: var(--fx-paper);
+}
+
+.hs-mark-cell--forest .hs-lockup-stacked__dot {
+  color: var(--hs-sage);
+}
+
+.hs-mark-cell--forest .hs-lockup-stacked__studio {
+  color: var(--fx-paper);
+}
+
+/* ==========================================
+   Stamp — brand-page-specific overrides
+   (base .hs-stamp rules are in pitch.css)
+   ========================================== */
+
+/* Extended stamp — with project code */
+.hs-stamp--extended {
+  gap: 4px;
+  padding: 12px 24px;
+}
+
+.hs-stamp__code {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--fx-base-600);
+  margin-top: 2px;
+  padding-top: 4px;
+  border-top: 1px solid var(--fx-base-800);
+}
+
+/* Stamp on light background */
+.hs-mark-cell--light .hs-stamp {
+  border-color: var(--fx-base-200);
+}
+
+.hs-mark-cell--light .hs-stamp__name {
+  color: var(--fx-black);
+}
+
+.hs-mark-cell--light .hs-stamp__desc {
+  color: var(--fx-base-600);
+}
+
+.hs-mark-cell--light .hs-stamp__code {
+  color: var(--fx-base-500);
+  border-top-color: var(--fx-base-200);
+}
+
+/* Stamp on forest background */
+.hs-mark-cell--forest .hs-stamp {
+  border-color: var(--hs-racing);
+}
+
+.hs-mark-cell--forest .hs-stamp__name {
+  color: var(--fx-paper);
+}
+
+.hs-mark-cell--forest .hs-stamp__desc {
+  color: var(--hs-sage);
+}
+
+.hs-mark-cell--forest .hs-stamp__code {
+  color: var(--hs-moss);
+  border-top-color: var(--hs-racing);
 }
 
 /* ==========================================
@@ -839,5 +1103,26 @@ body[data-pitch-brand] .slide__inner {
 
   .hs-duration-row {
     flex-wrap: wrap;
+  }
+
+  .hs-mark-grid--4 {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hs-wordmark__heist,
+  .hs-wordmark__dot {
+    font-size: 24px;
+  }
+
+  .hs-wordmark__studio {
+    font-size: 24px;
+  }
+
+  .hs-lockup-stacked__heist {
+    font-size: 36px;
+  }
+
+  .hs-lockup-stacked__studio {
+    font-size: 14px;
   }
 }

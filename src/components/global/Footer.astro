@@ -19,7 +19,10 @@ const year = new Date().getFullYear();
 
   <div class="footer-bottom">
     <div class="footer-inner">
-      <p class="footer-copyright">&copy; {year}</p>
+      <div class="footer-lockup">
+        <span class="footer-lockup-heist">HEIST</span><span class="footer-lockup-dot">.</span><span class="footer-lockup-studio">STUDIO</span>
+        <span class="footer-lockup-copy">&copy; {year}</span>
+      </div>
       <div class="footer-links">
         <a href="/about">About</a>
         <a href="/blog">Notes</a>
@@ -74,9 +77,42 @@ const year = new Date().getFullYear();
     margin: 0 auto;
   }
 
-  .footer-copyright {
+  .footer-lockup {
+    display: flex;
+    align-items: baseline;
+  }
+
+  .footer-lockup-heist {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    line-height: 1;
+  }
+
+  .footer-lockup-dot {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--color-accent-deep);
+    line-height: 1;
+  }
+
+  .footer-lockup-studio {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    line-height: 1;
+  }
+
+  .footer-lockup-copy {
     font-size: var(--text-xs);
     color: var(--color-text-muted);
+    margin-left: var(--space-md);
+    opacity: 0.5;
   }
 
   .footer-links {

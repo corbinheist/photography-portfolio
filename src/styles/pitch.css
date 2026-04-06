@@ -472,6 +472,75 @@ html:has([data-pitch]) {
 }
 
 /* ==========================================
+   HEIST.STUDIO Stamp (shared across all pitches)
+   ========================================== */
+
+.hs-stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+  gap: 2px;
+}
+
+.hs-stamp__name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.14em;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.hs-stamp__desc {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 400;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.hs-stamp--sm {
+  padding: 6px 12px;
+}
+
+.hs-stamp--sm .hs-stamp__name {
+  font-size: 11px;
+}
+
+.hs-stamp--sm .hs-stamp__desc {
+  font-size: 7px;
+}
+
+/* ==========================================
+   Dual-Stamp Pitch Footer
+   ========================================== */
+
+.pitch-footer-stamps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+}
+
+.pitch-footer-sep {
+  font-weight: 300;
+  font-size: 32px;
+  color: var(--color-border);
+  line-height: 1;
+}
+
+.pitch-footer-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-text-faint);
+  margin-top: var(--space-lg);
+}
+
+/* ==========================================
    Slide Counter
    ========================================== */
 
