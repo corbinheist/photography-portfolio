@@ -91,6 +91,11 @@ html:has([data-pitch]) {
 
 .slide--title {
   text-align: center;
+  background-color: var(--fx-base-800);
+}
+
+/* PC-12 deck hero — scoped so other pitches get a clean title slide */
+.slide--title--pc12 {
   background: url('/images/pitch/pc12-hero.webp') center / cover no-repeat;
   background-color: var(--fx-base-800);
 }

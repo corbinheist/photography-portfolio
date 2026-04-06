@@ -1,0 +1,445 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import '@styles/pitch.css';
+import '@styles/pitch-brand.css';
+---
+
+<BaseLayout title="Heist Studio — Brand Identity" description="Brand identity reference for Heist Studio." noindex={true}>
+  <script is:inline>
+    document.body.setAttribute('data-pitch', '');
+    document.body.setAttribute('data-pitch-brand', '');
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+
+  <!-- ======= 1. Cover ======= -->
+  <section class="slide slide--hs-cover" id="slide-1">
+    <div class="slide__inner">
+      <p class="slide__overline">Brand Identity Reference</p>
+      <h1 class="slide__heading slide__heading--large">Heist Studio</h1>
+      <p class="slide__subtitle">The camera comes because I&rsquo;m going anyway.</p>
+      <p class="hs-cover-mark">heist.studio &middot; April 2026</p>
+    </div>
+    <div class="scroll-hint fade-in">
+      <div class="scroll-hint__arrow"></div>
+    </div>
+  </section>
+
+  <!-- ======= 2. Positioning ======= -->
+  <section class="slide" id="slide-2">
+    <div class="slide__inner">
+      <p class="hs-section-num">01</p>
+      <h2 class="slide__heading">Positioning</h2>
+      <p class="hs-section-intro">Three modes converge: the <strong>Documentarian</strong> who travels to edges and records what&rsquo;s disappearing. The <strong>Architect</strong> who designs the systems that make building possible. The <strong>Frontier Technician</strong> who deploys and funds the other two. For most of history, this was one person with one practice. Heist Studio is the creative output of that convergence.</p>
+      <div class="hs-position-grid">
+        <div class="hs-position-card hs-position-card--is">
+          <div class="hs-position-card__label">Heist Studio Is</div>
+          <ul class="hs-position-card__list">
+            <li>Documentary work at edges&mdash;places where people do real things in the presence of forces that could end it</li>
+            <li>A curator&rsquo;s practice, not a content channel&mdash;distinct filter, narrative arc, deliberate sequencing</li>
+            <li>Photographs that work as series with a throughline, not scattered singles</li>
+            <li>Specific, embodied, and precise&mdash;name the lens, name the place, name the hour</li>
+            <li>A platform for long-form essays, collection narratives, and client work</li>
+          </ul>
+        </div>
+        <div class="hs-position-card hs-position-card--isnot">
+          <div class="hs-position-card__label">Heist Studio Is Not</div>
+          <ul class="hs-position-card__list">
+            <li>An influencer presence with a website attached&mdash;curation over volume</li>
+            <li>Trophy shots of pretty places&mdash;seeking consequence, not beauty</li>
+            <li>Generic adventure photography&mdash;every decision is intentional</li>
+            <li>A blog with photos&mdash;it is a portfolio with writing</li>
+            <li>Polished, glossy, optimized for reach&mdash;the work speaks at the volume it earns</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 3. Color ======= -->
+  <section class="slide" id="slide-3">
+    <div class="slide__inner">
+      <p class="hs-section-num">02</p>
+      <h2 class="slide__heading">Color</h2>
+      <p class="hs-section-intro">Earth and natural tones. Warm paper-to-black, not sterile blue-gray. The names say it: Walnut, Saddle, Rust, Moss, Forest, Paper. Natural materials layered with technical precision&mdash;the palette should feel lived-in, like something developing patina.</p>
+      <p class="hs-label">Flexoki base &middot; warm neutrals by Steph Ango</p>
+      <div class="hs-swatch-row hs-swatch-row--compact">
+        <div class="hs-swatch hs-swatch--lt" style="background:#100F0F;"><span class="hs-swatch__name">Black</span><span class="hs-swatch__hex">#100F0F</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#1C1B1A;"><span class="hs-swatch__name">900</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#282726;"><span class="hs-swatch__name">850</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#343331;"><span class="hs-swatch__name">800</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#403E3C;"><span class="hs-swatch__name">700</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#575653;"><span class="hs-swatch__name">600</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#6F6E69;"><span class="hs-swatch__name">500</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#B7B5AC;"><span class="hs-swatch__name">300</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#CECDC3;"><span class="hs-swatch__name">200</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#E6E4D9;"><span class="hs-swatch__name">100</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#FFFCF0;"><span class="hs-swatch__name">Paper</span><span class="hs-swatch__hex">#FFFCF0</span></div>
+      </div>
+      <p class="hs-label">Green &middot; primary accent &middot; Forest (dark) / Bottle (light)</p>
+      <div class="hs-swatch-row hs-swatch-row--compact">
+        <div class="hs-swatch hs-swatch--lt" style="background:#081A0F;"><span class="hs-swatch__name">Pine</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#0F3D24;"><span class="hs-swatch__name">Racing</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#1B6B3A;"><span class="hs-swatch__name">Bottle</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#2E8B57;"><span class="hs-swatch__name">Forest</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#5CC37E;"><span class="hs-swatch__name">Moss</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#A3E4BA;"><span class="hs-swatch__name">Sage</span></div>
+      </div>
+      <p class="hs-label">Warm &middot; secondary &middot; Rust (dark) / Oxide (light)</p>
+      <div class="hs-swatch-row hs-swatch-row--compact">
+        <div class="hs-swatch hs-swatch--lt" style="background:#1A0E06;"><span class="hs-swatch__name">Umber</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#3D2412;"><span class="hs-swatch__name">Walnut</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#7A4E2D;"><span class="hs-swatch__name">Saddle</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#BC5215;"><span class="hs-swatch__name">Oxide</span></div>
+        <div class="hs-swatch hs-swatch--lt" style="background:#DA702C;"><span class="hs-swatch__name">Rust</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#E8934A;"><span class="hs-swatch__name">Ember</span></div>
+        <div class="hs-swatch hs-swatch--dk" style="background:#F0B884;"><span class="hs-swatch__name">Clay</span></div>
+      </div>
+      <p class="hs-label">Kiln &middot; reserved for warnings and destructive actions only</p>
+      <div class="hs-swatch-row hs-swatch-row--compact">
+        <div class="hs-swatch hs-swatch--lt hs-swatch--exclusion" style="background:#8B2520; max-width:120px;"><span class="hs-swatch__name">Kiln Deep</span></div>
+        <div class="hs-swatch hs-swatch--lt hs-swatch--exclusion" style="background:#AF3029; max-width:120px;"><span class="hs-swatch__name">Kiln</span></div>
+        <div class="hs-swatch hs-swatch--lt hs-swatch--exclusion" style="background:#D14D41; max-width:120px;"><span class="hs-swatch__name">Kiln Light</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 4. Typography — Families ======= -->
+  <section class="slide" id="slide-4">
+    <div class="slide__inner">
+      <p class="hs-section-num">03</p>
+      <h2 class="slide__heading">Typography</h2>
+      <div class="hs-specimen">
+        <div class="hs-specimen__label">Display &amp; Headings &mdash; Vollkorn</div>
+        <div class="hs-specimen__sample" style="font-family: 'Vollkorn', serif; font-size: 48px; font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; color: var(--fx-base-100);">
+          The camera comes because I&rsquo;m going anyway
+        </div>
+        <div class="hs-specimen__meta">Vollkorn 400 &middot; -0.02em tracking &middot; 1.1 line-height &middot; &ldquo;Whole grain bread.&rdquo; Warm old-style with texture and weight. Workwear, not formal dress.</div>
+      </div>
+      <div class="hs-specimen">
+        <div class="hs-specimen__label">Body &mdash; IBM Plex Sans</div>
+        <div class="hs-specimen__sample" style="font-family: 'IBM Plex Sans', sans-serif; font-weight: 400; font-size: 17px; line-height: 1.6; color: var(--fx-base-300); max-width: 60ch;">
+          Sometimes I&rsquo;m in the French Pyrenees, the Dolomites, the Moroccan Atlas. Sometimes it&rsquo;s a skin track before dawn in January, a ridge run in August. The best photographs I&rsquo;ve brought home started as a two-hour detour.
+        </div>
+        <div class="hs-specimen__meta">IBM Plex Sans 400 &middot; 1.6 line-height &middot; max-width 65ch &middot; Open-source. No licensing dependencies. Owns the platform, owns the type.</div>
+      </div>
+      <div class="hs-specimen">
+        <div class="hs-specimen__label">Technical &mdash; IBM Plex Mono</div>
+        <div class="hs-specimen__sample" style="font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-size: 13px; letter-spacing: 0.04em; color: var(--fx-base-500);">
+          Leica SL3-S &middot; Summicron-SL 28mm f/2 &middot; 1/250s &middot; ISO 100 &middot; Lofoten, Norway
+        </div>
+        <div class="hs-specimen__meta">IBM Plex Mono 400 &middot; overlines, labels, metadata, captions &middot; The engineer&rsquo;s voice. Technical precision as identity.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 5. Typography — Scale ======= -->
+  <section class="slide" id="slide-5">
+    <div class="slide__inner">
+      <p class="hs-section-num">03</p>
+      <h2 class="slide__heading">Type Scale</h2>
+      <p class="hs-label">Fluid &middot; clamp() between 320px and 1440px viewport</p>
+      <div class="hs-scale">
+        <div class="hs-scale-step">
+          <span class="hs-scale-step__label">4xl</span>
+          <span class="hs-scale-step__sample" style="font-family: var(--font-heading); font-size: clamp(3rem, 2rem + 4vw, 6rem); line-height: 1.1;">Heist</span>
+          <span class="hs-scale-step__clamp">3rem &rarr; 6rem</span>
+        </div>
+        <div class="hs-scale-step">
+          <span class="hs-scale-step__label">3xl</span>
+          <span class="hs-scale-step__sample" style="font-family: var(--font-heading); font-size: var(--text-3xl); line-height: 1.1;">Section Title</span>
+          <span class="hs-scale-step__clamp">2.25rem &rarr; 3.75rem</span>
+        </div>
+        <div class="hs-scale-step">
+          <span class="hs-scale-step__label">2xl</span>
+          <span class="hs-scale-step__sample" style="font-family: var(--font-heading); font-size: var(--text-2xl); line-height: 1.1;">Card Heading</span>
+          <span class="hs-scale-step__clamp">1.75rem &rarr; 2.5rem</span>
+        </div>
+        <div class="hs-scale-step">
+          <span class="hs-scale-step__label">xl</span>
+          <span class="hs-scale-step__sample" style="font-family: var(--font-heading); font-size: var(--text-xl); line-height: 1.2;">Subsection</span>
+          <span class="hs-scale-step__clamp">1.375rem &rarr; 1.75rem</span>
+        </div>
+        <div class="hs-scale-step">
+          <span class="hs-scale-step__label">lg</span>
+          <span class="hs-scale-step__sample" style="font-size: var(--text-lg); line-height: 1.4;">Lead paragraph text</span>
+          <span class="hs-scale-step__clamp">1.125rem &rarr; 1.3125rem</span>
+        </div>
+        <div class="hs-scale-step">
+          <span class="hs-scale-step__label">base</span>
+          <span class="hs-scale-step__sample" style="font-size: var(--text-base);">Body text for prose and general content</span>
+          <span class="hs-scale-step__clamp">0.9375rem &rarr; 1.0625rem</span>
+        </div>
+        <div class="hs-scale-step">
+          <span class="hs-scale-step__label">sm</span>
+          <span class="hs-scale-step__sample" style="font-size: var(--text-sm); color: var(--fx-base-300);">Secondary text, captions, and card descriptions</span>
+          <span class="hs-scale-step__clamp">0.8125rem &rarr; 0.9375rem</span>
+        </div>
+        <div class="hs-scale-step">
+          <span class="hs-scale-step__label">xs</span>
+          <span class="hs-scale-step__sample" style="font-size: var(--text-xs); color: var(--fx-base-500); font-family: var(--font-mono); letter-spacing: 0.06em;">OVERLINES, COUNTERS, METADATA</span>
+          <span class="hs-scale-step__clamp">0.75rem &rarr; 0.875rem</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 6. Spacing ======= -->
+  <section class="slide" id="slide-6">
+    <div class="slide__inner">
+      <p class="hs-section-num">04</p>
+      <h2 class="slide__heading">Spacing</h2>
+      <p class="hs-label">Fluid scale &middot; 7 steps from xs to 3xl</p>
+      <div class="hs-spacing-row">
+        <div class="hs-spacing-step">
+          <span class="hs-spacing-step__label">xs</span>
+          <div class="hs-spacing-step__bar" style="width: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);"></div>
+          <span class="hs-spacing-step__value">4px &rarr; 8px</span>
+        </div>
+        <div class="hs-spacing-step">
+          <span class="hs-spacing-step__label">sm</span>
+          <div class="hs-spacing-step__bar" style="width: clamp(0.5rem, 0.4rem + 0.5vw, 0.75rem);"></div>
+          <span class="hs-spacing-step__value">8px &rarr; 12px</span>
+        </div>
+        <div class="hs-spacing-step">
+          <span class="hs-spacing-step__label">md</span>
+          <div class="hs-spacing-step__bar" style="width: clamp(1rem, 0.85rem + 0.75vw, 1.5rem);"></div>
+          <span class="hs-spacing-step__value">16px &rarr; 24px</span>
+        </div>
+        <div class="hs-spacing-step">
+          <span class="hs-spacing-step__label">lg</span>
+          <div class="hs-spacing-step__bar" style="width: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);"></div>
+          <span class="hs-spacing-step__value">24px &rarr; 40px</span>
+        </div>
+        <div class="hs-spacing-step">
+          <span class="hs-spacing-step__label">xl</span>
+          <div class="hs-spacing-step__bar" style="width: clamp(2rem, 1.5rem + 2.5vw, 4rem);"></div>
+          <span class="hs-spacing-step__value">32px &rarr; 64px</span>
+        </div>
+        <div class="hs-spacing-step">
+          <span class="hs-spacing-step__label">2xl</span>
+          <div class="hs-spacing-step__bar" style="width: clamp(3rem, 2rem + 4vw, 6rem);"></div>
+          <span class="hs-spacing-step__value">48px &rarr; 96px</span>
+        </div>
+        <div class="hs-spacing-step">
+          <span class="hs-spacing-step__label">3xl</span>
+          <div class="hs-spacing-step__bar" style="width: clamp(4rem, 3rem + 5vw, 8rem);"></div>
+          <span class="hs-spacing-step__value">64px &rarr; 128px</span>
+        </div>
+      </div>
+      <div style="margin-top: var(--space-xl);">
+        <p class="hs-label">Layout constants</p>
+        <table class="hs-breakpoint-table">
+          <thead><tr><th>Token</th><th>Value</th><th>Usage</th></tr></thead>
+          <tbody>
+            <tr><td>--container-max</td><td>1440px</td><td>Maximum width for text content (Container component)</td></tr>
+            <tr><td>--container-padding</td><td>1.25rem &rarr; 4rem</td><td>Inline padding for full-bleed sections</td></tr>
+            <tr><td>--z-header</td><td>100</td><td>Fixed header</td></tr>
+            <tr><td>--z-overlay</td><td>200</td><td>Navigation overlay</td></tr>
+            <tr><td>--z-lightbox</td><td>300</td><td>Photo lightbox (highest layer)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 7. Grid & Breakpoints ======= -->
+  <section class="slide" id="slide-7">
+    <div class="slide__inner">
+      <p class="hs-section-num">04</p>
+      <h2 class="slide__heading">Grid &amp; Breakpoints</h2>
+      <p class="hs-section-intro">Photo grids are full-bleed (outside Container). Text content lives inside Container at max-width 1440px. Masonry uses CSS <code style="font-family: var(--font-mono); background: var(--fx-base-850); padding: 2px 6px; border-radius: 2px; font-size: 0.9em;">columns</code> with a client-side reorder script for left-to-right reading order.</p>
+      <table class="hs-breakpoint-table">
+        <thead><tr><th>Breakpoint</th><th>Columns</th><th>Context</th></tr></thead>
+        <tbody>
+          <tr><td>&lt; 640px</td><td>1</td><td>Mobile &mdash; single column, full-width photos</td></tr>
+          <tr><td>640px+</td><td>2</td><td>Tablet &mdash; two-column grid</td></tr>
+          <tr><td>1024px+</td><td>3</td><td>Desktop &mdash; standard grid</td></tr>
+          <tr><td>1440px+</td><td>4</td><td>Wide desktop &mdash; collection and work pages</td></tr>
+          <tr><td>1920px+</td><td>5</td><td>Gallery page only &mdash; ultra-wide override</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top: var(--space-xl);">
+        <p class="hs-label">Blog cards &middot; responsive visibility</p>
+        <table class="hs-breakpoint-table">
+          <thead><tr><th>Breakpoint</th><th>Visible Cards</th><th>Method</th></tr></thead>
+          <tbody>
+            <tr><td>&lt; 640px</td><td>1</td><td>CSS nth-child hiding (all rendered for SEO)</td></tr>
+            <tr><td>640px+</td><td>2</td><td></td></tr>
+            <tr><td>1024px+</td><td>3</td><td></td></tr>
+            <tr><td>1440px+</td><td>4</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 8. Animation & Motion ======= -->
+  <section class="slide" id="slide-8">
+    <div class="slide__inner">
+      <p class="hs-section-num">05</p>
+      <h2 class="slide__heading">Animation &amp; Motion</h2>
+      <p class="hs-section-intro">Motion is earned, not decorative. Enthusiasm through action, not exclamation. Elements reveal quietly&mdash;they don&rsquo;t announce themselves.</p>
+      <p class="hs-label">Easing functions &middot; hover to preview</p>
+      <div class="hs-easing-grid">
+        <div class="hs-easing-card">
+          <div class="hs-easing-card__name">ease-out-expo</div>
+          <div class="hs-easing-card__value">(0.16, 1, 0.3, 1)</div>
+          <div class="hs-easing-card__track">
+            <div class="hs-easing-card__dot"></div>
+          </div>
+        </div>
+        <div class="hs-easing-card">
+          <div class="hs-easing-card__name">ease-out-quart</div>
+          <div class="hs-easing-card__value">(0.25, 1, 0.5, 1)</div>
+          <div class="hs-easing-card__track">
+            <div class="hs-easing-card__dot"></div>
+          </div>
+        </div>
+        <div class="hs-easing-card">
+          <div class="hs-easing-card__name">ease-in-out-quart</div>
+          <div class="hs-easing-card__value">(0.76, 0, 0.24, 1)</div>
+          <div class="hs-easing-card__track">
+            <div class="hs-easing-card__dot"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hs-duration-row">
+        <div class="hs-duration-item">
+          <div class="hs-duration-item__name">Fast</div>
+          <div class="hs-duration-item__value">150ms</div>
+          <div class="hs-duration-item__use">Hover, focus, micro-interactions</div>
+        </div>
+        <div class="hs-duration-item">
+          <div class="hs-duration-item__name">Normal</div>
+          <div class="hs-duration-item__value">300ms</div>
+          <div class="hs-duration-item__use">Transitions, menu, theme toggle</div>
+        </div>
+        <div class="hs-duration-item">
+          <div class="hs-duration-item__name">Slow</div>
+          <div class="hs-duration-item__value">600ms</div>
+          <div class="hs-duration-item__use">Page reveals, parallax, lightbox</div>
+        </div>
+      </div>
+      <div class="hs-anim-grid" style="margin-top: var(--space-xl);">
+        <div class="hs-anim-card">
+          <div class="hs-anim-card__name">.reveal</div>
+          <div class="hs-anim-card__desc">Fade up from 40px below. Triggered by ScrollTrigger when element enters viewport.</div>
+          <div class="hs-anim-card__usage">Use on standalone elements only&mdash;never on grid children.</div>
+        </div>
+        <div class="hs-anim-card">
+          <div class="hs-anim-card__name">.stagger-children</div>
+          <div class="hs-anim-card__desc">Animates all direct children in sequence from a single ScrollTrigger on the parent.</div>
+          <div class="hs-anim-card__usage">Use on grid parents. Solves the same-row trigger bug.</div>
+        </div>
+        <div class="hs-anim-card">
+          <div class="hs-anim-card__name">.fade-in</div>
+          <div class="hs-anim-card__desc">Opacity-only fade. No vertical translation. Quieter entrance for secondary elements.</div>
+          <div class="hs-anim-card__usage">Timestamps, marks, secondary labels.</div>
+        </div>
+        <div class="hs-anim-card">
+          <div class="hs-anim-card__name">.mask-reveal</div>
+          <div class="hs-anim-card__desc">Clip-path reveal from top to bottom. Dramatic entrance for images and hero elements.</div>
+          <div class="hs-anim-card__usage">Hero images, full-bleed photography.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 9. Voice & Tone ======= -->
+  <section class="slide" id="slide-9">
+    <div class="slide__inner">
+      <p class="hs-section-num">06</p>
+      <h2 class="slide__heading">Voice &amp; Tone</h2>
+      <div class="hs-voice-grid">
+        <div class="hs-voice hs-voice--do">
+          <div class="hs-voice__label">Do</div>
+          <div class="hs-voice__text">&ldquo;I live at the foot of Rattlesnake Mountain, in a small town at the top of the Snoqualmie Valley. On a good day I&rsquo;m up with first light through the Douglas firs.&rdquo;</div>
+        </div>
+        <div class="hs-voice hs-voice--dont">
+          <div class="hs-voice__label">Don&rsquo;t</div>
+          <div class="hs-voice__text">&ldquo;Based in the stunning Pacific Northwest, surrounded by incredible mountains and breathtaking natural beauty.&rdquo;</div>
+        </div>
+        <div class="hs-voice hs-voice--do">
+          <div class="hs-voice__label">Do</div>
+          <div class="hs-voice__text">&ldquo;Sometimes it&rsquo;s a skin track before dawn in January, a ridge run in August. The best photographs I&rsquo;ve brought home started as a two-hour detour.&rdquo;</div>
+        </div>
+        <div class="hs-voice hs-voice--dont">
+          <div class="hs-voice__label">Don&rsquo;t</div>
+          <div class="hs-voice__text">&ldquo;An epic road trip through the stunning fjords of Norway&rsquo;s most iconic destination.&rdquo;</div>
+        </div>
+        <div class="hs-voice hs-voice--do">
+          <div class="hs-voice__label">Do</div>
+          <div class="hs-voice__text">&ldquo;The camera comes because I&rsquo;m going anyway.&rdquo;</div>
+        </div>
+        <div class="hs-voice hs-voice--dont">
+          <div class="hs-voice__label">Don&rsquo;t</div>
+          <div class="hs-voice__text">&ldquo;Passionate about capturing the beauty of our world through the art of photography.&rdquo;</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 10. The Rule ======= -->
+  <section class="slide" id="slide-10">
+    <div class="slide__inner">
+      <div class="hs-rule-callout">
+        <div class="hs-rule-callout__label">The Rule</div>
+        <p class="hs-rule-callout__text">
+          Don&rsquo;t explain your philosophy. <em>Embody it.</em>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 11. Principles ======= -->
+  <section class="slide" id="slide-11">
+    <div class="slide__inner">
+      <p class="hs-section-num">07</p>
+      <h2 class="slide__heading">Principles</h2>
+      <div class="hs-principle-grid">
+        <div class="hs-principle">
+          <div class="hs-principle__title">Consequence, not beauty</div>
+          <p class="hs-principle__text">The draw is to places where people do real things in the presence of forces that could end it. Shepherds near borders. Craftspeople in economies industrializing past them. The photographs follow the consequence.</p>
+        </div>
+        <div class="hs-principle">
+          <div class="hs-principle__title">Essentialism</div>
+          <p class="hs-principle__text">The disciplined pursuit of less. Every image in a sequence, every design decision, every word on the page earns its place or gets cut. Good enough is valid when stated with criteria.</p>
+        </div>
+        <div class="hs-principle">
+          <div class="hs-principle__title">Systems, not surfaces</div>
+          <p class="hs-principle__text">Think in tradeoffs and constraints. The site is a system. The brand is architecture. The sequencing of a collection is a design problem. &ldquo;What&rsquo;s the actual constraint here?&rdquo; before every decision.</p>
+        </div>
+        <div class="hs-principle">
+          <div class="hs-principle__title">Embodied practice</div>
+          <p class="hs-principle__text">The camera follows the life, not the other way around. Walking as method. Skin tracks before dawn, ridge runs in August. Knowledge is felt before it&rsquo;s parsed. The work comes from the body, not the desk.</p>
+        </div>
+        <div class="hs-principle">
+          <div class="hs-principle__title">Precision is warmth</div>
+          <p class="hs-principle__text">Getting the details right is how you show respect. Name the lens, the place, the hour. Directness is care&mdash;softening wastes time. Profundity arrives in workwear, not formal dress. No emojis. No filler. Ever.</p>
+        </div>
+        <div class="hs-principle">
+          <div class="hs-principle__title">Natural &amp; technical</div>
+          <p class="hs-principle__text">Earth tones layered with technical materials. Lived-in quality developing patina over time. Markdown that doesn&rsquo;t disappear, self-hosted on infrastructure you control. Own the platform. Own the archive.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 12. Footer ======= -->
+  <section class="slide slide--hs-footer" id="slide-12">
+    <div class="slide__inner">
+      <div class="hs-footer-wordmark">Heist Studio</div>
+      <div class="hs-footer-domain">heist.studio</div>
+      <div class="hs-footer-version">Brand Identity Reference &middot; v1.0 &middot; April 2026</div>
+    </div>
+  </section>
+
+  <div class="pitch-counter" aria-hidden="true">
+    <span class="pitch-counter__current">1</span>
+    <span class="pitch-counter__sep"> / </span>
+    <span class="pitch-counter__total"></span>
+  </div>
+  <script>
+    import '@scripts/pitch-nav';
+  </script>
+</BaseLayout>

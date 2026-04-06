@@ -1,0 +1,578 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+---
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&family=Vollkorn:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap"
+  rel="stylesheet"
+/>
+
+<BaseLayout title="Font Exploration — Final Three" description="Newsreader vs Vollkorn vs Source Serif 4" noindex={true}>
+  <script is:inline>
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+
+  <main class="fe">
+
+    <!-- ── Header ── -->
+    <header class="fe__header">
+      <p class="fe__overline">Heist Studio &middot; Type Exploration</p>
+      <h1 class="fe__title">Heading Font: Final Three</h1>
+      <p class="fe__intro">IBM Plex Sans and Mono stay. These three compete for the display/heading role. Evaluate material warmth, Scandinavian restraint, and documentary authority.</p>
+    </header>
+
+    <!-- ════════════════════════════════════════
+         1. DISPLAY — "Heist Studio" at hero scale
+         ════════════════════════════════════════ -->
+
+    <section class="fe__section">
+      <div class="fe__section-header">
+        <h2 class="fe__section-title">Display Scale</h2>
+        <p class="fe__section-desc">Hero / cover size. Where texture matters most.</p>
+      </div>
+      <div class="fe__trio">
+        <div class="fe__trio-col">
+          <span class="fe__tag">Newsreader</span>
+          <h2 class="fe__display" style="font-family: 'Newsreader', serif; font-optical-sizing: auto;">Heist Studio</h2>
+        </div>
+        <div class="fe__trio-col">
+          <span class="fe__tag">Vollkorn</span>
+          <h2 class="fe__display" style="font-family: 'Vollkorn', serif;">Heist Studio</h2>
+        </div>
+        <div class="fe__trio-col">
+          <span class="fe__tag">Source Serif 4</span>
+          <h2 class="fe__display" style="font-family: 'Source Serif 4', serif; font-optical-sizing: auto;">Heist Studio</h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         2. HERO TAGLINE — over dark gradient
+         ════════════════════════════════════════ -->
+
+    <section class="fe__section">
+      <div class="fe__section-header">
+        <h2 class="fe__section-title">Hero Tagline</h2>
+        <p class="fe__section-desc">Homepage hero over a photo scrim. Readability and presence at large sizes on white.</p>
+      </div>
+      <div class="fe__hero-trio">
+        <div class="fe__hero-cell">
+          <span class="fe__tag fe__tag--light">Newsreader</span>
+          <h1 style="font-family: 'Newsreader', serif; font-optical-sizing: auto;">The camera comes because I&rsquo;m going anyway.</h1>
+        </div>
+        <div class="fe__hero-cell">
+          <span class="fe__tag fe__tag--light">Vollkorn</span>
+          <h1 style="font-family: 'Vollkorn', serif;">The camera comes because I&rsquo;m going anyway.</h1>
+        </div>
+        <div class="fe__hero-cell">
+          <span class="fe__tag fe__tag--light">Source Serif 4</span>
+          <h1 style="font-family: 'Source Serif 4', serif; font-optical-sizing: auto;">The camera comes because I&rsquo;m going anyway.</h1>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         3. HEADING + BODY PAIRING
+         ════════════════════════════════════════ -->
+
+    <section class="fe__section">
+      <div class="fe__section-header">
+        <h2 class="fe__section-title">Heading + Body Pairing</h2>
+        <p class="fe__section-desc">The serif heading transitions to IBM Plex Sans prose. One voice, two registers.</p>
+      </div>
+      <div class="fe__trio">
+        <div class="fe__trio-col fe__pair-card">
+          <span class="fe__tag">Newsreader</span>
+          <h2 class="fe__pair-h2" style="font-family: 'Newsreader', serif; font-optical-sizing: auto;">The Lofoten Archipelago</h2>
+          <h3 class="fe__pair-h3" style="font-family: 'Newsreader', serif; font-optical-sizing: auto;">Four days on the E10</h3>
+          <p class="fe__pair-body">The light at 68&deg;N doesn&rsquo;t set in June&mdash;it circles, flattens, turns the water to mercury. I shot the Summicron wide open at midnight and the shadows still had detail.</p>
+          <p class="fe__pair-meta">Canon EOS R5 Mark II &middot; RF 35mm f/1.4 L &middot; Lofoten, Norway</p>
+        </div>
+        <div class="fe__trio-col fe__pair-card">
+          <span class="fe__tag">Vollkorn</span>
+          <h2 class="fe__pair-h2" style="font-family: 'Vollkorn', serif;">The Lofoten Archipelago</h2>
+          <h3 class="fe__pair-h3" style="font-family: 'Vollkorn', serif;">Four days on the E10</h3>
+          <p class="fe__pair-body">The light at 68&deg;N doesn&rsquo;t set in June&mdash;it circles, flattens, turns the water to mercury. I shot the Summicron wide open at midnight and the shadows still had detail.</p>
+          <p class="fe__pair-meta">Canon EOS R5 Mark II &middot; RF 35mm f/1.4 L &middot; Lofoten, Norway</p>
+        </div>
+        <div class="fe__trio-col fe__pair-card">
+          <span class="fe__tag">Source Serif 4</span>
+          <h2 class="fe__pair-h2" style="font-family: 'Source Serif 4', serif; font-optical-sizing: auto;">The Lofoten Archipelago</h2>
+          <h3 class="fe__pair-h3" style="font-family: 'Source Serif 4', serif; font-optical-sizing: auto;">Four days on the E10</h3>
+          <p class="fe__pair-body">The light at 68&deg;N doesn&rsquo;t set in June&mdash;it circles, flattens, turns the water to mercury. I shot the Summicron wide open at midnight and the shadows still had detail.</p>
+          <p class="fe__pair-meta">Canon EOS R5 Mark II &middot; RF 35mm f/1.4 L &middot; Lofoten, Norway</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         4. COLLECTION CARDS
+         ════════════════════════════════════════ -->
+
+    <section class="fe__section">
+      <div class="fe__section-header">
+        <h2 class="fe__section-title">Collection Cards</h2>
+        <p class="fe__section-desc">Short titles at xl. Character at mid-sizes, not just display.</p>
+      </div>
+      <div class="fe__card-compare">
+        <div class="fe__card-compare-row">
+          <span class="fe__tag">Newsreader</span>
+          <div class="fe__card-set">
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Newsreader', serif; font-optical-sizing: auto;">Morocco</h3><span>Atlas &amp; Coast &middot; 2024</span></div>
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Newsreader', serif; font-optical-sizing: auto;">Norway</h3><span>Lofoten &middot; 2025</span></div>
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Newsreader', serif; font-optical-sizing: auto;">Japan</h3><span>Autumn &middot; 2026</span></div>
+          </div>
+        </div>
+        <div class="fe__card-compare-row">
+          <span class="fe__tag">Vollkorn</span>
+          <div class="fe__card-set">
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Vollkorn', serif;">Morocco</h3><span>Atlas &amp; Coast &middot; 2024</span></div>
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Vollkorn', serif;">Norway</h3><span>Lofoten &middot; 2025</span></div>
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Vollkorn', serif;">Japan</h3><span>Autumn &middot; 2026</span></div>
+          </div>
+        </div>
+        <div class="fe__card-compare-row">
+          <span class="fe__tag">Source Serif 4</span>
+          <div class="fe__card-set">
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Source Serif 4', serif; font-optical-sizing: auto;">Morocco</h3><span>Atlas &amp; Coast &middot; 2024</span></div>
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Source Serif 4', serif; font-optical-sizing: auto;">Norway</h3><span>Lofoten &middot; 2025</span></div>
+            <div class="fe__mini-card"><div class="fe__mini-card-img"></div><h3 style="font-family: 'Source Serif 4', serif; font-optical-sizing: auto;">Japan</h3><span>Autumn &middot; 2026</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         5. ITALICS + WEIGHTS
+         ════════════════════════════════════════ -->
+
+    <section class="fe__section">
+      <div class="fe__section-header">
+        <h2 class="fe__section-title">Italics &amp; Weight Range</h2>
+        <p class="fe__section-desc">Italics for pull quotes and epigraphs. Weight range for hierarchy without changing family.</p>
+      </div>
+      <div class="fe__trio">
+        <div class="fe__trio-col fe__detail-col">
+          <span class="fe__tag">Newsreader</span>
+          <p class="fe__italic-sample" style="font-family: 'Newsreader', serif; font-style: italic; font-optical-sizing: auto;">Don&rsquo;t explain your philosophy. Embody it.</p>
+          <div class="fe__weight-stack">
+            <span style="font-family: 'Newsreader', serif; font-weight: 300; font-optical-sizing: auto;">300 Light</span>
+            <span style="font-family: 'Newsreader', serif; font-weight: 400; font-optical-sizing: auto;">400 Regular</span>
+            <span style="font-family: 'Newsreader', serif; font-weight: 500; font-optical-sizing: auto;">500 Medium</span>
+            <span style="font-family: 'Newsreader', serif; font-weight: 600; font-optical-sizing: auto;">600 Semibold</span>
+          </div>
+        </div>
+        <div class="fe__trio-col fe__detail-col">
+          <span class="fe__tag">Vollkorn</span>
+          <p class="fe__italic-sample" style="font-family: 'Vollkorn', serif; font-style: italic;">Don&rsquo;t explain your philosophy. Embody it.</p>
+          <div class="fe__weight-stack">
+            <span style="font-family: 'Vollkorn', serif; font-weight: 400;">400 Regular</span>
+            <span style="font-family: 'Vollkorn', serif; font-weight: 500;">500 Medium</span>
+            <span style="font-family: 'Vollkorn', serif; font-weight: 600;">600 Semibold</span>
+            <span style="font-family: 'Vollkorn', serif; font-weight: 700;">700 Bold</span>
+          </div>
+        </div>
+        <div class="fe__trio-col fe__detail-col">
+          <span class="fe__tag">Source Serif 4</span>
+          <p class="fe__italic-sample" style="font-family: 'Source Serif 4', serif; font-style: italic; font-optical-sizing: auto;">Don&rsquo;t explain your philosophy. Embody it.</p>
+          <div class="fe__weight-stack">
+            <span style="font-family: 'Source Serif 4', serif; font-weight: 300; font-optical-sizing: auto;">300 Light</span>
+            <span style="font-family: 'Source Serif 4', serif; font-weight: 400; font-optical-sizing: auto;">400 Regular</span>
+            <span style="font-family: 'Source Serif 4', serif; font-weight: 500; font-optical-sizing: auto;">500 Medium</span>
+            <span style="font-family: 'Source Serif 4', serif; font-weight: 600; font-optical-sizing: auto;">600 Semibold</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════
+         6. SUMMARY
+         ════════════════════════════════════════ -->
+
+    <section class="fe__section fe__section--last">
+      <div class="fe__section-header">
+        <h2 class="fe__section-title">Summary</h2>
+      </div>
+      <div class="fe__trio">
+        <div class="fe__trio-col fe__summary">
+          <h3 class="fe__summary-name" style="font-family: 'Newsreader', serif; font-optical-sizing: auto;">Newsreader</h3>
+          <dl class="fe__dl">
+            <dt>Material</dt><dd>Editorial ink. Newspaper heritage, updated for screens.</dd>
+            <dt>Warmth</dt><dd>High. Old-style proportions, calligraphic italic.</dd>
+            <dt>Restraint</dt><dd>Moderate. High stroke contrast draws the eye.</dd>
+            <dt>Variable</dt><dd>Yes. Weight + optical sizing.</dd>
+            <dt>Fits</dt><dd>The Documentarian. Craig Mod territory.</dd>
+            <dt>Risk</dt><dd>Delicate at very large sizes.</dd>
+          </dl>
+        </div>
+        <div class="fe__trio-col fe__summary">
+          <h3 class="fe__summary-name" style="font-family: 'Vollkorn', serif;">Vollkorn</h3>
+          <dl class="fe__dl">
+            <dt>Material</dt><dd>Whole grain. Warm old-style with weight and texture.</dd>
+            <dt>Warmth</dt><dd>Highest. Nourishing, grounded, substantial.</dd>
+            <dt>Restraint</dt><dd>High. Sturdy without being heavy.</dd>
+            <dt>Variable</dt><dd>No. Static weights 400&ndash;900.</dd>
+            <dt>Fits</dt><dd>The whole practice. Workwear. Kagge + Shepherd.</dd>
+            <dt>Risk</dt><dd>No optical sizing. Heavier x-height.</dd>
+          </dl>
+        </div>
+        <div class="fe__trio-col fe__summary">
+          <h3 class="fe__summary-name" style="font-family: 'Source Serif 4', serif; font-optical-sizing: auto;">Source Serif 4</h3>
+          <dl class="fe__dl">
+            <dt>Material</dt><dd>Precision-milled. Transitional, mechanical clarity.</dd>
+            <dt>Warmth</dt><dd>Moderate. More controlled than warm.</dd>
+            <dt>Restraint</dt><dd>Highest. Clean, systematic, measured.</dd>
+            <dt>Variable</dt><dd>Yes. Weight + optical sizing.</dd>
+            <dt>Fits</dt><dd>The Architect. Systems thinking in type.</dd>
+            <dt>Risk</dt><dd>May be too precise for documentary work.</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</BaseLayout>
+
+<style>
+  /* ══════════════════════════════════════════
+     Font Exploration — Scoped Styles
+     ══════════════════════════════════════════ */
+
+  .fe {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: var(--space-2xl) var(--container-padding) var(--space-3xl);
+  }
+
+  /* ── Header ── */
+
+  .fe__header {
+    padding-bottom: var(--space-2xl);
+    margin-bottom: var(--space-2xl);
+    border-bottom: 1px solid var(--fx-base-850);
+  }
+
+  .fe__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--hs-forest);
+    margin-bottom: var(--space-md);
+  }
+
+  .fe__title {
+    font-family: var(--font-body);
+    font-size: var(--text-3xl);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-md);
+  }
+
+  .fe__intro {
+    font-size: var(--text-lg);
+    color: var(--fx-base-300);
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+
+  /* ── Sections ── */
+
+  .fe__section {
+    margin-bottom: var(--space-3xl);
+    padding-bottom: var(--space-3xl);
+    border-bottom: 1px solid var(--fx-base-900);
+  }
+
+  .fe__section--last {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .fe__section-header {
+    margin-bottom: var(--space-xl);
+  }
+
+  .fe__section-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fx-base-300);
+    margin-bottom: var(--space-xs);
+  }
+
+  .fe__section-desc {
+    font-size: var(--text-sm);
+    color: var(--fx-base-500);
+    line-height: 1.5;
+    max-width: none;
+  }
+
+  /* ── Tags ── */
+
+  .fe__tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fx-base-500);
+    background: var(--fx-base-900);
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: var(--space-md);
+  }
+
+  .fe__tag--light {
+    background: rgba(0, 0, 0, 0.4);
+    color: rgba(255, 252, 240, 0.6);
+  }
+
+  /* ── Trio Grid (reused everywhere) ── */
+
+  .fe__trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .fe__trio-col {
+    min-width: 0;
+  }
+
+  /* ── 1. Display Scale ── */
+
+  .fe__display {
+    font-size: clamp(2.75rem, 2rem + 3.5vw, 5rem);
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--fx-base-100);
+  }
+
+  /* ── 2. Hero Tagline ── */
+
+  .fe__hero-trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .fe__hero-cell {
+    background: linear-gradient(160deg, var(--fx-base-800) 0%, var(--fx-black) 100%);
+    padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 340px;
+  }
+
+  .fe__hero-cell:first-child { border-radius: 4px 0 0 4px; }
+  .fe__hero-cell:last-child { border-radius: 0 4px 4px 0; }
+
+  .fe__hero-cell h1 {
+    font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+    font-weight: 400;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: #fff;
+    max-width: 14ch;
+  }
+
+  /* ── 3. Heading + Body Pairing ── */
+
+  .fe__pair-card {
+    padding: var(--space-lg);
+    border: 1px solid var(--fx-base-850);
+    border-radius: 4px;
+  }
+
+  .fe__pair-h2 {
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--fx-base-100);
+    margin-bottom: var(--space-xs);
+  }
+
+  .fe__pair-h3 {
+    font-size: var(--text-lg);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.3;
+    color: var(--fx-base-400);
+    margin-bottom: var(--space-lg);
+  }
+
+  .fe__pair-body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--fx-base-300);
+    margin-bottom: var(--space-md);
+    max-width: none;
+  }
+
+  .fe__pair-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.03em;
+    color: var(--fx-base-600);
+    max-width: none;
+  }
+
+  /* ── 4. Collection Cards ── */
+
+  .fe__card-compare {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .fe__card-compare-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .fe__card-compare-row > .fe__tag {
+    margin-bottom: 0;
+  }
+
+  .fe__card-set {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .fe__mini-card {
+    border: 1px solid var(--fx-base-850);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .fe__mini-card-img {
+    aspect-ratio: 3 / 2;
+    background: var(--fx-base-900);
+  }
+
+  .fe__mini-card h3 {
+    font-size: var(--text-xl);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: var(--fx-base-100);
+    padding: var(--space-sm) var(--space-md) 2px;
+  }
+
+  .fe__mini-card span {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--fx-base-600);
+    letter-spacing: 0.02em;
+    padding: 0 var(--space-md) var(--space-sm);
+    max-width: none;
+  }
+
+  /* ── 5. Italics & Weights ── */
+
+  .fe__detail-col {
+    padding: var(--space-lg);
+    border: 1px solid var(--fx-base-850);
+    border-radius: 4px;
+  }
+
+  .fe__italic-sample {
+    font-size: var(--text-xl);
+    line-height: 1.3;
+    color: var(--fx-base-200);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--fx-base-850);
+  }
+
+  .fe__weight-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .fe__weight-stack span {
+    font-size: var(--text-base);
+    line-height: 1.4;
+    color: var(--fx-base-300);
+  }
+
+  /* ── 6. Summary ── */
+
+  .fe__summary {
+    padding: var(--space-lg);
+    border: 1px solid var(--fx-base-850);
+    border-radius: 4px;
+  }
+
+  .fe__summary-name {
+    font-size: var(--text-xl);
+    font-weight: 400;
+    color: var(--fx-base-100);
+    padding-bottom: var(--space-md);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--fx-base-850);
+  }
+
+  .fe__dl {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: var(--space-xs) var(--space-sm);
+  }
+
+  .fe__dl dt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    color: var(--fx-base-500);
+    padding-top: 3px;
+  }
+
+  .fe__dl dd {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--fx-base-300);
+  }
+
+  /* ── Responsive ── */
+
+  @media (max-width: 960px) {
+    .fe__trio,
+    .fe__hero-trio {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+
+    .fe__hero-cell {
+      min-height: 240px;
+      border-radius: 4px;
+    }
+
+    .fe__hero-cell:first-child,
+    .fe__hero-cell:last-child {
+      border-radius: 4px;
+    }
+
+    .fe__card-set {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .fe__card-set {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

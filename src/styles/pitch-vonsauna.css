@@ -1,0 +1,333 @@
+/* ==========================================
+   Von Sauna Pitch — Brand Overrides
+   All selectors scoped under body[data-pitch-vs]
+   ========================================== */
+
+/* ── Custom Properties ── */
+
+body[data-pitch-vs] {
+  --vs-ember:      #E8934A;
+  --vs-rust:       #DA702C;
+  --vs-oxide:      #BC5215;
+  --vs-walnut:     #3D2412;
+  --vs-cedar:      #8B5E3C;
+  --vs-honey:      #C4956A;
+  --vs-clay:       #F0B884;
+  --vs-lake:       #4385BE;
+  --vs-lake-deep:  #163B66;
+  --vs-lake-light: #66A0C8;
+}
+
+/* ==========================================
+   Slide Typography — Warm Foundation
+   ========================================== */
+
+body[data-pitch-vs] .slide__overline {
+  color: var(--hs-forest);
+}
+
+body[data-pitch-vs] .slide__heading {
+  color: var(--vs-walnut);
+}
+
+body[data-pitch-vs] .slide__text strong {
+  color: var(--vs-oxide);
+}
+
+body[data-pitch-vs] .slide__mark {
+  color: var(--hs-forest);
+  opacity: 0.6;
+}
+
+body[data-pitch-vs] .slide__subtitle {
+  color: var(--fx-base-600);
+}
+
+/* ==========================================
+   Title Slide — Studio Identity
+   ========================================== */
+
+body[data-pitch-vs] .slide--title .slide__overline {
+  color: rgba(255, 252, 240, 0.6);
+}
+
+body[data-pitch-vs] .slide--title .slide__heading {
+  color: var(--fx-paper);
+}
+
+body[data-pitch-vs] .slide--title .slide__subtitle {
+  color: rgba(255, 252, 240, 0.75);
+}
+
+/* ==========================================
+   Acts Grid — Color-Coded Palettes
+   ========================================== */
+
+body[data-pitch-vs] .act {
+  border-right-color: var(--fx-base-200);
+}
+
+/* Act I — Warm */
+body[data-pitch-vs] .vs-act--warm {
+  border-right-color: var(--vs-honey);
+}
+
+body[data-pitch-vs] .vs-act--warm .act__number {
+  color: var(--vs-rust);
+}
+
+body[data-pitch-vs] .vs-act--warm .act__title {
+  color: var(--vs-walnut);
+}
+
+/* Act II — Cold */
+body[data-pitch-vs] .vs-act--cold {
+  border-right-color: var(--vs-lake-light);
+}
+
+body[data-pitch-vs] .vs-act--cold .act__number {
+  color: var(--vs-lake);
+}
+
+body[data-pitch-vs] .vs-act--cold .act__title {
+  color: var(--vs-lake-deep);
+}
+
+/* Act III — Threshold */
+body[data-pitch-vs] .vs-act--threshold {
+  border-right: none;
+}
+
+body[data-pitch-vs] .vs-act--threshold .act__number {
+  background: linear-gradient(135deg, var(--vs-rust), var(--vs-lake));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+body[data-pitch-vs] .vs-act--threshold .act__title {
+  color: var(--fx-base-700);
+}
+
+body[data-pitch-vs] .acts-coda {
+  color: var(--vs-cedar);
+}
+
+/* ==========================================
+   Equipment List — Warm Borders
+   ========================================== */
+
+body[data-pitch-vs] .equipment-list li {
+  border-left-color: var(--vs-honey);
+}
+
+body[data-pitch-vs] .equipment-list li strong {
+  color: var(--vs-walnut);
+}
+
+/* ==========================================
+   Deliverables — Warm Names
+   ========================================== */
+
+body[data-pitch-vs] .deliverable__name {
+  color: var(--vs-walnut);
+}
+
+/* ==========================================
+   Partnership Grid — Warm Cards
+   ========================================== */
+
+body[data-pitch-vs] .partner {
+  border-color: rgba(196, 149, 106, 0.3);
+  background: rgba(196, 149, 106, 0.06);
+}
+
+body[data-pitch-vs] .partner__name {
+  color: var(--vs-walnut);
+}
+
+/* ==========================================
+   Contact Slide — Studio Accent
+   ========================================== */
+
+body[data-pitch-vs] .slide--contact .slide__heading {
+  color: var(--vs-walnut);
+}
+
+body[data-pitch-vs] .contact-info a {
+  color: var(--hs-forest);
+  text-decoration-color: var(--hs-forest);
+}
+
+body[data-pitch-vs] .contact-info a:hover {
+  color: var(--hs-bottle);
+}
+
+/* ==========================================
+   Essay Slide Overrides
+   ========================================== */
+
+/* Diptych captions */
+body[data-pitch-vs] .essay-diptych__caption {
+  color: var(--vs-cedar);
+}
+
+/* Full-bleed overlay text */
+body[data-pitch-vs] .essay-full-bleed__overlay h3 {
+  font-family: var(--font-heading);
+  color: var(--fx-paper);
+}
+
+body[data-pitch-vs] .essay-full-bleed__overlay p {
+  max-width: 50ch;
+}
+
+/* Image-text prose */
+body[data-pitch-vs] .essay-image-text__prose h3 {
+  color: var(--vs-walnut);
+}
+
+body[data-pitch-vs] .essay-image-text__prose p strong {
+  color: var(--vs-oxide);
+}
+
+body[data-pitch-vs] .essay-image-text {
+  align-items: stretch;
+}
+
+/* ==========================================
+   Shot Metadata Tags
+   ========================================== */
+
+body[data-pitch-vs] .vs-tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: rgba(232, 147, 74, 0.25);
+  color: rgba(255, 252, 240, 0.9);
+}
+
+/* ==========================================
+   Portfolio Triptych
+   ========================================== */
+
+/* Portfolio slide — full-bleed, no inner container */
+
+body[data-pitch-vs] .vs-slide--portfolio {
+  padding: 0;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+body[data-pitch-vs] .vs-portfolio-header {
+  padding: var(--space-xl) var(--container-padding) var(--space-md);
+  text-align: center;
+}
+
+body[data-pitch-vs] .vs-triptych {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+body[data-pitch-vs] .vs-triptych__card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: block;
+  min-height: 0;
+}
+
+body[data-pitch-vs] .vs-triptych__img {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.12);
+  transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body[data-pitch-vs] .vs-triptych__card:hover .vs-triptych__img {
+  transform: scale(1.0);
+}
+
+body[data-pitch-vs] .vs-triptych__img--pending {
+  background: linear-gradient(135deg, #dddbd2 0%, #cccac0 100%);
+  border: 1px dashed #b7b5ac;
+  transform: scale(1.0);
+}
+
+body[data-pitch-vs] .vs-triptych__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--space-xl) var(--space-lg);
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.15) 40%,
+    rgba(0, 0, 0, 0.0) 100%
+  );
+  transition: background 0.6s ease;
+}
+
+body[data-pitch-vs] .vs-triptych__card:hover .vs-triptych__overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.25) 40%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+}
+
+body[data-pitch-vs] .vs-triptych__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  color: var(--fx-paper);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+body[data-pitch-vs] .vs-triptych__sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 252, 240, 0.65);
+  margin-top: var(--space-xs);
+}
+
+/* Placeholder third card */
+body[data-pitch-vs] .vs-triptych__card--placeholder .vs-triptych__overlay {
+  background: none;
+}
+
+body[data-pitch-vs] .vs-triptych__card--placeholder .vs-triptych__title {
+  color: var(--fx-base-500);
+}
+
+body[data-pitch-vs] .vs-triptych__card--placeholder .vs-triptych__sub {
+  color: var(--fx-base-400);
+}
+
+@media (max-width: 768px) {
+  body[data-pitch-vs] .vs-triptych {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* ==========================================
+   Slide Counter — Warm
+   ========================================== */
+
+body[data-pitch-vs] .pitch-counter {
+  color: var(--vs-cedar);
+}

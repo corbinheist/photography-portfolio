@@ -1,0 +1,430 @@
+---
+import PitchLayout from '@layouts/PitchLayout.astro';
+import '@styles/essay.css';
+import '@styles/pitch-vonsauna.css';
+---
+
+<PitchLayout
+  title="Von Sauna × Heist Studio"
+  description="A photography pitch for Von Sauna's 2027 season."
+>
+  <script is:inline>
+    document.body.setAttribute('data-pitch-vs', '');
+  </script>
+
+  <!-- ======= 1. Title ======= -->
+  <section class="slide slide--title" id="slide-1">
+    <div class="vs-placeholder-bg">
+      <span class="vs-placeholder-bg__prompt">Pre-dawn. Long exposure, 1/30&ndash;1/8s. Steam rising off the cedar hull over glassy Lake Washington. Inside, a figure tends the stove&mdash;motion blur, more than a shadow, less than a person. A spectre of the flame.</span>
+    </div>
+    <div class="slide__inner">
+      <p class="slide__overline reveal">Heist Studio</p>
+      <h1 class="slide__heading slide__heading--large reveal">Von Sauna</h1>
+      <p class="slide__subtitle reveal">Documentary photography for the 2027 season</p>
+      <p class="slide__mark fade-in">heist.studio</p>
+    </div>
+    <div class="scroll-hint fade-in">
+      <div class="scroll-hint__arrow"></div>
+    </div>
+  </section>
+
+  <!-- ======= 2. The Pitch ======= -->
+  <section class="slide" id="slide-2">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">The Pitch</h2>
+      <p class="slide__text">
+        Two cedar vessels at Carillon Point. A wood-burning stove&mdash;not gas, because the smell of the fire and the crack of the wood are part of the experience. Lake Washington three steps from the door. David chose every material for a reason: the ritual matters more than the efficiency. <strong>Everyone is equal inside the sauna.</strong>
+      </p>
+      <p class="slide__text">
+        The experience is the contrast&mdash;170 degrees of amber firelight against 42-degree water so clear you can see the bottom. That duality is the visual story, and it hasn&rsquo;t been told yet. Von Sauna is entering its fourth season. <strong>The 2027 season is the moment to build a visual system around the thing that makes this place different</strong>&mdash;not stock sauna imagery, but the specific experience of fire, cedar, community, and a cold Pacific Northwest lake.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 3. VS-A: Interior Dawn — Full-Bleed ======= -->
+  <section class="slide essay-slide essay-full-bleed essay-full-bleed--scrim" id="slide-3">
+    <div class="essay-full-bleed__img">
+      <div class="vs-placeholder">
+        <span class="vs-placeholder__id">VS-A</span>
+        <span class="vs-placeholder__title">The Spectre</span>
+        <span class="vs-placeholder__layout">Full-Bleed</span>
+      </div>
+    </div>
+    <div class="essay-full-bleed__overlay essay-full-bleed__overlay--bottom-left">
+      <h3>The Spectre</h3>
+      <div class="vs-shot-meta">
+        <span class="vs-tag">Long Exposure</span>
+        <span class="vs-tag">1/30&ndash;1/8s</span>
+        <span class="vs-tag">35mm on tripod</span>
+      </div>
+      <p>Pre-dawn. Lake Washington is glass. Steam rises off the cedar hull into still air. Inside, a figure tends the stove&mdash;motion blur at 1/30 to 1/8 second, more than a shadow, less than a person. The fire is sharp. The figure is a spectre of it. Outside, the lake holds the reflection. This is the hero image of the entire set.</p>
+    </div>
+  </section>
+
+  <!-- ======= 4. Two Palettes ======= -->
+  <section class="slide" id="slide-4">
+    <div class="slide__inner">
+      <h2 class="slide__heading reveal">Two Palettes</h2>
+      <div class="acts-grid stagger-children">
+        <div class="act vs-act--warm">
+          <div class="act__number">I</div>
+          <div class="act__title">Fire &amp; Cedar</div>
+          <p class="act__text">
+            The warm half. Wood grain, brass hardware, water beading on cedar. The stove through the grate. Steam catching window light. This palette is amber, walnut, honey&mdash;earned from the material, not added in post.
+          </p>
+        </div>
+        <div class="act vs-act--cold">
+          <div class="act__number">II</div>
+          <div class="act__title">Cold &amp; Water</div>
+          <p class="act__text">
+            The cold half. Bubbles rising through green-blue clarity. Limbs suspended in Lake Washington. The underside of the surface. The hull of the sauna from below. This palette lives underwater and at the waterline&mdash;where the lake does the work.
+          </p>
+        </div>
+        <div class="act vs-act--threshold">
+          <div class="act__number">III</div>
+          <div class="act__title">The Threshold</div>
+          <p class="act__text">
+            Where the two worlds meet. The door opening. Three steps from heat to cold. The exhale. Between rounds&mdash;coffee, quiet, strangers talking because the heat and the cold did the introductions. This is where David&rsquo;s vision lives: everyone equal, nobody performing.
+          </p>
+        </div>
+      </div>
+      <p class="acts-coda fade-in">The contrast is the story. Every image lives in one world or the other&mdash;or at the line between them.</p>
+    </div>
+  </section>
+
+  <!-- ======= 5. VS-B + VS-C: Underwater Plunge + Surface Break — Diptych ======= -->
+  <section class="slide essay-slide essay-diptych essay-diptych--landscape" id="slide-5">
+    <div class="essay-diptych__images essay-diptych__images--gap-tight">
+      <div class="essay-diptych__item" style="flex:1">
+        <div class="vs-placeholder">
+          <span class="vs-placeholder__id">VS-B</span>
+          <span class="vs-placeholder__title">Underwater Plunge</span>
+          <span class="vs-placeholder__layout">Diptych</span>
+        </div>
+      </div>
+      <div class="essay-diptych__item" style="flex:1">
+        <div class="vs-placeholder">
+          <span class="vs-placeholder__id">VS-C</span>
+          <span class="vs-placeholder__title">Surface Break</span>
+          <span class="vs-placeholder__layout">Diptych</span>
+        </div>
+      </div>
+    </div>
+    <div class="essay-diptych__caption">VS-B: Full submersion. Bubbles rising, body suspended in green-blue Lake Washington light. Underwater housing, available light only. &ensp;|&ensp; VS-C: The surface break&mdash;split-level shot, half above, half below. Cold water below, steam and cedar above. The threshold in a single frame.</div>
+  </section>
+
+  <!-- ======= 6. VS-D: David Tending the Fire — Image-Text ======= -->
+  <section class="slide essay-slide essay-image-text" id="slide-6">
+    <div class="essay-image-text__image">
+      <div class="vs-placeholder">
+        <span class="vs-placeholder__id">VS-D</span>
+        <span class="vs-placeholder__title">David &amp; the Stove</span>
+        <span class="vs-placeholder__layout">Image-Text</span>
+      </div>
+    </div>
+    <div class="essay-image-text__prose">
+      <h3>David Tending the Fire</h3>
+      <div class="vs-shot-meta">
+        <span class="vs-tag">Environmental Portrait</span>
+        <span class="vs-tag">Available Light</span>
+        <span class="vs-tag">35mm f/1.4</span>
+      </div>
+      <p>The Chief of Heat. David loading the stove, checking the temperature, reading the room. Candid, not directed&mdash;he&rsquo;s done this a thousand times. The 35 at f/1.4 gives portrait separation while keeping the cedar interior legible. Fire glow as the key light.</p>
+      <p>This is the founder portrait. Not a headshot against a backdrop&mdash;the man inside the thing he built, doing the thing he does.</p>
+    </div>
+  </section>
+
+  <!-- ======= 7. The Norwegian Thread ======= -->
+  <section class="slide" id="slide-7">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">I&rsquo;ve Been in Those Saunas</h2>
+      <p class="slide__text">
+        David built Von Sauna after visiting the floating saunas on Oslo&rsquo;s waterfront. The name references the Norwegian <em>vann</em>&mdash;water. The wood-fire commitment, the ritual of heat and cold, the cedar construction&mdash;this is Scandinavian bathing culture on Lake Washington.
+      </p>
+      <p class="slide__text">
+        I&rsquo;ve sat in those Oslo saunas. KOK, the Bjørvika waterfront, the fjord at 7am in November. I&rsquo;ve photographed them. I know what that tradition looks and feels like&mdash;the steam off cold water, the wood interiors, the quiet discipline of the cycle. <strong>The photography should carry that origin</strong>&mdash;warm light on cold water. Honest materials. No performance.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 8. The Fit ======= -->
+  <section class="slide" id="slide-8">
+    <div class="slide__inner">
+      <h2 class="slide__heading reveal">The Fit</h2>
+      <div class="partnership-grid stagger-children">
+        <div class="partner">
+          <div class="partner__name">Already a member</div>
+          <p class="partner__angle">I know the dock, the temperature, the rhythm of a session. No briefing needed.</p>
+        </div>
+        <div class="partner">
+          <div class="partner__name">Norwegian saunas, firsthand</div>
+          <p class="partner__angle">KOK Oslo, Bjørvika, the fjord at 7am. Photographs from them. The tradition Von Sauna draws from, understood by experience.</p>
+        </div>
+        <div class="partner">
+          <div class="partner__name">Documentary approach</div>
+          <p class="partner__angle">Real materials, real light, real people. Images that feel as honest as the experience.</p>
+        </div>
+        <div class="partner">
+          <div class="partner__name">October&ndash;November 2026</div>
+          <p class="partner__angle">2&ndash;3 dawn sessions. Edited and delivered before the 2027 season marketing push.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 9. Selected Work ======= -->
+  <section class="slide vs-slide--portfolio" id="slide-9">
+    <div class="vs-portfolio-header">
+      <h2 class="slide__heading reveal">Selected Work</h2>
+    </div>
+    <div class="vs-triptych stagger-children">
+        <a class="vs-triptych__card" href="https://heist.studio/work/norway" target="_blank" rel="noopener">
+          <div class="vs-triptych__img" style="background-image: url('https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/2025_c_n_wedding_0157/2025_c_n_wedding_0157-1600.webp');"></div>
+          <div class="vs-triptych__overlay">
+            <span class="vs-triptych__title">Norway</span>
+            <span class="vs-triptych__sub">Lofoten &amp; the road south</span>
+          </div>
+        </a>
+        <a class="vs-triptych__card" href="https://heist.studio/work/morocco" target="_blank" rel="noopener">
+          <div class="vs-triptych__img" style="background-image: url('https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/cnh-all-images-0108/cnh-all-images-0108-1600.webp');"></div>
+          <div class="vs-triptych__overlay">
+            <span class="vs-triptych__title">Morocco</span>
+            <span class="vs-triptych__sub">Atlas, Sahara &amp; the terrain between</span>
+          </div>
+        </a>
+        <a class="vs-triptych__card vs-triptych__card--placeholder" href="https://heist.studio/gallery" target="_blank" rel="noopener">
+          <div class="vs-triptych__img vs-triptych__img--pending"></div>
+          <div class="vs-triptych__overlay">
+            <span class="vs-triptych__title">Patagonia</span>
+            <span class="vs-triptych__sub">Coming 2026</span>
+          </div>
+        </a>
+      </div>
+  </section>
+
+  <!-- ======= 10. VS-E + VS-F: Cedar Detail + Lake from Below — Diptych ======= -->
+  <section class="slide essay-slide essay-diptych essay-diptych--landscape" id="slide-8">
+    <div class="essay-diptych__images essay-diptych__images--gap-tight">
+      <div class="essay-diptych__item" style="flex:1">
+        <div class="vs-placeholder">
+          <span class="vs-placeholder__id">VS-E</span>
+          <span class="vs-placeholder__title">Cedar Detail</span>
+          <span class="vs-placeholder__layout">Diptych</span>
+        </div>
+      </div>
+      <div class="essay-diptych__item" style="flex:1">
+        <div class="vs-placeholder">
+          <span class="vs-placeholder__id">VS-F</span>
+          <span class="vs-placeholder__title">Hull from Below</span>
+          <span class="vs-placeholder__layout">Diptych</span>
+        </div>
+      </div>
+    </div>
+    <div class="essay-diptych__caption">VS-E: Cedar grain at close range. Water beading on thermally modified wood. Brass hardware. The warm palette distilled to a texture. &ensp;|&ensp; VS-F: The sauna hull from underwater, looking up. The vessel as object, suspended between two worlds. Green-blue ambient light.</div>
+  </section>
+
+  <!-- ======= 9. The Kit ======= -->
+  <section class="slide" id="slide-9">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">The Kit</h2>
+      <ul class="equipment-list">
+        <li><strong>Canon EOS R5 Mark II</strong> &mdash; weather-sealed body. Low-light performance for dawn interiors and firelight.</li>
+        <li><strong>RF 35mm f/1.4 L VCM</strong> &mdash; primary lens. Wide enough for the interior, fast enough for stove light only.</li>
+        <li><strong>RF 24-70mm f/2.8 L</strong> &mdash; dock portraits, the plunge sequence, versatility between rounds.</li>
+        <li><strong>Underwater housing</strong> &mdash; the cold palette lives here. Submerged plunge shots, split-level frames, the hull from below.</li>
+        <li><strong>Nanlite Pavotube 4ft</strong> &mdash; battery bi-color. Subtle fill for interior details. The stove is the key light&mdash;not this.</li>
+      </ul>
+      <p class="slide__text">
+        <strong>Available light first.</strong> The fire, the dawn, the lake&mdash;these are the light sources. The interior should feel lit by the stove, not by a photographer. Underwater shots use the green-blue ambient light of the lake itself.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 10. VS-G: Between Rounds — Full-Bleed ======= -->
+  <section class="slide essay-slide essay-full-bleed essay-full-bleed--scrim" id="slide-10">
+    <div class="essay-full-bleed__img">
+      <div class="vs-placeholder">
+        <span class="vs-placeholder__id">VS-G</span>
+        <span class="vs-placeholder__title">Between Rounds</span>
+        <span class="vs-placeholder__layout">Full-Bleed</span>
+      </div>
+    </div>
+    <div class="essay-full-bleed__overlay essay-full-bleed__overlay--bottom-left">
+      <h3>Between Rounds</h3>
+      <div class="vs-shot-meta">
+        <span class="vs-tag">Lifestyle</span>
+        <span class="vs-tag">Natural Light</span>
+        <span class="vs-tag">35mm</span>
+      </div>
+      <p>The dock. Towels, coffee, still water. Skin flushed, breath visible, the Cascades across the lake. Nobody is posing. A tech founder and a carpenter are talking about nothing in particular because the sauna doesn&rsquo;t care what you do for a living. This is the photograph that tells David&rsquo;s story.</p>
+    </div>
+  </section>
+
+  <!-- ======= 11. Deliverables ======= -->
+  <section class="slide" id="slide-11">
+    <div class="slide__inner stagger-children">
+      <h2 class="slide__heading">Deliverables</h2>
+      <ul class="deliverables-list">
+        <li>
+          <span class="deliverable__name">Hero Set</span>
+          <span class="deliverable__desc">20&ndash;30 edited images across both palettes. Refreshed website hero, booking pages, and a press kit that does the talking.</span>
+        </li>
+        <li>
+          <span class="deliverable__name">Social Library</span>
+          <span class="deliverable__desc">40&ndash;60 images sized for Instagram grid, stories, and seasonal campaigns. Three months of content from one production window.</span>
+        </li>
+        <li>
+          <span class="deliverable__name">Detail Bank</span>
+          <span class="deliverable__desc">Material textures&mdash;cedar, brass, water, steam. Backgrounds for print, merch, and anywhere the brand needs warmth without a hero shot.</span>
+        </li>
+        <li>
+          <span class="deliverable__name">Portraits</span>
+          <span class="deliverable__desc">David, the Sauna Masters, the regulars. The faces that make the community real&mdash;for the website, press, and &ldquo;about&rdquo; pages.</span>
+        </li>
+      </ul>
+      <p class="slide__label">Timeline</p>
+      <p class="slide__text">
+        <strong>September</strong> &mdash; planning, shot list, session scheduling.
+        <strong>October&ndash;November</strong> &mdash; 2&ndash;3 dawn sessions on the water.
+        <strong>November</strong> &mdash; edit and delivery within two weeks of final session.
+        <strong>December</strong> &mdash; assets ready for 2027 season launch.
+      </p>
+      <p class="slide__text">
+        Full resolution, perpetual license for Von Sauna&rsquo;s own channels.
+      </p>
+    </div>
+  </section>
+
+  <!-- ======= 12. Contact ======= -->
+  <section class="slide slide--contact" id="slide-13">
+    <div class="slide__inner">
+      <h2 class="slide__heading slide__heading--large reveal">Two palettes. One ritual.<br/>Let&rsquo;s shoot it.</h2>
+      <p class="slide__text fade-in" style="text-align: center; margin-inline: auto; margin-bottom: var(--space-xl);">
+        This is a collaboration, not a transaction. I want Von Sauna in my portfolio as much as you want the images. Let&rsquo;s talk about what the 2027 season needs and build the scope together.
+      </p>
+      <div class="contact-info fade-in">
+        <p><strong>Corbin Heist</strong></p>
+        <p>Heist Studio</p>
+        <p><a href="https://heist.studio/gallery" target="_blank" rel="noopener">heist.studio</a></p>
+        <p><a href="mailto:corbin@heist.studio">corbin@heist.studio</a></p>
+      </div>
+    </div>
+  </section>
+
+</PitchLayout>
+
+<style>
+  /* ── Title slide placeholder ── */
+
+  .vs-placeholder-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--fx-base-800) 0%, var(--fx-base-900) 100%);
+    border: 1px dashed var(--fx-base-700);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    z-index: 0;
+  }
+
+  .vs-placeholder-bg__prompt {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    color: var(--fx-base-600);
+    max-width: 40ch;
+    text-align: right;
+    line-height: 1.6;
+    padding: var(--space-lg);
+  }
+
+  /* ── Shot placeholders ── */
+
+  .vs-placeholder {
+    background: linear-gradient(135deg, #dddbd2 0%, #cccac0 100%);
+    border: 1px dashed #b7b5ac;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 300px;
+    gap: 6px;
+  }
+
+  .vs-placeholder__id {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: #8a8880;
+    text-transform: uppercase;
+  }
+
+  .vs-placeholder__title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #6f6e69;
+  }
+
+  .vs-placeholder__layout {
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #b7b5ac;
+  }
+
+  /* Full-bleed: fill the entire slide background */
+  .essay-full-bleed__img .vs-placeholder {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+  }
+
+  /* Image-text split: fill the image column */
+  .essay-image-text__image .vs-placeholder {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+  }
+
+  /* Diptych landscape: fixed aspect ratio */
+  .essay-diptych__item .vs-placeholder {
+    min-height: 0;
+    aspect-ratio: 3 / 2;
+  }
+
+
+  /* ── Shot metadata tags ── */
+
+  .vs-shot-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: var(--space-sm) 0 var(--space-md);
+  }
+
+  .vs-tag {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.15);
+    color: rgba(255, 252, 240, 0.7);
+  }
+
+  /* ── Image-text prose needs stretch for placeholder to fill ── */
+
+  .essay-image-text {
+    align-items: stretch;
+  }
+</style>
