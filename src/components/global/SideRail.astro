@@ -1,0 +1,421 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props {
+  defaultCollapsed?: boolean;
+}
+
+const { defaultCollapsed = false } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const links = [
+  { key: 'index', href: '/', label: 'Index', num: '01' },
+  { key: 'field', href: '/work', label: 'Field', num: '02' },
+  { key: 'gallery', href: '/gallery', label: 'Gallery', num: '03' },
+  { key: 'now', href: '/blog', label: 'Now', num: '04' },
+];
+
+function isActive(link: typeof links[number]) {
+  if (link.key === 'index') return currentPath === '/' || currentPath === '';
+  if (link.key === 'field') return currentPath.startsWith('/work');
+  if (link.key === 'gallery') return currentPath.startsWith('/gallery');
+  if (link.key === 'now') return currentPath.startsWith('/blog');
+  return false;
+}
+---
+
+<nav class:list={['side-rail', { 'side-rail--collapsed': defaultCollapsed }]} data-side-rail aria-label="Main navigation" transition:persist>
+  <button class="rail-toggle" data-rail-toggle type="button" aria-label="Toggle navigation">
+    <span class="rail-toggle__icon rail-toggle__icon--collapse">&larr;</span>
+    <span class="rail-toggle__icon rail-toggle__icon--expand">&rarr;</span>
+  </button>
+
+  <!-- Expanded wordmark -->
+  <a href="/" class="rail-wordmark" aria-label="Home">
+    <span class="rail-wordmark__line">HEIST</span>
+    <span class="rail-wordmark__line rail-wordmark__line--accent">STUDIO</span>
+  </a>
+
+  <!-- Collapsed vertical wordmark -->
+  <a href="/" class="rail-wordmark-vertical" aria-label="Home">
+    HEIST<span class="rail-wordmark-vertical__dot">.</span>STUDIO
+  </a>
+
+  <div class="rail-divider"></div>
+
+  <ul class="rail-nav">
+    {links.map((link) => {
+      const active = isActive(link);
+      return (
+        <li>
+          <a
+            href={link.href}
+            class:list={['rail-link', { 'rail-link--active': active }]}
+            data-rail-num={link.num}
+          >
+            <span class="rail-link__num">{link.num}</span>
+            <span class="rail-link__label">{link.label}</span>
+          </a>
+        </li>
+      );
+    })}
+  </ul>
+
+  <div class="rail-divider"></div>
+
+  <div class="rail-bottom">
+    <button class="rail-search" type="button" data-command-palette-trigger aria-label="Search">
+      <span class="rail-search__label">SEARCH</span>
+      <kbd class="rail-search__kbd">/</kbd>
+    </button>
+    <ThemeToggle />
+  </div>
+
+  <div class="rail-coords">
+    <span>47.5480°N</span>
+    <span>121.7858°W</span>
+    <span class="rail-coords__place">RATTLESNAKE RIDGE</span>
+  </div>
+</nav>
+
+<script>
+  function initSideRail() {
+    const rail = document.querySelector<HTMLElement>('[data-side-rail]');
+    const toggle = document.querySelector<HTMLButtonElement>('[data-rail-toggle]');
+    if (!rail || !toggle) return;
+
+    const STORAGE_KEY = 'rail-collapsed';
+
+    function isCollapsed(): boolean {
+      return rail!.classList.contains('side-rail--collapsed');
+    }
+
+    function setCollapsed(collapsed: boolean) {
+      rail!.classList.toggle('side-rail--collapsed', collapsed);
+      document.documentElement.style.setProperty(
+        '--rail-width',
+        collapsed ? '52px' : '180px'
+      );
+      localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
+    }
+
+    // Reconcile state: explicit user preference wins, otherwise use page default
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored !== null) {
+      setCollapsed(stored === '1');
+    } else {
+      // No stored preference — check if this page wants collapsed by default
+      const wantsCollapsed = !!document.querySelector('[data-rail-default="collapsed"]');
+      if (wantsCollapsed !== isCollapsed()) {
+        setCollapsed(wantsCollapsed);
+      }
+    }
+
+    // Guard against duplicate listeners from transition:persist
+    if (!toggle.dataset.railInit) {
+      toggle.dataset.railInit = '1';
+      toggle.addEventListener('click', () => {
+        setCollapsed(!isCollapsed());
+      });
+    }
+
+    // Update active link based on current URL
+    updateActiveLink();
+  }
+
+  function updateActiveLink() {
+    const path = window.location.pathname;
+    document.querySelectorAll<HTMLElement>('.rail-link').forEach((link) => {
+      const href = link.getAttribute('href') || '';
+      let active = false;
+      if (href === '/') {
+        active = path === '/' || path === '';
+      } else {
+        active = path.startsWith(href);
+      }
+      link.classList.toggle('rail-link--active', active);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initSideRail);
+  document.addEventListener('astro:after-swap', updateActiveLink);
+</script>
+
+<style>
+  .side-rail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 180px;
+    z-index: var(--z-header);
+    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-right: 1px solid var(--color-border-subtle);
+    padding: 28px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transition: width var(--duration-normal) var(--ease-out-quart);
+    overflow: hidden;
+  }
+
+  /* Hide on mobile */
+  @media (max-width: 1023px) {
+    .side-rail {
+      display: none;
+    }
+  }
+
+  /* ── Toggle button ── */
+  .rail-toggle {
+    position: absolute;
+    top: 22px;
+    right: 12px;
+    background: transparent;
+    border: 1px solid var(--color-border-subtle);
+    padding: 3px 7px;
+    cursor: pointer;
+    color: var(--color-text-faint);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+  }
+
+  .rail-toggle:hover {
+    color: var(--color-text-muted);
+    border-color: var(--color-border);
+  }
+
+  .rail-toggle__icon--expand { display: none; }
+  .rail-toggle__icon--collapse { display: inline; }
+
+  /* ── Expanded wordmark ── */
+  .rail-wordmark {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  .rail-wordmark__line {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    color: var(--color-text);
+    line-height: 1;
+  }
+
+  .rail-wordmark__line--accent {
+    color: var(--color-accent);
+  }
+
+  /* ── Collapsed vertical wordmark ── */
+  .rail-wordmark-vertical {
+    display: none;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-heading);
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    color: var(--color-text);
+    padding: 8px 0;
+    cursor: pointer;
+  }
+
+  .rail-wordmark-vertical__dot {
+    color: var(--color-accent);
+  }
+
+  /* ── Divider ── */
+  .rail-divider {
+    height: 1px;
+    background: var(--color-border-subtle);
+    flex-shrink: 0;
+  }
+
+  /* ── Nav links ── */
+  .rail-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+  }
+
+  .rail-link {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    padding-left: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    border-left: 2px solid transparent;
+    transition: color var(--duration-fast) ease;
+    cursor: pointer;
+  }
+
+  .rail-link:hover {
+    color: var(--color-text-muted);
+  }
+
+  .rail-link--active {
+    color: var(--color-text);
+    border-left-color: var(--color-accent);
+  }
+
+  .rail-link__num {
+    color: var(--color-text-faint);
+  }
+
+  /* ── Bottom section ── */
+  .rail-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rail-search {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    padding: 7px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: var(--color-text-faint);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+  }
+
+  .rail-search:hover {
+    color: var(--color-text-muted);
+    border-color: var(--color-border);
+  }
+
+  .rail-search__kbd {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    border: 1px solid var(--color-border-subtle);
+    padding: 0 4px;
+  }
+
+  /* Theme toggle inside rail — override to match rail style */
+  .rail-bottom :global(.theme-toggle) {
+    width: 100%;
+    height: auto;
+    padding: 7px 10px;
+    justify-content: flex-start;
+    border-radius: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Coordinates ── */
+  .rail-coords {
+    margin-top: auto;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--color-text-faint);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rail-coords__place {
+    opacity: 0.6;
+  }
+
+  /* ══════════════════════════════════════
+     COLLAPSED STATE
+     ══════════════════════════════════════ */
+  .side-rail--collapsed {
+    width: 52px;
+    padding: 22px 0;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .side-rail--collapsed .rail-toggle {
+    position: static;
+    right: auto;
+  }
+
+  .side-rail--collapsed .rail-toggle__icon--expand { display: inline; }
+  .side-rail--collapsed .rail-toggle__icon--collapse { display: none; }
+
+  /* Hide expanded wordmark, show collapsed vertical */
+  .side-rail--collapsed .rail-wordmark { display: none; }
+  .side-rail--collapsed .rail-wordmark-vertical { display: block; }
+
+  /* Divider becomes horizontal line */
+  .side-rail--collapsed .rail-divider {
+    width: 20px;
+    height: 1px;
+  }
+
+  /* Nav becomes numbered squares */
+  .side-rail--collapsed .rail-nav {
+    align-items: center;
+  }
+
+  .side-rail--collapsed .rail-link {
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border-left: none;
+    border: 1px solid transparent;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .side-rail--collapsed .rail-link--active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .side-rail--collapsed .rail-link__label {
+    display: none;
+  }
+
+  /* Bottom section stacks vertically, icon-only */
+  .side-rail--collapsed .rail-bottom {
+    align-items: center;
+  }
+
+  .side-rail--collapsed .rail-search {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    justify-content: center;
+  }
+
+  .side-rail--collapsed .rail-search__label { display: none; }
+  .side-rail--collapsed .rail-search__kbd { border: none; padding: 0; }
+
+  .side-rail--collapsed .rail-bottom :global(.theme-toggle) {
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    justify-content: center;
+  }
+
+  /* Hide coordinates when collapsed */
+  .side-rail--collapsed .rail-coords { display: none; }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    .side-rail {
+      transition: none;
+    }
+  }
+</style>

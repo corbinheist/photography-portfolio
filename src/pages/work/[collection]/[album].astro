@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import GalleryLayout from '@layouts/GalleryLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
 import PhotoGrid from '@components/photo/PhotoGrid.astro';
 import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
 
@@ -43,7 +43,7 @@ const lightboxPhotos = photos.map((p: any) => ({
 }));
 ---
 
-<GalleryLayout
+<ProjectLayout
   title={album.data.title}
   description={album.data.description}
 >
@@ -82,7 +82,7 @@ const lightboxPhotos = photos.map((p: any) => ({
   )}
 
   <PhotoLightbox photos={lightboxPhotos} />
-</GalleryLayout>
+</ProjectLayout>
 
 <style>
   .album-header {

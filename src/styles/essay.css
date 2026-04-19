@@ -39,7 +39,13 @@ html:has([data-essay]) {
   height: 100%;
 }
 
-.essay-full-bleed__img .photo-img {
+.essay-full-bleed__img .photo-wrap picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.essay-slide .essay-full-bleed__img .photo-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -63,7 +69,7 @@ html:has([data-essay]) {
   max-width: 100%;
 }
 
-.essay-full-bleed--contain .essay-full-bleed__img .photo-img {
+.essay-slide.essay-full-bleed--contain .essay-full-bleed__img .photo-img {
   width: auto;
   height: auto;
   max-height: 100dvh;
@@ -169,21 +175,27 @@ html:has([data-essay]) {
 .essay-image-text__image {
   position: relative;
   overflow: hidden;
+  display: flex;
 }
 
 .essay-image-text__image .photo-wrap {
-  position: absolute;
-  inset: 0;
+  flex: 1;
+  min-width: 0;
 }
 
-.essay-image-text__image .photo-img {
+.essay-image-text__image .photo-wrap picture {
+  display: block;
+  height: 100%;
+}
+
+.essay-slide .essay-image-text__image .photo-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* Portrait images in splits — anchor to top so faces aren't cropped */
-.essay-image-text--portrait .essay-image-text__image .photo-img {
+.essay-slide.essay-image-text--portrait .essay-image-text__image .photo-img {
   object-position: top center;
 }
 
@@ -282,13 +294,13 @@ html:has([data-essay]) {
   width: 100%;
 }
 
-.essay-diptych__item .photo-img {
+.essay-slide .essay-diptych__item .photo-img {
   width: 100%;
   display: block;
 }
 
 /* Landscape diptych — width-filling, height follows naturally */
-.essay-diptych--landscape .essay-diptych__item .photo-img {
+.essay-slide.essay-diptych--landscape .essay-diptych__item .photo-img {
   height: auto;
 }
 
@@ -301,7 +313,7 @@ html:has([data-essay]) {
   flex: none !important;
 }
 
-.essay-diptych--portrait .essay-diptych__item .photo-img {
+.essay-slide.essay-diptych--portrait .essay-diptych__item .photo-img {
   width: auto;
   max-width: 100%;
   height: 85dvh;
@@ -355,13 +367,13 @@ html:has([data-essay]) {
   width: 100%;
 }
 
-.essay-triptych__item .photo-img {
+.essay-slide .essay-triptych__item .photo-img {
   width: 100%;
   display: block;
 }
 
 /* Landscape triptych — width-filling, height follows naturally */
-.essay-triptych--landscape .essay-triptych__item .photo-img {
+.essay-slide.essay-triptych--landscape .essay-triptych__item .photo-img {
   height: auto;
 }
 
@@ -374,7 +386,7 @@ html:has([data-essay]) {
   flex: none !important;
 }
 
-.essay-triptych--portrait .essay-triptych__item .photo-img {
+.essay-slide.essay-triptych--portrait .essay-triptych__item .photo-img {
   width: auto;
   max-width: 100%;
   height: 75dvh;
@@ -421,7 +433,7 @@ html:has([data-essay]) {
   line-height: 0;
 }
 
-.essay-mini-gallery__item .photo-img {
+.essay-slide .essay-mini-gallery__item .photo-img {
   width: 100%;
   height: auto;
   max-height: 105dvh;
@@ -773,7 +785,7 @@ html:has([data-essay]) {
   }
 
   /* Portrait diptychs — reduce height, keep side by side */
-  .essay-diptych--portrait .essay-diptych__item .photo-img {
+  .essay-slide.essay-diptych--portrait .essay-diptych__item .photo-img {
     height: 60dvh;
   }
 
@@ -788,7 +800,7 @@ html:has([data-essay]) {
   }
 
   /* Portrait triptych — reduce height */
-  .essay-triptych--portrait .essay-triptych__item .photo-img {
+  .essay-slide.essay-triptych--portrait .essay-triptych__item .photo-img {
     height: 50dvh;
   }
 
@@ -819,7 +831,7 @@ html:has([data-essay]) {
 /* Portrait devices — portrait images can fill more of the screen */
 @media (orientation: portrait) {
   .essay-full-bleed--contain .essay-full-bleed__img .photo-wrap,
-  .essay-full-bleed--contain .essay-full-bleed__img .photo-img {
+  .essay-slide.essay-full-bleed--contain .essay-full-bleed__img .photo-img {
     max-height: 92dvh;
     max-width: 100%;
   }

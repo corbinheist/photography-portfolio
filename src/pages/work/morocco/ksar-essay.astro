@@ -10,7 +10,7 @@
  * queries show the matching sequence; JS binds nav/lightbox
  * to whichever is visible.
  */
-import EssayLayout from '@layouts/EssayLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
 import EssaySequence from '@components/essay/EssaySequence.astro';
 import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
 import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
@@ -102,9 +102,11 @@ const photos = [
 ];
 ---
 
-<EssayLayout
+<ProjectLayout
   title="Ksar Tamnougalt"
   description="Inside a fortified village in Morocco's Draa Valley. November 2025."
+  snap
+  progress
 >
 
   <!-- ============================================================
@@ -419,4 +421,4 @@ const photos = [
 
   </EssaySequence>
 
-</EssayLayout>
+</ProjectLayout>
