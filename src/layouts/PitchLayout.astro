@@ -1,5 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import SideRail from '@components/global/SideRail.astro';
+import CommandPalette from '@components/global/CommandPalette.astro';
 import '@styles/pitch.css';
 
 interface Props {
@@ -15,13 +17,25 @@ const { title, description } = Astro.props;
     document.body.setAttribute('data-pitch', '');
     document.documentElement.setAttribute('data-theme', 'light');
   </script>
-  <slot />
+  <SideRail />
+  <div class="pitch-content">
+    <slot />
+  </div>
   <div class="pitch-counter" aria-hidden="true">
     <span class="pitch-counter__current">1</span>
     <span class="pitch-counter__sep"> / </span>
     <span class="pitch-counter__total"></span>
   </div>
+  <CommandPalette />
   <script>
     import '@scripts/pitch-nav';
   </script>
 </BaseLayout>
+
+<style>
+  @media (min-width: 1024px) {
+    .pitch-content {
+      padding-left: var(--rail-width, 180px);
+    }
+  }
+</style>

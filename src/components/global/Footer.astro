@@ -17,25 +17,50 @@ const year = new Date().getFullYear();
     </div>
   </div>
 
-  <div class="footer-bottom">
-    <div class="footer-inner">
-      <div class="footer-lockup">
-        <span class="footer-lockup-heist">HEIST</span><span class="footer-lockup-dot">.</span><span class="footer-lockup-studio">STUDIO</span>
-        <span class="footer-lockup-copy">&copy; {year}</span>
+  <div class="footer-grid-wrap">
+    <div class="footer-grid">
+      <div class="footer-col footer-col--location">
+        <span class="footer-mono">CURRENTLY AT 47.5480°N, 121.7858°W</span>
+        <span class="footer-location-name">SNOQUALMIE VALLEY &middot; WA</span>
       </div>
-      <div class="footer-links">
-        <a href="/about">About</a>
-        <a href="/blog">Notes</a>
+
+      <div class="footer-col footer-col--lockup">
+        <div class="footer-lockup-box">
+          <div class="footer-lockup-name">HEIST.STUDIO</div>
+          <div class="footer-lockup-est">est. 2023</div>
+        </div>
       </div>
+
+      <div class="footer-col footer-col--links">
+        <a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">INSTAGRAM &#x2197;</a>
+        <a href="https://corbinheist.substack.com" target="_blank" rel="noopener">SUBSTACK &#x2197;</a>
+        <a href="/about">ABOUT</a>
+        <a href="/gallery">GALLERY</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-strip-wrap">
+    <div class="footer-strip">
+      <span>&copy; {year} CORBIN HEIST &middot; ALL FRAMES</span>
+      <span>SELF-HOSTED &middot; NO TRACKING &middot; NO COOKIES</span>
     </div>
   </div>
 </footer>
 
 <style>
   .footer {
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border-subtle);
+    margin-top: 120px;
   }
 
+  @media (min-width: 1024px) {
+    .footer {
+      padding-left: var(--rail-width, 180px);
+    }
+  }
+
+  /* ── Subscribe ── */
   .footer-subscribe {
     padding: var(--space-xl) var(--container-padding);
     border-bottom: 1px solid var(--color-border);
@@ -46,7 +71,7 @@ const year = new Date().getFullYear();
     align-items: center;
     justify-content: space-between;
     gap: var(--space-lg);
-    max-width: var(--container-max);
+    max-width: 1600px;
     margin: 0 auto;
   }
 
@@ -65,71 +90,104 @@ const year = new Date().getFullYear();
     width: 360px;
   }
 
-  .footer-bottom {
-    padding: var(--space-lg) var(--container-padding);
+  /* ── Three-column grid ── */
+  .footer-grid-wrap {
+    padding: 56px clamp(20px, 3vw, 40px) 36px;
   }
 
-  .footer-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    max-width: var(--container-max);
+  .footer-grid {
+    max-width: 1600px;
     margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 40px;
+    align-items: end;
   }
 
-  .footer-lockup {
+  .footer-col--location {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--color-text-faint);
+    line-height: 1.8;
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
   }
 
-  .footer-lockup-heist {
-    font-family: var(--font-heading);
-    font-weight: 400;
-    font-size: 14px;
-    letter-spacing: 0.04em;
+  .footer-location-name {
     color: var(--color-text-muted);
-    line-height: 1;
   }
 
-  .footer-lockup-dot {
-    font-family: var(--font-heading);
-    font-weight: 400;
-    font-size: 14px;
-    color: var(--color-accent-deep);
-    line-height: 1;
-  }
-
-  .footer-lockup-studio {
-    font-family: var(--font-heading);
-    font-weight: 400;
-    font-size: 14px;
-    letter-spacing: 0.04em;
-    color: var(--color-text-muted);
-    line-height: 1;
-  }
-
-  .footer-lockup-copy {
-    font-size: var(--text-xs);
-    color: var(--color-text-muted);
-    margin-left: var(--space-md);
-    opacity: 0.5;
-  }
-
-  .footer-links {
+  .footer-col--lockup {
     display: flex;
-    gap: var(--space-md);
+    justify-content: center;
   }
 
-  .footer-links a {
-    font-size: var(--text-xs);
+  .footer-lockup-box {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 22px;
+    border: 1px solid var(--color-border);
+    gap: 3px;
+  }
+
+  .footer-lockup-name {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--color-text);
+  }
+
+  .footer-lockup-est {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     color: var(--color-text-muted);
+  }
+
+  .footer-col--links {
+    display: flex;
+    gap: 22px;
+    justify-content: flex-end;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-faint);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-col--links a {
+    color: inherit;
+    cursor: pointer;
     transition: color var(--duration-fast) ease;
   }
 
-  .footer-links a:hover {
+  .footer-col--links a:hover {
     color: var(--color-accent);
   }
 
+  /* ── Bottom strip ── */
+  .footer-strip-wrap {
+    padding: 0 clamp(20px, 3vw, 40px);
+  }
+
+  .footer-strip {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border-subtle);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-text-faint);
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 36px;
+  }
+
+  /* ── Responsive ── */
   @media (max-width: 768px) {
     .footer-subscribe-inner {
       flex-direction: column;
@@ -139,6 +197,23 @@ const year = new Date().getFullYear();
 
     .footer-subscribe-form {
       width: 100%;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+      text-align: center;
+    }
+
+    .footer-col--links {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-strip {
+      flex-direction: column;
+      gap: var(--space-xs);
+      text-align: center;
     }
   }
 </style>

@@ -1,0 +1,268 @@
+---
+import Photo from '@components/photo/Photo.astro';
+
+interface CollectionCard {
+  id: string;
+  title: string;
+  description?: string;
+  location?: string;
+  meta: string;
+  coverUrl?: string;
+  coverWidth?: number;
+  coverHeight?: number;
+  coverLqip?: string;
+}
+
+interface Props {
+  collections: CollectionCard[];
+}
+
+const { collections } = Astro.props;
+
+// Editorial rhythm — variable column spans and aspect ratios
+const gridSpans = [6, 6, 4, 8, 5, 7, 7, 5, 8, 4];
+const aspectRatios = ['3/2', '4/5', '1/1', '16/9', '3/4', '3/2', '4/5', '3/2', '16/9', '1/1'];
+---
+
+<section class="fc">
+  <div class="fc__inner">
+    <div class="fc__header">
+      <div>
+        <div class="fc__overline">FIELD &middot; FEATURED</div>
+        <h2 class="fc__heading">
+          Trips worth<br />returning to.
+        </h2>
+      </div>
+      <a href="/work" class="fc__all-link">All collections &rarr;</a>
+    </div>
+
+    <div class="fc__grid stagger-children">
+      {collections.map((c, i) => {
+        const span = gridSpans[i % gridSpans.length];
+        const ar = aspectRatios[i % aspectRatios.length];
+        return (
+          <a
+            href={`/work/${c.id}`}
+            class="fc-card"
+            style={`--card-span: ${span}; --card-ar: ${ar};`}
+          >
+            <div class="fc-card__top">
+              <span class="fc-card__index">N&deg; {String(i + 1).padStart(2, '0')}</span>
+              <span class="fc-card__meta">{c.meta}</span>
+            </div>
+            <div class="fc-card__photo">
+              {c.coverUrl ? (
+                <Photo
+                  url={c.coverUrl}
+                  width={c.coverWidth!}
+                  height={c.coverHeight!}
+                  lqip={c.coverLqip!}
+                  alt={c.title}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ) : (
+                <div class="fc-card__placeholder"></div>
+              )}
+              <div class="fc-card__hover-overlay">OPEN ALBUM &rarr;</div>
+            </div>
+            <div class="fc-card__info">
+              <h3 class="fc-card__title">{c.title}</h3>
+              {c.location && <span class="fc-card__location">{c.location}</span>}
+            </div>
+            {c.description && (
+              <p class="fc-card__desc">{c.description}</p>
+            )}
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .fc {
+    padding: var(--space-3xl) clamp(28px, 5vw, 80px);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .fc__inner {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .fc__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 56px;
+  }
+
+  .fc__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 12px;
+  }
+
+  .fc__heading {
+    font-size: clamp(40px, 5.5vw, 84px);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .fc__all-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-border);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .fc__all-link:hover {
+    color: var(--color-accent);
+  }
+
+  /* ── Grid ── */
+  .fc__grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0;
+  }
+
+  @media (max-width: 768px) {
+    .fc__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .fc__header {
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+  }
+
+  /* ── Card ── */
+  .fc-card {
+    grid-column: span var(--card-span, 6);
+    padding: 8px 12px 32px;
+    border-top: 1px solid var(--color-border-subtle);
+    cursor: pointer;
+    display: block;
+    background: transparent;
+    transition: background 200ms var(--ease-out-quart);
+  }
+
+  @media (max-width: 768px) {
+    .fc-card {
+      grid-column: span 1 !important;
+    }
+  }
+
+  .fc-card:hover {
+    background: var(--color-surface);
+  }
+
+  .fc-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+  }
+
+  .fc-card__photo {
+    aspect-ratio: var(--card-ar, 3/2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fc-card__photo :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9);
+    transition: filter 250ms;
+  }
+
+  .fc-card:hover .fc-card__photo :global(.photo-img) {
+    filter: none;
+  }
+
+  .fc-card__photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(16, 15, 15, 0.6), transparent 40%);
+    pointer-events: none;
+  }
+
+  .fc-card__placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--color-surface-alt);
+  }
+
+  .fc-card__hover-overlay {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--fx-paper);
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 250ms, transform 250ms;
+    z-index: 1;
+  }
+
+  .fc-card:hover .fc-card__hover-overlay {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fc-card__info {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+  }
+
+  .fc-card__title {
+    font-size: clamp(22px, 2.4vw, 36px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .fc-card__location {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .fc-card__desc {
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    max-width: 52ch;
+    margin-top: 8px;
+  }
+</style>

@@ -1,8 +1,10 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Header from '@components/global/Header.astro';
+import SideRail from '@components/global/SideRail.astro';
 import Footer from '@components/global/Footer.astro';
 import SubscribeBanner from '@components/global/SubscribeBanner.astro';
+import CommandPalette from '@components/global/CommandPalette.astro';
 
 interface Props {
   title: string;
@@ -16,17 +18,26 @@ const { title, description, image, type, noindex } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} image={image} type={type} noindex={noindex}>
+  <SideRail />
   <Header />
   <main class="main">
     <slot />
   </main>
   <Footer />
   <SubscribeBanner />
+  <CommandPalette />
 </BaseLayout>
 
 <style>
   .main {
     min-height: 100dvh;
-    padding-top: 72px; /* Header height */
+    padding-top: 72px; /* Header height — mobile */
+  }
+
+  @media (min-width: 1024px) {
+    .main {
+      padding-top: 0;
+      padding-left: var(--rail-width, 180px);
+    }
   }
 </style>

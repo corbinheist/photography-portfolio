@@ -1,0 +1,147 @@
+---
+/**
+ * Expedition map section for the homepage.
+ * Wraps the existing Map.astro component in an editorial section
+ * matching the V2 design language.
+ */
+import Map from '@components/Map.astro';
+
+interface MarkerDef {
+  lng: number;
+  lat: number;
+  label: string;
+  num?: string;
+  target?: string;
+}
+
+interface Props {
+  markers: MarkerDef[];
+  regions?: GeoJSON.FeatureCollection;
+}
+
+const { markers, regions } = Astro.props;
+---
+
+<section class="exp-map">
+  <div class="exp-map__inner">
+    <div class="exp-map__header">
+      <div>
+        <div class="exp-map__overline">
+          &#x25C9; ATLAS &middot; 2023 &mdash; 2026
+        </div>
+        <h2 class="exp-map__heading">
+          Where I've been<br />pointing the camera.
+        </h2>
+      </div>
+      <div class="exp-map__stats">
+        <div>{markers.length} REGIONS</div>
+        <div>6 CONTINENTS</div>
+      </div>
+    </div>
+
+    <div class="exp-map__container">
+      <Map
+        center={[10, 25]}
+        zoom={1.8}
+        markers={markers}
+        regions={regions}
+        interactive={false}
+        theme="default"
+      />
+    </div>
+
+    <div class="exp-map__strip">
+      <span>EQUIRECTANGULAR &middot; MAPTILER</span>
+      <span>47.55°N 121.79°W</span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .exp-map {
+    padding: var(--space-3xl) clamp(28px, 5vw, 80px);
+    border-top: 1px solid var(--color-border-subtle);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .exp-map__inner {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .exp-map__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 48px;
+  }
+
+  .exp-map__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 12px;
+  }
+
+  .exp-map__heading {
+    font-size: clamp(40px, 5.5vw, 84px);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .exp-map__stats {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-faint);
+    letter-spacing: 0.14em;
+    line-height: 1.9;
+    text-transform: uppercase;
+    text-align: right;
+  }
+
+  .exp-map__container {
+    position: relative;
+    border: 1px solid var(--color-border-subtle);
+    aspect-ratio: 2 / 1;
+    overflow: hidden;
+  }
+
+  .exp-map__container :global(.map-container) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .exp-map__strip {
+    padding: 12px 16px;
+    border: 1px solid var(--color-border-subtle);
+    border-top: none;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 768px) {
+    .exp-map__header {
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .exp-map__stats {
+      text-align: left;
+    }
+
+    .exp-map__container {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>

@@ -49,24 +49,99 @@ const worldRegions = worldRegionFeatures.length > 0
 function findPhoto(id: string) {
   return allPhotos.find((p) => p.id === id);
 }
+
+// Build film-roll data: photos from albums, interleaved across collections
+const allAlbums = await getCollection('albums');
+type FilmPhoto = {
+  url: string; width: number; height: number; lqip: string;
+  collectionId: string; collectionTitle: string; markerNum: string | null;
+  albumUrl: string;
+};
+
+// Gather photos per collection (up to 6 each)
+const photosByCollection: FilmPhoto[][] = [];
+collectionsWithMaps.forEach((c, i) => {
+  const num = String(i + 1).padStart(2, '0');
+  const bucket: FilmPhoto[] = [];
+  for (const albumId of c.data.albums) {
+    const album = allAlbums.find((a) => a.id === albumId);
+    if (!album || album.data.draft) continue;
+    for (const photoId of album.data.photos.slice(0, 6)) {
+      const photo = findPhoto(photoId);
+      if (!photo) continue;
+      bucket.push({
+        url: photo.data.url, width: photo.data.width, height: photo.data.height,
+        lqip: photo.data.lqip, collectionId: c.id, collectionTitle: c.data.title,
+        markerNum: num, albumUrl: `/work/${c.id}/${albumId}`,
+      });
+    }
+  }
+  if (bucket.length) photosByCollection.push(bucket);
+});
+
+// Interleave round-robin: deal one from each collection in turn
+const filmRollPhotos: FilmPhoto[] = [];
+const maxLen = Math.max(...photosByCollection.map((b) => b.length), 0);
+for (let round = 0; round < maxLen; round++) {
+  for (const bucket of photosByCollection) {
+    if (round < bucket.length) filmRollPhotos.push(bucket[round]);
+  }
+}
 ---
 
 <PageLayout title="Work" description="Photography collections">
   {worldMarkers.length > 0 && (
     <div class="map-hero" id="map-hero">
-      <Map
-        center={[10, 25]}
-        zoom={1.8}
-        markers={worldMarkers}
-        regions={worldRegions}
-        interactive={false}
-        theme="default"
-      />
+      <div class="map-hero__map">
+        <Map
+          center={[10, 25]}
+          zoom={1.8}
+          markers={worldMarkers}
+          regions={worldRegions}
+          interactive={false}
+          theme="default"
+        />
+      </div>
+      {filmRollPhotos.length > 0 && (
+        <div class="film-roll" data-film-roll>
+          <div class="film-roll__track" data-film-track>
+            {filmRollPhotos.map((p) => {
+              const slug = p.url.split('/').pop() || '';
+              const src = `${p.url}/${slug}-640.webp`;
+              return (
+                <a
+                  href={p.albumUrl}
+                  class="film-roll__frame"
+                  data-marker-num={p.markerNum}
+                  data-collection={p.collectionId}
+                >
+                  <img
+                    src={src}
+                    alt={p.collectionTitle}
+                    class="film-roll__img"
+                    loading="lazy"
+                    decoding="async"
+                    style={`background-image: url(${p.lqip}); background-size: cover;`}
+                  />
+                  <span class="film-roll__label">{p.collectionTitle}</span>
+                </a>
+              );
+            })}
+          </div>
+          <div class="film-roll__edge film-roll__edge--left">
+            <span class="film-roll__chevron">&laquo;</span>
+          </div>
+          <div class="film-roll__edge film-roll__edge--right">
+            <span class="film-roll__chevron">&raquo;</span>
+          </div>
+        </div>
+      )}
       <div class="map-hero__scroll-hint">
         <div class="map-hero__arrow"></div>
       </div>
     </div>
   )}
+
   <div class="work-content" id="work-content">
   <div class="work-header reveal">
     <h1>Work</h1>
@@ -109,9 +184,17 @@ function findPhoto(id: string) {
   .map-hero {
     position: relative;
     height: 100dvh;
+    display: flex;
+    flex-direction: column;
   }
 
-  .map-hero .map-container {
+  .map-hero__map {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+  }
+
+  .map-hero__map :global(.map-container) {
     height: 100%;
   }
 
@@ -234,9 +317,145 @@ function findPhoto(id: string) {
     opacity: 1;
     transform: translateX(0);
   }
+
+  /* ── Film-roll strip ── */
+  .film-roll {
+    position: relative;
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+    overflow: hidden;
+  }
+
+  .film-roll__track {
+    display: flex;
+    gap: 3px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    padding: 3px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .film-roll__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .film-roll__frame {
+    flex-shrink: 0;
+    width: 180px;
+    height: 120px;
+    position: relative;
+    overflow: hidden;
+    scroll-snap-align: start;
+    display: block;
+    cursor: pointer;
+  }
+
+  .film-roll__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    filter: brightness(0.7) saturate(0.85);
+    transition: filter 200ms var(--ease-out-quart), transform 300ms var(--ease-out-quart);
+  }
+
+  .film-roll__frame:hover .film-roll__img {
+    filter: brightness(1) saturate(1);
+    transform: scale(1.05);
+  }
+
+  .film-roll__label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 4px 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fx-paper);
+    background: rgba(16, 15, 15, 0.7);
+    opacity: 0;
+    transition: opacity 150ms;
+  }
+
+  .film-roll__frame:hover .film-roll__label {
+    opacity: 1;
+  }
+
+  .film-roll__edge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 90px;
+    pointer-events: none;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .film-roll__edge--left {
+    left: 0;
+    background: linear-gradient(to right, var(--color-bg) 20%, transparent);
+    justify-content: flex-start;
+    padding-left: 10px;
+  }
+
+  .film-roll__edge--right {
+    right: 0;
+    background: linear-gradient(to left, var(--color-bg) 20%, transparent);
+    justify-content: flex-end;
+    padding-right: 10px;
+  }
+
+  .film-roll__chevron {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-text-faint);
+    opacity: 0.5;
+    letter-spacing: -0.1em;
+  }
 </style>
 
 <script>
+  function initFilmRollMapLink() {
+    const filmRoll = document.querySelector('[data-film-roll]');
+    const mapContainer = document.querySelector<HTMLElement>('[data-map]');
+    if (!filmRoll) return;
+
+    const frames = filmRoll.querySelectorAll<HTMLElement>('.film-roll__frame');
+
+    frames.forEach((frame) => {
+      frame.addEventListener('mouseenter', () => {
+        const num = frame.dataset.markerNum;
+        if (!num) return;
+        // Use exposed map setHovered if available (highlights regions + markers)
+        if (mapContainer && (mapContainer as any).__setHovered) {
+          (mapContainer as any).__setHovered(num);
+        } else {
+          // Fallback: just highlight markers
+          document.querySelectorAll('.map-marker').forEach((el) => {
+            const markerNum = (el as HTMLElement).dataset.markerNum;
+            el.classList.toggle('map-marker--active', markerNum === num);
+          });
+        }
+      });
+
+      frame.addEventListener('mouseleave', () => {
+        if (mapContainer && (mapContainer as any).__setHovered) {
+          (mapContainer as any).__setHovered(null);
+        } else {
+          document.querySelectorAll('.map-marker').forEach((el) => {
+            el.classList.remove('map-marker--active');
+          });
+        }
+      });
+    });
+  }
+
   function initMapHeroNav() {
     const hero = document.getElementById('map-hero');
     const content = document.getElementById('work-content');
@@ -268,5 +487,8 @@ function findPhoto(id: string) {
     }
   }
 
-  document.addEventListener('astro:page-load', initMapHeroNav);
+  document.addEventListener('astro:page-load', () => {
+    initMapHeroNav();
+    initFilmRollMapLink();
+  });
 </script>

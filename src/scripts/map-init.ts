@@ -288,41 +288,92 @@ function init() {
         });
       }
 
+      // ── Crosshatch pattern for hover ──
+      const patternSize = 16;
+      const canvas = document.createElement('canvas');
+      canvas.width = patternSize;
+      canvas.height = patternSize;
+      const pctx = canvas.getContext('2d')!;
+      pctx.clearRect(0, 0, patternSize, patternSize);
+      pctx.strokeStyle = accent.regionStroke;
+      pctx.lineWidth = 0.8;
+      pctx.globalAlpha = 0.5;
+      // Diagonal lines
+      pctx.beginPath();
+      pctx.moveTo(0, patternSize);
+      pctx.lineTo(patternSize, 0);
+      pctx.moveTo(-4, patternSize - 4);
+      pctx.lineTo(4, patternSize + 4);
+      pctx.moveTo(patternSize - 4, -4);
+      pctx.lineTo(patternSize + 4, 4);
+      pctx.stroke();
+
+      const img = new Image();
+      img.src = canvas.toDataURL();
+      img.onload = () => {
+        if (!map.hasImage('crosshatch')) {
+          map.addImage('crosshatch', img, { sdf: false });
+        }
+        // Add crosshatch fill layer (hidden by default)
+        if (regions && regions.features?.length && !map.getLayer('regions-hatch')) {
+          map.addLayer({
+            id: 'regions-hatch',
+            type: 'fill',
+            source: 'regions',
+            paint: {
+              'fill-pattern': 'crosshatch',
+              'fill-opacity': 0,
+            },
+          });
+        }
+      };
+
       // ── Region hover interaction ──
-      // Track which region num is hovered (null = none)
       let hoveredNum: string | null = null;
 
       function setHovered(num: string | null) {
         if (num === hoveredNum) return;
         hoveredNum = num;
-        // Update fill opacity: hovered region brighter
+        // Fill: hovered region much brighter
         map.setPaintProperty('regions-fill', 'fill-opacity', [
           'case',
           ['==', ['get', 'num'], num ?? ''],
-          0.30,
+          0.45,
           0.12,
         ]);
-        // Update stroke: hovered region brighter + thicker
+        // Crosshatch: only on hovered region
+        if (map.getLayer('regions-hatch')) {
+          map.setPaintProperty('regions-hatch', 'fill-opacity', [
+            'case',
+            ['==', ['get', 'num'], num ?? ''],
+            0.4,
+            0,
+          ]);
+        }
+        // Stroke: hovered region bold
         map.setPaintProperty('regions-stroke', 'line-opacity', [
           'case',
           ['==', ['get', 'num'], num ?? ''],
-          0.8,
+          1,
           0.35,
         ]);
         map.setPaintProperty('regions-stroke', 'line-width', [
           'case',
           ['==', ['get', 'num'], num ?? ''],
-          2.5,
+          3,
           1.5,
         ]);
-        // Update cursor
+        // Cursor
         map.getCanvas().style.cursor = num ? 'pointer' : '';
-        // Update label highlights
+        // Label highlights
         document.querySelectorAll('.map-marker').forEach((el) => {
           const markerNum = (el as HTMLElement).dataset.markerNum;
           el.classList.toggle('map-marker--active', markerNum === num);
         });
       }
+
+      // Expose setHovered on the container so external scripts (film-roll) can call it
+      (container as any).__setHovered = setHovered;
 
       // Hover on map regions
       map.on('mousemove', 'regions-fill', (e) => {

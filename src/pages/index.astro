@@ -1,37 +1,132 @@
 ---
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
-import HeroSection from '@components/home/HeroSection.astro';
-import FeaturedGallery from '@components/home/FeaturedGallery.astro';
-import AboutTeaser from '@components/home/AboutTeaser.astro';
-import BlogSection from '@components/blog/BlogSection.astro';
+import CineHero from '@components/home/CineHero.astro';
+import ExpeditionMap from '@components/home/ExpeditionMap.astro';
+import FeaturedCollections from '@components/home/FeaturedCollections.astro';
+import NowReel from '@components/home/NowReel.astro';
 
 const photos = await getCollection('photos');
 const albums = await getCollection('albums');
 const collections = await getCollection('photoCollections');
 
-// Build a map from photo ID → album page URL
-function getPhotoLink(photoId: string): string | undefined {
-  for (const album of albums) {
-    if (album.data.draft || !album.data.photos.includes(photoId)) continue;
-    const collection = collections.find((c) => c.data.albums.includes(album.id));
-    if (collection) return `/work/${collection.id}/${album.id}`;
+const sortedCollections = collections.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+
+// Resolve cover photo for a collection — tries coverPhoto, then first album cover, then featured photos
+function resolveCollectionCover(collection: typeof collections[number]) {
+  // 1. Direct coverPhoto on collection
+  if (collection.data.coverPhoto) {
+    const photo = photos.find((p) => p.id === collection.data.coverPhoto);
+    if (photo) return photo;
+  }
+  // 2. First album's coverPhoto
+  for (const albumId of collection.data.albums) {
+    const album = albums.find((a) => a.id === albumId);
+    if (album?.data.coverPhoto) {
+      const photo = photos.find((p) => p.id === album.data.coverPhoto);
+      if (photo) return photo;
+    }
+    // 3. First photo in first album
+    if (album?.data.photos.length) {
+      const photo = photos.find((p) => p.id === album.data.photos[0]);
+      if (photo) return photo;
+    }
+  }
+  return null;
+}
+
+// Build hero slides: collections with cover photos + featured photo fallbacks
+const heroSlides = sortedCollections
+  .map((c) => {
+    const cover = resolveCollectionCover(c);
+    if (!cover) return null;
+    return {
+      id: c.id,
+      title: c.data.title,
+      location: c.data.description || '',
+      meta: `${c.data.albums.length} ALBUMS`,
+      url: cover.data.url,
+      width: cover.data.width,
+      height: cover.data.height,
+      lqip: cover.data.lqip,
+      exif: cover.data.exif,
+    };
+  })
+  .filter(Boolean);
+
+// If fewer than 4 slides, supplement with featured photos
+if (heroSlides.length < 4) {
+  const featured = photos
+    .filter((p) => p.featured || p.data.featured)
+    .filter((p) => !heroSlides.some((s) => s!.url === p.data.url));
+  for (const p of featured.slice(0, 4 - heroSlides.length)) {
+    heroSlides.push({
+      id: `photo-${p.id}`,
+      title: '',
+      location: '',
+      meta: '',
+      url: p.data.url,
+      width: p.data.width,
+      height: p.data.height,
+      lqip: p.data.lqip,
+      exif: p.data.exif,
+    });
   }
 }
 
-const heroPhotos = photos.map((p) => ({
-  url: p.data.url,
-  width: p.data.width,
-  height: p.data.height,
-  lqip: p.data.lqip,
-  link: getPhotoLink(p.id),
-  featured: p.data.featured,
-}));
+// Build featured collections data
+const featuredCollections = sortedCollections.map((c) => {
+  const cover = resolveCollectionCover(c);
+  return {
+    id: c.id,
+    title: c.data.title,
+    description: c.data.description,
+    meta: `${c.data.albums.length} ALBUMS`,
+    coverUrl: cover?.data.url,
+    coverWidth: cover?.data.width,
+    coverHeight: cover?.data.height,
+    coverLqip: cover?.data.lqip,
+  };
+});
+
+// Build expedition map data (reuse pattern from work/index.astro)
+const countryFiles = import.meta.glob<{ default: any }>('/src/data/maps/*-country.json', { eager: true });
+const collectionsWithMaps = sortedCollections.filter((c) => c.data.map);
+let markerNum = 0;
+
+const worldMarkers = collectionsWithMaps.map((c) => {
+  markerNum++;
+  return {
+    label: c.data.title,
+    lng: c.data.map!.center[0],
+    lat: c.data.map!.center[1],
+    num: String(markerNum).padStart(2, '0'),
+    target: `/work/${c.id}`,
+  };
+});
+
+const worldRegionFeatures: any[] = [];
+collectionsWithMaps.forEach((c, i) => {
+  const countryFile = `/src/data/maps/${c.id}-country.json`;
+  const data = countryFiles[countryFile]?.default;
+  if (!data?.features) return;
+  const num = String(i + 1).padStart(2, '0');
+  for (const feat of data.features) {
+    worldRegionFeatures.push({
+      ...feat,
+      properties: { ...feat.properties, num },
+    });
+  }
+});
+
+const worldRegions = worldRegionFeatures.length > 0
+  ? { type: 'FeatureCollection' as const, features: worldRegionFeatures }
+  : undefined;
 ---
 
 <PageLayout title="Corbin Heist">
-  <HeroSection photos={heroPhotos} />
-  <FeaturedGallery />
-  <AboutTeaser />
-  <BlogSection limit={4} responsive />
+  <CineHero slides={heroSlides as any} />
+  <ExpeditionMap markers={worldMarkers} regions={worldRegions} />
+  <FeaturedCollections collections={featuredCollections} />
+  <NowReel />
 </PageLayout>

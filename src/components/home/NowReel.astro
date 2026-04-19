@@ -1,0 +1,203 @@
+---
+/**
+ * "Now" reel section — 4-column grid of current activities.
+ */
+const entries = [
+  {
+    when: 'THIS WEEK',
+    tag: 'FIELD',
+    text: 'Scouting a route up the Lyngen Alps for a January return.',
+  },
+  {
+    when: 'READING',
+    tag: 'NOTES',
+    text: 'Peter Matthiessen \u00B7 The Snow Leopard. Third time.',
+  },
+  {
+    when: 'SHOOTING',
+    tag: 'STUDIO',
+    text: 'Studio: identity system for a Portland tannery. Case study soon.',
+  },
+  {
+    when: 'LISTENING',
+    tag: 'SOUND',
+    text: 'Field recordings from the Snoqualmie, pre-dawn, March 14.',
+  },
+];
+---
+
+<section class="now-reel">
+  <div class="now-reel__inner">
+    <div class="now-reel__header">
+      <div>
+        <div class="now-reel__overline">
+          <span class="now-reel__pulse"></span>
+          NOW &middot; LIVE
+        </div>
+        <h2 class="now-reel__heading">
+          What the<br />studio's doing<br />this week.
+        </h2>
+      </div>
+      <a href="/blog" class="now-reel__link">Full journal &rarr;</a>
+    </div>
+
+    <div class="now-reel__grid stagger-children">
+      {entries.map((entry, i) => (
+        <div class="now-reel__card">
+          <div class="now-reel__card-header">
+            <span class="now-reel__when">{entry.when}</span>
+            <span class="now-reel__tag">{entry.tag}</span>
+          </div>
+          <p class="now-reel__text">{entry.text}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .now-reel {
+    padding: var(--space-3xl) clamp(28px, 5vw, 80px);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .now-reel__inner {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .now-reel__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 40px;
+  }
+
+  .now-reel__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-warm);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .now-reel__pulse {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: var(--color-warm);
+    border-radius: 50%;
+    animation: nowPulse 2s infinite;
+  }
+
+  @keyframes nowPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.3); }
+  }
+
+  .now-reel__heading {
+    font-size: clamp(40px, 5.5vw, 84px);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .now-reel__link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-bottom: 1px solid var(--color-border);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .now-reel__link:hover {
+    color: var(--color-accent);
+  }
+
+  /* ── Grid ── */
+  .now-reel__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  @media (max-width: 1023px) {
+    .now-reel__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .now-reel__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .now-reel__header {
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+  }
+
+  .now-reel__card {
+    padding: 24px 20px 28px;
+    border-right: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .now-reel__card:last-child {
+    border-right: none;
+  }
+
+  @media (max-width: 1023px) {
+    .now-reel__card:nth-child(2n) {
+      border-right: none;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .now-reel__card {
+      border-right: none;
+    }
+  }
+
+  .now-reel__card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+  }
+
+  .now-reel__tag {
+    color: var(--color-accent);
+  }
+
+  .now-reel__text {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--color-text);
+    margin: 0;
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .now-reel__pulse {
+      animation: none;
+    }
+  }
+</style>

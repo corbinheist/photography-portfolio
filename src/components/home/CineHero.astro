@@ -1,0 +1,663 @@
+---
+/**
+ * Cinematic scroll-pinned hero.
+ * 160vh sticky section — headline holds for first 25% of scroll,
+ * then collection photos cycle with captions, EXIF, and progress dots.
+ */
+interface HeroSlide {
+  id: string;
+  title: string;
+  location: string;
+  meta: string;
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  exif?: {
+    camera?: string;
+    lens?: string;
+    aperture?: string;
+    shutter?: string;
+    iso?: number;
+  };
+}
+
+interface Props {
+  slides: HeroSlide[];
+}
+
+const { slides } = Astro.props;
+
+// Build srcset for each slide
+const slideData = slides.map((s) => {
+  const slug = s.url.split('/').pop() || '';
+  const widths = [640, 1080, 1600, 2400].filter((w) => w <= s.width);
+  return {
+    ...s,
+    avifSrcset: widths.map((w) => `${s.url}/${slug}-${w}.avif ${w}w`).join(', '),
+    webpSrcset: widths.map((w) => `${s.url}/${slug}-${w}.webp ${w}w`).join(', '),
+    fallback: `${s.url}/${slug}-${widths[widths.length - 1] || 2400}.webp`,
+  };
+});
+---
+
+<section class="cine-hero" data-cine-hero>
+  <div class="cine-hero__stage">
+    <!-- Background photos -->
+    <div class="cine-hero__photos">
+      {slideData.map((slide, i) => (
+        <picture class="cine-hero__photo" data-slide-index={i}>
+          <source type="image/avif" srcset={slide.avifSrcset} sizes="100vw" />
+          <source type="image/webp" srcset={slide.webpSrcset} sizes="100vw" />
+          <img
+            src={slide.fallback}
+            alt={slide.title}
+            class="cine-hero__img"
+            style={`background-image: url(${slide.lqip}); background-size: cover;`}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        </picture>
+      ))}
+    </div>
+
+    <!-- Overlays -->
+    <div class="cine-hero__vignette"></div>
+    <div class="cine-hero__gradient" data-cine-gradient></div>
+
+    <!-- Register marks (corner crop marks) -->
+    <div class="cine-hero__marks">
+      <span class="mark mark--tl"></span>
+      <span class="mark mark--tr"></span>
+      <span class="mark mark--bl"></span>
+      <span class="mark mark--br"></span>
+    </div>
+
+    <!-- Headline (phase 1: holds for first 35%) -->
+    <div class="cine-hero__headline" data-cine-headline>
+      <div class="cine-hero__overline">
+        <span class="cine-hero__dot">&#x25CF;</span>
+        <span>FIELD NOTES</span>
+        <span>&middot;</span>
+        <span>2023 &mdash; 2026</span>
+      </div>
+      <h1 class="cine-hero__title">
+        Mountains, coastlines,<br />
+        and a reason to wake up<br />
+        at <em>3am</em>.
+      </h1>
+      <div class="cine-hero__cta">
+        <a href="/work" class="cine-hero__btn cine-hero__btn--primary">
+          Enter the archive &rarr;
+        </a>
+        <a href="/about" class="cine-hero__btn cine-hero__btn--secondary">
+          Or see the studio work
+        </a>
+      </div>
+    </div>
+
+    <!-- Photo caption (phase 2: after 35%) -->
+    <div class="cine-hero__caption" data-cine-caption>
+      <div class="cine-hero__caption-overline" data-cine-counter>
+        &#x25C9; EXPEDITION 01 / {String(slides.length).padStart(2, '0')}
+      </div>
+      <h2 class="cine-hero__caption-title" data-cine-title></h2>
+      <p class="cine-hero__caption-desc" data-cine-desc></p>
+    </div>
+
+    <!-- Bottom meta (phase 2) -->
+    <div class="cine-hero__meta-left" data-cine-meta-left>
+      <span class="cine-hero__dot">&#x25CF;</span>
+      <span data-cine-location></span>
+      <span>&middot;</span>
+      <span data-cine-slide-meta></span>
+    </div>
+
+    <!-- EXIF strip -->
+    <div class="cine-hero__exif" data-cine-exif></div>
+
+    <!-- Vertical progress dots -->
+    <div class="cine-hero__dots">
+      {slideData.map((_, i) => (
+        <div class="cine-hero__dot-bar" data-dot-index={i}></div>
+      ))}
+    </div>
+
+    <!-- Scroll hint — starts hidden, JS fades in after delay -->
+    <div class="cine-hero__scroll-hint" data-cine-scroll style="opacity: 0;">
+      <span>Scroll</span>
+      <div class="cine-hero__scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<script type="application/json" data-cine-slides set:html={JSON.stringify(slideData)}></script>
+
+<script>
+  function initCineHero() {
+    const hero = document.querySelector<HTMLElement>('[data-cine-hero]');
+    const dataEl = document.querySelector<HTMLScriptElement>('[data-cine-slides]');
+    if (!hero || !dataEl) return;
+
+    const slides = JSON.parse(dataEl.textContent || '[]');
+    if (!slides.length) return;
+
+    const photos = hero.querySelectorAll<HTMLElement>('.cine-hero__photo');
+    const headline = hero.querySelector<HTMLElement>('[data-cine-headline]');
+    const caption = hero.querySelector<HTMLElement>('[data-cine-caption]');
+    const scrollHint = hero.querySelector<HTMLElement>('[data-cine-scroll]');
+    const gradient = hero.querySelector<HTMLElement>('[data-cine-gradient]');
+    const metaLeft = hero.querySelector<HTMLElement>('[data-cine-meta-left]');
+    const exif = hero.querySelector<HTMLElement>('[data-cine-exif]');
+    const counter = hero.querySelector<HTMLElement>('[data-cine-counter]');
+    const titleEl = hero.querySelector<HTMLElement>('[data-cine-title]');
+    const descEl = hero.querySelector<HTMLElement>('[data-cine-desc]');
+    const locationEl = hero.querySelector<HTMLElement>('[data-cine-location]');
+    const slideMetaEl = hero.querySelector<HTMLElement>('[data-cine-slide-meta]');
+    const dots = hero.querySelectorAll<HTMLElement>('.cine-hero__dot-bar');
+    const total = slides.length;
+
+    let lastActive = -1;
+    let scrollHintVisible = false;
+
+    // Fade in scroll hint after a delay (like the original hero)
+    setTimeout(() => {
+      if (scrollHint && !scrollHintVisible) {
+        scrollHintVisible = true;
+        scrollHint.style.transition = 'opacity 1.6s ease';
+        scrollHint.style.opacity = '1';
+      }
+    }, 2500);
+
+    function onScroll() {
+      const rect = hero!.getBoundingClientRect();
+      const scrollTravel = hero!.offsetHeight - window.innerHeight;
+      const scrolled = Math.min(Math.max(-rect.top, 0), scrollTravel);
+      const p = scrollTravel > 0 ? scrolled / scrollTravel : 0;
+
+      // Scroll hint fades out once user starts scrolling
+      if (scrollHint && p > 0.01) {
+        scrollHint.style.transition = 'opacity 0.3s ease';
+        scrollHint.style.opacity = String(Math.max(0, 1 - p * 8));
+      }
+
+      // Phase split — headline holds for first 25%, then photos cycle
+      const storyP = Math.max(0, Math.min(1, (p - 0.25) / 0.75));
+      const introP = Math.max(0, Math.min(1, p / 0.25));
+      const activePhoto = Math.min(total - 1, Math.floor(storyP * total * 0.999));
+
+      // Headline opacity
+      const headlineOpacity = Math.max(0, 1 - introP * 0.15 - storyP * 1.2);
+      if (headline) {
+        headline.style.opacity = String(headlineOpacity);
+        headline.style.transform = `translateY(${-storyP * 40}px)`;
+        headline.style.display = storyP > 0.15 ? 'none' : '';
+        headline.style.pointerEvents = storyP > 0.1 ? 'none' : '';
+      }
+
+      // Caption opacity
+      const captionOpacity = storyP > 0.02 ? Math.min(1, storyP * 4) : 0;
+      if (caption) {
+        caption.style.opacity = String(captionOpacity);
+        caption.style.pointerEvents = captionOpacity > 0.5 ? '' : 'none';
+      }
+      if (metaLeft) metaLeft.style.opacity = String(captionOpacity);
+      if (exif) exif.style.opacity = String(captionOpacity);
+
+      // Gradient shift
+      if (gradient) {
+        gradient.style.background = `linear-gradient(to right, rgba(16,15,15,${0.88 - storyP * 0.2}) 0%, rgba(16,15,15,${0.5 - storyP * 0.2}) 55%, rgba(16,15,15,0.15) 100%)`;
+      }
+
+      // Photo crossfade
+      photos.forEach((photo, i) => {
+        const img = photo.querySelector('img');
+        if (!img) return;
+        const isActive = i === activePhoto;
+        img.style.opacity = isActive ? '1' : '0';
+        img.style.transform = isActive ? `scale(${1 + storyP * 0.04})` : 'scale(1.08)';
+      });
+
+      // Update text if slide changed
+      if (activePhoto !== lastActive) {
+        lastActive = activePhoto;
+        const slide = slides[activePhoto];
+        if (counter) {
+          counter.textContent = `\u25C9 EXPEDITION ${String(activePhoto + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+        }
+        if (titleEl) titleEl.textContent = slide.title || '';
+        if (descEl) descEl.textContent = slide.location || '';
+        if (locationEl) locationEl.textContent = slide.location || '\u2014';
+        if (slideMetaEl) slideMetaEl.textContent = slide.meta || '';
+        if (exif && slide.exif) {
+          const e = slide.exif;
+          exif.textContent = [e.camera, e.lens, e.aperture, e.shutter, e.iso ? `ISO ${e.iso}` : '']
+            .filter(Boolean)
+            .join(' \u00B7 ');
+        }
+      }
+
+      // Update progress dots
+      dots.forEach((dot, i) => {
+        const isActive = i === activePhoto;
+        dot.style.width = isActive ? '2px' : '1px';
+        dot.style.height = isActive ? '28px' : '14px';
+        dot.style.background = isActive
+          ? 'var(--color-accent)'
+          : 'rgba(255,252,240,0.25)';
+      });
+    }
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Keyboard navigation — J/K/arrows step between slides
+    function scrollToSlide(index: number) {
+      const clamped = Math.max(0, Math.min(total - 1, index));
+      const heroTop = hero!.offsetTop;
+      const scrollTravel = hero!.offsetHeight - window.innerHeight;
+      // Map slide index to scroll position within the story phase (25%-100%)
+      const slideP = (clamped + 0.5) / total; // center of the slide's range
+      const targetP = 0.25 + slideP * 0.75;   // offset by headline phase
+      const targetScroll = heroTop + targetP * scrollTravel;
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
+
+    function onKeydown(e: KeyboardEvent) {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') return;
+
+      // Only handle keys when hero is in view
+      const rect = hero!.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+
+      if (e.key === 'j' || e.key === 'J' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = lastActive < 0 ? 0 : Math.min(total - 1, lastActive + 1);
+        scrollToSlide(next);
+      } else if (e.key === 'k' || e.key === 'K' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = lastActive < 0 ? 0 : Math.max(0, lastActive - 1);
+        scrollToSlide(prev);
+      }
+    }
+
+    document.addEventListener('keydown', onKeydown);
+
+    // Cleanup on page transition
+    document.addEventListener('astro:before-preparation', () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('keydown', onKeydown);
+    }, { once: true });
+  }
+
+  document.addEventListener('astro:page-load', initCineHero);
+</script>
+
+<style>
+  .cine-hero {
+    position: relative;
+    height: 160vh;
+  }
+
+  .cine-hero__stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── Photos ── */
+  .cine-hero__photos {
+    position: absolute;
+    inset: 0;
+  }
+
+  .cine-hero__photo {
+    position: absolute;
+    inset: 0;
+  }
+
+  .cine-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    transform: scale(1.08);
+    transition: opacity 500ms var(--ease-out-quart), transform 600ms var(--ease-out-quart);
+  }
+
+  .cine-hero__photo:first-child .cine-hero__img {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* ── Overlays ── */
+  .cine-hero__vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at 30% 40%,
+      transparent 0%,
+      rgba(16, 15, 15, 0.35) 70%,
+      rgba(16, 15, 15, 0.85) 100%
+    );
+    pointer-events: none;
+  }
+
+  .cine-hero__gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(16, 15, 15, 0.88) 0%,
+      rgba(16, 15, 15, 0.5) 55%,
+      rgba(16, 15, 15, 0.15) 100%
+    );
+    pointer-events: none;
+    transition: background 300ms;
+  }
+
+  /* ── Register marks ── */
+  .cine-hero__marks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .mark {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+  }
+
+  .mark::before,
+  .mark::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 252, 240, 0.35);
+  }
+
+  .mark::before {
+    top: 0;
+    left: 10px;
+    bottom: 0;
+    width: 1px;
+  }
+
+  .mark::after {
+    left: 0;
+    top: 10px;
+    right: 0;
+    height: 1px;
+  }
+
+  .mark--tl { top: 16px; left: 16px; }
+  .mark--tr { top: 16px; right: 16px; }
+  .mark--bl { bottom: 16px; left: 16px; }
+  .mark--br { bottom: 16px; right: 16px; }
+
+  /* ── Headline (phase 1) ── */
+  .cine-hero__headline {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 clamp(28px, 6vw, 90px);
+    transition: opacity 200ms, transform 200ms;
+  }
+
+  .cine-hero__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 240, 0.55);
+    margin-bottom: 28px;
+    display: flex;
+    gap: 18px;
+  }
+
+  .cine-hero__dot {
+    color: var(--color-accent);
+  }
+
+  .cine-hero__title {
+    font-family: var(--font-heading);
+    font-size: clamp(36px, 5.5vw, 104px);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    color: var(--fx-paper);
+    margin: 0;
+    text-wrap: pretty;
+    max-width: 16ch;
+  }
+
+  .cine-hero__title em {
+    color: var(--color-accent);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .cine-hero__warm {
+    color: var(--color-warm);
+  }
+
+  .cine-hero__cta {
+    margin-top: 32px;
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+
+  .cine-hero__btn--primary {
+    background: var(--color-accent);
+    color: var(--fx-paper);
+    border: none;
+    padding: 16px 26px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background var(--duration-fast) ease;
+  }
+
+  .cine-hero__btn--primary:hover {
+    background: var(--color-accent-deep);
+  }
+
+  .cine-hero__btn--secondary {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 240, 0.7);
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255, 252, 240, 0.3);
+    padding-bottom: 2px;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .cine-hero__btn--secondary:hover {
+    color: var(--fx-paper);
+  }
+
+  /* ── Caption (phase 2) ── */
+  .cine-hero__caption {
+    position: absolute;
+    left: clamp(28px, 6vw, 90px);
+    right: clamp(28px, 6vw, 90px);
+    bottom: 12vh;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms;
+  }
+
+  .cine-hero__caption-overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .cine-hero__caption-title {
+    font-family: var(--font-heading);
+    font-size: clamp(36px, 5vw, 76px);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--fx-paper);
+    margin: 0;
+    max-width: 18ch;
+  }
+
+  .cine-hero__caption-desc {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.55;
+    color: rgba(255, 252, 240, 0.8);
+    max-width: 50ch;
+    margin-top: 18px;
+  }
+
+  /* ── Bottom meta ── */
+  .cine-hero__meta-left {
+    position: absolute;
+    bottom: 32px;
+    left: clamp(28px, 6vw, 90px);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: rgba(255, 252, 240, 0.6);
+    text-transform: uppercase;
+    display: flex;
+    gap: 18px;
+    align-items: baseline;
+    opacity: 0;
+  }
+
+  .cine-hero__exif {
+    position: absolute;
+    bottom: 32px;
+    right: clamp(28px, 6vw, 90px);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: rgba(255, 252, 240, 0.6);
+    text-transform: uppercase;
+    opacity: 0;
+  }
+
+  /* ── Progress dots ── */
+  .cine-hero__dots {
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .cine-hero__dot-bar {
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 252, 240, 0.25);
+    transition: all 300ms var(--ease-out-quart);
+  }
+
+  /* ── Scroll hint ── */
+  .cine-hero__scroll-hint {
+    position: absolute;
+    bottom: var(--space-xl);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 240, 0.6);
+    z-index: 1;
+  }
+
+  .cine-hero__scroll-line {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 252, 240, 0.6);
+    animation: cineScrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes cineScrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.5); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); }
+  }
+
+  /* ── Mobile adjustments ── */
+  @media (max-width: 639px) {
+    .cine-hero__title {
+      font-size: clamp(28px, 8vw, 48px);
+    }
+
+    .cine-hero__cta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .cine-hero__dots {
+      display: none;
+    }
+
+    .cine-hero__exif {
+      display: none;
+    }
+
+    .cine-hero__marks {
+      display: none;
+    }
+  }
+
+  /* ── Reduced motion ── */
+  @media (prefers-reduced-motion: reduce) {
+    .cine-hero {
+      height: 100vh;
+    }
+
+    .cine-hero__stage {
+      position: relative;
+    }
+
+    .cine-hero__headline {
+      opacity: 1 !important;
+      transform: none !important;
+      display: flex !important;
+    }
+
+    .cine-hero__caption,
+    .cine-hero__scroll-hint,
+    .cine-hero__dots {
+      display: none;
+    }
+
+    .cine-hero__photo:first-child .cine-hero__img {
+      opacity: 1;
+      transform: none;
+    }
+
+    .cine-hero__scroll-line {
+      animation: none;
+    }
+  }
+</style>
