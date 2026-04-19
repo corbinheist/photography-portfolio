@@ -16,6 +16,8 @@ import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
 import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
 import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
 import EssaySlideText from '@components/essay/EssaySlideText.astro';
+import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
+import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
 
 /**
  * Photo data — ordered by export number (001–011).
@@ -222,7 +224,12 @@ const photos = [
       </p>
     </EssaySlideImageText>
 
-    <!-- 9. The rooftop — full bleed portrait -->
+    <!-- 9. Pull quote -->
+    <EssaySlideQuote
+      text="The ksar is not a ruin. It is a place between states."
+    />
+
+    <!-- 10. The rooftop — full bleed portrait -->
     <EssaySlideFullBleed
       url={photos[9].url}
       width={photos[9].width}
@@ -233,7 +240,7 @@ const photos = [
       fit="contain"
     />
 
-    <!-- 10. Departure — full bleed portrait -->
+    <!-- 11. Departure — full bleed portrait -->
     <EssaySlideFullBleed
       url={photos[10].url}
       width={photos[10].width}
@@ -242,6 +249,25 @@ const photos = [
       alt={photos[10].title}
       lightboxIndex={10}
       fit="contain"
+    />
+
+    <!-- 12. Colophon -->
+    <EssaySlideColophon
+      title="Ksar Tamnougalt"
+      location="Ksar Tamnougalt, Draa Valley · 30°41′N 6°27′W"
+      dates="November 2025"
+      camera="Canon EOS R5 · Canon EOS R5m2"
+      frames="11"
+      collection="morocco"
+      nextStory={{
+        title: 'Nomads of Djebel Saghro',
+        slug: '/work/morocco/nomads-essay',
+        location: 'Djebel Saghro',
+        coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912',
+        coverWidth: 6916,
+        coverHeight: 4613,
+        coverLqip: 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA=',
+      }}
     />
 
   </EssaySequence>
@@ -397,7 +423,12 @@ const photos = [
       </p>
     </EssaySlideImageText>
 
-    <!-- 13. The rooftop — full image with blurred backdrop -->
+    <!-- 13. Pull quote -->
+    <EssaySlideQuote
+      text="The ksar is not a ruin. It is a place between states."
+    />
+
+    <!-- 14. The rooftop — full image with blurred backdrop -->
     <EssaySlideFullBleed
       url={photos[9].url}
       width={photos[9].width}
@@ -408,7 +439,7 @@ const photos = [
       fit="contain"
     />
 
-    <!-- 14. Departure — portrait on portrait = cover -->
+    <!-- 15. Departure — portrait on portrait = cover -->
     <EssaySlideFullBleed
       url={photos[10].url}
       width={photos[10].width}
@@ -417,6 +448,25 @@ const photos = [
       alt={photos[10].title}
       lightboxIndex={10}
       fit="cover"
+    />
+
+    <!-- 16. Colophon -->
+    <EssaySlideColophon
+      title="Ksar Tamnougalt"
+      location="Ksar Tamnougalt, Draa Valley · 30°41′N 6°27′W"
+      dates="November 2025"
+      camera="Canon EOS R5 · Canon EOS R5m2"
+      frames="11"
+      collection="morocco"
+      nextStory={{
+        title: 'Nomads of Djebel Saghro',
+        slug: '/work/morocco/nomads-essay',
+        location: 'Djebel Saghro',
+        coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912',
+        coverWidth: 6916,
+        coverHeight: 4613,
+        coverLqip: 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA=',
+      }}
     />
 
   </EssaySequence>

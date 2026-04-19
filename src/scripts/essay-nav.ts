@@ -220,6 +220,18 @@ function initEssayNav() {
   targetIndex = getVisibleIndex();
   onScroll();
 
+  // Deep-link: ?slide=N jumps to that slide on init
+  const slideParam = new URLSearchParams(location.search).get('slide');
+  if (slideParam) {
+    const slideIdx = parseInt(slideParam, 10);
+    if (!isNaN(slideIdx) && slideIdx >= 0 && slideIdx < snapSlides.length) {
+      // Wait one rAF for layout to settle, then jump without animation
+      requestAnimationFrame(() => {
+        navigateToSlide(slideIdx, 0);
+      });
+    }
+  }
+
   // Orientation change: reinitialize for the newly visible sequence
   const orientationMql = window.matchMedia('(orientation: portrait)');
   function onOrientationChange() {

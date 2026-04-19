@@ -1,0 +1,81 @@
+---
+/**
+ * Colophon slide — end-of-roll metadata + optional next-story teaser.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface Props {
+  title?: string;
+  location: string;
+  dates: string;
+  camera: string;
+  film?: string;
+  frames: string;
+  collection: string;
+  nextStory?: {
+    title: string;
+    slug: string;
+    location: string;
+    coverUrl: string;
+    coverWidth: number;
+    coverHeight: number;
+    coverLqip: string;
+  };
+}
+
+const { title, location, dates, camera, film, frames, collection, nextStory } = Astro.props;
+---
+
+<section class="essay-slide essay-colophon">
+  <div class="essay-colophon__inner">
+    <div class="essay-colophon__meta">
+      <div class="essay-colophon__overline">End of roll</div>
+      {title && <h2 class="essay-colophon__heading">{title}</h2>}
+      <dl class="essay-colophon__grid">
+        <div class="essay-colophon__field">
+          <dt>Location</dt>
+          <dd>{location}</dd>
+        </div>
+        <div class="essay-colophon__field">
+          <dt>Dates</dt>
+          <dd>{dates}</dd>
+        </div>
+        <div class="essay-colophon__field">
+          <dt>Camera</dt>
+          <dd>{camera}</dd>
+        </div>
+        {film && (
+          <div class="essay-colophon__field">
+            <dt>Film</dt>
+            <dd>{film}</dd>
+          </div>
+        )}
+        <div class="essay-colophon__field">
+          <dt>Frames</dt>
+          <dd>{frames}</dd>
+        </div>
+      </dl>
+      <a href={`/work/${collection}`} class="essay-colophon__back">
+        &larr; Back to {collection}
+      </a>
+    </div>
+    {nextStory && (
+      <a href={nextStory.slug} class="essay-colophon__next">
+        <div class="essay-colophon__next-img">
+          <Photo
+            url={nextStory.coverUrl}
+            width={nextStory.coverWidth}
+            height={nextStory.coverHeight}
+            lqip={nextStory.coverLqip}
+            alt={nextStory.title}
+            sizes="(max-width: 768px) 100vw, 45vw"
+          />
+        </div>
+        <div class="essay-colophon__next-overlay">
+          <span class="essay-colophon__next-kicker">Next &middot; {nextStory.location}</span>
+          <span class="essay-colophon__next-title">{nextStory.title}</span>
+        </div>
+      </a>
+    )}
+  </div>
+</section>

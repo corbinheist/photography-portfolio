@@ -1,0 +1,20 @@
+---
+/**
+ * Pull-quote slide — centered Vollkorn italic blockquote.
+ */
+
+interface Props {
+  text: string;
+  attribution?: string;
+}
+
+const { text, attribution } = Astro.props;
+---
+
+<section class="essay-slide essay-quote">
+  <div class="essay-quote__inner">
+    <div class="essay-quote__overline">Pull quote</div>
+    <blockquote class="essay-quote__text">&ldquo;{text}&rdquo;</blockquote>
+    {attribution && <div class="essay-quote__attr">&mdash; {attribution}</div>}
+  </div>
+</section>

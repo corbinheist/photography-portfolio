@@ -13,6 +13,8 @@ import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
 import EssaySlideTriptych from '@components/essay/EssaySlideTriptych.astro';
 import EssaySlideText from '@components/essay/EssaySlideText.astro';
 import EssaySlideFlow from '@components/essay/EssaySlideFlow.astro';
+import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
+import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
 
 /**
  * Photo data — ordered for the essay narrative.
@@ -531,7 +533,12 @@ const photos = [
 
   <!-- ======= III. DUSK & FIRELIGHT ======= -->
 
-  <!-- 19. Transition text -->
+  <!-- 19. Pull quote -->
+  <EssaySlideQuote
+    text="In the Saghro, water determines everything: where you camp, how long you stay, which direction you move next."
+  />
+
+  <!-- 20. Transition text -->
   <EssaySlideText align="center">
     <h2>When the light goes</h2>
     <p>
@@ -667,16 +674,24 @@ const photos = [
     fit="contain"
   />
 
-  <!-- 30. Credits -->
-  <EssaySlideText align="center">
-    <p class="overline">Heist Studio</p>
-    <h2>Nomads of Djebel Saghro</h2>
-    <p>
-      Djebel Saghro, Morocco.<br />
-      31&deg;16&prime;N &ensp; 5&deg;59&prime;W &ensp; 2,100m<br /><br />
-      RF 50mm f/1.2L &middot; RF 35mm f/1.4L &middot; RF 70-200mm f/2.8L
-    </p>
-  </EssaySlideText>
+  <!-- 30. Colophon -->
+  <EssaySlideColophon
+    title="Nomads of Djebel Saghro"
+    location="Djebel Saghro, Morocco · 31°16′N 5°59′W · 2,100m"
+    dates="November 2025"
+    camera="Canon EOS R5m2 · Canon EOS R5"
+    frames="35"
+    collection="morocco"
+    nextStory={{
+      title: 'Ksar Tamnougalt',
+      slug: '/work/morocco/ksar-essay',
+      location: 'Draa Valley',
+      coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-001-cnh_3628',
+      coverWidth: 8192,
+      coverHeight: 5464,
+      coverLqip: 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA==',
+    }}
+  />
 
   <PhotoLightbox photos={photos} />
 </ProjectLayout>

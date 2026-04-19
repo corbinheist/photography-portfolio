@@ -289,23 +289,31 @@ function init() {
       }
 
       // ── Crosshatch pattern for hover ──
-      const patternSize = 16;
+      const patternSize = 10;
       const canvas = document.createElement('canvas');
       canvas.width = patternSize;
       canvas.height = patternSize;
       const pctx = canvas.getContext('2d')!;
       pctx.clearRect(0, 0, patternSize, patternSize);
       pctx.strokeStyle = accent.regionStroke;
-      pctx.lineWidth = 0.8;
-      pctx.globalAlpha = 0.5;
-      // Diagonal lines
+      pctx.lineWidth = 0.6;
+      pctx.globalAlpha = 0.7;
+      // Diagonal lines — both directions for a true crosshatch
       pctx.beginPath();
+      // NE-SW
       pctx.moveTo(0, patternSize);
       pctx.lineTo(patternSize, 0);
-      pctx.moveTo(-4, patternSize - 4);
-      pctx.lineTo(4, patternSize + 4);
-      pctx.moveTo(patternSize - 4, -4);
-      pctx.lineTo(patternSize + 4, 4);
+      pctx.moveTo(-3, patternSize - 3);
+      pctx.lineTo(3, patternSize + 3);
+      pctx.moveTo(patternSize - 3, -3);
+      pctx.lineTo(patternSize + 3, 3);
+      // NW-SE
+      pctx.moveTo(0, 0);
+      pctx.lineTo(patternSize, patternSize);
+      pctx.moveTo(-3, 3);
+      pctx.lineTo(3, -3);
+      pctx.moveTo(patternSize - 3, patternSize + 3);
+      pctx.lineTo(patternSize + 3, patternSize - 3);
       pctx.stroke();
 
       const img = new Image();
@@ -330,8 +338,19 @@ function init() {
 
       // ── Region hover interaction ──
       let hoveredNum: string | null = null;
+      let hoverClearRaf = 0;
+
+      /** Deferred clear: schedule setHovered(null) for next frame.
+       *  If setHovered(someNum) fires before then, the clear is cancelled.
+       *  This prevents flicker when the cursor moves between overlapping
+       *  glyph / label / region elements. */
+      function deferClear() {
+        cancelAnimationFrame(hoverClearRaf);
+        hoverClearRaf = requestAnimationFrame(() => setHovered(null));
+      }
 
       function setHovered(num: string | null) {
+        if (num !== null) cancelAnimationFrame(hoverClearRaf);
         if (num === hoveredNum) return;
         hoveredNum = num;
         // Fill: hovered region much brighter
@@ -346,7 +365,7 @@ function init() {
           map.setPaintProperty('regions-hatch', 'fill-opacity', [
             'case',
             ['==', ['get', 'num'], num ?? ''],
-            0.4,
+            0.55,
             0,
           ]);
         }
@@ -372,23 +391,29 @@ function init() {
         });
       }
 
-      // Expose setHovered on the container so external scripts (film-roll) can call it
+      // Expose setHovered + deferClear on the container so external scripts can call them
       (container as any).__setHovered = setHovered;
+      (container as any).__deferClear = deferClear;
 
       // Hover on map regions
       map.on('mousemove', 'regions-fill', (e) => {
         const feat = e.features?.[0];
         setHovered(feat?.properties?.num ?? null);
       });
-      map.on('mouseleave', 'regions-fill', () => setHovered(null));
+      map.on('mouseleave', 'regions-fill', () => deferClear());
 
-      // Click on map regions
+      // Click on map regions — lock if on Work page, navigate otherwise
       map.on('click', 'regions-fill', (e) => {
         const feat = e.features?.[0];
         const num = feat?.properties?.num;
         if (num) {
-          const marker = markers.find((m) => m.num === num);
-          if (marker?.target) navigateTo(marker.target);
+          // If setLocked exists (Work page), use lock behavior
+          if ((container as any).__setLocked) {
+            (container as any).__setLocked(num);
+          } else {
+            const marker = markers.find((m) => m.num === num);
+            if (marker?.target) navigateTo(marker.target);
+          }
         }
       });
 
@@ -414,7 +439,7 @@ function init() {
             phase.classList.add('jp-timeline__phase--highlighted');
           });
           phase.addEventListener('mouseleave', () => {
-            setHovered(null);
+            deferClear();
             phase.classList.remove('jp-timeline__phase--highlighted');
           });
           phase.addEventListener('click', () => {
@@ -424,7 +449,118 @@ function init() {
         });
       }
 
-      // ── DOM markers (label only, no dot — positioned at region centroid) ──
+      // ── Pulsing region outline — follows country shape ──
+      if (regions && regions.features?.length) {
+        map.addSource('regions-pulse', { type: 'geojson', data: regions });
+        map.addLayer({
+          id: 'regions-pulse',
+          type: 'line',
+          source: 'regions-pulse',
+          paint: {
+            'line-color': accent.regionStroke,
+            'line-width': 2,
+            'line-opacity': 0,
+          },
+        });
+
+        // Animate the pulse layer via rAF
+        let pulseRaf = 0;
+        const PULSE_PERIOD = 2000; // ms per cycle
+        function animatePulse() {
+          if (!hoveredNum) {
+            map.setPaintProperty('regions-pulse', 'line-opacity', 0);
+            return;
+          }
+          const t = (performance.now() % PULSE_PERIOD) / PULSE_PERIOD;
+          // Sine wave: 0→1→0 per cycle
+          const wave = Math.sin(t * Math.PI);
+          // Opacity breathes 0.15 → 0.7
+          const opacity = 0.15 + wave * 0.55;
+          // Width breathes 1.5 → 4
+          const width = 1.5 + wave * 2.5;
+
+          map.setPaintProperty('regions-pulse', 'line-opacity', [
+            'case',
+            ['==', ['get', 'num'], hoveredNum ?? ''],
+            opacity,
+            0,
+          ]);
+          map.setPaintProperty('regions-pulse', 'line-width', [
+            'case',
+            ['==', ['get', 'num'], hoveredNum ?? ''],
+            width,
+            0,
+          ]);
+          pulseRaf = requestAnimationFrame(animatePulse);
+        }
+
+        // Hook pulse into setHovered lifecycle
+        const _baseSetHovered = setHovered;
+        setHovered = (num: string | null) => {
+          const prev = hoveredNum;
+          _baseSetHovered(num);
+          if (num && !prev) {
+            // Start pulse loop
+            cancelAnimationFrame(pulseRaf);
+            pulseRaf = requestAnimationFrame(animatePulse);
+          } else if (!num && prev) {
+            // Stop pulse
+            cancelAnimationFrame(pulseRaf);
+            map.setPaintProperty('regions-pulse', 'line-opacity', 0);
+          }
+        };
+        (container as any).__setHovered = setHovered;
+        (container as any).__deferClear = deferClear;
+      }
+
+      // ── Lock state for click-to-select ──
+      let lockedNum: string | null = null;
+
+      function setLocked(num: string | null) {
+        if (num === lockedNum) {
+          // Toggle off
+          lockedNum = null;
+          setHovered(null);
+        } else {
+          lockedNum = num;
+          if (num) setHovered(num);
+        }
+        container.dispatchEvent(new CustomEvent('work-story-change', {
+          bubbles: true,
+          detail: { num: lockedNum ?? hoveredNum, locked: !!lockedNum },
+        }));
+      }
+
+      // Expose lock on container
+      (container as any).__setLocked = setLocked;
+
+      // Wrap setHovered to respect lock
+      const _lockSetHovered = setHovered;
+      setHovered = (num: string | null) => {
+        if (lockedNum && num !== null && num !== lockedNum) return;
+        if (lockedNum && num === null) return; // don't clear when locked
+        _lockSetHovered(num);
+        // Dispatch event for external listeners (dossier, filmstrip)
+        if (!lockedNum) {
+          container.dispatchEvent(new CustomEvent('work-story-change', {
+            bubbles: true,
+            detail: { num, locked: false },
+          }));
+        }
+      };
+
+      // Re-expose the wrapped version
+      (container as any).__setHovered = setHovered;
+      (container as any).__deferClear = deferClear;
+
+      // Keyboard: Esc unlocks
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lockedNum) {
+          setLocked(null);
+        }
+      });
+
+      // ── DOM markers (label only — positioned at region centroid) ──
       markers.forEach((m) => {
         const computed = m.num ? centroidByNum.get(m.num) : undefined;
         const lngLat: [number, number] = computed ?? [m.lng, m.lat];
@@ -454,10 +590,16 @@ function init() {
 
         // Label hover triggers region highlight
         el.addEventListener('mouseenter', () => setHovered(m.num ?? null));
-        el.addEventListener('mouseleave', () => setHovered(null));
+        el.addEventListener('mouseleave', () => { if (!lockedNum) deferClear(); });
 
         if (m.target) {
-          el.addEventListener('click', () => navigateTo(m.target!));
+          el.addEventListener('click', () => {
+            if ((container as any).__setLocked) {
+              setLocked(m.num ?? null);
+            } else {
+              navigateTo(m.target!);
+            }
+          });
         }
       });
 
