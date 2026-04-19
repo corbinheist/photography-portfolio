@@ -87,25 +87,166 @@ for (let round = 0; round < maxLen; round++) {
     if (round < bucket.length) filmRollPhotos.push(bucket[round]);
   }
 }
+
+// ── Build story data for the dossier panel ──
+type Story = {
+  id: string;
+  collectionId: string;
+  title: string;
+  description: string;
+  kind: 'essay' | 'collection';
+  slug: string;
+  coverUrl: string;
+  coverWidth: number;
+  coverHeight: number;
+  coverLqip: string;
+  location: string;
+  lng: number;
+  lat: number;
+  markerNum: string;
+  year: string | null;
+  photoCount: number;
+};
+
+const stories: Story[] = [];
+collectionsWithMaps.forEach((c, i) => {
+  const num = String(i + 1).padStart(2, '0');
+  const lng = c.data.map!.center[0];
+  const lat = c.data.map!.center[1];
+
+  // Derive year from first album with a date
+  let year: string | null = null;
+  for (const albumId of c.data.albums) {
+    const album = allAlbums.find((a) => a.id === albumId);
+    if (album?.data.date) {
+      year = album.data.date.slice(0, 4);
+      break;
+    }
+  }
+
+  if (c.data.essays?.length) {
+    // Each essay becomes a story entry
+    for (const essay of c.data.essays) {
+      stories.push({
+        id: `${c.id}/${essay.slug}`,
+        collectionId: c.id,
+        title: essay.title,
+        description: essay.description || c.data.description || '',
+        kind: 'essay',
+        slug: `/work/${c.id}/${essay.slug}`,
+        coverUrl: essay.coverImage.url,
+        coverWidth: essay.coverImage.width,
+        coverHeight: essay.coverImage.height,
+        coverLqip: essay.coverImage.lqip,
+        location: c.data.title,
+        lng, lat,
+        markerNum: num,
+        year,
+        photoCount: essay.photoCount,
+      });
+    }
+  } else {
+    // Collection itself becomes a story entry
+    const cover = c.data.coverPhoto ? findPhoto(c.data.coverPhoto) : null;
+    stories.push({
+      id: c.id,
+      collectionId: c.id,
+      title: c.data.title,
+      description: c.data.description || '',
+      kind: 'collection',
+      slug: `/work/${c.id}`,
+      coverUrl: cover?.data.url || '',
+      coverWidth: cover?.data.width || 0,
+      coverHeight: cover?.data.height || 0,
+      coverLqip: cover?.data.lqip || '',
+      location: c.data.title,
+      lng, lat,
+      markerNum: num,
+      year,
+      photoCount: c.data.albums.length,
+    });
+  }
+});
+
+// Collect unique years for filter
+const years = [...new Set(stories.map((s) => s.year).filter(Boolean))] as string[];
+years.sort((a, b) => Number(b) - Number(a));
+
+const storyCount = stories.length;
 ---
 
 <PageLayout title="Work" description="Photography collections">
   {worldMarkers.length > 0 && (
     <div class="map-hero" id="map-hero">
-      <div class="map-hero__map">
-        <Map
-          center={[10, 25]}
-          zoom={1.8}
-          markers={worldMarkers}
-          regions={worldRegions}
-          interactive={false}
-          theme="default"
-        />
+      <!-- Year filter bar -->
+      <div class="work-filter-bar">
+        <span class="work-kicker">Work · Essays pinned to the world</span>
+        <div class="work-year-tabs" data-year-tabs>
+          <span class="work-year-label">Year</span>
+          <button class="work-year-tab work-year-tab--active" data-year="all">All</button>
+          {years.map((y) => (
+            <button class="work-year-tab" data-year={y}>{y}</button>
+          ))}
+          <span class="work-story-count" data-story-count>{storyCount} stories</span>
+        </div>
       </div>
+
+      <!-- Map + Dossier grid -->
+      <div class="map-hero__grid">
+        <div class="map-hero__map">
+          <Map
+            center={[10, 25]}
+            zoom={1.8}
+            markers={worldMarkers}
+            regions={worldRegions}
+            interactive={false}
+            theme="default"
+          />
+          <!-- Coordinate readout -->
+          <div class="work-coord-readout" data-coord-readout>
+            <span class="work-coord-readout__text">Hover a pin · {storyCount} stories</span>
+          </div>
+        </div>
+
+        <!-- Story dossier panel -->
+        <aside class="story-dossier" data-story-dossier>
+          <div class="story-dossier__index" data-story-index>
+            {stories.map((s, i) => (
+              <div
+                class="story-dossier__row"
+                data-story-row={i}
+                data-story-marker={s.markerNum}
+                data-story-year={s.year || ''}
+              >
+                <span class="story-dossier__num">{s.markerNum}</span>
+                <div class="story-dossier__row-info">
+                  <span class="story-dossier__row-title">{s.title}</span>
+                  <span class="story-dossier__row-meta">
+                    {s.kind === 'essay' ? 'Essay' : 'Collection'} · {s.photoCount} {s.kind === 'essay' ? 'frames' : 'albums'}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div class="story-dossier__detail" data-story-detail style="display:none">
+            <button class="story-dossier__back" data-story-back>&larr; Index</button>
+            <div class="story-dossier__detail-inner" data-story-detail-inner>
+              <!-- Populated by JS on hover/click -->
+            </div>
+          </div>
+        </aside>
+
+      </div>
+
+      <!-- Enhanced filmstrip (overlays bottom of grid, no layout shift) -->
       {filmRollPhotos.length > 0 && (
-        <div class="film-roll" data-film-roll>
+        <div class="film-roll film-roll--collapsed" data-film-roll>
+          <div class="film-roll__status" data-film-status>
+            <span class="film-roll__status-dot"></span>
+            <span class="film-roll__status-text">Hero roll · hover a pin to load frames</span>
+          </div>
           <div class="film-roll__track" data-film-track>
-            {filmRollPhotos.map((p) => {
+            {filmRollPhotos.map((p, idx) => {
               const slug = p.url.split('/').pop() || '';
               const src = `${p.url}/${slug}-640.webp`;
               return (
@@ -114,7 +255,10 @@ for (let round = 0; round < maxLen; round++) {
                   class="film-roll__frame"
                   data-marker-num={p.markerNum}
                   data-collection={p.collectionId}
+                  data-frame-idx={idx}
                 >
+                  <div class="film-roll__sprocket film-roll__sprocket--top"></div>
+                  <span class="film-roll__frame-num">{String(idx + 1).padStart(2, '0')}</span>
                   <img
                     src={src}
                     alt={p.collectionTitle}
@@ -124,9 +268,13 @@ for (let round = 0; round < maxLen; round++) {
                     style={`background-image: url(${p.lqip}); background-size: cover;`}
                   />
                   <span class="film-roll__label">{p.collectionTitle}</span>
+                  <div class="film-roll__sprocket film-roll__sprocket--bottom"></div>
                 </a>
               );
             })}
+            <div class="film-roll__leader">
+              <span class="film-roll__leader-text">END</span>
+            </div>
           </div>
           <div class="film-roll__edge film-roll__edge--left">
             <span class="film-roll__chevron">&laquo;</span>
@@ -178,9 +326,17 @@ for (let round = 0; round < maxLen; round++) {
     </div>
   </div>
   </div>
+
+  <!-- Story data for client-side interaction -->
+  <script
+    type="application/json"
+    data-stories
+    set:html={JSON.stringify(stories)}
+  />
 </PageLayout>
 
 <style>
+  /* ── Map hero section ── */
   .map-hero {
     position: relative;
     height: 100dvh;
@@ -188,10 +344,80 @@ for (let round = 0; round < maxLen; round++) {
     flex-direction: column;
   }
 
-  .map-hero__map {
+  /* ── Year filter bar ── */
+  .work-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--container-padding);
+    border-bottom: 1px solid var(--color-border-subtle);
+    flex-shrink: 0;
+  }
+
+  .work-kicker {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .work-year-tabs {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .work-year-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin-right: var(--space-xs);
+  }
+
+  .work-year-tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 4px 8px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--color-text-faint);
+    cursor: pointer;
+    transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
+  }
+
+  .work-year-tab:hover {
+    color: var(--color-text-muted);
+  }
+
+  .work-year-tab--active {
+    color: var(--color-text);
+    border-bottom-color: var(--color-warm);
+  }
+
+  .work-story-count {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--color-text-faint);
+    margin-left: var(--space-sm);
+  }
+
+  /* ── Map + Dossier grid ── */
+  .map-hero__grid {
     flex: 1;
     min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+  }
+
+  .map-hero__map {
     position: relative;
+    min-height: 0;
   }
 
   .map-hero__map :global(.map-container) {
@@ -221,6 +447,202 @@ for (let round = 0; round < maxLen; round++) {
     50% { opacity: 0.5; transform: translateX(-50%) translateY(6px); }
   }
 
+  /* ── Coordinate readout ── */
+  .work-coord-readout {
+    position: absolute;
+    bottom: var(--space-md);
+    left: var(--space-md);
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--color-text-faint);
+    pointer-events: none;
+  }
+
+  :global(.work-coord-readout--active) .work-coord-readout__text {
+    color: var(--color-text-muted);
+  }
+
+  /* ── Story dossier panel ── */
+  .story-dossier {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--color-border-subtle);
+    background: var(--color-bg);
+    overflow: hidden;
+  }
+
+  .story-dossier__index {
+    flex: 1;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .story-dossier__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border-subtle);
+    cursor: pointer;
+    transition: background var(--duration-fast) ease;
+  }
+
+  .story-dossier__row:hover {
+    background: var(--color-surface);
+  }
+
+  :global(.story-dossier__row--active) {
+    background: var(--color-surface) !important;
+    border-left: 2px solid var(--color-warm);
+  }
+
+  :global(.story-dossier__row--hidden) {
+    display: none !important;
+  }
+
+  .story-dossier__num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--color-text-faint);
+    flex-shrink: 0;
+    width: 24px;
+  }
+
+  .story-dossier__row-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .story-dossier__row-title {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .story-dossier__row-meta {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  /* Dossier detail view */
+  .story-dossier__detail {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-md);
+  }
+
+  .story-dossier__back {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-warm);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: var(--space-md);
+  }
+
+  .story-dossier__back:hover {
+    color: var(--color-warm-light);
+  }
+
+  :global(.story-detail__cover) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: var(--space-md);
+  }
+
+  :global(.story-detail__cover img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :global(.story-detail__kind) {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-warm);
+    margin-bottom: var(--space-xs);
+  }
+
+  :global(.story-detail__title) {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-sm);
+  }
+
+  :global(.story-detail__desc) {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+  }
+
+  :global(.story-detail__meta-grid) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+  }
+
+  :global(.story-detail__meta-item) {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+
+  :global(.story-detail__meta-label) {
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  :global(.story-detail__meta-value) {
+    color: var(--color-text-muted);
+    font-size: 11px;
+  }
+
+  :global(.story-detail__cta) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--color-warm);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--color-warm);
+    border-radius: 4px;
+    transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+  }
+
+  :global(.story-detail__cta:hover) {
+    background: var(--color-warm);
+    color: var(--fx-paper);
+  }
+
+  /* ── Collections grid (preserved below map) ── */
   .work-content {
     min-height: 100dvh;
   }
@@ -320,10 +742,67 @@ for (let round = 0; round < maxLen; round++) {
 
   /* ── Film-roll strip ── */
   .film-roll {
-    position: relative;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
     border-top: 1px solid var(--color-border-subtle);
-    border-bottom: 1px solid var(--color-border-subtle);
     overflow: hidden;
+    background: var(--color-bg);
+    transition: height 400ms var(--ease-out-quart);
+  }
+
+  .film-roll--collapsed {
+    height: 48px;
+  }
+
+  .film-roll--collapsed .film-roll__track,
+  .film-roll--collapsed .film-roll__edge {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .film-roll--expanded {
+    height: 168px;
+  }
+
+  .film-roll--expanded .film-roll__status {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Collapsed status bar */
+  .film-roll__status {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0 var(--container-padding);
+    transition: opacity 200ms ease;
+    z-index: 2;
+  }
+
+  .film-roll__status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    animation: status-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes status-glow {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .film-roll__status-text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
   }
 
   .film-roll__track {
@@ -335,6 +814,8 @@ for (let round = 0; round < maxLen; round++) {
     padding: 3px 0;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    transition: opacity 200ms ease;
+    height: 100%;
   }
 
   .film-roll__track::-webkit-scrollbar {
@@ -344,12 +825,47 @@ for (let round = 0; round < maxLen; round++) {
   .film-roll__frame {
     flex-shrink: 0;
     width: 180px;
-    height: 120px;
+    height: 100%;
     position: relative;
     overflow: hidden;
     scroll-snap-align: start;
     display: block;
     cursor: pointer;
+  }
+
+  /* Sprocket holes */
+  .film-roll__sprocket {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 8px;
+    z-index: 1;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0 3px,
+      rgba(0, 0, 0, 0.55) 3px 7px
+    );
+    pointer-events: none;
+  }
+
+  .film-roll__sprocket--top {
+    top: 0;
+  }
+
+  .film-roll__sprocket--bottom {
+    bottom: 0;
+  }
+
+  /* Frame number */
+  .film-roll__frame-num {
+    position: absolute;
+    top: 10px;
+    left: 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(255, 252, 240, 0.4);
+    z-index: 2;
+    pointer-events: none;
   }
 
   .film-roll__img {
@@ -368,7 +884,7 @@ for (let round = 0; round < maxLen; round++) {
 
   .film-roll__label {
     position: absolute;
-    bottom: 0;
+    bottom: 10px;
     left: 0;
     right: 0;
     padding: 4px 8px;
@@ -380,10 +896,39 @@ for (let round = 0; round < maxLen; round++) {
     background: rgba(16, 15, 15, 0.7);
     opacity: 0;
     transition: opacity 150ms;
+    z-index: 2;
   }
 
   .film-roll__frame:hover .film-roll__label {
     opacity: 1;
+  }
+
+  /* Tail leader */
+  .film-roll__leader {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 4px,
+        var(--color-border-subtle) 4px,
+        var(--color-border-subtle) 5px
+      );
+  }
+
+  .film-roll__leader-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    background: var(--color-bg);
+    padding: 2px 8px;
   }
 
   .film-roll__edge {
@@ -395,6 +940,7 @@ for (let round = 0; round < maxLen; round++) {
     z-index: 1;
     display: flex;
     align-items: center;
+    transition: opacity 200ms ease;
   }
 
   .film-roll__edge--left {
@@ -418,43 +964,41 @@ for (let round = 0; round < maxLen; round++) {
     opacity: 0.5;
     letter-spacing: -0.1em;
   }
+
+  /* ── Responsive: hide dossier on mobile ── */
+  @media (max-width: 1023px) {
+    .map-hero__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .story-dossier {
+      display: none;
+    }
+
+    .work-filter-bar {
+      flex-direction: column;
+      gap: var(--space-xs);
+      align-items: flex-start;
+    }
+
+    .film-roll--collapsed {
+      height: 40px;
+    }
+
+    .film-roll--expanded {
+      height: 130px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .work-kicker {
+      display: none;
+    }
+  }
 </style>
 
 <script>
-  function initFilmRollMapLink() {
-    const filmRoll = document.querySelector('[data-film-roll]');
-    const mapContainer = document.querySelector<HTMLElement>('[data-map]');
-    if (!filmRoll) return;
-
-    const frames = filmRoll.querySelectorAll<HTMLElement>('.film-roll__frame');
-
-    frames.forEach((frame) => {
-      frame.addEventListener('mouseenter', () => {
-        const num = frame.dataset.markerNum;
-        if (!num) return;
-        // Use exposed map setHovered if available (highlights regions + markers)
-        if (mapContainer && (mapContainer as any).__setHovered) {
-          (mapContainer as any).__setHovered(num);
-        } else {
-          // Fallback: just highlight markers
-          document.querySelectorAll('.map-marker').forEach((el) => {
-            const markerNum = (el as HTMLElement).dataset.markerNum;
-            el.classList.toggle('map-marker--active', markerNum === num);
-          });
-        }
-      });
-
-      frame.addEventListener('mouseleave', () => {
-        if (mapContainer && (mapContainer as any).__setHovered) {
-          (mapContainer as any).__setHovered(null);
-        } else {
-          document.querySelectorAll('.map-marker').forEach((el) => {
-            el.classList.remove('map-marker--active');
-          });
-        }
-      });
-    });
-  }
+  import '@scripts/work-map-interaction';
 
   function initMapHeroNav() {
     const hero = document.getElementById('map-hero');
@@ -489,6 +1033,5 @@ for (let round = 0; round < maxLen; round++) {
 
   document.addEventListener('astro:page-load', () => {
     initMapHeroNav();
-    initFilmRollMapLink();
   });
 </script>

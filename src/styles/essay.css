@@ -528,6 +528,194 @@ html:has([data-essay]) {
 }
 
 /* ==========================================
+   Pull Quote Slide
+   ========================================== */
+
+.essay-quote {
+  padding: var(--space-2xl) var(--container-padding);
+}
+
+.essay-quote__inner {
+  max-width: 820px;
+  width: 100%;
+  text-align: center;
+}
+
+.essay-quote__overline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-warm);
+  margin-bottom: var(--space-lg);
+}
+
+.essay-quote__text {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: var(--text-3xl);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  color: var(--color-text);
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.essay-quote__attr {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-top: var(--space-lg);
+}
+
+/* ==========================================
+   Colophon Slide
+   ========================================== */
+
+.essay-colophon {
+  padding: var(--space-2xl) var(--container-padding);
+}
+
+.essay-colophon__inner {
+  max-width: 1200px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.essay-colophon__overline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-warm);
+  margin-bottom: var(--space-md);
+}
+
+.essay-colophon__heading {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-xl);
+}
+
+.essay-colophon__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md) var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.essay-colophon__field dt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: 4px;
+}
+
+.essay-colophon__field dd {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.essay-colophon__back {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  color: var(--color-warm);
+  text-decoration: none;
+  transition: color var(--duration-fast) ease;
+}
+
+.essay-colophon__back:hover {
+  color: var(--color-warm-light);
+}
+
+/* Next story teaser card */
+.essay-colophon__next {
+  position: relative;
+  display: block;
+  border-radius: 6px;
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  text-decoration: none;
+}
+
+.essay-colophon__next-img {
+  width: 100%;
+  height: 100%;
+}
+
+.essay-colophon__next-img :global(.photo-wrap) {
+  width: 100%;
+  height: 100%;
+}
+
+.essay-colophon__next-img :global(.photo-wrap picture) {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.essay-colophon__next-img :global(.photo-img) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.essay-colophon__next:hover :global(.photo-img) {
+  transform: scale(1.03);
+}
+
+.essay-colophon__next-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-lg) var(--space-md);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.essay-colophon__next-kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 252, 240, 0.6);
+}
+
+.essay-colophon__next-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 400;
+  color: var(--fx-paper);
+}
+
+@media (max-width: 768px) {
+  .essay-colophon__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .essay-colophon__next {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+/* ==========================================
    Flow Section (no snap)
    ========================================== */
 
