@@ -57,7 +57,7 @@ const heroSlides = sortedCollections
 // If fewer than 4 slides, supplement with featured photos
 if (heroSlides.length < 4) {
   const featured = photos
-    .filter((p) => p.featured || p.data.featured)
+    .filter((p) => p.data.featured)
     .filter((p) => !heroSlides.some((s) => s!.url === p.data.url));
   for (const p of featured.slice(0, 4 - heroSlides.length)) {
     heroSlides.push({
