@@ -1,6 +1,6 @@
 # Photography Portfolio
 
-A minimalist, image-first photography portfolio built with [Astro](https://astro.build). Zero JavaScript by default, smooth scroll animations, responsive image delivery via DigitalOcean Spaces CDN, and Substack integration for blog content.
+A minimalist, image-first photography portfolio built with [Astro](https://astro.build). Smooth scroll animations, responsive image delivery via DigitalOcean Spaces CDN, snap-scroll photo essays, and Substack integration for blog content.
 
 ## Tech Stack
 
@@ -8,6 +8,7 @@ A minimalist, image-first photography portfolio built with [Astro](https://astro
 |---|---|
 | Framework | Astro 5 (static output) |
 | Styling | Vanilla CSS + Custom Properties |
+| Typography | Vollkorn (headings), IBM Plex Sans (body), IBM Plex Mono (code) — Google Fonts |
 | Animations | GSAP + Lenis |
 | Image Storage | DigitalOcean Spaces (S3-compatible CDN) |
 | Image Processing | Sharp (offline scripts) |
@@ -53,7 +54,7 @@ cp .env.example .env
 
 ### Fonts
 
-Download [Inter](https://rsms.me/inter/) and place the variable-weight `inter-latin.woff2` file in `public/fonts/`.
+Fonts are loaded via Google Fonts in `BaseLayout.astro` — no local files needed. The stack is Vollkorn (display/headings), IBM Plex Sans (body text), and IBM Plex Mono (code/UI labels).
 
 ## Content Architecture
 
@@ -118,13 +119,53 @@ sortOrder: 1
 
 Site name, author info, Substack URL, and social links.
 
-## Gallery Layouts
+## Page Layouts
+
+### ProjectLayout (albums + essays)
+
+`ProjectLayout` is the shared wrapper for album pages and photo essays under `/work/`. It provides the SideRail navigation and CommandPalette on every project page. Essays opt into snap-scroll behavior via props:
+
+- `snap` — enables `scroll-snap-type: y mandatory`, loads `essay.css`, activates keyboard navigation and nav dots
+- `progress` — shows a scroll progress bar at the top
+
+Albums use `ProjectLayout` with no props (no snap, no progress). The side rail defaults to collapsed (52px) on project pages.
+
+### PageLayout (standard pages)
+
+`PageLayout` wraps standard pages (gallery, work index, about, blog) with Header, Footer, and SubscribeBanner.
+
+### Navigation: SideRail + CommandPalette
+
+The **SideRail** is a fixed vertical nav bar with the HEIST.STUDIO wordmark, numbered section links, search trigger, and theme toggle. It collapses to a 52px icon strip and expands to 180px. State persists in `localStorage` (`rail-collapsed`). Hidden on mobile (< 1024px).
+
+The **CommandPalette** opens with `/` and provides fuzzy-match navigation to any page. Tab to accept completions, arrow keys to cycle matches, Enter to navigate.
+
+### Gallery Layouts
 
 Each album chooses its display style via the `layout` field:
 
 - **`masonry`** (default) — Pinterest-style columns, photos keep their natural aspect ratios
 - **`grid`** — Uniform aspect ratio grid (configurable via `gridAspectRatio`, e.g. `"3:2"`)
 - **`horizontal-scroll`** — Cinematic horizontal strip, one photo at a time, driven by GSAP ScrollTrigger pin + scrub
+
+## Photo Essays
+
+Full-viewport, snap-scroll photo essays live alongside album pages under `/work/`. Each essay is a sequence of slide components:
+
+| Component | Purpose |
+|---|---|
+| `EssaySlideFullBleed` | Full-viewport image (cover or contain with blurred backdrop) |
+| `EssaySlideImageText` | 55/45 image-text split (`flip` reverses to 45/55) |
+| `EssaySlideDiptych` | Two images side-by-side (landscape or portrait) |
+| `EssaySlideTriptych` | Three images side-by-side |
+| `EssaySlideMiniGallery` | Masonry grid within a single slide |
+| `EssaySlideText` | Text-only slide (centered or left-aligned) |
+| `EssaySlideFlow` | Prose section for longer narrative passages |
+| `EssaySequence` | Orientation-adaptive wrapper (landscape vs portrait sequences) |
+
+All slide styles are in `src/styles/essay.css`. Navigation (arrow keys, nav dots, progress bar) is handled by `src/scripts/essay-nav.ts`.
+
+See `/essays/example` for a kitchen-sink demo of every slide type.
 
 ## Image Pipeline
 
@@ -166,7 +207,7 @@ The `<Photo />` component renders a `<picture>` element with AVIF/WebP `srcset` 
 
 ## Theme
 
-Dark theme by default with a light theme toggle. The active theme persists in `localStorage`. An inline script in `<head>` sets the theme before first paint to prevent flash.
+Dark theme by default with a light theme toggle. The active theme persists in `localStorage`. Inline scripts in `<head>` set both the theme and the side rail width before first paint to prevent flash.
 
 CSS custom properties drive the entire color system — no accent color. The photography provides all the color.
 
@@ -177,7 +218,6 @@ photography-portfolio/
 ├── .github/workflows/
 │   └── deploy.yml              # GitHub Actions CI/CD
 ├── public/
-│   ├── fonts/                  # Self-hosted woff2 files
 │   ├── favicon.svg
 │   └── robots.txt
 ├── scripts/                    # Node.js image pipeline scripts
@@ -187,7 +227,8 @@ photography-portfolio/
 ├── src/
 │   ├── components/
 │   │   ├── blog/               # BlogCard, BlogSection
-│   │   ├── global/             # Header, Footer, ThemeToggle, SEO
+│   │   ├── essay/              # EssaySlideFullBleed, EssaySlideImageText, etc.
+│   │   ├── global/             # Header, Footer, SideRail, CommandPalette, ThemeToggle, SEO
 │   │   ├── home/               # HeroSection, FeaturedWork, AboutTeaser
 │   │   ├── photo/              # Photo, PhotoGrid, AlbumCard, PhotoLightbox
 │   │   └── ui/                 # Button, Container
@@ -200,30 +241,38 @@ photography-portfolio/
 │   │   ├── photos/             # Photo YAML files
 │   │   └── settings.yaml       # Site configuration
 │   ├── layouts/
-│   │   ├── BaseLayout.astro    # HTML shell, ClientRouter, fonts, theme
-│   │   ├── GalleryLayout.astro # Minimal chrome for gallery views
-│   │   └── PageLayout.astro    # Standard page with header/footer
+│   │   ├── BaseLayout.astro    # HTML shell, ClientRouter, fonts, theme, rail-width flash prevention
+│   │   ├── ProjectLayout.astro # Albums + essays: SideRail, CommandPalette, optional snap-scroll
+│   │   ├── PageLayout.astro    # Standard pages: Header, Footer, SubscribeBanner
+│   │   └── PitchLayout.astro   # Client pitch decks (variants: Japan, Korman, Archive)
 │   ├── pages/
 │   │   ├── index.astro
 │   │   ├── work/
 │   │   │   ├── index.astro             # All collections
+│   │   │   ├── morocco/
+│   │   │   │   ├── nomads-essay.astro  # Photo essay: Nomads of Djebel Saghro
+│   │   │   │   └── ksar-essay.astro    # Photo essay: Ksar Tamnougalt
 │   │   │   └── [collection]/
 │   │   │       ├── index.astro         # Albums in a collection
 │   │   │       └── [album].astro       # Single album gallery
+│   │   ├── essays/
+│   │   │   └── example.astro           # Kitchen-sink essay slide demo
+│   │   ├── pitch/                      # Client pitch decks
 │   │   ├── about.astro
 │   │   ├── blog.astro
 │   │   └── 404.astro
 │   ├── scripts/
 │   │   ├── animations/         # init.ts, reveals.ts, parallax.ts, gallery.ts
+│   │   ├── essay-nav.ts        # Essay keyboard nav, progress bar, nav dots
 │   │   ├── lightbox.ts         # Fullscreen photo viewer logic
 │   │   └── theme.ts            # Dark/light mode persistence
 │   └── styles/
 │       ├── global.css          # Reset, custom properties, typography
-│       ├── fonts.css           # @font-face declarations
+│       ├── fonts.css           # Font-stack declarations (Google Fonts loaded in BaseLayout)
+│       ├── essay.css            # Snap-scroll essay slide layouts + responsive rules
 │       └── animations.css      # Animation initial states + reduced motion
 ├── _raw/                       # Drop raw photos here (gitignored)
 ├── astro.config.mjs
-├── Caddyfile                   # Caddy config (unused — using Nginx)
 ├── tsconfig.json
 └── package.json
 ```
