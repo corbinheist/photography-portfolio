@@ -1,0 +1,420 @@
+---
+import { getCollection } from 'astro:content';
+
+const collections = await getCollection('photoCollections');
+const albums = await getCollection('albums');
+
+const paletteItems = [
+  { title: 'home', url: '/', hidden: false },
+  { title: 'work', url: '/work', hidden: false },
+  ...collections
+    .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
+    .flatMap((c) => {
+      const colAlbums = albums
+        .filter((a) => c.data.albums.includes(a.id) && !a.data.draft)
+        .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+      return [
+        { title: c.data.title.toLowerCase(), url: `/work/${c.id}`, hidden: false },
+        ...colAlbums.map((a) => ({
+          title: a.data.title.toLowerCase(),
+          url: `/work/${c.id}/${a.id}`,
+          hidden: false,
+        })),
+      ];
+    }),
+  { title: 'gallery', url: '/gallery', hidden: false },
+  { title: 'notes', url: '/blog', hidden: false },
+  { title: 'about', url: '/about', hidden: false },
+  { title: 'korman archive', url: '/pitch/the-korman-archive', hidden: true },
+  { title: 'amber theorem', url: '/pitch/amber-theorem', hidden: true },
+  { title: 'heist studio brand', url: '/pitch/brand', hidden: true },
+  { title: 'japan pitch', url: '/pitch/japan', hidden: true },
+  { title: 'von sauna', url: '/pitch/von-sauna', hidden: true },
+  { title: 'pc-12 espresso', url: '/pitch/pc12-espresso', hidden: true },
+  { title: 'wordmark study', url: '/pitch/wordmark-study', hidden: true },
+  { title: 'font exploration', url: '/pitch/font-explore', hidden: true },
+];
+---
+
+<div class="cmd" data-cmd aria-hidden="true">
+  <div class="cmd__backdrop" data-cmd-close></div>
+  <div class="cmd__box">
+    <div class="cmd__row">
+      <span class="cmd__prompt">/</span>
+      <div class="cmd__field">
+        <input
+          class="cmd__input"
+          type="text"
+          placeholder="where to?"
+          data-cmd-input
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span class="cmd__ghost" data-cmd-ghost></span>
+      </div>
+      <kbd class="cmd__tab" data-cmd-tab>TAB</kbd>
+      <kbd class="cmd__esc">ESC</kbd>
+    </div>
+    <div class="cmd__dest" data-cmd-dest></div>
+  </div>
+</div>
+
+<script type="application/json" data-cmd-items set:html={JSON.stringify(paletteItems)}></script>
+
+<script>
+  function initCommandPalette() {
+    const cmd = document.querySelector<HTMLElement>('[data-cmd]');
+    const input = document.querySelector<HTMLInputElement>('[data-cmd-input]');
+    const ghost = document.querySelector<HTMLElement>('[data-cmd-ghost]');
+    const tab = document.querySelector<HTMLElement>('[data-cmd-tab]');
+    const dest = document.querySelector<HTMLElement>('[data-cmd-dest]');
+    const backdrop = document.querySelector<HTMLElement>('[data-cmd-close]');
+    const dataEl = document.querySelector<HTMLScriptElement>('[data-cmd-items]');
+    if (!cmd || !input || !ghost || !dest || !dataEl) return;
+
+    const items: { title: string; url: string; hidden: boolean }[] =
+      JSON.parse(dataEl.textContent || '[]');
+    let matchIdx = 0;
+    let currentMatches: typeof items = [];
+
+    function isOpen() {
+      return cmd!.getAttribute('aria-hidden') === 'false';
+    }
+
+    function open() {
+      cmd!.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      input!.value = '';
+      matchIdx = 0;
+      currentMatches = [];
+      updateGhost('');
+      updateDest('');
+      setTimeout(() => input!.focus(), 20);
+    }
+
+    function close() {
+      cmd!.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function navigate(url: string) {
+      close();
+      window.location.href = url;
+    }
+
+    function getMatches(q: string): typeof items {
+      if (!q) return [];
+      const lower = q.toLowerCase();
+      // Prefix matches first, then contains
+      const prefix = items.filter((i) => i.title.startsWith(lower));
+      const contains = items.filter(
+        (i) => i.title.includes(lower) && !i.title.startsWith(lower)
+      );
+      return [...prefix, ...contains];
+    }
+
+    function updateGhost(q: string) {
+      currentMatches = getMatches(q);
+      if (matchIdx >= currentMatches.length) matchIdx = 0;
+
+      const match = currentMatches[matchIdx];
+      if (q && match && match.title.startsWith(q.toLowerCase())) {
+        const rest = match.title.slice(q.length);
+        ghost!.innerHTML = `<span style="visibility:hidden">${q.replace(/</g, '&lt;')}</span>${rest}`;
+        if (tab) tab.style.opacity = '1';
+      } else {
+        ghost!.innerHTML = '';
+        if (tab) tab.style.opacity = currentMatches.length > 1 ? '1' : '0';
+      }
+    }
+
+    function updateDest(q: string) {
+      if (!q || currentMatches.length === 0) {
+        dest!.innerHTML = '';
+        return;
+      }
+
+      const lines = currentMatches.map((m, i) => {
+        const active = i === matchIdx;
+        const pointer = active ? '<span class="cmd__arrow">→</span>' : '<span class="cmd__arrow">&nbsp;&nbsp;</span>';
+        const cls = active ? 'cmd__match cmd__match--active' : 'cmd__match';
+        // Highlight the matched portion
+        const lower = q.toLowerCase();
+        const idx = m.title.indexOf(lower);
+        let rendered = m.title;
+        if (idx !== -1) {
+          const before = m.title.slice(0, idx);
+          const match = m.title.slice(idx, idx + q.length);
+          const after = m.title.slice(idx + q.length);
+          rendered = `${before}<span class="cmd__hl">${match}</span>${after}`;
+        }
+        return `<div class="${cls}" data-cmd-url="${m.url}">${pointer}<span class="cmd__match-title">${rendered}</span><span class="cmd__match-url">${m.url}</span></div>`;
+      });
+
+      dest!.innerHTML = lines.join('');
+
+      // Scroll active into view
+      const activeEl = dest!.querySelector('.cmd__match--active');
+      if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+    }
+
+    function update() {
+      const q = input!.value;
+      updateGhost(q);
+      updateDest(q);
+    }
+
+    // / to open
+    document.addEventListener('keydown', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        if (e.key === 'Escape' && isOpen()) { close(); return; }
+        return;
+      }
+      if (e.key === '/' && !isOpen()) {
+        e.preventDefault();
+        open();
+        return;
+      }
+      if (e.key === 'Escape' && isOpen()) {
+        close();
+      }
+    });
+
+    input!.addEventListener('input', () => {
+      matchIdx = 0;
+      update();
+    });
+
+    input!.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        if (currentMatches.length > 0) {
+          // If ghost is showing a prefix completion, accept it
+          const match = currentMatches[matchIdx];
+          if (match && match.title.startsWith(input!.value.toLowerCase())) {
+            input!.value = match.title;
+          } else {
+            // Cycle to next match
+            matchIdx = (matchIdx + 1) % currentMatches.length;
+            input!.value = currentMatches[matchIdx].title;
+          }
+          update();
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (currentMatches.length > 0) {
+          matchIdx = Math.min(currentMatches.length - 1, matchIdx + 1);
+          update();
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (currentMatches.length > 0) {
+          matchIdx = Math.max(0, matchIdx - 1);
+          update();
+        }
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const match = currentMatches[matchIdx];
+        if (match) navigate(match.url);
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        close();
+      }
+    });
+
+    // Click a match
+    dest!.addEventListener('click', (e) => {
+      const el = (e.target as HTMLElement).closest<HTMLElement>('[data-cmd-url]');
+      if (el) navigate(el.dataset.cmdUrl!);
+    });
+
+    backdrop?.addEventListener('click', close);
+
+    document.querySelectorAll('[data-command-palette-trigger]').forEach((btn) => {
+      btn.addEventListener('click', () => open());
+    });
+
+    document.addEventListener('astro:before-preparation', close);
+  }
+
+  document.addEventListener('astro:page-load', initCommandPalette);
+</script>
+
+<style>
+  .cmd {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-lightbox);
+    display: grid;
+    place-items: start center;
+    padding-top: 22vh;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 120ms var(--ease-out-quart);
+  }
+
+  .cmd[aria-hidden='false'] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .cmd__backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--fx-black) 80%, transparent);
+    backdrop-filter: blur(12px);
+  }
+
+  .cmd__box {
+    position: relative;
+    width: min(520px, 90vw);
+  }
+
+  /* ── Input row ── */
+  .cmd__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .cmd__prompt {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-accent);
+    flex-shrink: 0;
+  }
+
+  .cmd__field {
+    position: relative;
+    flex: 1;
+  }
+
+  .cmd__input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    width: 100%;
+    caret-color: var(--color-accent);
+  }
+
+  .cmd__input::placeholder {
+    color: var(--color-text-faint);
+    font-style: italic;
+    opacity: 0.5;
+  }
+
+  .cmd__ghost {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    color: var(--color-text-faint);
+    pointer-events: none;
+    white-space: pre;
+    opacity: 0.3;
+  }
+
+  .cmd__tab,
+  .cmd__esc {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--color-text-faint);
+    border: 1px solid var(--color-border);
+    padding: 1px 5px;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .cmd__tab {
+    opacity: 0;
+    transition: opacity 120ms;
+  }
+
+  /* ── Destination results ── */
+  .cmd__dest {
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 6px 0;
+    scrollbar-width: none;
+  }
+
+  .cmd__dest::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cmd__match {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 5px 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    color: var(--color-text-faint);
+    cursor: pointer;
+    transition: color 80ms;
+  }
+
+  .cmd__match:hover {
+    color: var(--color-text-muted);
+  }
+
+  .cmd__match--active {
+    color: var(--color-text);
+  }
+
+  .cmd__arrow {
+    color: var(--color-accent);
+    flex-shrink: 0;
+    width: 1.2em;
+    font-size: 12px;
+  }
+
+  .cmd__match-title {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cmd__hl {
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .cmd__match-url {
+    font-size: 11px;
+    color: var(--color-text-faint);
+    opacity: 0.4;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  .cmd__match--active .cmd__match-url {
+    opacity: 0.7;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cmd {
+      transition: none;
+    }
+  }
+</style>

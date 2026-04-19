@@ -73,6 +73,29 @@ const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').t
         document.addEventListener('astro:after-swap', applyTheme);
       })();
     </script>
+
+    <!-- Inline rail-width script to prevent layout flash -->
+    <script is:inline>
+      (function () {
+        function applyRailWidth() {
+          if (window.innerWidth >= 1024) {
+            var stored = localStorage.getItem('rail-collapsed');
+            if (stored !== null) {
+              document.documentElement.style.setProperty(
+                '--rail-width',
+                stored === '1' ? '52px' : '180px'
+              );
+            }
+            /* If no stored preference, let CSS fallback handle it:
+               PageLayout defaults to 180px, ProjectLayout to 52px */
+          } else {
+            document.documentElement.style.removeProperty('--rail-width');
+          }
+        }
+        applyRailWidth();
+        document.addEventListener('astro:after-swap', applyRailWidth);
+      })();
+    </script>
   </head>
   <body>
     <slot />

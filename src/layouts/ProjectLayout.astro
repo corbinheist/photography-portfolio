@@ -1,0 +1,52 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SideRail from '@components/global/SideRail.astro';
+import CommandPalette from '@components/global/CommandPalette.astro';
+import '@styles/essay.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  /** Enable scroll-snap, essay navigation, and essay styles */
+  snap?: boolean;
+  /** Show scroll progress bar (typically used with snap) */
+  progress?: boolean;
+}
+
+const { title, description, image, snap = false, progress = false } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} image={image}>
+  {snap && (
+    <script is:inline>
+      document.body.setAttribute('data-essay', '');
+    </script>
+  )}
+
+  <SideRail defaultCollapsed />
+
+  {progress && <div class="essay-progress" data-essay-progress aria-hidden="true"></div>}
+
+  <main class="project-main" data-rail-default="collapsed">
+    <slot />
+  </main>
+
+  {snap && <nav class="essay-nav-dots" data-essay-dots aria-label="Essay navigation"></nav>}
+
+  <CommandPalette />
+
+  {snap && (
+    <script>
+      import '@scripts/essay-nav';
+    </script>
+  )}
+</BaseLayout>
+
+<style>
+  @media (min-width: 1024px) {
+    .project-main {
+      padding-left: var(--rail-width, 52px);
+    }
+  }
+</style>

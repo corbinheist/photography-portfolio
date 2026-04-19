@@ -6,7 +6,8 @@
  * This page reuses a subset of the Nomads photo set for demonstration.
  * Each slide is labeled with its component name and key props.
  */
-import EssayLayout from '@layouts/EssayLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
 import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
 import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
 import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
@@ -148,10 +149,11 @@ const photos = [
 ];
 ---
 
-<EssayLayout
+<ProjectLayout
   title="Essay Layout Example"
   description="Kitchen sink demonstrating every essay slide type with orientation behavior."
-  photos={photos}
+  snap
+  progress
 >
 
   <!-- ============================================================
@@ -570,4 +572,5 @@ const photos = [
     </p>
   </EssaySlideText>
 
-</EssayLayout>
+  <PhotoLightbox photos={photos} />
+</ProjectLayout>

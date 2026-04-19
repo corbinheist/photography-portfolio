@@ -5,7 +5,8 @@
  * A day with the Ait Atta: arrival, tea, bread, herders, and firelight
  * in Morocco's Djebel Saghro massif. November 2025.
  */
-import EssayLayout from '@layouts/EssayLayout.astro';
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
 import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
 import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
 import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
@@ -266,10 +267,11 @@ const photos = [
 ];
 ---
 
-<EssayLayout
+<ProjectLayout
   title="Nomads of Djebel Saghro"
   description="A day with the Ait Atta — tea, bread, herds, and firelight in Morocco's volcanic highlands."
-  photos={photos}
+  snap
+  progress
 >
 
   <!-- ======= I. ARRIVAL & CAMP ======= -->
@@ -676,4 +678,5 @@ const photos = [
     </p>
   </EssaySlideText>
 
-</EssayLayout>
+  <PhotoLightbox photos={photos} />
+</ProjectLayout>
