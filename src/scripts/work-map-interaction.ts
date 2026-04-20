@@ -54,6 +54,18 @@ function init() {
   const storyCountEl = document.querySelector<HTMLElement>('[data-story-count]');
   const rows = document.querySelectorAll<HTMLElement>('[data-story-row]');
 
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  const idleCoordText = isTouch
+    ? `Tap a pin · ${stories.length} stories`
+    : `Hover a pin · ${stories.length} stories`;
+  const idleFilmText = isTouch
+    ? 'Hero roll · tap a pin to load frames'
+    : 'Hero roll · hover a pin to load frames';
+
+  // Set initial text (overrides server-rendered generic copy)
+  if (coordText) coordText.textContent = idleCoordText;
+  if (filmStatusText) filmStatusText.textContent = idleFilmText;
+
   let activeYear = 'all';
   let activeNum: string | null = null;
   let isLocked = false;
@@ -94,14 +106,18 @@ function init() {
     }
   });
 
-  // ── Dossier: show detail for a story ──
-  function showDetail(story: Story) {
-    if (!detailPanel || !detailInner || !indexPanel) return;
+  // ── Mobile bottom sheet ──
+  const sheet = document.querySelector<HTMLElement>('[data-story-sheet]');
+  const sheetBackdrop = document.querySelector<HTMLElement>('[data-story-sheet-backdrop]');
+  const sheetDrawer = document.querySelector<HTMLElement>('[data-story-sheet-drawer]');
+  const sheetContent = document.querySelector<HTMLElement>('[data-story-sheet-content]');
+  const isMobile = () => window.matchMedia('(max-width: 1023px)').matches;
 
+  function buildDetailHTML(story: Story): string {
     const slug = story.coverUrl.split('/').pop() || '';
     const coverSrc = story.coverUrl ? `${story.coverUrl}/${slug}-640.webp` : '';
 
-    detailInner.innerHTML = `
+    return `
       ${coverSrc ? `<div class="story-detail__cover"><img src="${coverSrc}" alt="${story.title}" loading="lazy" /></div>` : ''}
       <div class="story-detail__kind">${story.kind === 'essay' ? 'Essay' : 'Collection'} · ${story.markerNum}</div>
       <div class="story-detail__title">${story.title}</div>
@@ -125,7 +141,67 @@ function init() {
         ${story.kind === 'essay' ? 'Start the essay' : 'View collection'} →
       </a>
     `;
+  }
 
+  function openSheet(story: Story) {
+    if (!sheet || !sheetContent) return;
+    sheetContent.innerHTML = buildDetailHTML(story);
+    sheet.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeSheet() {
+    if (!sheet) return;
+    sheet.setAttribute('aria-hidden', 'true');
+  }
+
+  // Backdrop click closes sheet
+  sheetBackdrop?.addEventListener('click', () => {
+    closeSheet();
+    if (mapContainer && (mapContainer as any).__setLocked) {
+      (mapContainer as any).__setLocked(null);
+    }
+  });
+
+  // Swipe-to-dismiss on the drawer
+  if (sheetDrawer) {
+    let touchStartY = 0;
+    let touchCurrentY = 0;
+    let tracking = false;
+
+    sheetDrawer.addEventListener('touchstart', (e) => {
+      if (sheetDrawer.scrollTop > 0) return;
+      touchStartY = e.touches[0].clientY;
+      touchCurrentY = touchStartY;
+      tracking = true;
+    }, { passive: true });
+
+    sheetDrawer.addEventListener('touchmove', (e) => {
+      if (!tracking) return;
+      touchCurrentY = e.touches[0].clientY;
+      const dy = touchCurrentY - touchStartY;
+      if (dy > 0) {
+        sheetDrawer.style.transform = `translateY(${dy}px)`;
+      }
+    }, { passive: true });
+
+    sheetDrawer.addEventListener('touchend', () => {
+      if (!tracking) return;
+      tracking = false;
+      const dy = touchCurrentY - touchStartY;
+      if (dy > 80) {
+        closeSheet();
+        if (mapContainer && (mapContainer as any).__setLocked) {
+          (mapContainer as any).__setLocked(null);
+        }
+      }
+      sheetDrawer.style.transform = '';
+    });
+  }
+
+  // ── Dossier: show detail for a story ──
+  function showDetail(story: Story) {
+    if (!detailPanel || !detailInner || !indexPanel) return;
+    detailInner.innerHTML = buildDetailHTML(story);
     indexPanel.style.display = 'none';
     detailPanel.style.display = '';
   }
@@ -191,7 +267,7 @@ function init() {
         }
       } else {
         coordReadout?.classList.remove('work-coord-readout--active');
-        coordText.textContent = `Hover a pin · ${stories.length} stories`;
+        coordText.textContent = idleCoordText;
       }
     }
 
@@ -214,7 +290,7 @@ function init() {
         filmRoll.classList.add('film-roll--collapsed');
         filmRoll.classList.remove('film-roll--expanded');
         if (filmStatusText) {
-          filmStatusText.textContent = 'Hero roll · hover a pin to load frames';
+          filmStatusText.textContent = idleFilmText;
         }
         // Reset all frame opacity
         filmRoll.querySelectorAll<HTMLElement>('.film-roll__frame').forEach((frame) => {
@@ -223,15 +299,22 @@ function init() {
       }
     }
 
-    // If locked and detail not shown, show first matching story
+    // If locked, show story detail
     if (locked && num) {
       const story = stories.find((s) => s.markerNum === num);
-      if (story) showDetail(story);
+      if (story) {
+        if (isMobile()) {
+          openSheet(story);
+        } else {
+          showDetail(story);
+        }
+      }
     }
 
-    // If unlocked, return to index
+    // If unlocked, return to index / close sheet
     if (!locked && !num) {
       showIndex();
+      closeSheet();
     }
   }) as EventListener);
 

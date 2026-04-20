@@ -99,4 +99,18 @@
   color: var(--color-text);
 }
 
+/* Enlarge tap targets on touch devices */
+@media (hover: none) {
+  .map-marker--label-only::before {
+    content: '';
+    position: absolute;
+    inset: -16px;
+    z-index: -1;
+  }
+
+  .map-marker__label {
+    padding: 8px 12px;
+  }
+}
+
 

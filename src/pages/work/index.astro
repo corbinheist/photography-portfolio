@@ -204,7 +204,7 @@ const storyCount = stories.length;
           />
           <!-- Coordinate readout -->
           <div class="work-coord-readout" data-coord-readout>
-            <span class="work-coord-readout__text">Hover a pin · {storyCount} stories</span>
+            <span class="work-coord-readout__text">Select a pin · {storyCount} stories</span>
           </div>
         </div>
 
@@ -238,12 +238,24 @@ const storyCount = stories.length;
 
       </div>
 
+      <!-- Mobile bottom sheet (hidden on desktop) -->
+      <div class="story-sheet" data-story-sheet aria-hidden="true">
+        <div class="story-sheet__backdrop" data-story-sheet-backdrop></div>
+        <div class="story-sheet__drawer" data-story-sheet-drawer>
+          <div class="story-sheet__handle">
+            <span class="story-sheet__handle-bar"></span>
+          </div>
+          <div class="story-sheet__content" data-story-sheet-content>
+          </div>
+        </div>
+      </div>
+
       <!-- Enhanced filmstrip (overlays bottom of grid, no layout shift) -->
       {filmRollPhotos.length > 0 && (
         <div class="film-roll film-roll--collapsed" data-film-roll>
           <div class="film-roll__status" data-film-status>
             <span class="film-roll__status-dot"></span>
-            <span class="film-roll__status-text">Hero roll · hover a pin to load frames</span>
+            <span class="film-roll__status-text">Hero roll · select a pin to load frames</span>
           </div>
           <div class="film-roll__track" data-film-track>
             {filmRollPhotos.map((p, idx) => {
@@ -963,6 +975,77 @@ const storyCount = stories.length;
     color: var(--color-text-faint);
     opacity: 0.5;
     letter-spacing: -0.1em;
+  }
+
+  /* ── Mobile bottom sheet ── */
+  .story-sheet {
+    display: none;
+  }
+
+  @media (max-width: 1023px) {
+    .story-sheet {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: var(--z-overlay);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--duration-normal) ease;
+    }
+
+    .story-sheet[aria-hidden='false'] {
+      pointer-events: auto;
+      opacity: 1;
+    }
+
+    .story-sheet__backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(16, 15, 15, 0.6);
+    }
+
+    .story-sheet__drawer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-height: 70vh;
+      background: var(--color-bg);
+      border-top: 1px solid var(--color-border);
+      border-radius: 16px 16px 0 0;
+      transform: translateY(100%);
+      transition: transform 400ms var(--ease-out-quart);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .story-sheet[aria-hidden='false'] .story-sheet__drawer {
+      transform: translateY(0);
+    }
+
+    .story-sheet__handle {
+      display: flex;
+      justify-content: center;
+      padding: 12px 0 8px;
+      position: sticky;
+      top: 0;
+      background: var(--color-bg);
+      border-radius: 16px 16px 0 0;
+      z-index: 1;
+      cursor: grab;
+    }
+
+    .story-sheet__handle-bar {
+      width: 36px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--color-border);
+    }
+
+    .story-sheet__content {
+      padding: 0 var(--space-md) var(--space-lg);
+    }
   }
 
   /* ── Responsive: hide dossier on mobile ── */
