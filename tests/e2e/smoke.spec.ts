@@ -25,6 +25,11 @@ test.describe('smoke tests — all pages render', () => {
 
   test('nav links are reachable from homepage', async ({ page }) => {
     await page.goto('/');
+
+    // Open the mobile dropdown nav
+    const toggle = page.locator('[data-menu-toggle]');
+    await toggle.click();
+
     const nav = page.locator('nav[aria-label="Main navigation"]');
     await expect(nav).toBeVisible();
 
