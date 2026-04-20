@@ -349,7 +349,7 @@ function init() {
         hoverClearRaf = requestAnimationFrame(() => setHovered(null));
       }
 
-      function setHovered(num: string | null) {
+      let setHovered = (num: string | null) => {
         if (num !== null) cancelAnimationFrame(hoverClearRaf);
         if (num === hoveredNum) return;
         hoveredNum = num;

@@ -3,11 +3,13 @@
  *
  * Listens for work-story-change events from map-init.ts and coordinates:
  *   - Story dossier panel (index list + detail view)
+ *   - Mobile bottom sheet
  *   - Filmstrip expand/collapse + filtering
  *   - Coordinate readout
  *   - Year filter tabs
  *   - Keyboard (Esc to unlock)
  */
+export {};
 
 interface Story {
   id: string;

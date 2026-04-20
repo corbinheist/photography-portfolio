@@ -2,6 +2,7 @@
  * Pitch deck keyboard navigation, fullscreen toggle, and slide counter.
  * Only activates on pages with [data-pitch] on the body.
  */
+export {};
 
 function init() {
   if (!document.body.hasAttribute('data-pitch')) return;
