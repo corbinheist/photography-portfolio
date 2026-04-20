@@ -24,6 +24,8 @@ test.describe('smoke tests — all pages render', () => {
   }
 
   test('nav links are reachable from homepage', async ({ page }) => {
+    // Use mobile viewport so the header + dropdown nav are visible
+    await page.setViewportSize({ width: 375, height: 812 });
     await page.goto('/');
 
     // Open the mobile dropdown nav
