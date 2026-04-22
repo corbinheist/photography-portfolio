@@ -1,0 +1,625 @@
+---
+import { buildWidthList } from '../../scripts/utils/photo-widths';
+
+interface HeroSlide {
+  id: string;
+  title: string;
+  location: string;
+  caption: string;
+  lat: string;
+  lon: string;
+  elev: string;
+  meta: string;
+  time: string;
+  status: string;
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+}
+
+interface Props {
+  slides: HeroSlide[];
+  dossierNum?: string;
+  dossierLabel?: string;
+}
+
+const { slides, dossierNum = '003', dossierLabel = 'FIELD' } = Astro.props;
+
+function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'): string {
+  const slug = url.split('/').pop() || '';
+  const widths = buildWidthList(nativeWidth);
+  return widths.map((w) => `${url}/${slug}-${w}.${format} ${w}w`).join(', ');
+}
+---
+
+<section class="hero" data-hero-briefing>
+  {/* ── Photo layers ── */}
+  <div class="hero__photos">
+    {slides.map((slide, i) => {
+      const slug = slide.url.split('/').pop() || '';
+      return (
+        <picture
+          class:list={['hero__slide', { 'hero__slide--active': i === 0 }]}
+          data-slide-index={i}
+        >
+          <source
+            type="image/avif"
+            srcset={buildSrcset(slide.url, slide.width, 'avif')}
+            sizes="100vw"
+          />
+          <source
+            type="image/webp"
+            srcset={buildSrcset(slide.url, slide.width, 'webp')}
+            sizes="100vw"
+          />
+          <img
+            src={`${slide.url}/${slug}-1600.webp`}
+            alt={slide.title || slide.location}
+            width={slide.width}
+            height={slide.height}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding={i === 0 ? 'sync' : 'async'}
+            style={`background-image: url(${slide.lqip}); background-size: cover;`}
+          />
+        </picture>
+      );
+    })}
+  </div>
+
+  {/* ── Gradient overlay ── */}
+  <div class="hero__gradient" aria-hidden="true"></div>
+
+  {/* ── HUD brackets ── */}
+  <div class="hero__hud" aria-hidden="true" data-hud>
+    <span class="hud-corner hud-corner--tl"></span>
+    <span class="hud-corner hud-corner--tr"></span>
+    <span class="hud-corner hud-corner--bl"></span>
+    <span class="hud-corner hud-corner--br"></span>
+  </div>
+
+  {/* ── Top ID strip ── */}
+  <div class="hero__id-strip">
+    <span class="id-strip__left">
+      &#9670; DOSSIER &middot; {dossierNum} &middot; <span data-hero-label>{slides[0]?.title.toUpperCase() || dossierLabel}</span>
+    </span>
+    <span class="id-strip__right">
+      FRAME <span data-hero-frame>01</span> / {String(slides.length).padStart(2, '0')} &middot;
+      <span class="id-strip__status" data-hero-status data-status-value={slides[0]?.status || 'PUBLISHED'}>
+        {slides[0]?.status || 'PUBLISHED'}
+      </span>
+    </span>
+  </div>
+
+  {/* ── Caption rail ── */}
+  <div class="hero__caption">
+    <div class="caption__overline" data-hero-location>{slides[0]?.location || ''}</div>
+    <h1 class="caption__title" data-hero-title>
+      {slides[0]?.title || ''}<span class="caption__period">.</span>
+    </h1>
+    {slides[0]?.caption && (
+      <p class="caption__quote" data-hero-caption>
+        <em>{slides[0].caption}</em>
+      </p>
+    )}
+  </div>
+
+  {/* ── EXIF bar ── */}
+  <div class="hero__exif">
+    <div class="exif__data">
+      <span class="exif__coords" data-hero-coords>
+        {slides[0]?.lat || '—'}, {slides[0]?.lon || '—'}
+      </span>
+      <span class="exif__elev" data-hero-elev>
+        {slides[0]?.elev || '—'}
+      </span>
+      <span class="exif__meta" data-hero-meta>
+        {slides[0]?.meta || ''}
+      </span>
+      <span class="exif__time" data-hero-time>
+        {slides[0]?.time || ''}
+      </span>
+    </div>
+
+    <div class="exif__filmstrip">
+      {slides.map((slide, i) => {
+        const slug = slide.url.split('/').pop() || '';
+        return (
+          <button
+            class:list={['filmstrip__thumb', { 'filmstrip__thumb--active': i === 0 }]}
+            data-filmstrip-index={i}
+            aria-label={`View ${slide.title || `slide ${i + 1}`}`}
+          >
+            <img
+              src={`${slide.url}/${slug}-640.webp`}
+              alt=""
+              loading="lazy"
+              decoding="async"
+            />
+          </button>
+        );
+      })}
+    </div>
+
+    <a href="/work" class="exif__archive">
+      &darr; ARCHIVE
+    </a>
+  </div>
+</section>
+
+<script type="application/json" data-hero-slides set:html={JSON.stringify(slides)} />
+
+<script>
+  const section = document.querySelector('[data-hero-briefing]') as HTMLElement;
+  if (!section) throw new Error('HeroBriefing: section not found');
+
+  const slidesJson = document.querySelector('[data-hero-slides]')?.textContent;
+  if (!slidesJson) throw new Error('HeroBriefing: slides data not found');
+  const slides: Array<{
+    id: string; title: string; location: string; caption: string;
+    lat: string; lon: string; elev: string; meta: string;
+    time: string; status: string;
+  }> = JSON.parse(slidesJson);
+
+  const pictureEls = section.querySelectorAll<HTMLElement>('[data-slide-index]');
+  const thumbEls = section.querySelectorAll<HTMLButtonElement>('[data-filmstrip-index]');
+
+  // Data targets
+  const labelEl = section.querySelector('[data-hero-label]')!;
+  const frameEl = section.querySelector('[data-hero-frame]')!;
+  const statusEl = section.querySelector('[data-hero-status]')!;
+  const locationEl = section.querySelector('[data-hero-location]')!;
+  const titleEl = section.querySelector('[data-hero-title]')!;
+  const captionEl = section.querySelector('[data-hero-caption]');
+  const coordsEl = section.querySelector('[data-hero-coords]')!;
+  const elevEl = section.querySelector('[data-hero-elev]')!;
+  const metaEl = section.querySelector('[data-hero-meta]')!;
+  const timeEl = section.querySelector('[data-hero-time]')!;
+
+  let current = 0;
+  let timer: ReturnType<typeof setInterval>;
+  let transitioning = false;
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FADE_OUT = prefersReducedMotion ? 0 : 400;
+  const FADE_IN  = prefersReducedMotion ? 0 : 500;
+
+  // Text groups that fade together
+  const captionGroup = section.querySelector('.hero__caption') as HTMLElement;
+  const exifDataGroup = section.querySelector('.exif__data') as HTMLElement;
+  const idStripLabel = section.querySelector('.id-strip__left') as HTMLElement;
+  const idStripRight = section.querySelector('.id-strip__right') as HTMLElement;
+  const fadeTargets = [captionGroup, exifDataGroup, idStripLabel, idStripRight].filter(Boolean);
+
+  function setTextContent(s: typeof slides[number]) {
+    labelEl.textContent = s.title.toUpperCase() || 'FIELD';
+    frameEl.textContent = String(current + 1).padStart(2, '0');
+    statusEl.textContent = s.status;
+    (statusEl as HTMLElement).dataset.statusValue = s.status;
+    locationEl.textContent = s.location;
+    titleEl.innerHTML = `${s.title}<span class="caption__period">.</span>`;
+
+    if (captionEl) {
+      if (s.caption) {
+        captionEl.innerHTML = `<em>${s.caption}</em>`;
+        (captionEl as HTMLElement).style.display = '';
+      } else {
+        (captionEl as HTMLElement).style.display = 'none';
+      }
+    }
+
+    coordsEl.textContent = `${s.lat}, ${s.lon}`;
+    metaEl.textContent = s.meta;
+    timeEl.textContent = s.time;
+  }
+
+  function goTo(index: number) {
+    if (transitioning) return;
+    if (index === current && pictureEls[index]?.classList.contains('hero__slide--active')) return;
+    const prev = current;
+    current = index;
+
+    // Photos (crossfade via CSS transition)
+    pictureEls.forEach((el, i) => {
+      el.classList.toggle('hero__slide--active', i === current);
+    });
+
+    // Filmstrip
+    thumbEls.forEach((el, i) => {
+      el.classList.toggle('filmstrip__thumb--active', i === current);
+    });
+
+    const s = slides[current];
+
+    if (prefersReducedMotion) {
+      setTextContent(s);
+      animateElev(s.elev, false);
+      return;
+    }
+
+    // Fade out text → update → fade in
+    transitioning = true;
+    fadeTargets.forEach((el) => {
+      el.style.transition = `opacity ${FADE_OUT}ms ease-out`;
+      el.style.opacity = '0';
+    });
+
+    setTimeout(() => {
+      setTextContent(s);
+      animateElev(s.elev, prev !== current);
+
+      fadeTargets.forEach((el) => {
+        el.style.transition = `opacity ${FADE_IN}ms ease-in`;
+        el.style.opacity = '1';
+      });
+      transitioning = false;
+    }, FADE_OUT);
+  }
+
+  function animateElev(target: string, animate: boolean) {
+    if (!target || target === '—' || prefersReducedMotion || !animate) {
+      elevEl.textContent = target || '—';
+      return;
+    }
+    // Parse numeric part (e.g., "2,400m" → 2400)
+    const match = target.match(/([\d,]+)/);
+    if (!match) { elevEl.textContent = target; return; }
+    const num = parseInt(match[1].replace(/,/g, ''), 10);
+    const suffix = target.replace(match[1], '').trim();
+    const start = performance.now();
+    const duration = 900;
+
+    function tick(now: number) {
+      const t = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - t, 4); // ease-out-quart
+      const val = Math.round(num * ease);
+      elevEl.textContent = val.toLocaleString() + suffix;
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function startCycle() {
+    if (prefersReducedMotion) return;
+    clearInterval(timer);
+    timer = setInterval(() => {
+      goTo((current + 1) % slides.length);
+    }, 7500);
+  }
+
+  // Filmstrip clicks
+  thumbEls.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.filmstripIndex || '0', 10);
+      goTo(idx);
+      startCycle(); // Reset timer on manual interaction
+    });
+  });
+
+  // Keyboard nav
+  section.setAttribute('tabindex', '0');
+  section.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.key === 'ArrowRight' || e.key === 'j') {
+      goTo((current + 1) % slides.length);
+      startCycle();
+    } else if (e.key === 'ArrowLeft' || e.key === 'k') {
+      goTo((current - 1 + slides.length) % slides.length);
+      startCycle();
+    }
+  });
+
+  startCycle();
+</script>
+
+<style>
+  /* ── Section ── */
+  .hero {
+    position: relative;
+    height: 92vh;
+    min-height: 640px;
+    overflow: hidden;
+    background: var(--fx-black);
+  }
+
+  @media (max-width: 639px) {
+    .hero {
+      height: 70vh;
+      min-height: 480px;
+    }
+  }
+
+  /* ── Photos ── */
+  .hero__photos {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: scale(1.02);
+    transition: opacity 1600ms var(--ease-in-out-quart), transform 1600ms var(--ease-in-out-quart);
+    will-change: opacity, transform;
+  }
+
+  .hero__slide--active {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .hero__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__slide {
+      transition: opacity 200ms ease;
+      transform: none !important;
+    }
+  }
+
+  /* ── Gradient ── */
+  .hero__gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(16, 15, 15, 0.55) 0%,
+      transparent 22%,
+      transparent 55%,
+      rgba(16, 15, 15, 0.85) 100%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* ── HUD brackets ── */
+  .hero__hud {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .hud-corner {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-color: rgba(255, 252, 240, 0.18);
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .hud-corner--tl {
+    top: 56px;
+    left: 34px;
+    border-top-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .hud-corner--tr {
+    top: 56px;
+    right: 34px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+  }
+
+  .hud-corner--bl {
+    bottom: 80px;
+    left: 34px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+  }
+
+  .hud-corner--br {
+    bottom: 80px;
+    right: 34px;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+  }
+
+  @media (max-width: 639px) {
+    .hero__hud { display: none; }
+  }
+
+  /* ── ID strip ── */
+  .hero__id-strip {
+    position: absolute;
+    top: 18px;
+    left: 34px;
+    right: 34px;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 240, 0.5);
+  }
+
+  .id-strip__status[data-status-value="IN FIELD"] {
+    color: var(--color-warm-light);
+  }
+
+  .id-strip__status[data-status-value="IN FIELD"]::before {
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-warm-light);
+    margin-right: 5px;
+    vertical-align: middle;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  @media (max-width: 639px) {
+    .hero__id-strip {
+      left: 16px;
+      right: 16px;
+      font-size: 8px;
+    }
+    .id-strip__right { display: none; }
+  }
+
+  /* ── Caption rail ── */
+  .hero__caption {
+    position: absolute;
+    bottom: 72px;
+    left: 34px;
+    right: 34px;
+    z-index: 3;
+  }
+
+  .caption__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 12px;
+  }
+
+  .caption__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.8rem, 5.2vw, 5.5rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fx-paper);
+    max-width: 16ch;
+    margin: 0;
+  }
+
+  .caption__period {
+    color: var(--color-accent);
+  }
+
+  .caption__quote {
+    font-family: var(--font-heading);
+    font-size: 17px;
+    font-style: italic;
+    color: rgba(255, 252, 240, 0.82);
+    max-width: 48ch;
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 639px) {
+    .hero__caption {
+      bottom: 56px;
+      left: 16px;
+      right: 16px;
+    }
+
+    .caption__quote { display: none; }
+  }
+
+  /* ── EXIF bar ── */
+  .hero__exif {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 34px;
+    background: rgba(16, 15, 15, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(255, 252, 240, 0.06);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 240, 0.5);
+  }
+
+  .exif__data {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+  }
+
+  .exif__coords {
+    color: var(--color-accent);
+  }
+
+  .exif__filmstrip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+  }
+
+  .filmstrip__thumb {
+    width: 24px;
+    height: 28px;
+    overflow: hidden;
+    border: 1px solid transparent;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    transition: width 300ms var(--ease-out-quart), border-color 300ms ease;
+    flex-shrink: 0;
+  }
+
+  .filmstrip__thumb--active {
+    width: 48px;
+    border-color: var(--color-accent);
+  }
+
+  .filmstrip__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    transition: opacity 300ms ease;
+  }
+
+  .filmstrip__thumb--active img {
+    opacity: 1;
+  }
+
+  .filmstrip__thumb:hover img {
+    opacity: 0.85;
+  }
+
+  .exif__archive {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: rgba(255, 252, 240, 0.5);
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .exif__archive:hover {
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 639px) {
+    .hero__exif {
+      padding: 10px 16px;
+      gap: 12px;
+    }
+
+    .exif__data { display: none; }
+    .exif__filmstrip { margin-left: 0; }
+    .exif__archive { margin-left: auto; }
+  }
+</style>

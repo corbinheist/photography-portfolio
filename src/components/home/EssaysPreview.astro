@@ -1,0 +1,182 @@
+---
+interface Essay {
+  num: string;
+  title: string;
+  description: string;
+  collection: string;
+  location: string;
+  href: string;
+}
+
+interface Props {
+  essays: Essay[];
+}
+
+const { essays } = Astro.props;
+---
+
+<section class="essays">
+  <div class="essays__inner">
+    <div class="essays__header">
+      <div>
+        <div class="essays__overline">FIELD NOTES</div>
+        <h2 class="essays__heading">Writing from<br />the road.</h2>
+      </div>
+      <a href="/notes" class="essays__all-link">All essays &rarr;</a>
+    </div>
+
+    <div class="essays__grid stagger-children">
+      {essays.map((e) => (
+        <a href={e.href} class="essay-card">
+          <div class="essay-card__top">
+            <span class="essay-card__num">N&deg; {e.num}</span>
+            <span class="essay-card__collection">{e.collection}</span>
+          </div>
+          <h3 class="essay-card__title">{e.title}</h3>
+          <p class="essay-card__desc">{e.description}</p>
+          <div class="essay-card__footer">
+            <span class="essay-card__location">{e.location}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .essays {
+    padding: var(--space-2xl) var(--container-padding);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .essays__inner {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .essays__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 48px;
+  }
+
+  .essays__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 12px;
+  }
+
+  .essays__heading {
+    font-size: clamp(40px, 5.5vw, 72px);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: var(--color-text);
+    margin: 0;
+    line-height: 1;
+  }
+
+  .essays__all-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border);
+    transition: color var(--duration-fast) ease;
+    white-space: nowrap;
+  }
+
+  .essays__all-link:hover {
+    color: var(--color-accent);
+  }
+
+  /* ── Grid ── */
+  .essays__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 36px;
+  }
+
+  /* ── Card ── */
+  .essay-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border: 1px solid var(--color-border-subtle);
+    transition: border-color 200ms ease, background 200ms ease;
+    cursor: pointer;
+  }
+
+  .essay-card:hover {
+    border-color: var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .essay-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .essay-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 10px;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .essay-card:hover .essay-card__title {
+    color: var(--color-accent);
+  }
+
+  .essay-card__desc {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    flex: 1;
+  }
+
+  .essay-card__footer {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .essay-card__location {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1023px) {
+    .essays__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 639px) {
+    .essays__header {
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .essays__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

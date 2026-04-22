@@ -1,0 +1,142 @@
+---
+// Static content — no props needed
+---
+
+<section class="colophon">
+  <div class="colophon__inner">
+    <div class="colophon__left">
+      <div class="colophon__overline">ABOUT &middot; THE STUDIO</div>
+      <h2 class="colophon__heading">
+        The camera is a notebook,<br />not a trophy case<span class="colophon__period">.</span>
+      </h2>
+      <a href="/about" class="colophon__link">About the maker &rarr;</a>
+    </div>
+
+    <div class="colophon__right">
+      <div class="colophon__grid">
+        <div class="colophon__kv">
+          <span class="kv__label">Body &middot; primary</span>
+          <span class="kv__value">Canon R5 Mark II</span>
+        </div>
+        <div class="colophon__kv">
+          <span class="kv__label">Body &middot; compact</span>
+          <span class="kv__value">Leica Q2</span>
+        </div>
+        <div class="colophon__kv">
+          <span class="kv__label">Body &middot; film</span>
+          <span class="kv__value">Canon EOS 3</span>
+        </div>
+        <div class="colophon__kv">
+          <span class="kv__label">Aerial</span>
+          <span class="kv__value">DJI Mavic 3 Pro</span>
+        </div>
+        <div class="colophon__kv">
+          <span class="kv__label">Home ground</span>
+          <span class="kv__value">Snoqualmie Valley, WA</span>
+        </div>
+        <div class="colophon__kv">
+          <span class="kv__label">Site</span>
+          <span class="kv__value">Astro &middot; DigitalOcean</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .colophon {
+    padding: var(--space-2xl) var(--container-padding);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .colophon__inner {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  /* ── Left ── */
+  .colophon__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    margin-bottom: 12px;
+  }
+
+  .colophon__heading {
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    color: var(--color-text);
+    margin: 0 0 32px;
+    max-width: 20ch;
+    line-height: 1.15;
+  }
+
+  .colophon__period {
+    color: var(--color-accent);
+  }
+
+  .colophon__link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    border-bottom: 1px solid var(--color-border);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .colophon__link:hover {
+    color: var(--color-accent);
+  }
+
+  /* ── Right ── */
+  .colophon__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .colophon__kv {
+    padding: 20px;
+    border: 1px solid var(--color-border-subtle);
+    margin-right: -1px;
+    margin-bottom: -1px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .kv__label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .kv__value {
+    font-size: 13px;
+    color: var(--color-text);
+    line-height: 1.4;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 1023px) {
+    .colophon__inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .colophon__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

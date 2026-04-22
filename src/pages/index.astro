@@ -1,10 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
-import CineHero from '@components/home/CineHero.astro';
-import ExpeditionMap from '@components/home/ExpeditionMap.astro';
-import FeaturedCollections from '@components/home/FeaturedCollections.astro';
-import NowReel from '@components/home/NowReel.astro';
+import HeroBriefing from '@components/home/HeroBriefing.astro';
+import DispatchCallout from '@components/home/DispatchCallout.astro';
+import ManifestSection from '@components/home/ManifestSection.astro';
+import EssaysPreview from '@components/home/EssaysPreview.astro';
+import ColophonTeaser from '@components/home/ColophonTeaser.astro';
 
 const photos = await getCollection('photos');
 const albums = await getCollection('albums');
@@ -12,21 +13,18 @@ const collections = await getCollection('photoCollections');
 
 const sortedCollections = collections.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
 
-// Resolve cover photo for a collection — tries coverPhoto, then first album cover, then featured photos
+// Resolve cover photo for a collection — tries coverPhoto, then first album cover, then first photo
 function resolveCollectionCover(collection: typeof collections[number]) {
-  // 1. Direct coverPhoto on collection
   if (collection.data.coverPhoto) {
     const photo = photos.find((p) => p.id === collection.data.coverPhoto);
     if (photo) return photo;
   }
-  // 2. First album's coverPhoto
   for (const albumId of collection.data.albums) {
     const album = albums.find((a) => a.id === albumId);
     if (album?.data.coverPhoto) {
       const photo = photos.find((p) => p.id === album.data.coverPhoto);
       if (photo) return photo;
     }
-    // 3. First photo in first album
     if (album?.data.photos.length) {
       const photo = photos.find((p) => p.id === album.data.photos[0]);
       if (photo) return photo;
@@ -35,21 +33,82 @@ function resolveCollectionCover(collection: typeof collections[number]) {
   return null;
 }
 
-// Build hero slides: collections with cover photos + featured photo fallbacks
+// Resolve a landscape-oriented cover for the hero — prefers landscape (width >= height),
+// falls back to any landscape photo in the collection's albums, then the regular cover
+function resolveHeroCover(collection: typeof collections[number]) {
+  const defaultCover = resolveCollectionCover(collection);
+  if (defaultCover && defaultCover.data.width >= defaultCover.data.height) return defaultCover;
+
+  // Search albums for a landscape photo
+  for (const albumId of collection.data.albums) {
+    const album = albums.find((a) => a.id === albumId);
+    if (!album) continue;
+    for (const photoId of album.data.photos) {
+      const photo = photos.find((p) => p.id === photoId);
+      if (photo && photo.data.width >= photo.data.height) return photo;
+    }
+  }
+
+  // Fall back to default cover even if portrait — object-fit: cover will handle it
+  return defaultCover;
+}
+
+// Count total frames in a collection's albums
+function countFrames(collection: typeof collections[number]): number {
+  let count = 0;
+  for (const albumId of collection.data.albums) {
+    const album = albums.find((a) => a.id === albumId);
+    if (album) count += album.data.photos.length;
+  }
+  return count;
+}
+
+// Derive status from collection data
+function deriveStatus(collection: typeof collections[number]): string {
+  if (collection.data.albums.length === 0) return 'DRAFT';
+  const hasAllDraft = collection.data.albums.every((albumId: string) => {
+    const album = albums.find((a) => a.id === albumId);
+    return album?.data.draft;
+  });
+  if (hasAllDraft) return 'EDITING';
+  return 'PUBLISHED';
+}
+
+// Format coordinates for display
+function fmtCoord(val: number, pos: string, neg: string): string {
+  const dir = val >= 0 ? pos : neg;
+  return `${Math.abs(val).toFixed(2)}° ${dir}`;
+}
+
+// ── Hero slides (landscape-preferred covers for full-bleed hero) ──
 const heroSlides = sortedCollections
   .map((c) => {
-    const cover = resolveCollectionCover(c);
-    if (!cover) return null;
+    const cover = resolveHeroCover(c);
+    if (!cover || !c.data.map) return null;
+    const [lng, lat] = c.data.map.center;
+    const exif = cover.data.exif;
+    const firstAlbum = c.data.albums.length
+      ? albums.find((a) => a.id === c.data.albums[0])
+      : null;
+
     return {
       id: c.id,
       title: c.data.title,
       location: c.data.description || '',
-      meta: `${c.data.albums.length} ALBUMS`,
+      caption: c.data.essays?.[0]?.description || '',
+      lat: fmtCoord(lat, 'N', 'S'),
+      lon: fmtCoord(lng, 'E', 'W'),
+      elev: '—',
+      meta: exif
+        ? [exif.camera?.split(' ').pop(), exif.focalLength, exif.aperture, `ISO ${exif.iso}`]
+            .filter(Boolean).join(' · ')
+        : `${c.data.albums.length} ALBUMS`,
+      time: firstAlbum?.data.date || '',
+      status: deriveStatus(c),
       url: cover.data.url,
       width: cover.data.width,
       height: cover.data.height,
       lqip: cover.data.lqip,
-      exif: cover.data.exif,
     };
   })
   .filter(Boolean);
@@ -64,24 +123,65 @@ if (heroSlides.length < 4) {
       id: `photo-${p.id}`,
       title: '',
       location: '',
+      caption: '',
+      lat: '—',
+      lon: '—',
+      elev: '—',
       meta: '',
+      time: '',
+      status: 'PUBLISHED',
       url: p.data.url,
       width: p.data.width,
       height: p.data.height,
       lqip: p.data.lqip,
-      exif: p.data.exif,
     });
   }
 }
 
-// Build featured collections data
-const featuredCollections = sortedCollections.map((c) => {
+// ── Dispatch (most recent collection with content) ──
+const dispatchCollection = [...sortedCollections]
+  .reverse()
+  .find((c) => c.data.albums.length > 0 && resolveCollectionCover(c));
+const dispatchCover = dispatchCollection ? resolveCollectionCover(dispatchCollection) : null;
+
+const dispatchData = dispatchCollection && dispatchCover ? {
+  title: dispatchCollection.data.title,
+  href: `/work/${dispatchCollection.id}`,
+  coverUrl: dispatchCover.data.url,
+  coverWidth: dispatchCover.data.width,
+  coverHeight: dispatchCover.data.height,
+  coverLqip: dispatchCover.data.lqip,
+  caption: dispatchCollection.data.description || '',
+  coords: dispatchCollection.data.map
+    ? `${fmtCoord(dispatchCollection.data.map.center[1], 'N', 'S')}, ${fmtCoord(dispatchCollection.data.map.center[0], 'E', 'W')}`
+    : '',
+  meta: dispatchCover.data.exif
+    ? [dispatchCover.data.exif.camera?.split(' ').pop(), dispatchCover.data.exif.focalLength, dispatchCover.data.exif.aperture].filter(Boolean).join(' · ')
+    : '',
+  data: [
+    { label: 'Day', value: dispatchCover.data.exif?.date || '—' },
+    { label: 'Elevation', value: '—' },
+    { label: 'Frames', value: String(countFrames(dispatchCollection)) },
+    { label: 'Next', value: 'TBD' },
+  ],
+} : null;
+
+// ── Manifest collections ──
+let manifestNum = 0;
+const manifestCollections = sortedCollections.map((c) => {
+  manifestNum++;
   const cover = resolveCollectionCover(c);
+  const [lng, lat] = c.data.map?.center || [0, 0];
   return {
     id: c.id,
+    num: String(manifestNum).padStart(2, '0'),
     title: c.data.title,
-    description: c.data.description,
-    meta: `${c.data.albums.length} ALBUMS`,
+    description: c.data.description || '',
+    lat: c.data.map ? fmtCoord(lat, 'N', 'S') : '—',
+    lon: c.data.map ? fmtCoord(lng, 'E', 'W') : '—',
+    elev: '—',
+    status: deriveStatus(c) === 'PUBLISHED' ? 'LIVE' : deriveStatus(c),
+    frameCount: countFrames(c),
     coverUrl: cover?.data.url,
     coverWidth: cover?.data.width,
     coverHeight: cover?.data.height,
@@ -89,44 +189,37 @@ const featuredCollections = sortedCollections.map((c) => {
   };
 });
 
-// Build expedition map data (reuse pattern from work/index.astro)
-const countryFiles = import.meta.glob<{ default: any }>('/src/data/maps/*-country.json', { eager: true });
-const collectionsWithMaps = sortedCollections.filter((c) => c.data.map);
-let markerNum = 0;
-
-const worldMarkers = collectionsWithMaps.map((c) => {
-  markerNum++;
-  return {
-    label: c.data.title,
-    lng: c.data.map!.center[0],
-    lat: c.data.map!.center[1],
-    num: String(markerNum).padStart(2, '0'),
-    target: `/work/${c.id}`,
-  };
-});
-
-const worldRegionFeatures: any[] = [];
-collectionsWithMaps.forEach((c, i) => {
-  const countryFile = `/src/data/maps/${c.id}-country.json`;
-  const data = countryFiles[countryFile]?.default;
-  if (!data?.features) return;
-  const num = String(i + 1).padStart(2, '0');
-  for (const feat of data.features) {
-    worldRegionFeatures.push({
-      ...feat,
-      properties: { ...feat.properties, num },
+// ── Essays (flatten across collections, take latest 3) ──
+const allEssays: Array<{
+  num: string; title: string; description: string;
+  collection: string; location: string; href: string;
+}> = [];
+let essayNum = 0;
+for (const c of sortedCollections) {
+  if (!c.data.essays) continue;
+  for (const essay of c.data.essays) {
+    essayNum++;
+    allEssays.push({
+      num: String(essayNum).padStart(2, '0'),
+      title: essay.title,
+      description: essay.description || '',
+      collection: c.data.title,
+      location: c.data.title,
+      href: `/work/${c.id}/${essay.slug}`,
     });
   }
-});
-
-const worldRegions = worldRegionFeatures.length > 0
-  ? { type: 'FeatureCollection' as const, features: worldRegionFeatures }
-  : undefined;
+}
+const latestEssays = allEssays.slice(-3).reverse();
 ---
 
 <PageLayout title="Corbin Heist">
-  <CineHero slides={heroSlides as any} />
-  <ExpeditionMap markers={worldMarkers} regions={worldRegions} />
-  <FeaturedCollections collections={featuredCollections} />
-  <NowReel />
+  <HeroBriefing slides={heroSlides as any} dossierNum={String(sortedCollections.length).padStart(3, '0')} />
+  {dispatchData && (
+    <DispatchCallout {...dispatchData} />
+  )}
+  <ManifestSection collections={manifestCollections} totalCount={sortedCollections.length} />
+  {latestEssays.length > 0 && (
+    <EssaysPreview essays={latestEssays} />
+  )}
+  <ColophonTeaser />
 </PageLayout>
