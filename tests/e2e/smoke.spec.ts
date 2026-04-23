@@ -5,8 +5,8 @@ test.describe('smoke tests — all pages render', () => {
     { path: '/', title: 'Corbin Heist' },
     { path: '/gallery', heading: 'Gallery' },
     { path: '/work', heading: 'Work' },
-    { path: '/about', heading: 'About' },
-    { path: '/blog', heading: 'Notes' },
+    { path: '/about', title: 'About' },
+    { path: '/blog', heading: 'Journal' },
   ];
 
   for (const { path, title, heading } of pages) {
@@ -38,5 +38,25 @@ test.describe('smoke tests — all pages render', () => {
     const links = nav.locator('a');
     const count = await links.count();
     expect(count).toBeGreaterThanOrEqual(4);
+  });
+
+  test('theme toggle switches between dark and light', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.goto('/');
+
+    const html = page.locator('html');
+    const initialTheme = await html.getAttribute('data-theme');
+
+    const toggle = page.locator('.header-right [data-theme-toggle]');
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+
+    const newTheme = await html.getAttribute('data-theme');
+    expect(newTheme).not.toBe(initialTheme);
+
+    // Toggle back
+    await toggle.click();
+    const restoredTheme = await html.getAttribute('data-theme');
+    expect(restoredTheme).toBe(initialTheme);
   });
 });
