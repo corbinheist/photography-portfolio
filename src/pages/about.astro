@@ -1,130 +1,740 @@
 ---
+import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
+
+const portraitBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait';
+const portraitLqip = 'data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=';
+
+const ksarBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-001-cnh_3628';
+const ksarLqip = 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA==';
+
+// ── Build dynamic ledger from collections, albums, and essays ──
+const allCollections = await getCollection('photoCollections');
+const allAlbums = await getCollection('albums');
+
+type LedgerEntry = {
+  date: string;
+  place: string;
+  note: string;
+  count: string;
+  href: string;
+};
+
+const ledger: LedgerEntry[] = [];
+
+for (const collection of allCollections) {
+  const essays = collection.data.essays ?? [];
+
+  // Derive earliest album date for the collection (used as fallback)
+  let collectionDate: string | null = null;
+  for (const albumId of collection.data.albums) {
+    const album = allAlbums.find((a) => a.id === albumId);
+    if (album?.data.date) {
+      collectionDate = album.data.date;
+      break;
+    }
+  }
+
+  // Each album becomes a ledger entry
+  for (const albumId of collection.data.albums) {
+    const album = allAlbums.find((a) => a.id === albumId);
+    if (!album || album.data.draft) continue;
+
+    const date = album.data.date || collectionDate;
+    if (!date) continue; // skip albums with no date at all
+
+    const location = album.data.location || collection.data.title;
+    ledger.push({
+      date: date.replace('-', '.'),
+      place: `${collection.data.title} · ${location}`,
+      note: album.data.description || collection.data.description || album.data.title,
+      count: `${album.data.photos.length} frames`,
+      href: `/work/${collection.id}/${albumId}`,
+    });
+  }
+
+  // Each essay becomes a ledger entry
+  for (const essay of essays) {
+    const date = collectionDate;
+    if (!date) continue;
+
+    ledger.push({
+      date: date.replace('-', '.'),
+      place: `${collection.data.title} · ${essay.title}`,
+      note: essay.description || collection.data.description || essay.title,
+      count: `${essay.photoCount} frames`,
+      href: `/work/${collection.id}/${essay.slug}`,
+    });
+  }
+}
+
+// Sort newest first
+ledger.sort((a, b) => b.date.localeCompare(a.date));
+
+// Compute stats
+const collectionsWithContent = allCollections.filter(
+  (c) => c.data.albums.length > 0 || (c.data.essays?.length ?? 0) > 0,
+);
+const totalEssays = allCollections.reduce((n, c) => n + (c.data.essays?.length ?? 0), 0);
+const totalRegions = allCollections.filter((c) => c.data.map).length;
+
+const kit = [
+  { label: 'Body · primary', value: 'Canon R5 Mark II' },
+  { label: 'Body · compact', value: 'Leica Q2' },
+  { label: 'Body · film', value: 'Canon EOS 3' },
+  { label: 'Lens · prime', value: 'RF 35mm ƒ/1.4L VCM' },
+  { label: 'Lens · zoom', value: 'RF 24–70mm ƒ/2.8L IS' },
+  { label: 'Lens · tele', value: 'RF 70–200mm ƒ/2.8L IS' },
+  { label: 'Aerial', value: 'DJI Mavic 3 Pro' },
+  { label: 'Site', value: 'Astro · DigitalOcean' },
+];
+
+const contacts = [
+  { label: 'Email', value: 'corbin@heist.studio', href: 'mailto:corbin@heist.studio' },
+  { label: 'Substack', value: 'corbinheist.substack.com', href: 'https://corbinheist.substack.com' },
+  { label: 'Instagram', value: '@corbinheist', href: 'https://instagram.com/corbinheist' },
+];
 ---
 
-<PageLayout title="About" description="Corbin Heist lives at the foot of Rattlesnake Mountain. The camera comes because he's going anyway.">
-  <section class="about-page">
-    <div class="about-header reveal">
-      <h1>About</h1>
-    </div>
+<PageLayout title="About" description="I live at the foot of Rattlesnake Mountain. The camera comes because I'm going anyway.">
 
-      <div class="about-layout reveal">
-        <div class="about-portrait">
-          <picture>
-            <source
-              type="image/avif"
-              srcset="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-640.avif 640w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-750.avif 750w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.avif 1080w"
-              sizes="(max-width: 768px) 100vw, 30vw"
-            />
-            <source
-              type="image/webp"
-              srcset="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-640.webp 640w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-750.webp 750w, https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.webp 1080w"
-              sizes="(max-width: 768px) 100vw, 30vw"
-            />
-            <img
-              src="https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait/about-portrait-1080.webp"
-              alt="Corbin Heist"
-              width="1366"
-              height="2048"
-              loading="eager"
-              decoding="async"
-              class="portrait-img"
-              style={`background-image: url(data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=); background-size: cover;`}
-            />
-          </picture>
-        </div>
+  {/* Slug bar */}
+  <div class="slug-bar">
+    <span>File · 001</span>
+    <span>Subject · Heist, Corbin</span>
+    <span>Lat 47.4896 · Lon −121.7854</span>
+    <span>Elev 158m</span>
+    <span>Updated · April 2026</span>
+  </div>
 
-        <div class="about-body">
-          <div class="about-text">
-            <p>
-              I live at the foot of Rattlesnake Mountain, in a small town at the top of the Snoqualmie Valley. On a good day I'm up with first light through the Douglas firs, coffee by the fire on the balcony, and by afternoon I'm climbing the same ridge behind my home until the trees break and the whole Snoqualmie Valley opens up — Si in front of me, Baker and the high Cascades stretched out behind it.
-            </p>
-            <p>
-              Sometimes I travel to industrial towns, port cities, the kind of nowhere that doesn't make anyone's must-visit list. Sometimes I'm in the French Pyrenees, the Dolomites, the Moroccan Atlas. Sometimes it's a skin track before dawn in January, a ridge run in August. The camera comes because I'm going anyway. The best photographs I've brought home started as a two-hour detour.
-            </p>
-            <p>
-              Sometimes my path crosses yours. Same town, same trail, same morning. <a href="mailto:corbin@heist.studio">corbin@heist.studio</a> when it does. <a href="https://corbinheist.substack.com" target="_blank" rel="noopener">Substack</a> and <a href="https://instagram.com/corbinheist" target="_blank" rel="noopener">Instagram</a> in the meantime.
-            </p>
-          </div>
+  {/* Hero grid */}
+  <section class="hero-section">
+    <div class="hero-grid">
+      <div class="hero-portrait">
+        <picture>
+          <source
+            type="image/avif"
+            srcset={`${portraitBase}/about-portrait-640.avif 640w, ${portraitBase}/about-portrait-750.avif 750w, ${portraitBase}/about-portrait-1080.avif 1080w`}
+            sizes="(max-width: 768px) 100vw, 38vw"
+          />
+          <source
+            type="image/webp"
+            srcset={`${portraitBase}/about-portrait-640.webp 640w, ${portraitBase}/about-portrait-750.webp 750w, ${portraitBase}/about-portrait-1080.webp 1080w`}
+            sizes="(max-width: 768px) 100vw, 38vw"
+          />
+          <img
+            src={`${portraitBase}/about-portrait-1080.webp`}
+            alt="Corbin Heist"
+            width="1366"
+            height="2048"
+            loading="eager"
+            decoding="async"
+            class="portrait-img"
+            style={`background-image: url(${portraitLqip}); background-size: cover;`}
+          />
+        </picture>
+        <div class="plate-caption">
+          <span>Plate 001 · Self</span>
+          <span>Leica M11 · 50mm · ƒ/2</span>
         </div>
       </div>
+
+      <div class="hero-body">
+        <div class="overline overline--accent">About — field notes on a practice</div>
+        <h1 class="hero-headline">
+          The camera comes<br/>
+          <em>because</em>{' '}
+          <br/>I'm going anyway.
+        </h1>
+
+        <p class="body-lg">
+          I live at the foot of Rattlesnake Mountain, in a small town at
+          the top of the Snoqualmie Valley. On a good day I'm up with
+          first light through the Douglas firs, coffee by the fire on
+          the balcony, and by afternoon I'm climbing the same ridge
+          until the trees break.
+        </p>
+        <p class="body-md">
+          Sometimes I travel to industrial towns, port cities, the kind
+          of nowhere that doesn't make anyone's must-visit list. The
+          camera comes because I'm going anyway. The best photographs
+          I've brought home started as a two-hour detour.
+        </p>
+
+        <div class="roles-strip">
+          {[
+            { num: '01', title: 'Documentarian', desc: "Records what's\ndisappearing." },
+            { num: '02', title: 'Architect', desc: 'Designs the\nsystems underneath.' },
+            { num: '03', title: 'Frontier tech.', desc: 'Deploys it.\nFunds it.' },
+          ].map((role, i) => (
+            <div class:list={['role-cell', i > 0 && 'role-cell--border']}>
+              <div class="role-num">{role.num}</div>
+              <div class="role-title">{role.title}</div>
+              <div class="role-desc">{role.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   </section>
+
+  {/* Ledger */}
+  <section class="ledger-section">
+    <div class="ledger-inner">
+      <div class="ledger-header">
+        <div>
+          <div class="overline overline--accent">Ledger · 2023 — present</div>
+          <h2 class="ledger-title">Where the camera has come along.</h2>
+        </div>
+        <div class="ledger-stats">{totalRegions} regions · {collectionsWithContent.length} collections · {totalEssays} essays</div>
+      </div>
+
+      <div class="ledger-rows">
+        {ledger.map((row) => (
+          <a href={row.href} class="ledger-row">
+            <div class="ledger-date">{row.date}</div>
+            <div class="ledger-place">{row.place}</div>
+            <div class="ledger-note">{row.note}</div>
+            <div class="ledger-count">{row.count}</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* Plate 002 */}
+  <section class="plate-section">
+    <div class="plate-inner">
+      <figure class="plate-figure">
+        <picture>
+          <source
+            type="image/avif"
+            srcset={`${ksarBase}/heist-ksar-essay-001-cnh_3628-640.avif 640w, ${ksarBase}/heist-ksar-essay-001-cnh_3628-1080.avif 1080w, ${ksarBase}/heist-ksar-essay-001-cnh_3628-1600.avif 1600w, ${ksarBase}/heist-ksar-essay-001-cnh_3628-2400.avif 2400w`}
+            sizes="(max-width: 768px) 100vw, 80vw"
+          />
+          <source
+            type="image/webp"
+            srcset={`${ksarBase}/heist-ksar-essay-001-cnh_3628-640.webp 640w, ${ksarBase}/heist-ksar-essay-001-cnh_3628-1080.webp 1080w, ${ksarBase}/heist-ksar-essay-001-cnh_3628-1600.webp 1600w, ${ksarBase}/heist-ksar-essay-001-cnh_3628-2400.webp 2400w`}
+            sizes="(max-width: 768px) 100vw, 80vw"
+          />
+          <img
+            src={`${ksarBase}/heist-ksar-essay-001-cnh_3628-1600.webp`}
+            alt="Ksar Tamnougalt at the edge of the Sahara, Morocco"
+            width="8192"
+            height="5464"
+            loading="lazy"
+            decoding="async"
+            class="plate-img"
+            style={`background-image: url(${ksarLqip}); background-size: cover;`}
+          />
+        </picture>
+        <figcaption class="plate-figcaption">
+          <span class="plate-figcaption__num">Plate 002</span>
+          <span>Ksar at the edge of the Sahara · Morocco, 2024</span>
+          <span>Canon R5 · 50mm · ƒ/4 · 1/1000s</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  {/* Correspondence + Kit */}
+  <section class="contact-section">
+    <div class="contact-grid">
+      <div>
+        <div class="overline overline--accent">Correspondence</div>
+        <h3 class="contact-heading">
+          Sometimes my path crosses yours. Same town, same trail, same morning.
+        </h3>
+        <p class="contact-desc">
+          Write when it does. No mailing list. No scheduled newsletter.
+          I'll either write back or I won't. Both are honest answers.
+        </p>
+        <div class="contact-rows">
+          {contacts.map((c) => (
+            <a href={c.href} target={c.href.startsWith('mailto') ? undefined : '_blank'} rel={c.href.startsWith('mailto') ? undefined : 'noopener'} class="contact-row">
+              <div class="contact-row__label">{c.label}</div>
+              <div class="contact-row__value">{c.value}</div>
+              <div class="contact-row__arrow">↗</div>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div class="overline overline--accent">Kit</div>
+        <h3 class="kit-heading">What it's made on.</h3>
+        <div class="kit-rows">
+          {kit.map((item) => (
+            <div class="kit-row">
+              <div class="kit-row__label">{item.label}</div>
+              <div class="kit-row__value">{item.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
 </PageLayout>
 
 <style>
-  .about-page {
-    padding: var(--space-xl) var(--container-padding) var(--space-3xl);
+  /* ── Shared overline ── */
+  .overline {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin-bottom: 10px;
   }
 
-  .about-header {
-    margin-bottom: var(--space-xl);
+  .overline--accent {
+    color: var(--color-accent);
   }
 
-  @media (min-width: 768px) {
-    .about-header {
-      display: none;
-    }
-  }
-
-  .about-layout {
+  /* ── Slug bar ── */
+  .slug-bar {
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding: 14px var(--container-padding);
     display: flex;
-    flex-direction: column;
-    gap: var(--space-xl);
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
   }
 
-  @media (min-width: 768px) {
-    .about-layout {
-      flex-direction: row;
-      align-items: flex-start;
-      gap: var(--space-2xl);
-    }
+  /* ── Hero section ── */
+  .hero-section {
+    padding: 72px var(--container-padding) 0;
   }
 
-  .about-portrait {
-    flex-shrink: 0;
+  .hero-grid {
+    max-width: 1184px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 0.9fr 1.4fr;
+    gap: 64px;
+    align-items: start;
   }
 
-  @media (min-width: 768px) {
-    .about-portrait {
-      position: sticky;
-      top: calc(72px + var(--space-xl));
-      width: 40%;
-    }
+  .hero-portrait {
+    position: sticky;
+    top: calc(72px + var(--space-xl));
   }
 
   .portrait-img {
     width: 100%;
     height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 25%;
+    filter: saturate(0.8) contrast(1.05);
+    border-top: 1px solid var(--color-border-subtle);
     background-repeat: no-repeat;
     background-position: center;
   }
 
-  .about-body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .about-text {
+  .plate-caption {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin-top: 10px;
     display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
+    justify-content: space-between;
   }
 
-  .about-text p {
-    font-size: var(--text-xl);
+  .hero-body {
+    padding-top: 8px;
+  }
+
+  .hero-headline {
+    font-family: var(--font-heading);
+    font-size: clamp(40px, 5.4vw, 62px);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    margin: 0 0 36px;
+    color: var(--color-text);
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--color-accent);
+  }
+
+  .body-lg {
+    font-size: 19px;
     line-height: 1.7;
+    color: var(--color-text);
+    margin: 0 0 22px;
+    max-width: 52ch;
+  }
+
+  .body-md {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    margin: 0 0 40px;
+    max-width: 52ch;
+  }
+
+  /* ── Roles strip (3-column) ── */
+  .roles-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .role-cell {
+    padding: 22px 20px;
+  }
+
+  .role-cell--border {
+    border-left: 1px solid var(--color-border-subtle);
+  }
+
+  .role-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--color-accent);
+    margin-bottom: 8px;
+  }
+
+  .role-title {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--color-text);
+    margin-bottom: 8px;
+  }
+
+  .role-desc {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    white-space: pre-line;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Ledger section ── */
+  .ledger-section {
+    padding: 112px var(--container-padding) 0;
+  }
+
+  .ledger-inner {
+    max-width: 1184px;
+    margin: 0 auto;
+  }
+
+  .ledger-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 20px;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .ledger-title {
+    font-family: var(--font-heading);
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+
+  .ledger-stats {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .ledger-row {
+    display: grid;
+    grid-template-columns: 110px 1.2fr 2fr 110px;
+    gap: 32px;
+    padding: 20px 4px;
+    margin: 0 -4px;
+    border-bottom: 1px solid var(--color-border-subtle);
+    align-items: baseline;
+    transition: background var(--duration-fast) ease;
+    border-radius: 2px;
+  }
+
+  .ledger-row:hover {
+    background: var(--color-surface);
+  }
+
+  .ledger-row:hover .ledger-note {
+    color: var(--color-accent);
+  }
+
+  .ledger-date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--color-accent);
+  }
+
+  .ledger-place {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--color-text);
+    text-transform: uppercase;
+  }
+
+  .ledger-note {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: var(--color-text-muted);
   }
 
-  .about-text a {
+  .ledger-count {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--color-text-faint);
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  /* ── Plate 002 ── */
+  .plate-section {
+    padding: 112px var(--container-padding) 0;
+  }
+
+  .plate-inner {
+    max-width: 1184px;
+    margin: 0 auto;
+  }
+
+  .plate-figure {
+    margin: 0;
+  }
+
+  .plate-img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    filter: saturate(0.9) contrast(1.03);
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+
+  .plate-figcaption {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 24px;
+    padding: 14px 2px 0;
+    border-top: 1px solid var(--color-border-subtle);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .plate-figcaption__num {
     color: var(--color-accent);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  }
+
+  /* ── Correspondence + Kit ── */
+  .contact-section {
+    padding: 112px var(--container-padding) 0;
+  }
+
+  .contact-grid {
+    max-width: 1184px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 72px;
+  }
+
+  .contact-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(24px, 2.7vw, 32px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+    color: var(--color-text);
+    max-width: 22ch;
+  }
+
+  .contact-desc {
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    margin: 0 0 32px;
+    max-width: 48ch;
+  }
+
+  .contact-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 520px;
+  }
+
+  .contact-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    align-items: center;
     transition: color var(--duration-fast) ease;
   }
 
-  .about-text a:hover {
-    color: var(--color-accent-hover);
+  .contact-row:hover .contact-row__value {
+    color: var(--color-accent);
   }
 
+  .contact-row__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .contact-row__value {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--color-text);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .contact-row__arrow {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--color-accent);
+    text-align: right;
+  }
+
+  .kit-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(24px, 2.7vw, 32px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin: 0 0 20px;
+    color: var(--color-text);
+  }
+
+  .kit-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .kit-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .kit-row__label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .kit-row__value {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-text);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Mobile responsive ── */
+  @media (max-width: 768px) {
+    .slug-bar {
+      display: none;
+    }
+
+    .hero-section {
+      padding-top: var(--space-xl);
+    }
+
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+    }
+
+    .hero-portrait {
+      position: static;
+    }
+
+    .hero-headline {
+      font-size: clamp(32px, 8vw, 48px);
+    }
+
+    .roles-strip {
+      grid-template-columns: 1fr;
+    }
+
+    .role-cell--border {
+      border-left: none;
+      border-top: 1px solid var(--color-border-subtle);
+    }
+
+    .ledger-section,
+    .plate-section,
+    .contact-section {
+      padding-top: var(--space-3xl);
+    }
+
+    .ledger-row {
+      grid-template-columns: 1fr;
+      gap: 6px;
+      padding: 16px 0;
+    }
+
+    .ledger-count {
+      text-align: left;
+    }
+
+    .plate-figcaption {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-3xl);
+    }
+
+    .contact-row {
+      grid-template-columns: 80px 1fr 20px;
+    }
+
+    .contact-row__value {
+      font-size: 13px;
+    }
+  }
 </style>

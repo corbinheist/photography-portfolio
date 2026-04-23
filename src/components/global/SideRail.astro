@@ -12,14 +12,14 @@ const links = [
   { key: 'index', href: '/', label: 'Index', num: '01' },
   { key: 'field', href: '/work', label: 'Field', num: '02' },
   { key: 'gallery', href: '/gallery', label: 'Gallery', num: '03' },
-  { key: 'now', href: '/blog', label: 'Now', num: '04' },
+  { key: 'journal', href: '/blog', label: 'Journal', num: '04' },
 ];
 
 function isActive(link: typeof links[number]) {
   if (link.key === 'index') return currentPath === '/' || currentPath === '';
   if (link.key === 'field') return currentPath.startsWith('/work');
   if (link.key === 'gallery') return currentPath.startsWith('/gallery');
-  if (link.key === 'now') return currentPath.startsWith('/blog');
+  if (link.key === 'journal') return currentPath.startsWith('/blog');
   return false;
 }
 ---
