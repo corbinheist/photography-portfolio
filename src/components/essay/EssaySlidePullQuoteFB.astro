@@ -1,0 +1,59 @@
+---
+/**
+ * Pull-quote full-bleed slide — big italic serif quote over a dimmed
+ * background image with radial scrim. Editorial set-piece.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface Props {
+  url: string;
+  width: number;
+  height: number;
+  lqip?: string;
+  alt: string;
+  lightboxIndex?: number;
+  text: string;
+  attribution?: string;
+  location?: string;
+  dossierNum?: string;
+}
+
+const { url, width, height, lqip, alt, lightboxIndex, text, attribution, location, dossierNum } = Astro.props;
+---
+
+<section class="essay-slide essay-quote-fb" data-essay-frame-slide>
+  <div class="essay-quote-fb__bg">
+    <Photo
+      url={url}
+      width={width}
+      height={height}
+      lqip={lqip!}
+      alt={alt}
+      sizes="100vw"
+      lightboxIndex={lightboxIndex}
+    />
+  </div>
+
+  <div class="essay-quote-fb__scrim"></div>
+
+  <div class="essay-quote-fb__frame">
+    <div class="essay-quote-fb__top">
+      <p class="essay-ov" style="color: var(--color-accent);">
+        ◆ FIELD NOTE {dossierNum ? `· DOSSIER ${dossierNum}` : ''}
+      </p>
+      {location && <p class="essay-ov" style="opacity: 0.7;">{location}</p>}
+    </div>
+
+    <blockquote class="essay-quote-fb__text">
+      <span class="essay-quote-fb__mark">&ldquo;</span>
+      {text}
+    </blockquote>
+
+    {attribution && (
+      <div class="essay-quote-fb__attrib">
+        <span class="essay-quote-fb__attrib-line"></span>
+        <span>{attribution}</span>
+      </div>
+    )}
+  </div>
+</section>

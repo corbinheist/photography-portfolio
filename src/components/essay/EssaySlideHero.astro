@@ -1,0 +1,105 @@
+---
+/**
+ * Dossier hero slide — full-bleed image with left-weighted gradient,
+ * dossier manifest overlay, and scroll indicator.
+ */
+import Photo from '@components/photo/Photo.astro';
+import EssayOverline from './EssayOverline.astro';
+
+interface Props {
+  url: string;
+  width: number;
+  height: number;
+  lqip?: string;
+  alt: string;
+  lightboxIndex?: number;
+  loading?: 'lazy' | 'eager';
+  /** Dossier number, e.g. "011" */
+  dossierNum: string;
+  /** Dossier sequence number, e.g. "N° 01" */
+  sequenceNum: string;
+  /** Overline text (location · region), e.g. "Djebel Saghro · Anti-Atlas · Morocco" */
+  overline: string;
+  /** Big h1 title */
+  title: string;
+  /** Deck paragraph */
+  deck: string;
+  /** Manifest bar data — 5 columns */
+  manifest: {
+    region: string;
+    coords: string;
+    elev: string;
+    date: string;
+    frames: string;
+  };
+}
+
+const {
+  url, width, height, lqip, alt, lightboxIndex,
+  loading = 'eager',
+  dossierNum, sequenceNum, overline, title, deck, manifest,
+} = Astro.props;
+---
+
+<section class="essay-slide essay-hero" data-essay-frame-slide>
+  <div class="essay-hero__img">
+    <Photo
+      url={url}
+      width={width}
+      height={height}
+      lqip={lqip!}
+      alt={alt}
+      sizes="100vw"
+      loading={loading}
+      lightboxIndex={lightboxIndex}
+    />
+  </div>
+
+  <div class="essay-hero__gradient"></div>
+
+  <div class="essay-hero__inner">
+    <div class="essay-hero__top">
+      <div class="essay-hero__stamp">
+        <span class="essay-hero__stamp-mark"></span>
+        <span>HEIST.STUDIO / FIELD</span>
+      </div>
+      <div>{sequenceNum} &middot; DOSSIER {dossierNum}</div>
+    </div>
+
+    <div class="essay-hero__body">
+      <p class="essay-ov" style="color: var(--fx-base-200); opacity: 0.7;">
+        {overline} &middot; {manifest.coords}
+      </p>
+      <h1 class="essay-hero__title">{title}</h1>
+      <p class="essay-hero__deck">{deck}</p>
+    </div>
+
+    <div class="essay-hero__manifest">
+      <div class="essay-hero__manifest-cell">
+        <span class="essay-hero__manifest-k">Region</span>
+        <span class="essay-hero__manifest-v">{manifest.region}</span>
+      </div>
+      <div class="essay-hero__manifest-cell">
+        <span class="essay-hero__manifest-k">Coords</span>
+        <span class="essay-hero__manifest-v">{manifest.coords}</span>
+      </div>
+      <div class="essay-hero__manifest-cell">
+        <span class="essay-hero__manifest-k">Elev.</span>
+        <span class="essay-hero__manifest-v">{manifest.elev}</span>
+      </div>
+      <div class="essay-hero__manifest-cell">
+        <span class="essay-hero__manifest-k">Date</span>
+        <span class="essay-hero__manifest-v">{manifest.date}</span>
+      </div>
+      <div class="essay-hero__manifest-cell">
+        <span class="essay-hero__manifest-k">Frames</span>
+        <span class="essay-hero__manifest-v">{manifest.frames}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="essay-hero__scroll">
+    <span>BEGIN</span>
+    <span>&darr;</span>
+  </div>
+</section>

@@ -1,0 +1,58 @@
+---
+/**
+ * Contact sheet slide — 6-column grid of thumbnails with frame numbers.
+ * Evokes an analog contact sheet / proof sheet.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface Props {
+  photos: Array<{
+    url: string;
+    width: number;
+    height: number;
+    lqip: string;
+    alt: string;
+    lightboxIndex?: number;
+  }>;
+  heading?: string;
+  caption?: string;
+  footerLeft?: string;
+  footerRight?: string;
+}
+
+const { photos, heading, caption, footerLeft, footerRight } = Astro.props;
+---
+
+<section class="essay-slide essay-contact-sheet">
+  <div class="essay-contact-sheet__head">
+    <div>
+      {heading && <p class="essay-ov" style="color: var(--color-accent);">{heading}</p>}
+      {caption && <h3>{caption}</h3>}
+    </div>
+    <span class="essay-contact-sheet__count">{photos.length} FRAMES &middot; SELECT</span>
+  </div>
+
+  <div class="essay-contact-sheet__grid">
+    {photos.map((photo, i) => (
+      <div class="essay-contact-sheet__cell">
+        <Photo
+          url={photo.url}
+          width={photo.width}
+          height={photo.height}
+          lqip={photo.lqip}
+          alt={photo.alt}
+          sizes="(max-width: 768px) 33vw, 16vw"
+          lightboxIndex={photo.lightboxIndex}
+        />
+        <span class="essay-contact-sheet__num">{String(i + 1).padStart(2, '0')}</span>
+      </div>
+    ))}
+  </div>
+
+  {(footerLeft || footerRight) && (
+    <div class="essay-contact-sheet__foot">
+      <span>{footerLeft || ''}</span>
+      <span>{footerRight || ''}</span>
+    </div>
+  )}
+</section>

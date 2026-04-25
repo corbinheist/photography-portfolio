@@ -1,0 +1,43 @@
+---
+/**
+ * Timeline slide — vertical field-journal entries with time, label, and note.
+ * Used for showing the rhythm of a day in the field.
+ */
+import EssayOverline from './EssayOverline.astro';
+
+interface Props {
+  overline?: string;
+  dossierNum?: string;
+  heading: string;
+  lead?: string;
+  entries: Array<{ time: string; label: string; note?: string; active?: boolean }>;
+}
+
+const { overline, dossierNum, heading, lead, entries } = Astro.props;
+---
+
+<section class="essay-slide essay-timeline">
+  <div class="essay-timeline__head">
+    <div class="essay-timeline__head-left">
+      {overline && dossierNum && <EssayOverline num={dossierNum} text={overline} />}
+      {overline && !dossierNum && <p class="essay-ov">{overline}</p>}
+      <h2>{heading}</h2>
+    </div>
+    {lead && <p class="essay-timeline__lead">{lead}</p>}
+  </div>
+
+  <ol class="essay-timeline__list">
+    {entries.map((entry) => (
+      <li class:list={['essay-timeline__entry', entry.active && 'essay-timeline__entry--active']}>
+        <div class="essay-timeline__time">
+          <span class="essay-timeline__hhmm">{entry.time}</span>
+          <span class="essay-timeline__tick"></span>
+        </div>
+        <div class="essay-timeline__body">
+          <h4>{entry.label}</h4>
+          {entry.note && <p>{entry.note}</p>}
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>

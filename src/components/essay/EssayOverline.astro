@@ -1,0 +1,24 @@
+---
+/**
+ * Dossier overline — mono caps label with accent diamond.
+ * Used inline within slides, not as a standalone slide.
+ *
+ * Renders: ◆ DOSSIER · {num} · {text}
+ */
+
+interface Props {
+  /** Dossier number, e.g. "011" */
+  num: string;
+  /** Content text, e.g. "ANTI-ATLAS" */
+  text: string;
+  /** Use warm (rust) color instead of accent (green) */
+  warm?: boolean;
+  class?: string;
+}
+
+const { num, text, warm = false, class: className } = Astro.props;
+---
+
+<p class:list={['essay-ov', warm && 'essay-ov--warm', className]}>
+  <span class="essay-ov__diamond">◆</span> DOSSIER · {num} · {text}
+</p>

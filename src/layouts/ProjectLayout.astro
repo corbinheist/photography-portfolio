@@ -12,31 +12,83 @@ interface Props {
   snap?: boolean;
   /** Show scroll progress bar (typically used with snap) */
   progress?: boolean;
+  /** Enable dossier chrome (replaces dots + progress bar) */
+  dossier?: {
+    /** Dossier number, e.g. "011" */
+    num: string;
+    /** Short title for chrome bar, e.g. "NOMADS" */
+    label: string;
+    /** Total image frames in the essay */
+    totalFrames: number;
+  };
 }
 
-const { title, description, image, snap = false, progress = false } = Astro.props;
+const { title, description, image, snap = false, progress = false, dossier } = Astro.props;
+const isDossier = !!dossier;
+const isSnap = snap || isDossier;
+const showOldProgress = progress && !isDossier;
 ---
 
 <BaseLayout title={title} description={description} image={image}>
-  {snap && (
+  {isSnap && (
     <script is:inline>
+      document.body.setAttribute('data-essay', '');
+    </script>
+  )}
+
+  {isDossier && (
+    <script is:inline>
+      document.body.setAttribute('data-essay-dossier', '');
       document.body.setAttribute('data-essay', '');
     </script>
   )}
 
   <SideRail defaultCollapsed />
 
-  {progress && <div class="essay-progress" data-essay-progress aria-hidden="true"></div>}
+  {showOldProgress && <div class="essay-progress" data-essay-progress aria-hidden="true"></div>}
+
+  {isDossier && (
+    <header class="essay-chrome" aria-hidden="true">
+      <div class="essay-chrome__progress" data-essay-progress></div>
+      <div class="essay-chrome__bar">
+        <span class="essay-chrome__left">
+          <span class="essay-chrome__dot"></span>
+          <span>HEIST.STUDIO</span>
+          <span class="essay-chrome__sep">/</span>
+          <span>FIELD</span>
+        </span>
+        <span class="essay-chrome__center">
+          <span>DOSSIER {dossier!.num}</span>
+          <span class="essay-chrome__sep">&middot;</span>
+          <span style="color: var(--color-text)">{dossier!.label.toUpperCase()}</span>
+        </span>
+        <span class="essay-chrome__right" data-essay-frame>
+          <span>FRAME</span>
+          <span style="color: var(--color-text); font-variant-numeric: tabular-nums" data-essay-frame-current>01 / {String(dossier!.totalFrames).padStart(2, '0')}</span>
+          <span class="essay-chrome__sep">&middot;</span>
+          <span style="color: var(--color-accent)" data-essay-frame-pct>0%</span>
+        </span>
+      </div>
+    </header>
+  )}
+
+  {isDossier && (
+    <script type="application/json" data-essay-meta set:html={JSON.stringify({
+      num: dossier!.num,
+      label: dossier!.label,
+      totalFrames: dossier!.totalFrames,
+    })} />
+  )}
 
   <main class="project-main" data-rail-default="collapsed">
     <slot />
   </main>
 
-  {snap && <nav class="essay-nav-dots" data-essay-dots aria-label="Essay navigation"></nav>}
+  {isSnap && !isDossier && <nav class="essay-nav-dots" data-essay-dots aria-label="Essay navigation"></nav>}
 
   <CommandPalette />
 
-  {snap && (
+  {isSnap && (
     <script>
       import '@scripts/essay-nav';
     </script>

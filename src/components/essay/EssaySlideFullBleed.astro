@@ -24,6 +24,8 @@ interface Props {
   loading?: 'lazy' | 'eager';
   /** When set, renders a placeholder wireframe instead of a Photo */
   placeholder?: { id: string; title: string };
+  /** Mark as image frame for dossier chrome counter */
+  frameSlide?: boolean;
 }
 
 const {
@@ -39,6 +41,7 @@ const {
   captionMeta,
   loading = 'lazy',
   placeholder,
+  frameSlide = false,
 } = Astro.props;
 
 const isPortrait = height > width;
@@ -55,6 +58,7 @@ const hasCaption = captionTitle || captionMeta;
     fit === 'contain' && 'essay-full-bleed--contain',
     hasOverlay && 'essay-full-bleed--scrim',
   ]}
+  {...(frameSlide ? { 'data-essay-frame-slide': '' } : {})}
 >
   {fit === 'contain' && lqip && !placeholder && (
     <div

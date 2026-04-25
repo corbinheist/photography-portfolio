@@ -1,0 +1,39 @@
+---
+/**
+ * Pinned caption slide — full-bleed image with a persistent
+ * glass-morphism caption bar fixed at the bottom.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface Props {
+  url: string;
+  width: number;
+  height: number;
+  lqip?: string;
+  alt: string;
+  lightboxIndex?: number;
+  caption: string;
+  meta?: string;
+}
+
+const { url, width, height, lqip, alt, lightboxIndex, caption, meta } = Astro.props;
+---
+
+<section class="essay-slide essay-pinned-caption" data-essay-frame-slide>
+  <div class="essay-pinned-caption__img">
+    <Photo
+      url={url}
+      width={width}
+      height={height}
+      lqip={lqip!}
+      alt={alt}
+      sizes="100vw"
+      lightboxIndex={lightboxIndex}
+    />
+  </div>
+
+  <div class="essay-pinned-caption__bar">
+    <span class="essay-pinned-caption__title">{caption}</span>
+    {meta && <span>{meta}</span>}
+  </div>
+</section>

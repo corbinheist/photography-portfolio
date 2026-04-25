@@ -1,0 +1,98 @@
+---
+/**
+ * Related dossiers slide — feature card + numbered list.
+ * Shows at the end of an essay, after the colophon.
+ */
+import Photo from '@components/photo/Photo.astro';
+
+interface RelatedDossier {
+  title: string;
+  slug: string;
+  description?: string;
+  location?: string;
+  coverUrl?: string;
+  coverWidth?: number;
+  coverHeight?: number;
+  coverLqip?: string;
+  dossierLabel?: string;
+}
+
+interface Props {
+  heading?: string;
+  featured: RelatedDossier;
+  others?: RelatedDossier[];
+  allDossiersHref?: string;
+}
+
+const { heading = 'Next from the archive.', featured, others = [], allDossiersHref } = Astro.props;
+---
+
+<section class="essay-slide essay-related">
+  <div class="essay-related__head">
+    <div>
+      <p class="essay-ov" style="color: var(--color-accent);">◆ CONTINUE THE FIELD</p>
+      <h2>{heading}</h2>
+    </div>
+    {allDossiersHref && (
+      <a href={allDossiersHref} class="essay-related__link">All dossiers &rarr;</a>
+    )}
+  </div>
+
+  <div class="essay-related__body">
+    <a class="essay-related__feature" href={featured.slug}>
+      {featured.coverUrl && featured.coverWidth && featured.coverHeight && featured.coverLqip && (
+        <div class="essay-related__feature-thumb">
+          <Photo
+            url={featured.coverUrl}
+            width={featured.coverWidth}
+            height={featured.coverHeight}
+            lqip={featured.coverLqip}
+            alt={featured.title}
+            sizes="(max-width: 768px) 100vw, 30vw"
+          />
+        </div>
+      )}
+      <div class="essay-related__feature-meta">
+        {featured.dossierLabel && <p class="essay-ov" style="color: var(--color-accent);">{featured.dossierLabel}</p>}
+        <h3>{featured.title}.</h3>
+        {featured.description && <p class="essay-related__feature-desc">{featured.description}</p>}
+        {featured.location && <p class="essay-related__feature-loc">{featured.location}</p>}
+        <p class="essay-related__feature-cta">Read dossier &rarr;</p>
+      </div>
+    </a>
+
+    {others.length > 0 && (
+      <ol class="essay-related__list">
+        {others.map((item) => (
+          <li>
+            <a href={item.slug} class="essay-related__row">
+              <span class="essay-related__row-num">{item.dossierLabel || ''}</span>
+              {item.coverUrl && item.coverWidth && item.coverHeight && item.coverLqip && (
+                <span class="essay-related__row-thumb">
+                  <Photo
+                    url={item.coverUrl}
+                    width={item.coverWidth}
+                    height={item.coverHeight}
+                    lqip={item.coverLqip}
+                    alt={item.title}
+                    sizes="72px"
+                  />
+                </span>
+              )}
+              <span class="essay-related__row-info">
+                <span class="essay-related__row-title">{item.title}</span>
+                {item.description && <span class="essay-related__row-desc">{item.description}</span>}
+              </span>
+              {item.location && <span class="essay-related__row-loc">{item.location}</span>}
+            </a>
+          </li>
+        ))}
+      </ol>
+    )}
+  </div>
+
+  <div class="essay-related__foot">
+    <span>HEIST.STUDIO &middot; ESSAYS &middot; SELF-HOSTED &middot; NO TRACKING</span>
+    <span>{new Date().getFullYear()}</span>
+  </div>
+</section>

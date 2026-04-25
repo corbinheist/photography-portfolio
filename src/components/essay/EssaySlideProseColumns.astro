@@ -1,0 +1,28 @@
+---
+/**
+ * Prose columns slide — two-column prose layout with optional labels.
+ * Uses named slots for rich content in each column.
+ */
+
+interface Props {
+  heading?: string;
+  leftLabel?: string;
+  rightLabel?: string;
+}
+
+const { heading, leftLabel, rightLabel } = Astro.props;
+---
+
+<section class="essay-slide essay-prose-columns">
+  {heading && <h2 class="essay-prose-columns__heading">{heading}</h2>}
+
+  <div class="essay-prose-columns__col">
+    {leftLabel && <p class="essay-ov">{leftLabel}</p>}
+    <slot name="left" />
+  </div>
+
+  <div class="essay-prose-columns__col">
+    {rightLabel && <p class="essay-ov">{rightLabel}</p>}
+    <slot name="right" />
+  </div>
+</section>

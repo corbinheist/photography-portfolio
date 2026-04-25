@@ -1,12 +1,19 @@
 ---
 /**
  * Colophon slide — end-of-roll metadata + optional next-story teaser.
+ *
+ * When `dossierNum` is provided, renders a manifest-grid layout with
+ * dossier overline. Otherwise, preserves the original dl/dd layout.
  */
 import Photo from '@components/photo/Photo.astro';
+import EssayOverline from './EssayOverline.astro';
 
 interface Props {
   title?: string;
+  /** When set, renders dossier manifest layout */
+  dossierNum?: string;
   location: string;
+  coords?: string;
   dates: string;
   camera: string;
   film?: string;
@@ -16,6 +23,7 @@ interface Props {
     title: string;
     slug: string;
     location: string;
+    dossierNum?: string;
     coverUrl: string;
     coverWidth: number;
     coverHeight: number;
@@ -23,59 +31,115 @@ interface Props {
   };
 }
 
-const { title, location, dates, camera, film, frames, collection, nextStory } = Astro.props;
+const { title, dossierNum, location, coords, dates, camera, film, frames, collection, nextStory } = Astro.props;
+const isDossier = !!dossierNum;
 ---
 
-<section class="essay-slide essay-colophon">
+<section class:list={['essay-slide', 'essay-colophon', isDossier && 'essay-colophon--dossier']}>
   <div class="essay-colophon__inner">
-    <div class="essay-colophon__meta">
-      <div class="essay-colophon__overline">End of roll</div>
-      {title && <h2 class="essay-colophon__heading">{title}</h2>}
-      <dl class="essay-colophon__grid">
-        <div class="essay-colophon__field">
-          <dt>Location</dt>
-          <dd>{location}</dd>
+    {isDossier ? (
+      <Fragment>
+        <div class="essay-colophon__head">
+          <EssayOverline num={dossierNum!} text={`END OF DOSSIER`} />
+          {title && <h2 class="essay-colophon__heading">{title}</h2>}
+          <p style="color: var(--color-text-muted); max-width: 60ch; margin: 0;">{Astro.slots.has('default') ? <slot /> : ''}</p>
         </div>
-        <div class="essay-colophon__field">
-          <dt>Dates</dt>
-          <dd>{dates}</dd>
+
+        <div class="essay-colophon__manifest">
+          <div class="essay-colophon__manifest-cell">
+            <span class="essay-colophon__manifest-k">Location</span>
+            <span class="essay-colophon__manifest-v">{location}</span>
+          </div>
+          {coords && (
+            <div class="essay-colophon__manifest-cell">
+              <span class="essay-colophon__manifest-k">Coords</span>
+              <span class="essay-colophon__manifest-v">{coords}</span>
+            </div>
+          )}
+          <div class="essay-colophon__manifest-cell">
+            <span class="essay-colophon__manifest-k">Dates</span>
+            <span class="essay-colophon__manifest-v">{dates}</span>
+          </div>
+          <div class="essay-colophon__manifest-cell">
+            <span class="essay-colophon__manifest-k">Frames</span>
+            <span class="essay-colophon__manifest-v">{frames}</span>
+          </div>
         </div>
-        <div class="essay-colophon__field">
-          <dt>Camera</dt>
-          <dd>{camera}</dd>
-        </div>
-        {film && (
-          <div class="essay-colophon__field">
-            <dt>Film</dt>
-            <dd>{film}</dd>
+
+        {nextStory && (
+          <div class="essay-colophon__next">
+            <a href={nextStory.slug} class="essay-colophon__next-img">
+              <Photo
+                url={nextStory.coverUrl}
+                width={nextStory.coverWidth}
+                height={nextStory.coverHeight}
+                lqip={nextStory.coverLqip}
+                alt={nextStory.title}
+                sizes="240px"
+              />
+            </a>
+            <div class="essay-colophon__next-overlay">
+              <span class="essay-colophon__next-kicker">
+                <span class="essay-ov__diamond" style="color: var(--color-accent);">◆</span> NEXT DOSSIER {nextStory.dossierNum ? `· ${nextStory.dossierNum}` : ''}
+              </span>
+              <span class="essay-colophon__next-title">{nextStory.title}</span>
+              <span style="font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-text-faint); margin-top: 4px;">{nextStory.location} &rarr;</span>
+            </div>
           </div>
         )}
-        <div class="essay-colophon__field">
-          <dt>Frames</dt>
-          <dd>{frames}</dd>
+      </Fragment>
+    ) : (
+      <Fragment>
+        <div class="essay-colophon__meta">
+          <div class="essay-colophon__overline">End of roll</div>
+          {title && <h2 class="essay-colophon__heading">{title}</h2>}
+          <dl class="essay-colophon__grid">
+            <div class="essay-colophon__field">
+              <dt>Location</dt>
+              <dd>{location}</dd>
+            </div>
+            <div class="essay-colophon__field">
+              <dt>Dates</dt>
+              <dd>{dates}</dd>
+            </div>
+            <div class="essay-colophon__field">
+              <dt>Camera</dt>
+              <dd>{camera}</dd>
+            </div>
+            {film && (
+              <div class="essay-colophon__field">
+                <dt>Film</dt>
+                <dd>{film}</dd>
+              </div>
+            )}
+            <div class="essay-colophon__field">
+              <dt>Frames</dt>
+              <dd>{frames}</dd>
+            </div>
+          </dl>
+          <a href={`/work/${collection}`} class="essay-colophon__back">
+            &larr; Back to {collection}
+          </a>
         </div>
-      </dl>
-      <a href={`/work/${collection}`} class="essay-colophon__back">
-        &larr; Back to {collection}
-      </a>
-    </div>
-    {nextStory && (
-      <a href={nextStory.slug} class="essay-colophon__next">
-        <div class="essay-colophon__next-img">
-          <Photo
-            url={nextStory.coverUrl}
-            width={nextStory.coverWidth}
-            height={nextStory.coverHeight}
-            lqip={nextStory.coverLqip}
-            alt={nextStory.title}
-            sizes="(max-width: 768px) 100vw, 45vw"
-          />
-        </div>
-        <div class="essay-colophon__next-overlay">
-          <span class="essay-colophon__next-kicker">Next &middot; {nextStory.location}</span>
-          <span class="essay-colophon__next-title">{nextStory.title}</span>
-        </div>
-      </a>
+        {nextStory && (
+          <a href={nextStory.slug} class="essay-colophon__next">
+            <div class="essay-colophon__next-img">
+              <Photo
+                url={nextStory.coverUrl}
+                width={nextStory.coverWidth}
+                height={nextStory.coverHeight}
+                lqip={nextStory.coverLqip}
+                alt={nextStory.title}
+                sizes="(max-width: 768px) 100vw, 45vw"
+              />
+            </div>
+            <div class="essay-colophon__next-overlay">
+              <span class="essay-colophon__next-kicker">Next &middot; {nextStory.location}</span>
+              <span class="essay-colophon__next-title">{nextStory.title}</span>
+            </div>
+          </a>
+        )}
+      </Fragment>
     )}
   </div>
 </section>

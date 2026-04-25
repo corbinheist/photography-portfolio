@@ -1,6 +1,6 @@
 # Photography Portfolio
 
-A minimalist, image-first photography portfolio built with [Astro](https://astro.build). Smooth scroll animations, responsive image delivery via DigitalOcean Spaces CDN, snap-scroll photo essays, and Substack integration for blog content.
+A minimalist, image-first photography portfolio built with [Astro](https://astro.build). Smooth scroll animations, responsive image delivery via DigitalOcean Spaces CDN, snap-scroll photo essays, interactive MapLibre GL maps, and Substack integration for blog content.
 
 ## Tech Stack
 
@@ -12,8 +12,10 @@ A minimalist, image-first photography portfolio built with [Astro](https://astro
 | Animations | GSAP + Lenis |
 | Image Storage | DigitalOcean Spaces (S3-compatible CDN) |
 | Image Processing | Sharp (offline scripts) |
+| Maps | MapLibre GL + MapTiler |
 | Content | Astro Content Collections (YAML + Zod schemas) |
 | Blog | Substack RSS feed, parsed at build time |
+| Testing | Vitest (unit) + Playwright (e2e) |
 | Server | Nginx on a DO Droplet |
 | CI/CD | GitHub Actions → SCP to droplet |
 | Package Manager | pnpm |
@@ -51,6 +53,7 @@ cp .env.example .env
 | `DO_SPACES_CDN_ENDPOINT` | CDN URL for the bucket |
 | `SUBSTACK_RSS_URL` | Your Substack RSS feed URL |
 | `SITE_URL` | Production site URL |
+| `PUBLIC_MAPTILER_KEY` | MapTiler API key for map tiles |
 
 ### Fonts
 
@@ -58,11 +61,13 @@ Fonts are loaded via Google Fonts in `BaseLayout.astro` — no local files neede
 
 ## Content Architecture
 
-Content is organized as YAML files in a three-level hierarchy:
+Content is organized as YAML files in a three-level hierarchy, with optional photo essays and map data per collection:
 
 ```
 Collections → Albums → Photos
- (e.g. "Landscapes" → "Iceland 2024" → individual photos)
+ (e.g. "Morocco" → "Nomads of Djebel Saghro" → individual photos)
+      └──→ Essays (snap-scroll photo stories)
+      └──→ Map (interactive MapLibre GL map with routes + markers)
 ```
 
 Each level lives in its own directory under `src/data/` and is validated by Zod schemas in `src/content.config.ts`.
@@ -107,12 +112,32 @@ sortOrder: 1
 ### Collections (`src/data/collections/*.yaml`)
 
 ```yaml
-title: Landscapes
-description: Wide open spaces and dramatic light.
+title: Morocco
+description: Atlas to Sahara — trade routes, kasbahs, and nomadic life.
 albums:
-  - iceland-2024                  # ordered list of album IDs
-coverPhoto: iceland-001
+  - morocco                       # ordered list of album IDs
+essays:                           # optional snap-scroll photo essays
+  - slug: nomads-essay
+    title: Nomads of Djebel Saghro
+    description: Semi-nomadic Amazigh herders in the Anti-Atlas.
+    coverImage:
+      url: https://cdn.example.com/photos/morocco-001
+      width: 2400
+      height: 1600
+      lqip: data:image/webp;base64,...
+    photoCount: 24
+coverPhoto: morocco-001
 sortOrder: 1
+map:                              # optional interactive map
+  center: [-6.5, 31.8]           # [lng, lat]
+  zoom: 6
+  regionsFile: morocco-regions.json
+  routeFile: morocco-route.json
+  markers:
+    - label: Marrakech
+      lng: -8.0
+      lat: 31.63
+      target: morocco
 ```
 
 ### Site Settings (`src/data/settings.yaml`)
@@ -133,6 +158,22 @@ Albums use `ProjectLayout` with no props (no snap, no progress). The side rail d
 ### PageLayout (standard pages)
 
 `PageLayout` wraps standard pages (gallery, work index, about, blog) with Header, Footer, and SubscribeBanner.
+
+### PitchLayout (client decks)
+
+Specialized layouts for client pitch presentations under `/pitch/`. Variants include `JapanPitchLayout`, `KormanPitchLayout`, and `ArchivePitchLayout` for project-specific styling.
+
+### Homepage
+
+The landing page uses a briefing/dossier design language:
+
+| Component | Purpose |
+|---|---|
+| `HeroBriefing` | Full-viewport slideshow with dossier-style metadata overlays |
+| `DispatchCallout` | Featured collection callout with cover image + coordinates |
+| `ManifestSection` | Numbered list of all collections with status, coordinates, and frame counts |
+| `EssaysPreview` | Latest photo essays as a numbered list |
+| `ColophonTeaser` | About/colophon section teaser |
 
 ### Navigation: SideRail + CommandPalette
 
@@ -160,8 +201,11 @@ Full-viewport, snap-scroll photo essays live alongside album pages under `/work/
 | `EssaySlideTriptych` | Three images side-by-side |
 | `EssaySlideMiniGallery` | Masonry grid within a single slide |
 | `EssaySlideText` | Text-only slide (centered or left-aligned) |
+| `EssaySlideQuote` | Pull-quote slide |
+| `EssaySlideColophon` | Closing credits/colophon slide |
 | `EssaySlideFlow` | Prose section for longer narrative passages |
 | `EssaySequence` | Orientation-adaptive wrapper (landscape vs portrait sequences) |
+| `EssayPlaceholder` | Placeholder for essays under construction |
 
 All slide styles are in `src/styles/essay.css`. Navigation (arrow keys, nav dots, progress bar) is handled by `src/scripts/essay-nav.ts`.
 
@@ -189,7 +233,15 @@ The pipeline produces:
 - A 20px-wide base64 LQIP blur placeholder per photo (~400 bytes)
 - EXIF metadata extraction (camera, lens, settings, date)
 
+When a source image's native width falls between standard breakpoints (e.g. 2048px), the pipeline generates an additional variant at native width so the srcset covers every resolution without upscaling.
+
 The `<Photo />` component renders a `<picture>` element with AVIF/WebP `srcset` and the LQIP as a CSS background for instant blur-up.
+
+## Maps
+
+Each collection can include an interactive map (MapLibre GL + MapTiler tiles) showing the travel route, region boundaries, and album markers. Map configuration lives in the collection YAML (`map` field) and geospatial data lives in `src/data/maps/` as GeoJSON files.
+
+The `<Map />` component (`src/components/Map.astro`) is reusable — it renders on collection landing pages with region highlights, route lines, and clickable markers that link to albums. GeoJSON boundary and route files are stored in `src/data/maps/`.
 
 ## Animation System
 
@@ -216,44 +268,60 @@ CSS custom properties drive the entire color system — no accent color. The pho
 ```
 photography-portfolio/
 ├── .github/workflows/
-│   └── deploy.yml              # GitHub Actions CI/CD
+│   └── deploy.yml              # GitHub Actions CI/CD (build + test + deploy)
 ├── public/
 │   ├── favicon.svg
-│   └── robots.txt
+│   ├── robots.txt
+│   ├── fonts/                  # Local font files (if any)
+│   ├── images/                 # Static images (pitch deck assets)
+│   └── scripts/                # Third-party scripts (analytics)
 ├── scripts/                    # Node.js image pipeline scripts
 │   ├── process-images.ts       # Sharp resize + format conversion + LQIP
 │   ├── upload-to-spaces.ts     # S3 upload to DO Spaces
-│   └── generate-photo-yaml.ts  # EXIF extraction + YAML generation
+│   ├── generate-photo-yaml.ts  # EXIF extraction + YAML generation
+│   ├── fetch-rss.ts            # Substack RSS feed fetcher
+│   └── preview.ts              # Local preview server management
+├── tests/
+│   ├── e2e/                    # Playwright e2e tests (smoke, lightbox, theme)
+│   └── unit/                   # Vitest unit tests (lightbox, theme, RSS, subscribe, photo-widths)
 ├── src/
 │   ├── components/
 │   │   ├── blog/               # BlogCard, BlogSection
-│   │   ├── essay/              # EssaySlideFullBleed, EssaySlideImageText, etc.
-│   │   ├── global/             # Header, Footer, SideRail, CommandPalette, ThemeToggle, SEO
-│   │   ├── home/               # HeroSection, FeaturedWork, AboutTeaser
+│   │   ├── brand/              # HeistMask (wordmark/branding)
+│   │   ├── essay/              # EssaySlide* components, EssaySequence, EssayPlaceholder
+│   │   ├── global/             # Header, Footer, SideRail, CommandPalette, ThemeToggle, SEO, SubscribeForm, SubscribeBanner
+│   │   ├── home/               # HeroBriefing, DispatchCallout, ManifestSection, EssaysPreview, ColophonTeaser, etc.
 │   │   ├── photo/              # Photo, PhotoGrid, AlbumCard, PhotoLightbox
-│   │   └── ui/                 # Button, Container
+│   │   ├── ui/                 # Button, Container
+│   │   └── Map.astro           # Reusable MapLibre GL map component
 │   ├── content.config.ts       # Zod schemas for all content collections
 │   ├── data/
 │   │   ├── albums/             # Album YAML files
 │   │   ├── collections/        # Collection YAML files
+│   │   ├── maps/               # GeoJSON files (regions, routes, country boundaries)
 │   │   ├── loaders/
 │   │   │   └── substack-loader.ts
 │   │   ├── photos/             # Photo YAML files
-│   │   └── settings.yaml       # Site configuration
+│   │   ├── settings.yaml       # Site configuration
+│   │   └── substack-feed.xml   # Cached RSS feed (committed to repo)
 │   ├── layouts/
 │   │   ├── BaseLayout.astro    # HTML shell, ClientRouter, fonts, theme, rail-width flash prevention
 │   │   ├── ProjectLayout.astro # Albums + essays: SideRail, CommandPalette, optional snap-scroll
 │   │   ├── PageLayout.astro    # Standard pages: Header, Footer, SubscribeBanner
-│   │   └── PitchLayout.astro   # Client pitch decks (variants: Japan, Korman, Archive)
+│   │   ├── PitchLayout.astro   # Client pitch decks
+│   │   ├── JapanPitchLayout.astro
+│   │   ├── KormanPitchLayout.astro
+│   │   └── ArchivePitchLayout.astro
 │   ├── pages/
 │   │   ├── index.astro
+│   │   ├── gallery.astro               # All photos (masonry grid + lightbox)
 │   │   ├── work/
 │   │   │   ├── index.astro             # All collections
 │   │   │   ├── morocco/
 │   │   │   │   ├── nomads-essay.astro  # Photo essay: Nomads of Djebel Saghro
 │   │   │   │   └── ksar-essay.astro    # Photo essay: Ksar Tamnougalt
 │   │   │   └── [collection]/
-│   │   │       ├── index.astro         # Albums in a collection
+│   │   │       ├── index.astro         # Albums in a collection (+ map if configured)
 │   │   │       └── [album].astro       # Single album gallery
 │   │   ├── essays/
 │   │   │   └── example.astro           # Kitchen-sink essay slide demo
@@ -263,19 +331,44 @@ photography-portfolio/
 │   │   └── 404.astro
 │   ├── scripts/
 │   │   ├── animations/         # init.ts, reveals.ts, parallax.ts, gallery.ts
+│   │   ├── utils/              # photo-widths.ts
 │   │   ├── essay-nav.ts        # Essay keyboard nav, progress bar, nav dots
 │   │   ├── lightbox.ts         # Fullscreen photo viewer logic
+│   │   ├── map-init.ts         # MapLibre GL map initialization
+│   │   ├── subscribe.ts        # Email subscribe form logic
 │   │   └── theme.ts            # Dark/light mode persistence
 │   └── styles/
 │       ├── global.css          # Reset, custom properties, typography
 │       ├── fonts.css           # Font-stack declarations (Google Fonts loaded in BaseLayout)
-│       ├── essay.css            # Snap-scroll essay slide layouts + responsive rules
-│       └── animations.css      # Animation initial states + reduced motion
+│       ├── essay.css           # Snap-scroll essay slide layouts + responsive rules
+│       ├── animations.css      # Animation initial states + reduced motion
+│       ├── map.css             # MapLibre GL map styling
+│       └── pitch.css           # Pitch deck base styles (+ per-deck variants)
 ├── _raw/                       # Drop raw photos here (gitignored)
+├── vitest.config.ts
+├── playwright.config.ts
 ├── astro.config.mjs
 ├── tsconfig.json
 └── package.json
 ```
+
+## Testing
+
+```sh
+# Run unit tests (vitest)
+pnpm test
+
+# Run unit tests in watch mode
+pnpm test:watch
+
+# Run e2e tests (playwright — requires a build first)
+pnpm test:e2e
+
+# Run all tests
+pnpm test:all
+```
+
+Unit tests cover lightbox logic, theme persistence, RSS parsing, subscribe forms, and photo width utilities. E2E tests cover smoke navigation, lightbox interaction, and theme toggling.
 
 ## Deployment
 
@@ -324,12 +417,14 @@ Enable with `ln -s /etc/nginx/sites-available/portfolio /etc/nginx/sites-enabled
 The workflow at `.github/workflows/deploy.yml` runs on every push to `main`:
 
 1. Installs dependencies with pnpm
-2. Attempts to fetch fresh Substack RSS (falls back to cached file if blocked)
-3. Runs `astro check` (type checking) and `astro build`
-4. SCPs the `dist/` directory to the droplet
-5. Reloads Nginx
+2. Runs unit tests (`pnpm test`)
+3. Attempts to fetch fresh Substack RSS (falls back to cached file if blocked)
+4. Runs `astro check` (type checking) and `astro build`
+5. Installs Playwright and runs e2e tests against the build
+6. SCPs the `dist/` directory to the droplet
+7. Reloads Nginx
 
-Deploy steps are skipped if secrets aren't configured yet.
+The build and deploy jobs are separated — deploy only runs on `main` and requires the build to pass.
 
 Required GitHub repository secrets:
 
@@ -340,6 +435,7 @@ Required GitHub repository secrets:
 | `DROPLET_SSH_KEY` | Private SSH key for the deploy user |
 | `SUBSTACK_RSS_URL` | Substack RSS feed URL (optional) |
 | `SITE_URL` | Production URL |
+| `PUBLIC_MAPTILER_KEY` | MapTiler API key for map tiles |
 
 The workflow also triggers on `repository_dispatch` events of type `substack-update` and on manual `workflow_dispatch`.
 
@@ -426,6 +522,16 @@ albums:
   - album-id
 coverPhoto: photo-id
 sortOrder: 1
+map:                            # optional
+  center: [-8.0, 31.6]
+  zoom: 6
+  regionsFile: my-regions.json  # place in src/data/maps/
+  routeFile: my-route.json
+  markers:
+    - label: Marrakech
+      lng: -8.0
+      lat: 31.63
+      target: album-id
 ```
 
-The new collection will automatically appear at `/work/` and generate routes at `/work/[collection-id]/`.
+The new collection will automatically appear at `/work/` and generate routes at `/work/[collection-id]/`. If a `map` is configured, the collection landing page will render an interactive map.

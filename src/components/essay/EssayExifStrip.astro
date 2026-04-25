@@ -1,0 +1,21 @@
+---
+/**
+ * EXIF data strip — 6-column mono band showing shooting metadata.
+ * Used inline within slides, not as a standalone snap slide.
+ */
+
+interface Props {
+  items: Array<{ label: string; value: string }>;
+}
+
+const { items } = Astro.props;
+---
+
+<div class="essay-exif-strip">
+  {items.map((item) => (
+    <div class="essay-exif-strip__cell">
+      <span class="essay-exif-strip__label">{item.label}</span>
+      <span class="essay-exif-strip__value">{item.value}</span>
+    </div>
+  ))}
+</div>

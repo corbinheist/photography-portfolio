@@ -1,0 +1,50 @@
+---
+/**
+ * Gear slide — spec-sheet manifest card grid for equipment.
+ * 3-column grid with index, usage tag, name, and description.
+ */
+import EssayOverline from './EssayOverline.astro';
+
+interface Props {
+  overline?: string;
+  dossierNum?: string;
+  heading: string;
+  lead?: string;
+  items: Array<{ name: string; description: string; usage?: string }>;
+  footerLeft?: string;
+  footerRight?: string;
+}
+
+const { overline, dossierNum, heading, lead, items, footerLeft, footerRight } = Astro.props;
+---
+
+<section class="essay-slide essay-gear">
+  <div class="essay-gear__head">
+    <div class="essay-gear__head-left">
+      {overline && dossierNum && <EssayOverline num={dossierNum} text={overline} />}
+      {overline && !dossierNum && <p class="essay-ov">{overline}</p>}
+      <h2>{heading}</h2>
+    </div>
+    {lead && <p class="essay-gear__lead">{lead}</p>}
+  </div>
+
+  <div class="essay-gear__grid">
+    {items.map((item, i) => (
+      <div class="essay-gear__card">
+        <div class="essay-gear__card-top">
+          <span class="essay-gear__card-idx">{String(i + 1).padStart(2, '0')}</span>
+          {item.usage && <span class="essay-gear__card-usage">{item.usage}</span>}
+        </div>
+        <h3>{item.name}</h3>
+        <p>{item.description}</p>
+      </div>
+    ))}
+  </div>
+
+  {(footerLeft || footerRight) && (
+    <div class="essay-gear__foot">
+      <span>{footerLeft || ''}</span>
+      <span>{footerRight || ''}</span>
+    </div>
+  )}
+</section>

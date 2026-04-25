@@ -1,12 +1,13 @@
 ---
 /**
- * Nomads of Djebel Saghro — Photo Essay
+ * Nomads of Djebel Saghro — Photo Essay (Dossier 011)
  *
  * A day with the Ait Atta: arrival, tea, bread, herders, and firelight
  * in Morocco's Djebel Saghro massif. November 2025.
  */
 import ProjectLayout from '@layouts/ProjectLayout.astro';
 import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
+import EssaySlideHero from '@components/essay/EssaySlideHero.astro';
 import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
 import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
 import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
@@ -15,6 +16,16 @@ import EssaySlideText from '@components/essay/EssaySlideText.astro';
 import EssaySlideFlow from '@components/essay/EssaySlideFlow.astro';
 import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
 import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
+import EssayDivider from '@components/essay/EssayDivider.astro';
+import EssaySlideStats from '@components/essay/EssaySlideStats.astro';
+import EssaySlidePullQuoteFB from '@components/essay/EssaySlidePullQuoteFB.astro';
+import EssaySlideTimeline from '@components/essay/EssaySlideTimeline.astro';
+import EssaySlideContactSheet from '@components/essay/EssaySlideContactSheet.astro';
+import EssaySlideGear from '@components/essay/EssaySlideGear.astro';
+import EssaySlideRelated from '@components/essay/EssaySlideRelated.astro';
+import EssaySlidePinnedCaption from '@components/essay/EssaySlidePinnedCaption.astro';
+import EssaySlideProseColumns from '@components/essay/EssaySlideProseColumns.astro';
+import EssaySlideMapInset from '@components/essay/EssaySlideMapInset.astro';
 
 /**
  * Photo data — ordered for the essay narrative.
@@ -272,30 +283,32 @@ const photos = [
 <ProjectLayout
   title="Nomads of Djebel Saghro"
   description="A day with the Ait Atta — tea, bread, herds, and firelight in Morocco's volcanic highlands."
-  snap
-  progress
+  dossier={{ num: '011', label: 'NOMADS', totalFrames: 26 }}
 >
 
-  <!-- ======= I. ARRIVAL & CAMP ======= -->
+  <!-- ======= HERO ======= -->
 
   <!-- 1. Hero — The road in -->
-  <EssaySlideFullBleed
+  <EssaySlideHero
     url={photos[0].url}
     width={photos[0].width}
     height={photos[0].height}
     lqip={photos[0].lqip}
     alt={photos[0].title}
     lightboxIndex={0}
-    fit="cover"
-    overlayPosition="bottom-left"
-    loading="eager"
-  >
-    <h1 style="font-family: var(--font-heading); font-size: var(--text-3xl); font-weight: 400; margin-bottom: var(--space-sm);">
-      Nomads of Djebel Saghro
-    </h1>
-    <p style="font-size: var(--text-lg); opacity: 0.8;">Morocco</p>
-    <p style="font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.06em; opacity: 0.5; margin-top: var(--space-sm);">31&deg;16&prime;N &ensp; 5&deg;59&prime;W &ensp; 2,100m</p>
-  </EssaySlideFullBleed>
+    dossierNum="011"
+    sequenceNum="N° 01"
+    overline="Djebel Saghro · Anti-Atlas · Morocco"
+    title="Nomads of Djebel Saghro"
+    deck="A day with the Ait Atta — tea, bread, herds, and firelight in Morocco's volcanic highlands."
+    manifest={{
+      region: 'Anti-Atlas',
+      coords: "31°16′N 5°59′W",
+      elev: '2,100 m',
+      date: 'NOV 2025',
+      frames: '35',
+    }}
+  />
 
   <!-- 2. Opening text -->
   <EssaySlideText align="center">
@@ -310,6 +323,36 @@ const photos = [
     </p>
   </EssaySlideText>
 
+  <!-- Map inset — location context -->
+  <EssaySlideMapInset
+    heading="Anti-Atlas massif, southern Morocco"
+    description="The Djebel Saghro is a volcanic plateau rising between the High Atlas and the Sahara — black basalt pinnacles, dry riverbeds, and seasonal camps of the Ait Atta nomads."
+    metadata={[
+      { label: 'Coords', value: "31°16′N 5°59′W" },
+      { label: 'Elevation', value: '2,100 m' },
+      { label: 'Region', value: 'Anti-Atlas · Draa-Tafilalet' },
+      { label: 'Dates', value: 'November 2025' },
+      { label: 'Party', value: '3 (photographer + guide + driver)' },
+    ]}
+  />
+
+  <!-- Stats — expedition numbers -->
+  <EssaySlideStats
+    heading="Field numbers."
+    stats={[
+      { value: '4', label: 'DAYS' },
+      { value: '35', label: 'FRAMES' },
+      { value: '2,100', label: 'METRES' },
+      { value: '40', label: 'MIN WALK', unit: 'to water' },
+    ]}
+    footerLeft="DOSSIER 011 · NOMADS"
+    footerRight="NOV 2025"
+  />
+
+  <!-- ======= I. ARRIVAL & CAMP ======= -->
+
+  <EssayDivider num="01" label="I · ARRIVAL & CAMP" />
+
   <!-- 3. Tea preparation — image + text -->
   <EssaySlideImageText
     url={photos[1].url}
@@ -318,6 +361,7 @@ const photos = [
     lqip={photos[1].lqip}
     alt={photos[1].title}
     lightboxIndex={1}
+    frameSlide
   >
     <h3>The Tea Ritual</h3>
     <p>
@@ -342,6 +386,7 @@ const photos = [
     alt={photos[2].title}
     lightboxIndex={2}
     fit="contain"
+    frameSlide
   />
 
   <!-- 5. Details diptych — sugar scoop + flour hands -->
@@ -351,6 +396,7 @@ const photos = [
       { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
     ]}
     gap="tight"
+    frameSlide
   />
 
   <!-- 6. Bread making — image + text (flipped) -->
@@ -362,6 +408,7 @@ const photos = [
     alt={photos[5].title}
     lightboxIndex={5}
     flip
+    frameSlide
   >
     <h3>Bread in the Dark</h3>
     <p>
@@ -384,6 +431,21 @@ const photos = [
       { ...photos[7], alt: photos[7].title, lightboxIndex: 7 },
     ]}
     gap="tight"
+    frameSlide
+  />
+
+  <!-- Pull quote — tea maker -->
+  <EssaySlidePullQuoteFB
+    url={photos[6].url}
+    width={photos[6].width}
+    height={photos[6].height}
+    lqip={photos[6].lqip}
+    alt={photos[6].title}
+    lightboxIndex={6}
+    text="The first pour is for the tea, the second for the sugar, the third for the mint."
+    attribution="Field note · Day 1"
+    location="Camp I · 31°16′N"
+    dossierNum="011"
   />
 
   <!-- 8. Bread oven fire — full bleed -->
@@ -395,9 +457,12 @@ const photos = [
     alt={photos[8].title}
     lightboxIndex={8}
     captionTitle={photos[8].title}
+    frameSlide
   />
 
   <!-- ======= II. THE HERDERS ======= -->
+
+  <EssayDivider num="02" label="II · THE HERDERS" />
 
   <!-- 9. Transition prose -->
   <EssaySlideFlow>
@@ -424,6 +489,7 @@ const photos = [
     alt={photos[9].title}
     lightboxIndex={9}
     fit="contain"
+    frameSlide
   />
 
   <!-- 11. Herder with kid — image + text -->
@@ -434,6 +500,7 @@ const photos = [
     lqip={photos[10].lqip}
     alt={photos[10].title}
     lightboxIndex={10}
+    frameSlide
   >
     <h3>The Flock</h3>
     <p>
@@ -455,6 +522,21 @@ const photos = [
       { ...photos[12], alt: photos[12].title, lightboxIndex: 12 },
     ]}
     gap="tight"
+    frameSlide
+  />
+
+  <!-- Timeline — a day with the herders -->
+  <EssaySlideTimeline
+    heading="A day in the field."
+    lead="The rhythm of life in the Saghro follows the sun and the flock."
+    entries={[
+      { time: '05:40', label: 'First light', note: 'Sun hits the eastern pinnacles. The camp stirs.' },
+      { time: '07:10', label: 'Tea and bread', note: 'Kettle on the coals, bread in the ashes.' },
+      { time: '09:30', label: 'Herds out', note: 'Sheep and goats move toward the western pasture.' },
+      { time: '13:00', label: 'Shade and rest', note: 'Too hot to move. Shelter under rock overhangs.', active: true },
+      { time: '17:45', label: 'Water run', note: 'Forty minutes to the nearest source and back.' },
+      { time: '19:20', label: 'Fire and again', note: 'Scrub brush, coals, kettle. The cycle resets.' },
+    ]}
   />
 
   <!-- 13. Pinnacles landscape — full bleed -->
@@ -467,6 +549,7 @@ const photos = [
     lightboxIndex={13}
     captionTitle={photos[13].title}
     captionMeta="35mm &middot; f/6.3 &middot; 1/320s"
+    frameSlide
   />
 
   <!-- 14. Two herders sitting diptych -->
@@ -476,6 +559,7 @@ const photos = [
       { ...photos[15], alt: photos[15].title, lightboxIndex: 15 },
     ]}
     gap="tight"
+    frameSlide
   />
 
   <!-- 15. Herder carrying water — image + text (flipped) -->
@@ -487,6 +571,7 @@ const photos = [
     alt={photos[16].title}
     lightboxIndex={16}
     flip
+    frameSlide
   >
     <h3>Between Water and Pasture</h3>
     <p>
@@ -519,6 +604,7 @@ const photos = [
     alt={photos[20].title}
     lightboxIndex={20}
     fit="contain"
+    frameSlide
   />
 
   <!-- 18. Flock at mesa sunset — full bleed landscape (transition to dusk) -->
@@ -529,9 +615,12 @@ const photos = [
     lqip={photos[21].lqip}
     alt={photos[21].title}
     lightboxIndex={21}
+    frameSlide
   />
 
   <!-- ======= III. DUSK & FIRELIGHT ======= -->
+
+  <EssayDivider num="03" label="III · DUSK & FIRELIGHT" />
 
   <!-- 19. Pull quote -->
   <EssaySlideQuote
@@ -558,6 +647,7 @@ const photos = [
     alt={photos[22].title}
     lightboxIndex={22}
     fit="contain"
+    frameSlide
   />
 
   <!-- 21. Two campfire scenes diptych -->
@@ -567,6 +657,7 @@ const photos = [
       { ...photos[24], alt: photos[24].title, lightboxIndex: 24 },
     ]}
     gap="tight"
+    frameSlide
   />
 
   <!-- 22. Fire tender — image + text -->
@@ -577,6 +668,7 @@ const photos = [
     lqip={photos[25].lqip}
     alt={photos[25].title}
     lightboxIndex={25}
+    frameSlide
   >
     <h3>Fire and Tea Again</h3>
     <p>
@@ -598,6 +690,7 @@ const photos = [
       { ...photos[27], alt: photos[27].title, lightboxIndex: 27 },
     ]}
     gap="tight"
+    frameSlide
   />
 
   <!-- 24. Campfire among pinnacles — full bleed landscape -->
@@ -608,6 +701,7 @@ const photos = [
     lqip={photos[28].lqip}
     alt={photos[28].title}
     lightboxIndex={28}
+    frameSlide
   />
 
   <!-- 25. Campfire + dusk landscape diptych -->
@@ -617,6 +711,7 @@ const photos = [
       { ...photos[30], alt: photos[30].title, lightboxIndex: 30 },
     ]}
     gap="tight"
+    frameSlide
   />
 
   <!-- 26. Two at fire wide — full bleed landscape -->
@@ -627,6 +722,7 @@ const photos = [
     lqip={photos[31].lqip}
     alt={photos[31].title}
     lightboxIndex={31}
+    frameSlide
   />
 
   <!-- 27. Firelight portrait — image + text (flipped) -->
@@ -638,6 +734,7 @@ const photos = [
     alt={photos[32].title}
     lightboxIndex={32}
     flip
+    frameSlide
   >
     <h3>The Last Tea</h3>
     <p>
@@ -661,6 +758,7 @@ const photos = [
     alt={photos[33].title}
     lightboxIndex={33}
     fit="contain"
+    frameSlide
   />
 
   <!-- 29. Closing — man by dying embers -->
@@ -672,12 +770,73 @@ const photos = [
     alt={photos[34].title}
     lightboxIndex={34}
     fit="contain"
+    frameSlide
+  />
+
+  <!-- ======= APPENDIX ======= -->
+
+  <!-- Contact sheet — select frames -->
+  <EssaySlideContactSheet
+    heading="DOSSIER 011 · PROOF SHEET"
+    caption="Selected frames."
+    photos={[
+      { url: photos[0].url, width: photos[0].width, height: photos[0].height, lqip: photos[0].lqip, alt: photos[0].title, lightboxIndex: 0 },
+      { url: photos[2].url, width: photos[2].width, height: photos[2].height, lqip: photos[2].lqip, alt: photos[2].title, lightboxIndex: 2 },
+      { url: photos[6].url, width: photos[6].width, height: photos[6].height, lqip: photos[6].lqip, alt: photos[6].title, lightboxIndex: 6 },
+      { url: photos[9].url, width: photos[9].width, height: photos[9].height, lqip: photos[9].lqip, alt: photos[9].title, lightboxIndex: 9 },
+      { url: photos[11].url, width: photos[11].width, height: photos[11].height, lqip: photos[11].lqip, alt: photos[11].title, lightboxIndex: 11 },
+      { url: photos[13].url, width: photos[13].width, height: photos[13].height, lqip: photos[13].lqip, alt: photos[13].title, lightboxIndex: 13 },
+      { url: photos[20].url, width: photos[20].width, height: photos[20].height, lqip: photos[20].lqip, alt: photos[20].title, lightboxIndex: 20 },
+      { url: photos[22].url, width: photos[22].width, height: photos[22].height, lqip: photos[22].lqip, alt: photos[22].title, lightboxIndex: 22 },
+      { url: photos[25].url, width: photos[25].width, height: photos[25].height, lqip: photos[25].lqip, alt: photos[25].title, lightboxIndex: 25 },
+      { url: photos[28].url, width: photos[28].width, height: photos[28].height, lqip: photos[28].lqip, alt: photos[28].title, lightboxIndex: 28 },
+      { url: photos[32].url, width: photos[32].width, height: photos[32].height, lqip: photos[32].lqip, alt: photos[32].title, lightboxIndex: 32 },
+      { url: photos[34].url, width: photos[34].width, height: photos[34].height, lqip: photos[34].lqip, alt: photos[34].title, lightboxIndex: 34 },
+    ]}
+    footerLeft="HEIST.STUDIO / FIELD"
+    footerRight="35mm + 50mm · NOV 2025"
+  />
+
+  <!-- Prose columns — what the fire does -->
+  <EssaySlideProseColumns heading="What the fire does." leftLabel="WARMTH" rightLabel="TEA">
+    <p slot="left">
+      The scrub brush of the Saghro burns hot and fast. It crackles like rifle shots
+      in the silence. The herders feed it in steady handfuls, leaning forward to blow
+      on the coals when the flame drops. The warmth pushes back the cold that rolls
+      down from the mesa after sunset, ten degrees gone in twenty minutes. Without the
+      fire there is only the dark and the wind.
+    </p>
+    <p slot="right">
+      The kettle goes on first, balanced on the same three stones, and by the time
+      the tea is poured the fire has done its work twice over. The amber arc from pot
+      to glass catches the light of the coals instead of the sun, and the gesture is
+      identical to the one made that morning. The ritual holds. The fire is the axis
+      around which the day turns.
+    </p>
+  </EssaySlideProseColumns>
+
+  <!-- Gear manifest -->
+  <EssaySlideGear
+    heading="Kit manifest."
+    lead="Two bodies, three lenses, and a tripod that mostly stayed in the bag."
+    items={[
+      { name: 'Canon EOS R5 Mark II', description: 'Primary body. 45MP, fast autofocus in low light. 30 of 35 frames.', usage: '30 FRAMES' },
+      { name: 'Canon EOS R5', description: 'Secondary body. Paired with the 70-200mm for reach.', usage: '5 FRAMES' },
+      { name: 'RF 50mm f/1.2L USM', description: 'Primary lens. Wide open for firelight work, stopped down for daylight.', usage: 'PRIMARY' },
+      { name: 'RF 35mm f/1.4L VCM', description: 'Secondary wide. Used for campfire scenes and landscapes.', usage: 'SECONDARY' },
+      { name: 'RF 70-200mm f/2.8L IS USM', description: 'Telephoto for herders at distance. Compressed the pinnacles.', usage: 'TELEPHOTO' },
+      { name: 'Peak Design Travel Tripod', description: 'Carbon fiber. Carried every day, used twice.', usage: 'RARELY' },
+    ]}
+    footerLeft="DOSSIER 011"
+    footerRight="TOTAL: 35 FRAMES"
   />
 
   <!-- 30. Colophon -->
   <EssaySlideColophon
     title="Nomads of Djebel Saghro"
-    location="Djebel Saghro, Morocco · 31°16′N 5°59′W · 2,100m"
+    dossierNum="011"
+    location="Djebel Saghro"
+    coords="31°16′N 5°59′W"
     dates="November 2025"
     camera="Canon EOS R5m2 · Canon EOS R5"
     frames="35"
@@ -686,11 +845,32 @@ const photos = [
       title: 'Ksar Tamnougalt',
       slug: '/work/morocco/ksar-essay',
       location: 'Draa Valley',
+      dossierNum: 'N° 02',
       coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-001-cnh_3628',
       coverWidth: 8192,
       coverHeight: 5464,
       coverLqip: 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA==',
     }}
+  />
+
+  <!-- Related dossiers -->
+  <EssaySlideRelated
+    featured={{
+      title: 'Ksar Tamnougalt',
+      slug: '/work/morocco/ksar-essay',
+      description: 'A fortified village in the Draa Valley — mud walls, palm groves, and the memory of the caravan trade.',
+      location: 'Draa Valley · Morocco',
+      dossierLabel: 'N° 02',
+      coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-001-cnh_3628',
+      coverWidth: 8192,
+      coverHeight: 5464,
+      coverLqip: 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA==',
+    }}
+    others={[
+      { title: 'Gorges du Dadès', slug: '#', location: 'High Atlas · Morocco', dossierLabel: 'N° 03', description: 'Coming soon.' },
+      { title: 'Erg Chebbi', slug: '#', location: 'Sahara · Morocco', dossierLabel: 'N° 04', description: 'Coming soon.' },
+    ]}
+    allDossiersHref="/work/morocco"
   />
 
   <PhotoLightbox photos={photos} />

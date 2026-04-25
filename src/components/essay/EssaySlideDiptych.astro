@@ -20,15 +20,17 @@ interface Props {
   photos: [PhotoData, PhotoData];
   gap?: 'none' | 'tight' | 'normal';
   caption?: string;
+  /** Mark as image frame for dossier chrome counter */
+  frameSlide?: boolean;
 }
 
-const { photos, gap = 'tight', caption } = Astro.props;
+const { photos, gap = 'tight', caption, frameSlide = false } = Astro.props;
 
 const isPortrait = photos.every((p) => p.height > p.width);
 const orientation = isPortrait ? 'portrait' : 'landscape';
 ---
 
-<section class:list={['essay-slide', 'essay-diptych', `essay-diptych--${orientation}`]}>
+<section class:list={['essay-slide', 'essay-diptych', `essay-diptych--${orientation}`]} {...(frameSlide ? { 'data-essay-frame-slide': '' } : {})}>
   <div class:list={['essay-diptych__images', `essay-diptych__images--gap-${gap}`]}>
     {photos.map((photo) => (
       <div class="essay-diptych__item" style={`flex: ${photo.width / photo.height}`}>

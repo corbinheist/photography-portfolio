@@ -17,6 +17,8 @@ interface Props {
   flip?: boolean;
   /** When set, renders a placeholder wireframe instead of a Photo */
   placeholder?: { id: string; title: string };
+  /** Mark as image frame for dossier chrome counter */
+  frameSlide?: boolean;
 }
 
 const {
@@ -28,6 +30,7 @@ const {
   lightboxIndex,
   flip = false,
   placeholder,
+  frameSlide = false,
 } = Astro.props;
 
 const isPortrait = height > width;
@@ -40,6 +43,7 @@ const isPortrait = height > width;
     flip && 'essay-image-text--flip',
     isPortrait && 'essay-image-text--portrait',
   ]}
+  {...(frameSlide ? { 'data-essay-frame-slide': '' } : {})}
 >
   <div class="essay-image-text__image">
     {placeholder ? (

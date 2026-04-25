@@ -12,12 +12,15 @@
  */
 import ProjectLayout from '@layouts/ProjectLayout.astro';
 import EssaySequence from '@components/essay/EssaySequence.astro';
+import EssaySlideHero from '@components/essay/EssaySlideHero.astro';
 import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
 import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
 import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
 import EssaySlideText from '@components/essay/EssaySlideText.astro';
 import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
 import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
+import EssaySlideRelated from '@components/essay/EssaySlideRelated.astro';
+import EssayDivider from '@components/essay/EssayDivider.astro';
 
 /**
  * Photo data — ordered by export number (001–011).
@@ -102,13 +105,23 @@ const photos = [
     exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.8', shutter: '1/3200s', iso: 400 },
   },
 ];
+
+const nextStoryData = {
+  title: 'Nomads of Djebel Saghro',
+  slug: '/work/morocco/nomads-essay',
+  location: 'Djebel Saghro',
+  dossierNum: 'N° 01',
+  coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912',
+  coverWidth: 6916,
+  coverHeight: 4613,
+  coverLqip: 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA=',
+};
 ---
 
 <ProjectLayout
   title="Ksar Tamnougalt"
   description="Inside a fortified village in Morocco's Draa Valley. November 2025."
-  snap
-  progress
+  dossier={{ num: '012', label: 'KSAR', totalFrames: 9 }}
 >
 
   <!-- ============================================================
@@ -116,28 +129,40 @@ const photos = [
        ============================================================ -->
   <EssaySequence orientation="landscape" photos={photos}>
 
-    <!-- 1. Cover — Figure along the ksar wall -->
-    <EssaySlideFullBleed
+    <!-- 1. Hero — Figure along the ksar wall -->
+    <EssaySlideHero
       url={photos[0].url}
       width={photos[0].width}
       height={photos[0].height}
       lqip={photos[0].lqip}
       alt={photos[0].title}
       lightboxIndex={0}
-      fit="cover"
-      loading="eager"
+      dossierNum="012"
+      sequenceNum="N° 02"
+      overline="Draa Valley · Morocco"
+      title="Ksar Tamnougalt"
+      deck="Inside a fortified village on the edge of the Draa, half-collapsed and still inhabited. November 2025."
+      manifest={{
+        region: 'Draa Valley',
+        coords: "30°41′N 6°27′W",
+        elev: '1,060 m',
+        date: 'NOV 2025',
+        frames: '11',
+      }}
     />
 
     <!-- 2. Title card -->
     <EssaySlideText align="center">
       <p class="overline">Ksar Tamnougalt &middot; Draa Valley &middot; 30&deg;41&prime;N &ensp; 6&deg;27&prime;W</p>
-      <h2>Ksar Tamnougalt</h2>
+      <h2>Where the walls still hold</h2>
       <p>
         A fortified village on the edge of the Draa, half-collapsed and still
         inhabited. Our guide grew up inside these walls. He walked us through
         what remained.
       </p>
     </EssaySlideText>
+
+    <EssayDivider num="01" label="I · ENTERING" />
 
     <!-- 3. Entering the ksar — image + text -->
     <EssaySlideImageText
@@ -147,6 +172,7 @@ const photos = [
       lqip={photos[1].lqip}
       alt={photos[1].title}
       lightboxIndex={1}
+      frameSlide
     >
       <h3>Through the Door</h3>
       <p>
@@ -165,6 +191,7 @@ const photos = [
         { ...photos[7], alt: photos[7].title, lightboxIndex: 7 },
       ]}
       gap="tight"
+      frameSlide
     />
 
     <!-- 5. The corridor — full bleed portrait -->
@@ -176,7 +203,10 @@ const photos = [
       alt={photos[3].title}
       lightboxIndex={3}
       fit="contain"
+      frameSlide
     />
+
+    <EssayDivider num="02" label="II · INSIDE THE WALLS" />
 
     <!-- 6. Movement through space — image + text (flipped) -->
     <EssaySlideImageText
@@ -187,6 +217,7 @@ const photos = [
       alt={photos[4].title}
       lightboxIndex={4}
       flip
+      frameSlide
     >
       <h3>Room to Room</h3>
       <p>
@@ -205,6 +236,7 @@ const photos = [
         { ...photos[6], alt: photos[6].title, lightboxIndex: 6 },
       ]}
       gap="tight"
+      frameSlide
     />
 
     <!-- 8. Interior detail — image + text -->
@@ -215,6 +247,7 @@ const photos = [
       lqip={photos[8].lqip}
       alt={photos[8].title}
       lightboxIndex={8}
+      frameSlide
     >
       <h3>What Remains</h3>
       <p>
@@ -229,6 +262,8 @@ const photos = [
       text="The ksar is not a ruin. It is a place between states."
     />
 
+    <EssayDivider num="03" label="III · ABOVE" />
+
     <!-- 10. The rooftop — full bleed portrait -->
     <EssaySlideFullBleed
       url={photos[9].url}
@@ -238,6 +273,7 @@ const photos = [
       alt={photos[9].title}
       lightboxIndex={9}
       fit="contain"
+      frameSlide
     />
 
     <!-- 11. Departure — full bleed portrait -->
@@ -249,25 +285,33 @@ const photos = [
       alt={photos[10].title}
       lightboxIndex={10}
       fit="contain"
+      frameSlide
     />
 
     <!-- 12. Colophon -->
     <EssaySlideColophon
       title="Ksar Tamnougalt"
-      location="Ksar Tamnougalt, Draa Valley · 30°41′N 6°27′W"
+      dossierNum="012"
+      location="Ksar Tamnougalt, Draa Valley"
+      coords="30°41′N 6°27′W"
       dates="November 2025"
       camera="Canon EOS R5 · Canon EOS R5m2"
       frames="11"
       collection="morocco"
-      nextStory={{
+      nextStory={nextStoryData}
+    />
+
+    <!-- 13. Related dossiers -->
+    <EssaySlideRelated
+      featured={{
         title: 'Nomads of Djebel Saghro',
         slug: '/work/morocco/nomads-essay',
-        location: 'Djebel Saghro',
-        coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912',
-        coverWidth: 6916,
-        coverHeight: 4613,
-        coverLqip: 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA=',
+        description: 'A day with the Ait Atta — tea, bread, herds, and firelight in the volcanic highlands.',
+        location: 'Anti-Atlas · 31°16′N',
+        dossierLabel: 'N° 01 · DOSSIER 011',
+        ...nextStoryData,
       }}
+      allDossiersHref="/work/morocco"
     />
 
   </EssaySequence>
@@ -275,35 +319,46 @@ const photos = [
   <!-- ============================================================
        PORTRAIT SEQUENCE — optimized for tall viewports (mobile)
        Uses same photos but adapted slide types:
-       - Landscape covers → full-bleed cover (still works on tall screens)
-       - Image-text splits → stacked (CSS handles this at 768px anyway)
-       - Diptychs with mixed orientations → single full-bleed
+       - Diptychs → individual full-bleeds
+       - Image-text splits → stacked (CSS handles this at 768px)
        - Portrait images → full-bleed cover (native orientation match)
        ============================================================ -->
   <EssaySequence orientation="portrait" photos={photos}>
 
-    <!-- 1. Cover — Figure along the ksar wall (landscape on portrait = cover crop) -->
-    <EssaySlideFullBleed
+    <!-- 1. Hero — Figure along ksar wall -->
+    <EssaySlideHero
       url={photos[0].url}
       width={photos[0].width}
       height={photos[0].height}
       lqip={photos[0].lqip}
       alt={photos[0].title}
       lightboxIndex={0}
-      fit="cover"
-      loading="lazy"
+      dossierNum="012"
+      sequenceNum="N° 02"
+      overline="Draa Valley · Morocco"
+      title="Ksar Tamnougalt"
+      deck="Inside a fortified village on the edge of the Draa. November 2025."
+      manifest={{
+        region: 'Draa Valley',
+        coords: "30°41′N 6°27′W",
+        elev: '1,060 m',
+        date: 'NOV 2025',
+        frames: '11',
+      }}
     />
 
     <!-- 2. Title card -->
     <EssaySlideText align="center">
       <p class="overline">Ksar Tamnougalt &middot; Draa Valley &middot; 30&deg;41&prime;N &ensp; 6&deg;27&prime;W</p>
-      <h2>Ksar Tamnougalt</h2>
+      <h2>Where the walls still hold</h2>
       <p>
         A fortified village on the edge of the Draa, half-collapsed and still
         inhabited. Our guide grew up inside these walls. He walked us through
         what remained.
       </p>
     </EssaySlideText>
+
+    <EssayDivider num="01" label="I · ENTERING" />
 
     <!-- 3. Entering the ksar — portrait on portrait = cover -->
     <EssaySlideFullBleed
@@ -314,6 +369,7 @@ const photos = [
       alt={photos[1].title}
       lightboxIndex={1}
       fit="cover"
+      frameSlide
     />
 
     <!-- 4. Through the Door — text slide -->
@@ -337,6 +393,7 @@ const photos = [
       alt={photos[2].title}
       lightboxIndex={2}
       fit="cover"
+      frameSlide
     />
 
     <!-- 6. The corridor — portrait on portrait = cover -->
@@ -348,7 +405,10 @@ const photos = [
       alt={photos[3].title}
       lightboxIndex={3}
       fit="cover"
+      frameSlide
     />
+
+    <EssayDivider num="02" label="II · INSIDE THE WALLS" />
 
     <!-- 7. Through the Courtyard — landscape cover crop -->
     <EssaySlideFullBleed
@@ -359,6 +419,7 @@ const photos = [
       alt={photos[4].title}
       lightboxIndex={4}
       fit="cover"
+      frameSlide
     />
 
     <!-- 8. Room to Room — text -->
@@ -382,6 +443,7 @@ const photos = [
       alt={photos[5].title}
       lightboxIndex={5}
       fit="cover"
+      frameSlide
     />
 
     <!-- 10. Courtyard from above — portrait on portrait = cover -->
@@ -393,6 +455,7 @@ const photos = [
       alt={photos[6].title}
       lightboxIndex={6}
       fit="cover"
+      frameSlide
     />
 
     <!-- 11. Through the Arches — landscape cover crop -->
@@ -404,6 +467,7 @@ const photos = [
       alt={photos[7].title}
       lightboxIndex={7}
       fit="cover"
+      frameSlide
     />
 
     <!-- 12. Interior detail — image + text (stacks on mobile CSS) -->
@@ -414,6 +478,7 @@ const photos = [
       lqip={photos[8].lqip}
       alt={photos[8].title}
       lightboxIndex={8}
+      frameSlide
     >
       <h3>What Remains</h3>
       <p>
@@ -428,6 +493,8 @@ const photos = [
       text="The ksar is not a ruin. It is a place between states."
     />
 
+    <EssayDivider num="03" label="III · ABOVE" />
+
     <!-- 14. The rooftop — full image with blurred backdrop -->
     <EssaySlideFullBleed
       url={photos[9].url}
@@ -437,6 +504,7 @@ const photos = [
       alt={photos[9].title}
       lightboxIndex={9}
       fit="contain"
+      frameSlide
     />
 
     <!-- 15. Departure — portrait on portrait = cover -->
@@ -448,25 +516,33 @@ const photos = [
       alt={photos[10].title}
       lightboxIndex={10}
       fit="cover"
+      frameSlide
     />
 
     <!-- 16. Colophon -->
     <EssaySlideColophon
       title="Ksar Tamnougalt"
-      location="Ksar Tamnougalt, Draa Valley · 30°41′N 6°27′W"
+      dossierNum="012"
+      location="Ksar Tamnougalt, Draa Valley"
+      coords="30°41′N 6°27′W"
       dates="November 2025"
       camera="Canon EOS R5 · Canon EOS R5m2"
       frames="11"
       collection="morocco"
-      nextStory={{
+      nextStory={nextStoryData}
+    />
+
+    <!-- 17. Related dossiers -->
+    <EssaySlideRelated
+      featured={{
         title: 'Nomads of Djebel Saghro',
         slug: '/work/morocco/nomads-essay',
-        location: 'Djebel Saghro',
-        coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912',
-        coverWidth: 6916,
-        coverHeight: 4613,
-        coverLqip: 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA=',
+        description: 'A day with the Ait Atta — tea, bread, herds, and firelight in the volcanic highlands.',
+        location: 'Anti-Atlas · 31°16′N',
+        dossierLabel: 'N° 01 · DOSSIER 011',
+        ...nextStoryData,
       }}
+      allDossiersHref="/work/morocco"
     />
 
   </EssaySequence>

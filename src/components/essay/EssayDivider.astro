@@ -1,0 +1,23 @@
+---
+/**
+ * Numbered section divider — hairline rule with section number and label.
+ * Used between essay acts, not as a standalone snap slide.
+ *
+ * Renders: 01 ——————————— I · ARRIVAL & CAMP
+ */
+
+interface Props {
+  /** Two-digit section number, e.g. "01" */
+  num: string;
+  /** Section label, e.g. "I · ARRIVAL & CAMP" */
+  label: string;
+}
+
+const { num, label } = Astro.props;
+---
+
+<div class="essay-divider">
+  <span class="essay-divider__num">{num}</span>
+  <span class="essay-divider__rule"></span>
+  <span class="essay-divider__label">{label}</span>
+</div>

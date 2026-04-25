@@ -2,6 +2,10 @@
  * Essay navigation: progress bar, nav dots, keyboard navigation.
  * Only activates on pages with [data-essay] on the body.
  *
+ * Dossier mode: when [data-essay-dossier] is present, uses the chrome
+ * bar frame counter instead of nav dots. Frame counter tracks slides
+ * that have [data-essay-frame-slide].
+ *
  * Sequence-aware: when EssaySequence wrappers exist, only observes
  * slides within the visible (orientation-matched) sequence.
  * Falls back to all .essay-slide elements for backward compat.
@@ -33,6 +37,7 @@ function initEssayNav() {
     cleanupFn = null;
   }
 
+  const isDossier = document.body.hasAttribute('data-essay-dossier');
   const visibleSequence = getVisibleSequence();
   const slideRoot = visibleSequence || document;
   const snapSlides = Array.from(
@@ -43,26 +48,33 @@ function initEssayNav() {
   const dotsContainer =
     document.querySelector<HTMLElement>('[data-essay-dots]');
 
+  // Dossier frame counter elements
+  const frameCurrentEl = document.querySelector<HTMLElement>('[data-essay-frame-current]');
+  const framePctEl = document.querySelector<HTMLElement>('[data-essay-frame-pct]');
+  const frameSlides = isDossier
+    ? Array.from(slideRoot.querySelectorAll<HTMLElement>('[data-essay-frame-slide]'))
+    : [];
+
   if (snapSlides.length === 0) return;
 
-  // Clear existing dots
-  if (dotsContainer) dotsContainer.innerHTML = '';
-
-  // Build nav dots
-  snapSlides.forEach((slide, i) => {
-    const dot = document.createElement('button');
-    dot.className = 'essay-nav-dot';
-    dot.setAttribute('aria-label', `Go to section ${i + 1}`);
-    dot.addEventListener('click', () => {
-      targetIndex = i;
-      animateScrollTo(slide.offsetTop, 400);
+  // Build nav dots (only in non-dossier mode)
+  if (!isDossier && dotsContainer) {
+    dotsContainer.innerHTML = '';
+    snapSlides.forEach((slide, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'essay-nav-dot';
+      dot.setAttribute('aria-label', `Go to section ${i + 1}`);
+      dot.addEventListener('click', () => {
+        targetIndex = i;
+        animateScrollTo(slide.offsetTop, 400);
+      });
+      dotsContainer.appendChild(dot);
     });
-    dotsContainer?.appendChild(dot);
-  });
+  }
 
-  const dots = Array.from(
-    dotsContainer?.querySelectorAll<HTMLElement>('.essay-nav-dot') ?? [],
-  );
+  const dots = !isDossier
+    ? Array.from(dotsContainer?.querySelectorAll<HTMLElement>('.essay-nav-dot') ?? [])
+    : [];
 
   // --- Smooth scroll with controllable duration ---
   let scrollRaf = 0;
@@ -122,6 +134,16 @@ function initEssayNav() {
     return 0;
   }
 
+  function getVisibleFrameIndex(): number {
+    if (frameSlides.length === 0) return 0;
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+    for (let i = frameSlides.length - 1; i >= 0; i--) {
+      if (frameSlides[i].offsetTop <= scrollY + vh * 0.5) return i;
+    }
+    return 0;
+  }
+
   function updateProgress() {
     const scrollY = window.scrollY;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -129,9 +151,18 @@ function initEssayNav() {
     if (progressBar) {
       progressBar.style.width = `${pct}%`;
     }
+
+    // Update dossier frame counter
+    if (isDossier && frameCurrentEl && framePctEl) {
+      const currentFrame = getVisibleFrameIndex() + 1;
+      const total = frameSlides.length;
+      frameCurrentEl.textContent = `${String(currentFrame).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+      framePctEl.textContent = `${Math.round(pct)}%`;
+    }
   }
 
   function updateDots() {
+    if (isDossier) return;
     const active = getVisibleIndex();
     dots.forEach((dot, i) => {
       dot.classList.toggle('essay-nav-dot--active', i === active);

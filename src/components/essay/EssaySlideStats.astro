@@ -1,0 +1,50 @@
+---
+/**
+ * Stats slide — ledger-style numbered rows with large serif values.
+ * Used for expedition numbers, field data, etc.
+ */
+import EssayOverline from './EssayOverline.astro';
+
+interface Props {
+  overline?: string;
+  dossierNum?: string;
+  heading: string;
+  lead?: string;
+  stats: Array<{ label: string; value: string; unit?: string }>;
+  footerLeft?: string;
+  footerRight?: string;
+}
+
+const { overline, dossierNum, heading, lead, stats, footerLeft, footerRight } = Astro.props;
+---
+
+<section class="essay-slide essay-stats">
+  <div class="essay-stats__head">
+    <div class="essay-stats__head-left">
+      {overline && dossierNum && <EssayOverline num={dossierNum} text={overline} />}
+      {overline && !dossierNum && <p class="essay-ov">{overline}</p>}
+      <h2>{heading}</h2>
+    </div>
+    {lead && <p class="essay-stats__lead">{lead}</p>}
+  </div>
+
+  <ol class="essay-stats__ledger">
+    {stats.map((stat, i) => (
+      <li class="essay-stats__row">
+        <span class="essay-stats__idx">{String(i + 1).padStart(2, '0')}</span>
+        <span class="essay-stats__label">{stat.label}</span>
+        <span class="essay-stats__val">
+          <span class="essay-stats__num">{stat.value}</span>
+          {stat.unit && <span class="essay-stats__unit">{stat.unit}</span>}
+        </span>
+      </li>
+    ))}
+  </ol>
+
+  {(footerLeft || footerRight) && (
+    <div class="essay-stats__foot">
+      <span>{footerLeft || ''}</span>
+      <span>{footerRight || ''}</span>
+    </div>
+  )}
+</section>
