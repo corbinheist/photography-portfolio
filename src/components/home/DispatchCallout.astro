@@ -13,19 +13,31 @@ interface Props {
   coverWidth: number;
   coverHeight: number;
   coverLqip: string;
+  mobileCoverUrl?: string;
+  mobileCoverWidth?: number;
+  mobileCoverHeight?: number;
+  mobileCoverLqip?: string;
   caption: string;
   coords: string;
   meta: string;
   data: Datum[];
 }
 
-const { title, href, coverUrl, coverWidth, coverHeight, coverLqip, caption, coords, meta, data } = Astro.props;
+const { title, href, coverUrl, coverWidth, coverHeight, coverLqip, mobileCoverUrl, mobileCoverWidth, mobileCoverHeight, mobileCoverLqip, caption, coords, meta, data } = Astro.props;
 
 const slug = coverUrl.split('/').pop() || '';
 const widths = buildWidthList(coverWidth);
+const hasMobile = mobileCoverUrl && mobileCoverWidth;
 
 function buildSrcset(format: 'avif' | 'webp'): string {
   return widths.map((w) => `${coverUrl}/${slug}-${w}.${format} ${w}w`).join(', ');
+}
+
+function buildMobileSrcset(format: 'avif' | 'webp'): string {
+  if (!mobileCoverUrl || !mobileCoverWidth) return '';
+  const mSlug = mobileCoverUrl.split('/').pop() || '';
+  const mWidths = buildWidthList(mobileCoverWidth);
+  return mWidths.map((w) => `${mobileCoverUrl}/${mSlug}-${w}.${format} ${w}w`).join(', ');
 }
 ---
 
@@ -42,6 +54,12 @@ function buildSrcset(format: 'avif' | 'webp'): string {
 
     <div class="dispatch__hero">
       <picture>
+        {hasMobile && (
+          <>
+            <source media="(max-width: 639px)" type="image/avif" srcset={buildMobileSrcset('avif')} sizes="100vw" />
+            <source media="(max-width: 639px)" type="image/webp" srcset={buildMobileSrcset('webp')} sizes="100vw" />
+          </>
+        )}
         <source type="image/avif" srcset={buildSrcset('avif')} sizes="(max-width: 1440px) 100vw, 1440px" />
         <source type="image/webp" srcset={buildSrcset('webp')} sizes="(max-width: 1440px) 100vw, 1440px" />
         <img
@@ -51,7 +69,7 @@ function buildSrcset(format: 'avif' | 'webp'): string {
           height={coverHeight}
           loading="lazy"
           decoding="async"
-          style={`background-image: url(${coverLqip}); background-size: cover;`}
+          style={`background-image: url(${hasMobile ? mobileCoverLqip : coverLqip}); background-size: cover;`}
           class="dispatch__img"
         />
       </picture>
@@ -251,7 +269,7 @@ function buildSrcset(format: 'avif' | 'webp'): string {
     }
 
     .dispatch__hero {
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 3 / 4;
     }
 
     .dispatch__meta-grid {

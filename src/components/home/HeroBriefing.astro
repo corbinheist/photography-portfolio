@@ -16,6 +16,10 @@ interface HeroSlide {
   width: number;
   height: number;
   lqip: string;
+  mobileUrl?: string;
+  mobileWidth?: number;
+  mobileHeight?: number;
+  mobileLqip?: string;
 }
 
 interface Props {
@@ -38,11 +42,30 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
   <div class="hero__photos">
     {slides.map((slide, i) => {
       const slug = slide.url.split('/').pop() || '';
+      const hasMobile = slide.mobileUrl && slide.mobileWidth;
       return (
         <picture
           class:list={['hero__slide', { 'hero__slide--active': i === 0 }]}
           data-slide-index={i}
         >
+          {/* Mobile art direction — portrait source when available */}
+          {hasMobile && (
+            <>
+              <source
+                media="(max-width: 639px)"
+                type="image/avif"
+                srcset={buildSrcset(slide.mobileUrl!, slide.mobileWidth!, 'avif')}
+                sizes="100vw"
+              />
+              <source
+                media="(max-width: 639px)"
+                type="image/webp"
+                srcset={buildSrcset(slide.mobileUrl!, slide.mobileWidth!, 'webp')}
+                sizes="100vw"
+              />
+            </>
+          )}
+          {/* Desktop — landscape source */}
           <source
             type="image/avif"
             srcset={buildSrcset(slide.url, slide.width, 'avif')}
@@ -60,7 +83,7 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
             height={slide.height}
             loading={i === 0 ? 'eager' : 'lazy'}
             decoding={i === 0 ? 'sync' : 'async'}
-            style={`background-image: url(${slide.lqip}); background-size: cover;`}
+            style={`background-image: url(${hasMobile ? slide.mobileLqip : slide.lqip}); background-size: cover;`}
           />
         </picture>
       );

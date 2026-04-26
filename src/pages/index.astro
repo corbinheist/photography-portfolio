@@ -53,6 +53,24 @@ function resolveHeroCover(collection: typeof collections[number]) {
   return defaultCover;
 }
 
+// Resolve a portrait-oriented cover for mobile — prefers portrait (height > width),
+// falls back to the default collection cover
+function resolvePortraitCover(collection: typeof collections[number]) {
+  const defaultCover = resolveCollectionCover(collection);
+  if (defaultCover && defaultCover.data.height > defaultCover.data.width) return defaultCover;
+
+  for (const albumId of collection.data.albums) {
+    const album = albums.find((a) => a.id === albumId);
+    if (!album) continue;
+    for (const photoId of album.data.photos) {
+      const photo = photos.find((p) => p.id === photoId);
+      if (photo && photo.data.height > photo.data.width) return photo;
+    }
+  }
+
+  return defaultCover;
+}
+
 // Count total frames in a collection's albums
 function countFrames(collection: typeof collections[number]): number {
   let count = 0;
@@ -80,7 +98,7 @@ function fmtCoord(val: number, pos: string, neg: string): string {
   return `${Math.abs(val).toFixed(2)}° ${dir}`;
 }
 
-// ── Hero slides (landscape-preferred covers for full-bleed hero) ──
+// ── Hero slides (landscape desktop, portrait mobile when available) ──
 const heroSlides = sortedCollections
   .map((c) => {
     const cover = resolveHeroCover(c);
@@ -90,6 +108,10 @@ const heroSlides = sortedCollections
     const firstAlbum = c.data.albums.length
       ? albums.find((a) => a.id === c.data.albums[0])
       : null;
+
+    // Mobile art direction — use portrait cover if available and different from desktop
+    const mobileCover = resolvePortraitCover(c);
+    const hasMobile = mobileCover && mobileCover.data.url !== cover.data.url;
 
     return {
       id: c.id,
@@ -109,6 +131,10 @@ const heroSlides = sortedCollections
       width: cover.data.width,
       height: cover.data.height,
       lqip: cover.data.lqip,
+      mobileUrl: hasMobile ? mobileCover.data.url : undefined,
+      mobileWidth: hasMobile ? mobileCover.data.width : undefined,
+      mobileHeight: hasMobile ? mobileCover.data.height : undefined,
+      mobileLqip: hasMobile ? mobileCover.data.lqip : undefined,
     };
   })
   .filter(Boolean);
@@ -143,6 +169,8 @@ const dispatchCollection = [...sortedCollections]
   .reverse()
   .find((c) => c.data.albums.length > 0 && resolveCollectionCover(c));
 const dispatchCover = dispatchCollection ? resolveCollectionCover(dispatchCollection) : null;
+const dispatchMobileCover = dispatchCollection ? resolvePortraitCover(dispatchCollection) : null;
+const hasDispatchMobile = dispatchMobileCover && dispatchCover && dispatchMobileCover.data.url !== dispatchCover.data.url;
 
 const dispatchData = dispatchCollection && dispatchCover ? {
   title: dispatchCollection.data.title,
@@ -151,6 +179,10 @@ const dispatchData = dispatchCollection && dispatchCover ? {
   coverWidth: dispatchCover.data.width,
   coverHeight: dispatchCover.data.height,
   coverLqip: dispatchCover.data.lqip,
+  mobileCoverUrl: hasDispatchMobile ? dispatchMobileCover.data.url : undefined,
+  mobileCoverWidth: hasDispatchMobile ? dispatchMobileCover.data.width : undefined,
+  mobileCoverHeight: hasDispatchMobile ? dispatchMobileCover.data.height : undefined,
+  mobileCoverLqip: hasDispatchMobile ? dispatchMobileCover.data.lqip : undefined,
   caption: dispatchCollection.data.description || '',
   coords: dispatchCollection.data.map
     ? `${fmtCoord(dispatchCollection.data.map.center[1], 'N', 'S')}, ${fmtCoord(dispatchCollection.data.map.center[0], 'E', 'W')}`
