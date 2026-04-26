@@ -16,7 +16,6 @@ import EssaySlideText from '@components/essay/EssaySlideText.astro';
 import EssaySlideFlow from '@components/essay/EssaySlideFlow.astro';
 import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
 import EssayDivider from '@components/essay/EssayDivider.astro';
-import EssaySlideStats from '@components/essay/EssaySlideStats.astro';
 import EssaySlidePullQuoteFB from '@components/essay/EssaySlidePullQuoteFB.astro';
 import EssaySlideTimeline from '@components/essay/EssaySlideTimeline.astro';
 import EssaySlideContactSheet from '@components/essay/EssaySlideContactSheet.astro';
@@ -25,6 +24,7 @@ import EssaySlideRelated from '@components/essay/EssaySlideRelated.astro';
 import EssaySlidePinnedCaption from '@components/essay/EssaySlidePinnedCaption.astro';
 import EssaySlideProseColumns from '@components/essay/EssaySlideProseColumns.astro';
 import EssaySlideMapInset from '@components/essay/EssaySlideMapInset.astro';
+import moroccoRegions from '@data/maps/morocco-regions.json';
 
 /**
  * Photo data — ordered for the essay narrative.
@@ -327,25 +327,17 @@ const photos = [
     heading="Anti-Atlas massif, southern Morocco"
     description="The Djebel Saghro is a volcanic plateau rising between the High Atlas and the Sahara — black basalt pinnacles, dry riverbeds, and seasonal camps of the Ait Atta nomads."
     metadata={[
+      { label: 'Region', value: 'Anti-Atlas' },
       { label: 'Coords', value: "31°16′N 5°59′W" },
       { label: 'Elevation', value: '2,100 m' },
-      { label: 'Region', value: 'Anti-Atlas · Draa-Tafilalet' },
       { label: 'Dates', value: 'November 2025' },
-      { label: 'Party', value: '3 (photographer + guide + driver)' },
     ]}
-  />
-
-  <!-- Stats — expedition numbers -->
-  <EssaySlideStats
-    heading="Field numbers."
-    stats={[
-      { value: '4', label: 'DAYS' },
-      { value: '35', label: 'FRAMES' },
-      { value: '2,100', label: 'METRES' },
-      { value: '40', label: 'MIN WALK', unit: 'to water' },
+    center={[-5.85, 31.25]}
+    zoom={7.5}
+    regions={moroccoRegions as any}
+    markers={[
+      { lng: -5.85, lat: 31.25, label: 'Djebel Saghro', num: '01' },
     ]}
-    footerLeft="DOSSIER 011 · NOMADS"
-    footerRight="NOV 2025"
   />
 
   <!-- ======= I. ARRIVAL & CAMP ======= -->

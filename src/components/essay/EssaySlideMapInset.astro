@@ -1,24 +1,42 @@
 ---
 /**
- * Map inset slide — location card + schematic map visualization.
- * Two-column layout: left has text card with metadata table,
- * right shows a stylized grid-pattern map with a pin marker.
- *
- * Uses a schematic SVG, not the full MapLibre GL component
- * (too heavy for a snap-scroll slide).
+ * Map inset slide — location card + real MapLibre map.
+ * Two-column layout: left has text card with metadata,
+ * right hosts the reusable <Map> component (MapLibre GL).
  */
+import Map from '@components/Map.astro';
+
+interface MarkerDef {
+  lng: number;
+  lat: number;
+  label: string;
+  num?: string;
+  target?: string;
+}
 
 interface Props {
   heading: string;
   description?: string;
   metadata?: Array<{ label: string; value: string }>;
-  /** Optional SVG path for the terrain outline */
-  svgPath?: string;
-  /** Text labels for the schematic map */
-  mapLabels?: Array<{ text: string; x: number; y: number }>;
+  center: [number, number];
+  zoom?: number;
+  markers?: MarkerDef[];
+  regions?: GeoJSON.FeatureCollection;
+  route?: GeoJSON.Feature;
+  theme?: string;
 }
 
-const { heading, description, metadata = [], svgPath, mapLabels = [] } = Astro.props;
+const {
+  heading,
+  description,
+  metadata = [],
+  center,
+  zoom = 7,
+  markers = [],
+  regions,
+  route,
+  theme = 'default',
+} = Astro.props;
 ---
 
 <section class="essay-slide essay-map-inset">
@@ -40,23 +58,14 @@ const { heading, description, metadata = [], svgPath, mapLabels = [] } = Astro.p
   </div>
 
   <div class="essay-map-inset__viz">
-    <svg viewBox="0 0 200 200" style="width: 80%; height: 80%;">
-      {svgPath ? (
-        <path d={svgPath} fill="none" stroke="var(--color-border)" stroke-width="0.5" />
-      ) : (
-        <Fragment>
-          <path d="M10,110 Q30,80 55,90 T95,70 Q120,60 135,80 T175,75 L185,120 Q160,145 130,135 T85,155 Q55,165 35,145 Z"
-                fill="none" stroke="var(--color-border)" stroke-width="0.5" />
-          <path d="M20,115 Q40,100 60,108 T100,95 Q125,90 140,105 T170,102"
-                fill="none" stroke="var(--color-text-faint)" stroke-width="0.3" stroke-dasharray="1 2" />
-        </Fragment>
-      )}
-      {mapLabels.map((label) => (
-        <text x={label.x} y={label.y} font-family="var(--font-mono)" font-size="5" fill="var(--color-text-faint)" letter-spacing="0.5">
-          {label.text}
-        </text>
-      ))}
-    </svg>
-    <div class="essay-map-inset__pin"></div>
+    <Map
+      center={center}
+      zoom={zoom}
+      markers={markers}
+      regions={regions}
+      route={route}
+      interactive={false}
+      theme={theme}
+    />
   </div>
 </section>
