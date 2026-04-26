@@ -1183,8 +1183,21 @@ html:has([data-essay]) {
   top: 0;
   left: 0;
   right: 0;
-  z-index: var(--z-header);
+  z-index: calc(var(--z-header) - 1);
   pointer-events: none;
+  transition: left var(--duration-normal) var(--ease-out-quart);
+}
+
+@media (min-width: 1024px) {
+  .essay-chrome {
+    left: var(--rail-width, 52px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .essay-chrome {
+    transition: none;
+  }
 }
 
 .essay-chrome > * {

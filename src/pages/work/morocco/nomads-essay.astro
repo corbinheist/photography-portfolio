@@ -15,7 +15,6 @@ import EssaySlideTriptych from '@components/essay/EssaySlideTriptych.astro';
 import EssaySlideText from '@components/essay/EssaySlideText.astro';
 import EssaySlideFlow from '@components/essay/EssaySlideFlow.astro';
 import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
-import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
 import EssayDivider from '@components/essay/EssayDivider.astro';
 import EssaySlideStats from '@components/essay/EssaySlideStats.astro';
 import EssaySlidePullQuoteFB from '@components/essay/EssaySlidePullQuoteFB.astro';
@@ -831,29 +830,7 @@ const photos = [
     footerRight="TOTAL: 35 FRAMES"
   />
 
-  <!-- 30. Colophon -->
-  <EssaySlideColophon
-    title="Nomads of Djebel Saghro"
-    dossierNum="011"
-    location="Djebel Saghro"
-    coords="31°16′N 5°59′W"
-    dates="November 2025"
-    camera="Canon EOS R5m2 · Canon EOS R5"
-    frames="35"
-    collection="morocco"
-    nextStory={{
-      title: 'Ksar Tamnougalt',
-      slug: '/work/morocco/ksar-essay',
-      location: 'Draa Valley',
-      dossierNum: 'N° 02',
-      coverUrl: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-001-cnh_3628',
-      coverWidth: 8192,
-      coverHeight: 5464,
-      coverLqip: 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA==',
-    }}
-  />
-
-  <!-- Related dossiers -->
+  <!-- 30. Related dossiers -->
   <EssaySlideRelated
     featured={{
       title: 'Ksar Tamnougalt',
