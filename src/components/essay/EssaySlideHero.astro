@@ -27,7 +27,7 @@ interface Props {
   manifest: {
     region: string;
     coords: string;
-    elev: string;
+    elev?: string;
     date: string;
     frames: string;
   };
@@ -82,10 +82,12 @@ const {
         <span class="essay-hero__manifest-k">Coords</span>
         <span class="essay-hero__manifest-v">{manifest.coords}</span>
       </div>
-      <div class="essay-hero__manifest-cell">
-        <span class="essay-hero__manifest-k">Elev.</span>
-        <span class="essay-hero__manifest-v">{manifest.elev}</span>
-      </div>
+      {manifest.elev && (
+        <div class="essay-hero__manifest-cell">
+          <span class="essay-hero__manifest-k">Elev.</span>
+          <span class="essay-hero__manifest-v">{manifest.elev}</span>
+        </div>
+      )}
       <div class="essay-hero__manifest-cell">
         <span class="essay-hero__manifest-k">Date</span>
         <span class="essay-hero__manifest-v">{manifest.date}</span>
