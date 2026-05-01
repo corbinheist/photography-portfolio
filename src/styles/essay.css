@@ -2440,6 +2440,8 @@ html:has([data-essay]) {
 .essay-map-inset {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  height: 100dvh;
+  align-items: stretch;
 }
 
 .essay-map-inset__card {
@@ -2493,12 +2495,11 @@ html:has([data-essay]) {
 .essay-map-inset__viz {
   position: relative;
   background: var(--color-surface);
-  overflow: hidden;
 }
 
 .essay-map-inset__viz :global(.map-container) {
   width: 100%;
-  height: 100%;
+  height: 100dvh;
 }
 
 /* ==========================================

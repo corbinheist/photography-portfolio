@@ -21,6 +21,15 @@ essays:
       height: 5464
       lqip: "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA=="
     photoCount: 11
+  - slug: wise-essay
+    title: The Bougmez Underfoot
+    description: One day in Morocco's High Atlas — gorge, pass, and darkness. A Wise Ultra Running assignment.
+    coverImage:
+      url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-wise-essay-027-cnh_4995
+      width: 8192
+      height: 5464
+      lqip: "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAABQBACdASoUAA0APzmEuVOvKKWisAgB4CcJZACdMoR8eB4PdpLS2R2d3ZQAAP4WGRVyUfBK1fBofN49yXWJCrYljs0jT4JYMtS52C3J3sNRvvuk3vorcZqTuP/QeabQAAA="
+    photoCount: 24
 coverPhoto: cnh-all-images-0108
 sortOrder: 8
 map:
@@ -59,3 +68,8 @@ map:
       lat: 31.62
       num: "06"
       target: /work/morocco/morocco
+    - label: Tsiki Pass
+      lng: -6.31
+      lat: 31.55
+      num: "07"
+      target: /work/morocco/wise-essay
