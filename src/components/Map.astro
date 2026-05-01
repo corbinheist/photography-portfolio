@@ -23,6 +23,12 @@ interface MarkerDef {
   target?: string;
 }
 
+interface LiveMarkerDef {
+  lng: number;
+  lat: number;
+  label: string;
+}
+
 interface Props {
   id?: string;
   center: [number, number];
@@ -30,6 +36,7 @@ interface Props {
   markers?: MarkerDef[];
   regions?: GeoJSON.FeatureCollection;
   route?: GeoJSON.Feature;
+  liveMarker?: LiveMarkerDef;
   interactive?: boolean;
   theme?: string;
   class?: string;
@@ -42,6 +49,7 @@ const {
   markers = [],
   regions,
   route,
+  liveMarker,
   interactive = false,
   theme = 'default',
   class: className,
@@ -60,6 +68,7 @@ const maptilerKey = import.meta.env.PUBLIC_MAPTILER_KEY ?? '';
   data-interactive={String(interactive)}
   data-map-theme={theme}
   data-maptiler-key={maptilerKey}
+  data-live-marker={liveMarker ? JSON.stringify(liveMarker) : undefined}
 >
 </div>
 {regions && (

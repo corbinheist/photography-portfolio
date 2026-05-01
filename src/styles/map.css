@@ -48,6 +48,75 @@
 
 
 /* ==========================================
+   Map Markers — Live Location
+   ========================================== */
+
+.map-marker--live {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+.map-marker__live-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-warm, #DA702C);
+  left: -4px;
+  top: -4px;
+  animation: live-dot-pulse 2.2s ease-in-out infinite;
+}
+
+.map-marker__live-dot::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1px solid var(--color-warm, #DA702C);
+  animation: live-halo-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes live-dot-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes live-halo-pulse {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(2.2); }
+}
+
+.map-marker--live .map-marker__label {
+  position: absolute;
+  left: 12px;
+  top: -9px;
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.map-marker__live-tag {
+  font-family: var(--font-mono, monospace);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-warm, #DA702C);
+}
+
+.map-marker--live .map-marker__name {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, rgba(242, 240, 229, 0.75));
+  text-shadow: 0 1px 6px var(--color-bg);
+}
+
+
+/* ==========================================
    Map Markers — Label Only
    ========================================== */
 

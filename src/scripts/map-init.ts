@@ -126,6 +126,8 @@ function init() {
     const center = JSON.parse(container.dataset.center!) as [number, number];
     const zoom = Number(container.dataset.zoom);
     const markers: MarkerDef[] = JSON.parse(container.dataset.markers || '[]');
+    const liveMarkerData: { lng: number; lat: number; label: string } | null =
+      container.dataset.liveMarker ? JSON.parse(container.dataset.liveMarker) : null;
     const interactive = container.dataset.interactive === 'true';
     const key = container.dataset.maptilerKey || '';
     const themeName = container.dataset.mapTheme || 'default';
@@ -602,6 +604,32 @@ function init() {
           });
         }
       });
+
+      // ── Live location marker ──
+      if (liveMarkerData) {
+        const el = document.createElement('div');
+        el.className = 'map-marker map-marker--live';
+
+        const dot = document.createElement('div');
+        dot.className = 'map-marker__live-dot';
+        el.appendChild(dot);
+
+        const label = document.createElement('div');
+        label.className = 'map-marker__label';
+        const liveTag = document.createElement('span');
+        liveTag.className = 'map-marker__live-tag';
+        liveTag.textContent = 'LIVE';
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'map-marker__name';
+        nameSpan.textContent = liveMarkerData.label;
+        label.appendChild(liveTag);
+        label.appendChild(nameSpan);
+        el.appendChild(label);
+
+        new maplibregl.Marker({ element: el, anchor: 'center' })
+          .setLngLat([liveMarkerData.lng, liveMarkerData.lat])
+          .addTo(map);
+      }
 
       // ── Watch for site theme changes (light/dark toggle) ──
       const observer = new MutationObserver((mutations) => {
