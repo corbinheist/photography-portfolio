@@ -403,82 +403,6 @@ html:has([data-essay]) {
 }
 
 /* ==========================================
-   Text-Only Slide
-   ========================================== */
-
-.essay-text {
-  padding: var(--space-2xl) var(--container-padding);
-}
-
-.essay-text__inner {
-  max-width: 680px;
-  width: 100%;
-}
-
-.essay-text--center {
-  text-align: center;
-}
-
-.essay-text--center .essay-text__inner {
-  margin-inline: auto;
-}
-
-.essay-text--center .essay-text__inner p {
-  margin-inline: auto;
-}
-
-.essay-text--left .essay-text__inner {
-  margin-right: auto;
-}
-
-.essay-text__inner h1,
-.essay-text__inner h2,
-.essay-text__inner h3 {
-  font-family: var(--font-heading);
-  font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-md);
-}
-
-.essay-text__inner h1 {
-  font-size: var(--text-3xl);
-}
-
-.essay-text__inner h2 {
-  font-size: var(--text-2xl);
-}
-
-.essay-text__inner h3 {
-  font-size: var(--text-xl);
-}
-
-.essay-text__inner p {
-  font-size: var(--text-lg);
-  line-height: 1.65;
-  color: var(--color-text-muted);
-  max-width: 60ch;
-}
-
-.essay-text__inner p + p {
-  margin-top: var(--space-md);
-}
-
-.essay-text__inner p strong {
-  color: var(--color-text);
-  font-weight: 500;
-}
-
-.essay-text__inner .overline {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-  margin-bottom: var(--space-md);
-}
-
-/* ==========================================
    Colophon Slide
    ========================================== */
 
@@ -833,13 +757,6 @@ html:has([data-essay]) {
   .essay-slide.essay-full-bleed--contain .essay-full-bleed__img .photo-img {
     max-height: 92dvh;
     max-width: 100%;
-  }
-}
-
-/* Short landscape */
-@media (max-height: 500px) {
-  .essay-text {
-    padding: var(--space-lg) var(--container-padding);
   }
 }
 
