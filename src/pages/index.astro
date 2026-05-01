@@ -170,16 +170,14 @@ if (heroSlides.length < 4) {
   }
 }
 
-// ── Dispatch (most recent collection with content) ──
-const dispatchCollection = [...sortedCollections]
-  .reverse()
-  .find((c) => c.data.albums.length > 0 && resolveCollectionCover(c));
+// ── Dispatch (pinned to Norway) ──
+const dispatchCollection = collections.find((c) => c.id === 'norway');
 const dispatchCover = dispatchCollection ? resolveCollectionCover(dispatchCollection) : null;
 const dispatchMobileCover = dispatchCollection ? resolvePortraitCover(dispatchCollection) : null;
 const hasDispatchMobile = dispatchMobileCover && dispatchCover && dispatchMobileCover.data.url !== dispatchCover.data.url;
 
 const dispatchData = dispatchCollection && dispatchCover ? {
-  title: dispatchCollection.data.title,
+  title: 'Oslo, NOR',
   href: `/work/${dispatchCollection.id}`,
   coverUrl: dispatchCover.data.url,
   coverWidth: dispatchCover.data.width,
@@ -190,15 +188,13 @@ const dispatchData = dispatchCollection && dispatchCover ? {
   mobileCoverHeight: hasDispatchMobile ? dispatchMobileCover.data.height : undefined,
   mobileCoverLqip: hasDispatchMobile ? dispatchMobileCover.data.lqip : undefined,
   caption: dispatchCollection.data.description || '',
-  coords: dispatchCollection.data.map
-    ? `${fmtCoord(dispatchCollection.data.map.center[1], 'N', 'S')}, ${fmtCoord(dispatchCollection.data.map.center[0], 'E', 'W')}`
-    : '',
+  coords: '59°55\'N, 10°45\'E',
   meta: dispatchCover.data.exif
     ? [dispatchCover.data.exif.camera?.split(' ').pop(), dispatchCover.data.exif.focalLength, dispatchCover.data.exif.aperture].filter(Boolean).join(' · ')
     : '',
   data: [
-    { label: 'Day', value: dispatchCover.data.exif?.date || '—' },
-    { label: 'Elevation', value: '—' },
+    { label: 'Season', value: 'Spring' },
+    { label: 'Date', value: 'May 2026' },
     { label: 'Frames', value: String(countFrames(dispatchCollection)) },
     { label: 'Next', value: 'TBD' },
   ],
