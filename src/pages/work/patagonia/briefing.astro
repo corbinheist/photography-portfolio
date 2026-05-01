@@ -1,0 +1,538 @@
+---
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+import EssaySlideText from '@components/essay/EssaySlideText.astro';
+import EssaySlideMapInset from '@components/essay/EssaySlideMapInset.astro';
+import EssaySlideStats from '@components/essay/EssaySlideStats.astro';
+import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
+import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
+import EssayDivider from '@components/essay/EssayDivider.astro';
+import patagoniaRegions from '@data/maps/patagonia-regions.json';
+import EssaySlideTimeline from '@components/essay/EssaySlideTimeline.astro';
+import EssaySlideGear from '@components/essay/EssaySlideGear.astro';
+
+const markers = [
+  { lng: -72.4,  lat: -50.917, label: 'Estancia Cerro Guido', num: '01' },
+  { lng: -72.95, lat: -50.94,  label: 'Torres del Paine',     num: '02' },
+  { lng: -72.8,  lat: -51.0,   label: 'Lago Sarmiento',       num: '03' },
+  { lng: -72.78, lat: -50.99,  label: 'Laguna Amarga',        num: '04' },
+  { lng: -73.1,  lat: -50.97,  label: 'Lago Pehoé',           num: '05' },
+];
+---
+
+<ProjectLayout
+  title="The Patagonia Expedition Briefing"
+  description="Pre-trip briefing — Estancia Cerro Guido, Torres del Paine. Six days, three altitudes, one window."
+  dossier={{ num: '014', label: 'PATAGONIA · BRIEFING', totalFrames: 18 }}
+>
+
+  <!-- 1. Briefing card — text-only hero (no frames yet) -->
+  <section class="essay-slide briefing-cover">
+    <div class="briefing-cover__inner">
+      <div class="briefing-cover__top">
+        <div class="briefing-cover__stamp">
+          <span class="briefing-cover__stamp-mark"></span>
+          <span>FIELD &middot; PRE-TRIP</span>
+        </div>
+        <div>N&deg; 04 &middot; DOSSIER 014</div>
+      </div>
+
+      <div class="briefing-cover__body">
+        <p class="essay-ov essay-ov--warm">
+          <span class="essay-ov__diamond">&#9670;</span> BRIEFING ISSUED &middot; 50&deg;55&prime;S 72&deg;24&prime;W
+        </p>
+        <h1 class="briefing-cover__title">The Patagonia Expedition Briefing</h1>
+        <p class="briefing-cover__deck">
+          Estancia Cerro Guido to Torres del Paine. Six days. Three altitudes.
+          One autumn window before winter closes the southern road.
+        </p>
+      </div>
+
+      <div class="briefing-cover__manifest">
+        <div class="briefing-cover__manifest-cell">
+          <span class="briefing-cover__manifest-k">Region</span>
+          <span class="briefing-cover__manifest-v">Magallanes, CHL</span>
+        </div>
+        <div class="briefing-cover__manifest-cell">
+          <span class="briefing-cover__manifest-k">Coords</span>
+          <span class="briefing-cover__manifest-v">50&deg;55&prime;S 72&deg;24&prime;W</span>
+        </div>
+        <div class="briefing-cover__manifest-cell">
+          <span class="briefing-cover__manifest-k">Season</span>
+          <span class="briefing-cover__manifest-v">Autumn 2026</span>
+        </div>
+        <div class="briefing-cover__manifest-cell">
+          <span class="briefing-cover__manifest-k">Depart</span>
+          <span class="briefing-cover__manifest-v">03 May</span>
+        </div>
+        <div class="briefing-cover__manifest-cell">
+          <span class="briefing-cover__manifest-k">Status</span>
+          <span class="briefing-cover__manifest-v" style="color: var(--color-warm);">PRE-TRIP</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="briefing-cover__scroll">
+      <span>BRIEFING</span>
+      <span>&darr;</span>
+    </div>
+  </section>
+
+  <!-- 2. Title card -->
+  <EssaySlideText align="center">
+    <p class="overline">Patagonia &middot; Magallanes &middot; 50&deg;55&prime;S &ensp; 72&deg;24&prime;W</p>
+    <h2>Wind, granite, and the end of the road.</h2>
+    <p>
+      A briefing is the shape of an expedition before it has frames.
+      What follows is the plan, the country, and the intent &mdash; written
+      before departure. The album that lands here next will be the answer.
+    </p>
+  </EssaySlideText>
+
+  <!-- 3. Map inset — Cerro Guido + Torres del Paine -->
+  <EssaySlideMapInset
+    heading="Estancia Cerro Guido &amp; Torres del Paine"
+    description="Six days based out of Estancia Cerro Guido on the eastern flank of the massif, working west into Torres del Paine across three altitudes — steppe floor, lenga forest, and the granite alpine."
+    metadata={[
+      { label: 'Region', value: 'Magallanes, Chile' },
+      { label: 'Base', value: 'Estancia Cerro Guido' },
+      { label: 'Coords', value: '50°55′S 72°24′W' },
+      { label: 'Window', value: 'May 03 — May 09, 2026' },
+    ]}
+    center={[-72.75, -50.97]}
+    zoom={8}
+    markers={markers}
+    regions={patagoniaRegions as any}
+  />
+
+  <!-- 4. Stats — what's known, before the day count moves -->
+  <EssaySlideStats
+    overline="EXPEDITION PARAMETERS"
+    dossierNum="014"
+    heading="What we&rsquo;re bringing into the wind."
+    lead="The numbers a briefing can carry. Frames, distance, and weight will be tallied on return."
+    stats={[
+      { label: 'Days in country', value: '6' },
+      { label: 'Altitudes worked', value: '3' },
+      { label: 'Base camp', value: '1', unit: 'estancia' },
+      { label: 'Departure', value: 'May 03', unit: '2026' },
+      { label: 'Frames captured', value: '—', unit: 'pending' },
+      { label: 'Selects published', value: '—', unit: 'pending' },
+    ]}
+    footerLeft="PRE-TRIP · 014"
+    footerRight="UPDATED ON RETURN"
+  />
+
+  <!-- BLUF -->
+  <EssaySlideText align="center">
+    <p class="essay-ov essay-ov--warm"><span class="essay-ov__diamond">◆</span> BLUF · Field Brief</p>
+    <h2>Six days, three altitudes, one window.</h2>
+    <p>
+      A relatively calm, cold, frontal-cycle week &mdash; unusual for Patagonia.
+      The Sunday&ndash;Tuesday system clears around midweek;
+      <strong>Wednesday 6 May is the day</strong> &mdash; post-frontal crisp air,
+      fresh snow on the peaks, low wind, active pumas. Sunday and Monday are
+      weather-shelter days: the towers will be socked in, but the lenga forest
+      in rain is its own subject. Late-week confidence drops; recheck Tuesday
+      morning local.
+    </p>
+  </EssaySlideText>
+
+  <EssayDivider num="01" label="I · ELEVATION BANDS" />
+
+  <!-- Elevation bands -->
+  <EssaySlideStats
+    overline="THREE ALTITUDES"
+    dossierNum="014"
+    heading="One weather system, three expressions."
+    lead="The Patagonian frontal cycle expresses differently at each altitude. Cerro Guido sits in band one, but every shot of the towers is governed by what the air is doing 2,500 metres above."
+    stats={[
+      { label: 'BAND 01 · STEPPE · Cerro Guido', value: '~280 m', unit: 'pampas, guanaco, puma' },
+      { label: 'BAND 02 · MID · Pre-cordillera',  value: '~1500 m', unit: 'lenga, ñirre, scrub' },
+      { label: 'BAND 03 · HIGH · Towers / Paine Grande', value: '~2500–3050 m', unit: 'granite, ice' },
+    ]}
+    footerLeft="PRE-TRIP · 014"
+    footerRight="GFS / ECMWF / MOUNTAIN-FORECAST"
+  />
+
+  <EssayDivider num="02" label="II · WEATHER WINDOW" />
+
+  <!-- 6-day forecast -->
+  <EssaySlideTimeline
+    overline="SIX-DAY FORECAST"
+    dossierNum="014"
+    heading="The frontal cycle, day by day."
+    lead="Steppe (~280 m) · Mid (~1500 m) · High (~3000 m). Wednesday is load-bearing."
+    entries={[
+      { time: 'Sun 03', label: 'Steppe 2–4°C · light rain PM · calm',       note: 'Mid −1 to 0°C · light snow · High −4 to −7°C · gales 30–45 · base 400 m' },
+      { time: 'Mon 04', label: 'Steppe 2–4°C · rain AM · 5–15 km/h',        note: 'Mid −1 to −2°C · light snow · High −10 to −11°C · gales 50–60' },
+      { time: 'Tue 05', label: 'Steppe 2–4°C · showers · 10 km/h',          note: 'Mid −1 to −3°C · snow showers · High −11 to −14°C · gales 45–60' },
+      { time: 'Wed 06', label: '★ THE DAY — Steppe 0–1°C · clearing',       note: 'Mid −5 to −6°C · clearing · High −10 to −13°C · summits clear', active: true },
+      { time: 'Thu 07', label: 'Steppe 0–3°C · mixed cloud · est.',          note: 'Mid −3 to −6°C · light snow possible · High −10 to −14°C · winds returning' },
+      { time: 'Fri 08', label: 'Steppe 0–3°C · variable · est.',             note: 'Mid −3 to −6°C · uncertain · High −10 to −14°C · gales likely' },
+    ]}
+  />
+
+  <EssayDivider num="03" label="III · LIGHT" />
+
+  <EssaySlideText align="center">
+    <h2>The sun never climbs out of the golden hour.</h2>
+    <p>
+      At 51&deg; south in early winter, the solar maximum altitude is roughly 25&deg;.
+      The sun rises at nine, sets at half-six, and traces a low arc all day.
+      Functionally, every frame between sunrise and sunset is sidelit &mdash; the
+      kind of light that runs sideways across the steppe grasses all day and
+      gives guanaco fur its rim.
+    </p>
+    <p>
+      The tradeoff is total flux. Nine and a half hours of usable light, much of
+      it under cloud, means ISO will sit higher than you&rsquo;d like on overcast
+      frames. Plan two compressed sessions: dawn through eleven, four through
+      last light. Don&rsquo;t try to make the middle of the day work.
+    </p>
+  </EssaySlideText>
+
+  <EssaySlideTimeline
+    overline="TWILIGHT WINDOWS"
+    heading="CLT — Chile Standard Time (UTC−3)"
+    entries={[
+      { time: '~07:35', label: 'Astronomical dawn' },
+      { time: '~08:25', label: 'Civil dawn / blue hour', note: 'through ~08:55' },
+      { time: '~09:00', label: 'Sunrise' },
+      { time: '~18:30', label: 'Sunset' },
+      { time: '~18:35', label: 'Civil dusk / blue hour', note: 'through ~19:10' },
+    ]}
+  />
+
+  <EssayDivider num="04" label="IV · MOON" />
+
+  <EssaySlideText align="center">
+    <h2>A waning gibbous, late and getting later.</h2>
+    <p>
+      The Flower Moon was full on 1 May. Your stay opens at ~95% illumination
+      and tapers to ~73% by Friday. Astrolandscape work is dead. The Milky Way
+      will be washed out. But moonlit landscape compositions at last light are
+      gettable on clear nights, and Wednesday and Thursday hold the best chance
+      for that.
+    </p>
+    <p>
+      Moonrise gets later each evening; by midweek the moon is up well after
+      sunset, leaving a window of true dark before it climbs. On clear nights
+      at the steppe (no light pollution for hundreds of kilometres) that gap is
+      short but rich.
+    </p>
+  </EssaySlideText>
+
+  <EssayDivider num="05" label="V · THE WEDNESDAY WINDOW" />
+
+  <EssaySlideText align="center">
+    <h2>What the post-frontal air gives you.</h2>
+    <p>
+      The Sunday&ndash;Tuesday system clears Tuesday afternoon into Wednesday.
+      Post-frontal Patagonian air is the cleanest you&rsquo;ll get in this
+      region &mdash; distance haze gone, fresh snow welded to the granite,
+      broken cloud breaking up the flat-light failure mode that pure clear
+      days produce.
+    </p>
+    <p>
+      Cloud base lifts from 400 metres on Sunday to 2,400+ metres on Wednesday.
+      The Cuernos sediment band against fresh white snowcaps is the postcard.
+      Pre-position Tuesday night for Lago Sarmiento or Laguna Amarga at first
+      light Wednesday.
+    </p>
+  </EssaySlideText>
+
+  <EssaySlideQuote
+    text="Sunday and Monday: don't burn fuel chasing the towers. Shoot the rain. Gauchos, sheep, the kitchen at the estancia, lenga in autumn colour with mist in the branches. This is your differentiated material — everyone else is waiting for clear weather, and you'll be the only one with frames of the place actually working."
+    attribution="Field note · Wed 06 · Lago Sarmiento · 50°59′S"
+  />
+
+  <EssayDivider num="06" label="VI · WIND" />
+
+  <EssaySlideText align="center">
+    <h2>Calm by Patagonian standards. Read that carefully.</h2>
+    <p>
+      Forecast sustained winds of 5&ndash;15 km/h at the steppe are unusually
+      low for this region. Tripod work is feasible, reflections in Sarmiento
+      and Sof&iacute;a are gettable, dust on the gravel roads will settle.
+    </p>
+    <p>
+      Caveat: forecast skill on Patagonian gusts is poor. The funnel zones
+      around Cerro Guido and the park entrance routinely double the modelled
+      value. Carry the heavy plate. A 15 km/h forecast can deliver 35 km/h
+      gusts on exposed pampas, which is the difference between a shot and a
+      long exposure of camera shake.
+    </p>
+  </EssaySlideText>
+
+  <EssayDivider num="07" label="VII · PUMAS" />
+
+  <EssaySlideText align="center">
+    <h2>Cool, stable, low wind. Cats hate wind for the same reasons you do.</h2>
+    <p>
+      This is good hunting weather. Pumas dislike wind for the same reasons
+      photographers do &mdash; it disrupts stalking, scent, and audio cues.
+      A calm cold week brings them down out of cover and concentrates them
+      around guanaco herds, which themselves cluster tighter in the cold.
+    </p>
+    <p>
+      Crepuscular peaks at roughly 08:30&ndash;10:30 and 17:30&ndash;19:30.
+      With short daylight, your shooting window is dawn light through eleven,
+      then four through last light. Two compressed sessions per day. Use the
+      middle hours for travel, scout work, and sleep.
+    </p>
+    <p>
+      Snow dusting on the higher steppe benches Tuesday into Wednesday gives
+      you tawny fur against white. That&rsquo;s the frame your guides will be
+      reading the wind for.
+    </p>
+  </EssaySlideText>
+
+  <EssayDivider num="08" label="VIII · CONFIDENCE" />
+
+  <EssaySlideStats
+    overline="FORECAST CONFIDENCE"
+    dossierNum="014"
+    heading="What&rsquo;s load-bearing, what isn&rsquo;t."
+    lead="Mountain-Forecast's six-day skill is reasonable for this region. Days four and five are extrapolated from synoptic pattern rather than direct model output. Refresh Tuesday morning local before committing to the Wednesday plan."
+    stats={[
+      { label: 'Sun → Tue', value: 'High',     unit: '88%' },
+      { label: 'Wed',       value: 'Mod-high',  unit: '75%' },
+      { label: 'Thu',       value: 'Moderate',  unit: '50%' },
+      { label: 'Fri',       value: 'Low-mod',   unit: '35%' },
+    ]}
+    footerLeft="SOURCES: MOUNTAIN-FORECAST · OPEN-METEO"
+    footerRight="ISSUED 01 MAY 2026"
+  />
+
+  <EssaySlideGear
+    overline="PACK NOTES"
+    dossierNum="014"
+    heading="Two sessions a day. Cold hands."
+    items={[
+      { name: 'Hands',                  usage: 'COLD',      description: 'Heaviest gloves you own. Wind chill −5 to −13°C at the steppe at dawn. Liner + shell system if you have one.' },
+      { name: 'Astrolandscape',         usage: 'SKIP',      description: 'Skip it. The waning gibbous moon is up most of the dark hours and washes the sky.' },
+      { name: 'RF 100–500 condensation',usage: 'OPTICS',    description: 'Hand warmer + sock around the lens barrel for moves out of a heated vehicle into −2°C air. Cold optics + warm cabin = fogged front element for ten minutes.' },
+      { name: 'Tripod plate',           usage: 'STABILITY', description: 'Heaviest you brought. Forecast gusts under-resolve in the funnel zones around the park entrance.' },
+      { name: 'Rain cover — day one',   usage: 'DAY 1',     description: 'Pack the R5 II rain cover at the top, not the bottom. Sunday is wet on arrival and you\'ll want it before you\'ve unpacked anything else.' },
+    ]}
+  />
+
+  <!-- Retreat objectives — from vault -->
+  <EssaySlideText align="center">
+    <p class="overline">Objectives &middot; The Patagonia No One Sees</p>
+    <h2>What we&rsquo;re going in for.</h2>
+    <p>
+      Fifth Strohl retreat. This is the consolidation one &mdash; portfolio-defining work,
+      not just strong singles. The program is &ldquo;The Patagonia No One Sees&rdquo;:
+      private reserve access and a working estancia as the base, which means the story
+      nobody else gets. The brief is a cohesive body of work &mdash; something that could
+      be a zine, a print series, a narrative arc across days and conditions.
+    </p>
+    <p>
+      Five objectives, in order of priority: <strong>environmental portraiture in extreme
+      conditions</strong> (people <em>in</em> Patagonia, not just in front of it);
+      <strong>puma search and gaucho culture</strong> (the private reserve access is the
+      whole point &mdash; don&rsquo;t squander it); <strong>wind as a character</strong>,
+      not a problem to solve; <strong>the zine concept</strong> &mdash; enough material
+      and narrative arc to sequence a publication; and the <strong>detail layer</strong>
+      that every previous retreat has proven is the difference between a set of landscapes
+      and a story.
+    </p>
+    <p style="color: var(--color-text-faint); font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.14em; text-transform: uppercase; margin-top: 2em;">
+      Briefing issued &middot; pre-departure &middot; 01 May 2026
+    </p>
+  </EssaySlideText>
+
+  <!-- 8. Colophon — placeholder, replaced on return -->
+  <EssaySlideColophon
+    dossierNum="014"
+    title="The Patagonia Expedition Briefing"
+    location="Magallanes, Chile"
+    coords="50°55′S 72°24′W"
+    dates="May 03 — May 09, 2026"
+    camera="TBD on return"
+    frames="Pending"
+    collection="patagonia"
+  >
+    Briefing issued before departure. Updated on return with the album.
+  </EssaySlideColophon>
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      document.querySelectorAll<HTMLElement>('.project-main .essay-slide').forEach((s) => {
+        s.setAttribute('data-essay-frame-slide', '');
+      });
+    });
+  </script>
+
+</ProjectLayout>
+
+<style>
+  /* Briefing-cover: text-only hero in the same shape as EssaySlideHero. */
+  .briefing-cover {
+    position: relative;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(184, 92, 56, 0.08), transparent 60%),
+      var(--color-bg);
+    overflow: hidden;
+  }
+
+  .briefing-cover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.25;
+    pointer-events: none;
+  }
+
+  .briefing-cover__inner {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 6vh 8vw 12vh;
+    gap: 4em;
+  }
+
+  .briefing-cover__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .briefing-cover__stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+
+  .briefing-cover__stamp-mark {
+    width: 8px;
+    height: 8px;
+    background: var(--color-warm);
+    border-radius: 50%;
+    animation: briefing-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes briefing-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  .briefing-cover__body {
+    max-width: 880px;
+  }
+
+  .briefing-cover__body .essay-ov {
+    color: var(--color-warm);
+    margin-bottom: 1.4em;
+  }
+
+  .briefing-cover__title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(2.6rem, 6vw, 5rem);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.6em;
+    color: var(--color-text);
+  }
+
+  .briefing-cover__deck {
+    font-family: var(--font-serif);
+    font-size: clamp(1.1rem, 1.6vw, 1.5rem);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+    max-width: 60ch;
+  }
+
+  .briefing-cover__manifest {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 2.5em;
+    border-top: 1px solid var(--color-border-subtle);
+    padding-top: 2em;
+  }
+
+  .briefing-cover__manifest-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+  }
+
+  .briefing-cover__manifest-k {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .briefing-cover__manifest-v {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .briefing-cover__scroll {
+    position: absolute;
+    bottom: 3vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    z-index: 2;
+  }
+
+  @media (max-width: 720px) {
+    .briefing-cover__inner {
+      padding: 5vh 5vw 10vh;
+      gap: 3em;
+    }
+    .briefing-cover__manifest {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.6em;
+    }
+  }
+
+  /* Override serif heading font with mono for briefing data tables */
+  :global(.essay-stats__num) {
+    font-family: var(--font-mono);
+    font-size: clamp(1.1rem, 1.2rem + 0.5vw, 1.6rem);
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+  :global(.essay-stats__label) {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  :global(.essay-timeline__hhmm) {
+    font-family: var(--font-mono);
+  }
+  :global(.essay-timeline__body h4) {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+</style>

@@ -170,34 +170,33 @@ if (heroSlides.length < 4) {
   }
 }
 
-// ── Dispatch (pinned to Norway) ──
-const dispatchCollection = collections.find((c) => c.id === 'norway');
+// ── Dispatch (pinned to Patagonia — pre-trip) ──
+const dispatchCollection = collections.find((c) => c.id === 'patagonia');
 const dispatchCover = dispatchCollection ? resolveCollectionCover(dispatchCollection) : null;
 const dispatchMobileCover = dispatchCollection ? resolvePortraitCover(dispatchCollection) : null;
 const hasDispatchMobile = dispatchMobileCover && dispatchCover && dispatchMobileCover.data.url !== dispatchCover.data.url;
 
-const dispatchData = dispatchCollection && dispatchCover ? {
-  title: 'Oslo, NOR',
-  href: `/work/${dispatchCollection.id}`,
-  coverUrl: dispatchCover.data.url,
-  coverWidth: dispatchCover.data.width,
-  coverHeight: dispatchCover.data.height,
-  coverLqip: dispatchCover.data.lqip,
-  mobileCoverUrl: hasDispatchMobile ? dispatchMobileCover.data.url : undefined,
-  mobileCoverWidth: hasDispatchMobile ? dispatchMobileCover.data.width : undefined,
-  mobileCoverHeight: hasDispatchMobile ? dispatchMobileCover.data.height : undefined,
-  mobileCoverLqip: hasDispatchMobile ? dispatchMobileCover.data.lqip : undefined,
-  caption: dispatchCollection.data.description || '',
-  coords: '59°55\'N, 10°45\'E',
-  meta: dispatchCover.data.exif
-    ? [dispatchCover.data.exif.camera?.split(' ').pop(), dispatchCover.data.exif.focalLength, dispatchCover.data.exif.aperture].filter(Boolean).join(' · ')
-    : '',
+const dispatchData = dispatchCollection ? {
+  title: 'Cerro Guido, CHL',
+  href: '/work/patagonia/briefing',
+  coverUrl: dispatchCover?.data.url,
+  coverWidth: dispatchCover?.data.width,
+  coverHeight: dispatchCover?.data.height,
+  coverLqip: dispatchCover?.data.lqip,
+  mobileCoverUrl: hasDispatchMobile ? dispatchMobileCover!.data.url : undefined,
+  mobileCoverWidth: hasDispatchMobile ? dispatchMobileCover!.data.width : undefined,
+  mobileCoverHeight: hasDispatchMobile ? dispatchMobileCover!.data.height : undefined,
+  mobileCoverLqip: hasDispatchMobile ? dispatchMobileCover!.data.lqip : undefined,
+  caption: 'Pre-trip brief — Estancia Cerro Guido, Torres del Paine. Six days, three altitudes, one window.',
+  coords: '50°55\'S, 72°24\'W',
+  meta: 'PRE-TRIP · BRIEFING ISSUED',
   data: [
-    { label: 'Season', value: 'Spring' },
+    { label: 'Season', value: 'Autumn' },
     { label: 'Date', value: 'May 2026' },
-    { label: 'Frames', value: String(countFrames(dispatchCollection)) },
-    { label: 'Next', value: 'TBD' },
+    { label: 'Status', value: 'PRE-TRIP' },
+    { label: 'Depart', value: '03 May' },
   ],
+  live: true,
 } : null;
 
 // ── Manifest collections ──

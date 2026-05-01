@@ -66,6 +66,7 @@ const photoCollections = defineCollection({
       )
       .optional(),
     coverPhoto: z.string().optional().describe('Reference to a photo ID'),
+    primaryHref: z.string().optional().describe('Override link for world map marker (defaults to /work/<id>)'),
     sortOrder: z.number().default(0),
     map: z
       .object({

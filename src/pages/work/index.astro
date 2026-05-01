@@ -23,7 +23,7 @@ const worldMarkers = collectionsWithMaps.map((c) => {
     lng: c.data.map!.center[0],
     lat: c.data.map!.center[1],
     num: String(markerNum).padStart(2, '0'),
-    target: `/work/${c.id}`,
+    target: c.data.primaryHref ?? `/work/${c.id}`,
   };
 });
 

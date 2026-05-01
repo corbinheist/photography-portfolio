@@ -9,10 +9,10 @@ interface Datum {
 interface Props {
   title: string;
   href: string;
-  coverUrl: string;
-  coverWidth: number;
-  coverHeight: number;
-  coverLqip: string;
+  coverUrl?: string;
+  coverWidth?: number;
+  coverHeight?: number;
+  coverLqip?: string;
   mobileCoverUrl?: string;
   mobileCoverWidth?: number;
   mobileCoverHeight?: number;
@@ -21,12 +21,14 @@ interface Props {
   coords: string;
   meta: string;
   data: Datum[];
+  live?: boolean;
 }
 
-const { title, href, coverUrl, coverWidth, coverHeight, coverLqip, mobileCoverUrl, mobileCoverWidth, mobileCoverHeight, mobileCoverLqip, caption, coords, meta, data } = Astro.props;
+const { title, href, coverUrl, coverWidth, coverHeight, coverLqip, mobileCoverUrl, mobileCoverWidth, mobileCoverHeight, mobileCoverLqip, caption, coords, meta, data, live } = Astro.props;
 
-const slug = coverUrl.split('/').pop() || '';
-const widths = buildWidthList(coverWidth);
+const hasImage = coverUrl && coverWidth && coverHeight;
+const slug = hasImage ? (coverUrl.split('/').pop() || '') : '';
+const widths = hasImage ? buildWidthList(coverWidth) : [];
 const hasMobile = mobileCoverUrl && mobileCoverWidth;
 
 function buildSrcset(format: 'avif' | 'webp'): string {
@@ -41,7 +43,7 @@ function buildMobileSrcset(format: 'avif' | 'webp'): string {
 }
 ---
 
-<section class="dispatch">
+<section class:list={['dispatch', { 'dispatch--live': live }]}>
   <div class="dispatch__inner">
     <div class="dispatch__header">
       <div class="dispatch__label">
@@ -52,32 +54,49 @@ function buildMobileSrcset(format: 'avif' | 'webp'): string {
       <a href={href} class="dispatch__link">Follow dispatch &rarr;</a>
     </div>
 
-    <div class="dispatch__hero">
-      <picture>
-        {hasMobile && (
-          <>
-            <source media="(max-width: 639px)" type="image/avif" srcset={buildMobileSrcset('avif')} sizes="100vw" />
-            <source media="(max-width: 639px)" type="image/webp" srcset={buildMobileSrcset('webp')} sizes="100vw" />
-          </>
-        )}
-        <source type="image/avif" srcset={buildSrcset('avif')} sizes="(max-width: 1440px) 100vw, 1440px" />
-        <source type="image/webp" srcset={buildSrcset('webp')} sizes="(max-width: 1440px) 100vw, 1440px" />
-        <img
-          src={`${coverUrl}/${slug}-1600.webp`}
-          alt={title}
-          width={coverWidth}
-          height={coverHeight}
-          loading="lazy"
-          decoding="async"
-          style={`background-image: url(${hasMobile ? mobileCoverLqip : coverLqip}); background-size: cover;`}
-          class="dispatch__img"
-        />
-      </picture>
-      <div class="dispatch__img-overlay">
-        <span class="dispatch__img-coords">{coords}</span>
-        <span class="dispatch__img-meta">{meta}</span>
-      </div>
+    <div class="dispatch__meta-strip">
+      {data.map((item, i) => (
+        <>
+          <span class="dispatch__meta-k">{item.label}</span>
+          <span class="dispatch__meta-v">{item.value}</span>
+          {i < data.length - 1 && <span class="dispatch__meta-sep">&middot;</span>}
+        </>
+      ))}
     </div>
+
+    {hasImage ? (
+      <div class="dispatch__hero">
+        <picture>
+          {hasMobile && (
+            <>
+              <source media="(max-width: 639px)" type="image/avif" srcset={buildMobileSrcset('avif')} sizes="100vw" />
+              <source media="(max-width: 639px)" type="image/webp" srcset={buildMobileSrcset('webp')} sizes="100vw" />
+            </>
+          )}
+          <source type="image/avif" srcset={buildSrcset('avif')} sizes="(max-width: 1440px) 100vw, 1440px" />
+          <source type="image/webp" srcset={buildSrcset('webp')} sizes="(max-width: 1440px) 100vw, 1440px" />
+          <img
+            src={`${coverUrl}/${slug}-1600.webp`}
+            alt={title}
+            width={coverWidth}
+            height={coverHeight}
+            loading="lazy"
+            decoding="async"
+            style={`background-image: url(${hasMobile ? mobileCoverLqip : coverLqip}); background-size: cover;`}
+            class="dispatch__img"
+          />
+        </picture>
+        <div class="dispatch__img-overlay">
+          <span class="dispatch__img-coords">{coords}</span>
+          <span class="dispatch__img-meta">{meta}</span>
+        </div>
+      </div>
+    ) : (
+      <div class="dispatch__coords-bar">
+        <span class="dispatch__coords-value">{coords}</span>
+        <span class="dispatch__coords-meta">{meta}</span>
+      </div>
+    )}
 
     <div class="dispatch__meta-grid">
       <div class="dispatch__caption">{caption}</div>
@@ -125,6 +144,10 @@ function buildMobileSrcset(format: 'avif' | 'webp'): string {
     animation: pulse-dispatch 2s ease-in-out infinite;
   }
 
+  .dispatch--live .dispatch__dot {
+    background: var(--color-warm);
+  }
+
   @keyframes pulse-dispatch {
     0%, 100% { opacity: 0.4; }
     50% { opacity: 1; }
@@ -136,6 +159,10 @@ function buildMobileSrcset(format: 'avif' | 'webp'): string {
     letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--color-accent);
+  }
+
+  .dispatch--live .dispatch__overline {
+    color: var(--color-warm);
   }
 
   .dispatch__title {
@@ -160,6 +187,64 @@ function buildMobileSrcset(format: 'avif' | 'webp'): string {
 
   .dispatch__link:hover {
     color: var(--color-accent);
+  }
+
+  .dispatch--live .dispatch__link:hover {
+    color: var(--color-warm);
+  }
+
+  /* ── Metadata strip ── */
+  .dispatch__meta-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3em 0.6em;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--color-border-subtle);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+  }
+
+  .dispatch__meta-k {
+    color: var(--color-text-faint);
+    text-transform: uppercase;
+  }
+
+  .dispatch__meta-k::after {
+    content: ":";
+    margin-right: 0.25em;
+  }
+
+  .dispatch__meta-v {
+    color: var(--color-text-muted);
+  }
+
+  .dispatch__meta-sep {
+    color: var(--color-border);
+    margin: 0 0.2em;
+  }
+
+  /* ── Imageless coords bar (pre-trip dispatches) ── */
+  .dispatch__coords-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .dispatch__coords-value {
+    color: var(--color-warm);
+  }
+
+  .dispatch__coords-meta {
+    color: var(--color-text-faint);
   }
 
   /* ── Hero image ── */
@@ -195,6 +280,10 @@ function buildMobileSrcset(format: 'avif' | 'webp'): string {
 
   .dispatch__img-coords {
     color: var(--color-accent);
+  }
+
+  .dispatch--live .dispatch__img-coords {
+    color: var(--color-warm);
   }
 
   .dispatch__img-meta {
