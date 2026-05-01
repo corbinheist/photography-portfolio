@@ -43,6 +43,39 @@ const albums = defineCollection({
   }),
 });
 
+const essays = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/data/essays' }),
+  schema: z.object({
+    slug: z.string(),
+    collectionId: z.string(),
+    title: z.string(),
+    description: z.string().optional(),
+    date: z.string().optional(),
+    location: z.string().optional(),
+    coverPhotoIndex: z.number().int().nonnegative().default(0),
+    photos: z.array(
+      z.object({
+        url: z.string().url(),
+        width: z.number().int().positive(),
+        height: z.number().int().positive(),
+        lqip: z.string(),
+        title: z.string().optional(),
+        exif: z
+          .object({
+            camera: z.string().optional(),
+            lens: z.string().optional(),
+            focalLength: z.string().optional(),
+            aperture: z.string().optional(),
+            shutter: z.string().optional(),
+            iso: z.number().optional(),
+            date: z.string().optional(),
+          })
+          .optional(),
+      }),
+    ),
+  }),
+});
+
 const photoCollections = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/data/collections' }),
   schema: z.object({
@@ -116,4 +149,4 @@ const blog = defineCollection({
   loader: substackLoader(),
 });
 
-export const collections = { photos, albums, photoCollections, settings, blog };
+export const collections = { photos, albums, essays, photoCollections, settings, blog };

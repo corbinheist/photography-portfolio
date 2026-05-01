@@ -1,0 +1,426 @@
+slug: nomads-essay
+collectionId: morocco
+title: Nomads of Djebel Saghro
+description: A day with the Ait Atta — tea, bread, herds, and firelight in Morocco's volcanic highlands.
+coverPhotoIndex: 0
+photos:
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-073-cnh_0912
+    width: 6916
+    height: 4613
+    lqip: data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwC7AB6Gk0EQggGaVIAA94pOVoqQRFUpYGzbL827W9YrrdSIuLnnoSDnMcTPgAA=
+    title: The Road to Saghro
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/4
+      shutter: 1/2500s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-075-cnh_1217
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJQBOgBFFP+L+SpzkQkAAA/p59TgGue3fmT63N4wMgHaC9bjsuN7SVS4wKdWCATY2otkAA
+    title: Preparing the Tea
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/14
+      shutter: 1/20s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-076-cnh_1237
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABwBQCdASoUAB4APzmEvVavJ6YjsBgIAeAnCUAWI+QwOHuT6N+kkrYT823tq2WQxfgNymdAAM3aqP7+27BKpKPz7mG4vZ+eWT4TbV/xdVl3W8lqvDemP25zLFxULTe9sN/JjWv7+afRNDea8xREJzKz0ZUv3QjUTBeMjJl2mO7chTYnF4yqhX0GxnMAPSJaKq6BLDKe9YYMgD7TFAAAAA==
+    title: Pouring Mint Tea
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.6
+      shutter: 1/6400s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-074-cnh_1169
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYgCdMoACLoDNBi4B+YAAzB5anIywYmzA2IYp5EF8TRiaY06aRVPwWgEz2PbinSEUCDED/A5XtwkDTcuTr7Sa7gA2vqvj0wuwAA==
+    title: Sugar for Tea
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/13
+      shutter: 1/40s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-079-cnh_1105
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBOgA8vmStqCmIsQAAD+udyrX0jHYrMG+9gJbomD9pmbbmmtj2KG1iog5m6WSuxgYNsE34mYDL/cGAA=
+    title: Flour-Dusted Hands
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/2.8
+      shutter: 1/125s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-078-cnh_1097
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAACQBACdASoUAB4APzmMu1OvKiYisAgB4CcJQBTig2a47JTNn92kNiVqhI2T5oAA/uOErukgdTtgyvcvkXI482KNwMBYxBa0jIn16iz5YXfkXjBLQm1Jhd7+znRmEY/yll00n0D4KEHLdOk3zCBbdI74YhgUU+aSkcDYCTPlvUdrgAAA
+    title: Making Bread
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/3.5
+      shutter: 1/125s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-077-cnh_1243
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAACQBACdASoUAB4APzmQu1WvKqYjMBgIAeAnCUAVHoEPjANNzL52G94/PGmpWYAA+49NFMjvQ4LOaR2lUlS8GXq2fykA7zonb6y2m8x6jePF1W71UNhQue7VbhK2Shnp42ag2ZgimLEteVQ+p7dy604lVqkbWgvoZqoXsXf/EsuSt9UJff0CUTATnIRR956tRyXK/qSkwU80AA==
+    title: The Tea Maker
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.6
+      shutter: 1/4000s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-081-cnh_1358
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAACQBQCdASoUAB4APzmQvFWvKiYjMBgIAeAnCWMAuxrgABuflil7QldgoNgRNJ/E1RVCTqmzAAD+dYykFy12XGYd04FjfQFC9IC/QyxWTKMSJzMW6KklbuCB+aJJM0m3Qsz10uGiLLerH8e1ErObjtRkGWLtjdvqghoV3xF1cZWh3at42jDncWU8tgkFe8MaHgx4/PieRg6fC2wAAAA=
+    title: Sharing Bread
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/3.2
+      shutter: 1/400s
+      iso: 320
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-080-cnh_1255
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQBACdASoUAA0APzmIuVQvKSWjMAgB4CcJZgCw7CBSv1q2JjRz//81wAD+H5oAyT/GKhQq5bIid1/m31MPM0eEzw6H46g2I0MDnf1F1Ft4EFfwn91OMt4ep6k8AA==
+    title: Bread Oven
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.6
+      shutter: 1/4000s
+      iso: 320
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-082-cnh_3747
+    width: 5366
+    height: 8044
+    lqip: data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAABQBACdASoUAB4APzl8p1OvJyKit/VR4CcJZQDKAEVfxn6L/vEsFb4zFqKgAP7vss7pwJ2ivhgkaNwrJEXqIUrle8ebFAnsCXW6Y2UvMazZ6q8Ay+x0JKla0OEWu14zlfzpIaT2pAA32MGT2t/GR2f1OLaiZP/grYAAAA==
+    title: Herder and Flock
+    exif:
+      camera: Canon EOS R5
+      lens: RF 70-200mm F2.8L IS USM
+      focalLength: 153mm
+      aperture: f/3.2
+      shutter: 1/1250s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-083-cnh_1414
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYwAAVOvFb64Li5OBzoAA/tPoTysDmaEz7Oy3VhiMO5mk4b7zfqvyqumuAB0mZT8YBiMHubHZUb5HSlgVNILuM75+FIlh5C6VUAAA
+    title: Holding a Kid
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/4
+      shutter: 1/160s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-084-cnh_1463
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAwBACdASoUAB4APzmKuVYvKSWjsBgIAeAnCWdkMwAUnkI9EMos7t9h2AAA/ucTtPa/Ah9E2wDqfyz15qyXAA4fpib/1a+/ZBKWzJ05x0fbersRuN+EUjhuNVFbsgAA
+    title: The Herder
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/2.8
+      shutter: 1/640s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-089-cnh_1676
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwBACdASoUAB4APzmIulOvKSWisAgB4CcJQBfJBEBEbvVoZ1nkGQWW3IvgJQREjQAA/t6TL5z6eKRdx6fK1WKQAlmZbKPD5oJt1CEqCjT+LFgHE0xap3tiy6Wrx+2O/yZXUQ3GjujcKzvA3+7Pd/DVhEJdiHqFtv2GKoBMRRfMpntCAAA=
+    title: With a Newborn Kid
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/3.2
+      shutter: 1/500s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-086-cnh_3827
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJZgCdABc62yqX1BjAAMqhHP7DntbCWR6k19D4ljMlXAJ6hPZKyVtxxqfqUEqcAJQepzgJ4PDMiLEGfEAAAA==
+    title: Volcanic Pinnacles
+    exif:
+      camera: Canon EOS R5
+      lens: RF 35mm F1.4 L VCM
+      focalLength: 35mm
+      aperture: f/6.3
+      shutter: 1/320s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-087-cnh_1644
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAACwBACdASoUAB4APzmMulOvKiWisAgB4CcJQBXDhDwjY7W1rSSSNuRb+On/JDUAAP5S63Xz+m1U1NyficsEqqS2H0dw++6Gy5JF2Kukw9i2PvB2G35YnppSK5K/u0iQFPFD8ms7oXjkP2BMAimG8/up27KScpJOpJgAAA==
+    title: Two Herders Resting
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/4
+      shutter: 1/200s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-088-cnh_1647
+    width: 4881
+    height: 6508
+    lqip: data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwBACdASoUABsAPzmIvFUvKSYjKA1R4CcJZwDQGBEcMKLH6jh+Sm8bNrTTCsrkkAAA/tMKOksVBu4wgGB3mZ4lKEe/4b1pNO02kZqXAHMnGOPeaTDFkGxp4mpaZFjMWkuI0e/H9wwfxp1cdgUqoFuQVAA=
+    title: Seated Among Pinnacles
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/4
+      shutter: 1/200s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-085-cnh_1493
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACQAwCdASoUAA0APzmEulOvKKWisAgB4CcJZQCdACFjilNu8nwAAP0w3RX6tzvHY4N2DWqaREeX5xHqpoJrVrnjZjtFWZFl1aAAAA==
+    title: Carrying Water
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/2.2
+      shutter: 1/1000s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-090-cnh_3873
+    width: 8044
+    height: 5366
+    lqip: data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBWABZuCwwAA/uDoyhMwvh5sFNZUPZC4B9TBH8FjBsJ8YspaAAAA
+    title: Watching the Flock
+    exif:
+      camera: Canon EOS R5
+      lens: RF 70-200mm F2.8L IS USM
+      focalLength: 200mm
+      aperture: f/3.2
+      shutter: 1/500s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-092-cnh_1680
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACQAwCdASoUAA0APzmGulOvKSWisAgB4CcJYwCdACIftx5I9YiAAPKR6RsIgpD6okTi1UdN+g4g/jxFUQXNWxU4Gl99WE1VgAAAAA==
+    title: Below the Mesa
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/3.2
+      shutter: 1/500s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-093-cnh_1689
+    width: 8095
+    height: 5399
+    lqip: data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACwAwCdASoUAA0APzmIulQvKSWjMAgB4CcJYwCdMoADVQNQQ0uIAADLQzCAlqhnFGPFwY0udx+46RlsYEYXN9JXQktVnbyQ6AdQAAAA
+    title: Evening Gathering
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/3.2
+      shutter: 1/500s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-091-cnh_3906
+    width: 5375
+    height: 8059
+    lqip: data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAADQAwCdASoUAB4APzmUwVmvKicjqAgB4CcJYwDE2A6/XvyHfNEFogAA8qH05WPVNw0S8iSJfrrni0BJhNuNnLdjjkYHekiJIQdm4i4BMMng2OMH0ZsYcF4akbiYZITafCdhqkte8AINdIRhDGDQv06PAAAAAA==
+    title: Two Herders Walking
+    exif:
+      camera: Canon EOS R5
+      lens: RF 70-200mm F2.8L IS USM
+      focalLength: 135mm
+      aperture: f/3.2
+      shutter: 1/500s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-094-cnh_1711
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAAAwBACdASoUAA0APzmIuVQvKSWjMAgB4CcJYgCdMoGv/gPPzMYlaXoFxFAA/qFdSuhXLm9RtYbBHIq+m/NSyzzUfR0MCq7jLE9HEno71hzZfHNkqGcAAA==
+    title: Flock at Sunset
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/3.5
+      shutter: 1/1600s
+      iso: 800
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-095-cnh_3954
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAwCdASoUAB4APzmEt1SvKCUkMBgMAeAnCWMAtsgE3Q/ElmWXSYAA0LJ5PuRIsDZuwaDlWF56mzEqNATSK8COPztQjOFs8P7T5+l8TZZmoJHnjBC4AAAA
+    title: Campfire Below the Cliffs
+    exif:
+      camera: Canon EOS R5
+      lens: RF 35mm F1.4 L VCM
+      focalLength: 35mm
+      aperture: f/3.2
+      shutter: 1/125s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-096-cnh_3988
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQBACdASoUAB4APzmIu1avKKWjsBgIAeAnCWUAuDALLHIQbO5FPaPn+ADNidgC/XEeLnwBXKXly08sEYrPnxpdUiXt/5QT4V9EkwbySoNtS4CvNDCpf8rPDXCgAAAA
+    title: Two at the Fire
+    exif:
+      camera: Canon EOS R5
+      lens: RF 35mm F1.4 L VCM
+      focalLength: 35mm
+      aperture: f/1.4
+      shutter: 1/160s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-103-cnh_4028
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAQBACdASoUAB4APyV+slOuKKSkN/qoAcAkiWUswAABgagWWDneKiifkAD+nJhXNGjI3Bn1Wsp9WtPn+TN5M2yTGGt8M++7UsE60uZW3AQAAA==
+    title: Silhouettes at the Fire
+    exif:
+      camera: Canon EOS R5
+      lens: RF 35mm F1.4 L VCM
+      focalLength: 35mm
+      aperture: f/1.4
+      shutter: 1/160s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-097-cnh_1875
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACwBACdASoUAB4APzmEuFOvKKUisAgB4CcJZQDDrCIKEN/qPFswBoerPXrwyjtAAN5lAdRtX3b+7V8XloWJ8LUuTCv4OA1Q0NgLgoepfSI4SioVmsuc0Y7VI/KVfRBjitc9PEIT4JGEDGk7LfHkAAAA
+    title: Tending the Fire
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.2
+      shutter: 1/400s
+      iso: 1600
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-098-cnh_1807
+    width: 5281
+    height: 7918
+    lqip: data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADQBACdASoUAB4APzmQvlevKaYjqAqp4CcJYgCo9DT3b+z+oFuEWA4wdu7A5UHiwAD+jc+j/cAhtAWg+ecF5UVGQLgvHEoBaydJW+EYIrsjwxBAgM5vYQGvxysiHIACy0sf4pu3SoANplLmhF1Oal0yiFbCmAU5Qg+fQWtQAAA=
+    title: Kettle at Dusk
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.2
+      shutter: 1/1250s
+      iso: 1600
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-099-cnh_1757
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAACwBACdASoUAB4APzl+uFOvJ6Uit/VYAeAnCWMAw6xRRyvesj9Zuj9MZ/4mklgAAP7sPQt53L6traxPQlc6vtSXTeuKIaMKVaRIy6aBSL/bj83dD9xLNuqz5HtLuJxFGdEVCOYTAV4fAAAA
+    title: Tea on the Coals
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/2.8
+      shutter: 1/160s
+      iso: 1600
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-100-cnh_4011
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAwAwCdASoUAA0APzmMvlUvKaajMAgB4CcJZwC+SCzcCtgAAP7utQDcLbe5v5R1ZL1n7ZDKOGvODDvetTP+Q5ItQkk0AA==
+    title: Fire Among the Pinnacles
+    exif:
+      camera: Canon EOS R5
+      lens: RF 35mm F1.4 L VCM
+      focalLength: 35mm
+      aperture: f/1.4
+      shutter: 1/160s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-101-cnh_4020
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAABQBACdASoUAB4APy2CtFOuqSUoN/VYAdAliWUAwCgQ0X4Ijfw90sGNeWngAP4UCj/wbBjtKf7wz3PUETUwYFE4EYiiZm48oTGo2LjW6gPdDwdLRjEAAA==
+    title: Campfire and Cliffs
+    exif:
+      camera: Canon EOS R5
+      lens: RF 35mm F1.4 L VCM
+      focalLength: 35mm
+      aperture: f/1.4
+      shutter: 1/160s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-104-cnh_1965
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAwCdASoUAB4APzmOwFcvKacuKAqp4CcJZQAAMWVdZREc8I25PJAA/nZo+nXukHZu/L9ODGrROgnL3Te83sRR57b1tTi+NtiOjoYdkAAAAA==
+    title: Dusk Over Saghro
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.2
+      shutter: 1/200s
+      iso: 1600
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-102-cnh_4025
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,UklGRkgAAABXRUJQVlA4IDwAAABwAwCdASoUAA0APzmEuVOvKKWsMAgB4CcJZQDImCHegIPYQAAA/hEovwIgYiz3QNrbjruDibTuSuIAAAA=
+    title: Two at the Fire
+    exif:
+      camera: Canon EOS R5
+      lens: RF 35mm F1.4 L VCM
+      focalLength: 35mm
+      aperture: f/1.4
+      shutter: 1/160s
+      iso: 400
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-105-cnh_2042
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQBACdASoUAB4APx1yrlOtJqQit+gBoCOJZgDA3DJRQFTsbM+t0hAyAAD+7pJP+dnZBSTT0yMTS3LWcJgowLslTZhuFd1J9vFPSnC/OdC5Oc+tR4SjRYAAmHgAAA==
+    title: Making Tea by Firelight
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.2
+      shutter: 1/160s
+      iso: 3200
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-106-cnh_2132
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADwBACdASoUAB4APzmMulYvKSWjqA1R4CcJbADE2EXfvD6WmCyBR2UzhN3ZrjtmrQAA/vVldvtmPAsE5C/8wfOI+hEbvwv6b++eLP34NRXeL5UpQJ4j3VyK/0TDQmFJUhQgth5XWxWKgETqLsUTqCcxAL/wb1UoAAA=
+    title: Embers and Kettle
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.2
+      shutter: 1/100s
+      iso: 3200
+  - url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-_nomads-107-cnh_2005
+    width: 5464
+    height: 8192
+    lqip: data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAACwAwCdASoUAB4APzmOuVWvKiWjMBgIAeAnCWcAAJ7rh5CTDaG7AAD+790s9fP9Tx4VoADpYdKUJVEYjE2lNAAA
+    title: Embers
+    exif:
+      camera: Canon EOS R5m2
+      lens: RF50mm F1.2 L USM
+      focalLength: 50mm
+      aperture: f/1.2
+      shutter: 1/100s
+      iso: 1600
