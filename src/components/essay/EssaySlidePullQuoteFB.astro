@@ -57,3 +57,120 @@ const { url, width, height, lqip, alt, lightboxIndex, text, attribution, locatio
     )}
   </div>
 </section>
+
+<style>
+  .essay-quote-fb {
+    position: relative;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .essay-quote-fb__bg {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* .photo-wrap / picture / .photo-img come from <Photo> child component */
+  .essay-quote-fb__bg :global(.photo-wrap) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .essay-quote-fb__bg :global(.photo-wrap picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .essay-slide .essay-quote-fb__bg :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.42;
+    filter: grayscale(0.3) contrast(0.95);
+  }
+
+  .essay-quote-fb__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(16, 15, 15, 0.55) 0%, rgba(16, 15, 15, 0.85) 70%),
+      linear-gradient(180deg, rgba(16, 15, 15, 0.4) 0%, rgba(16, 15, 15, 0) 30%, rgba(16, 15, 15, 0) 70%, rgba(16, 15, 15, 0.6) 100%);
+  }
+
+  .essay-quote-fb__frame {
+    position: relative;
+    height: 100%;
+    padding: 72px 96px 64px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .essay-quote-fb__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .essay-quote-fb__text {
+    position: relative;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.125rem, 1.5rem + 2.5vw, 3.625rem);
+    line-height: 1.18;
+    color: var(--fx-paper);
+    quotes: none;
+    letter-spacing: -0.015em;
+    align-self: center;
+    max-width: 22ch;
+    text-wrap: pretty;
+    margin: 0;
+    border: none;
+    padding: 0;
+  }
+
+  .essay-quote-fb__mark {
+    position: absolute;
+    top: -0.6em;
+    left: -0.5em;
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.6em;
+    line-height: 1;
+    color: var(--color-accent);
+    opacity: 0.9;
+  }
+
+  .essay-quote-fb__attrib {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fx-base-200);
+    justify-self: start;
+  }
+
+  .essay-quote-fb__attrib-line {
+    width: 42px;
+    height: 1px;
+    background: var(--color-accent);
+  }
+
+  @media (max-width: 768px) {
+    .essay-quote-fb__frame {
+      padding: 48px var(--container-padding) 40px;
+    }
+
+    .essay-quote-fb__text {
+      max-width: 100%;
+    }
+  }
+</style>
