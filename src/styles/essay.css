@@ -403,55 +403,6 @@ html:has([data-essay]) {
 }
 
 /* ==========================================
-   Mini Gallery Slide
-   ========================================== */
-
-.essay-mini-gallery {
-  flex-direction: column;
-  padding: 0;
-}
-
-.essay-mini-gallery__grid {
-  columns: 3;
-  column-gap: var(--space-sm);
-  width: 100%;
-  max-width: 2000px;
-  margin-inline: auto;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  padding: var(--space-sm);
-}
-
-.essay-mini-gallery__grid--cols-2 {
-  columns: 2;
-}
-
-.essay-mini-gallery__item {
-  break-inside: avoid;
-  margin-bottom: var(--space-sm);
-  line-height: 0;
-}
-
-.essay-slide .essay-mini-gallery__item .photo-img {
-  width: 100%;
-  height: auto;
-  max-height: 105dvh;
-  object-fit: cover;
-}
-
-.essay-mini-gallery__caption {
-  width: 100%;
-  text-align: center;
-  padding: var(--space-sm) var(--container-padding);
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-faint);
-  letter-spacing: 0.04em;
-  flex-shrink: 0;
-}
-
-/* ==========================================
    Text-Only Slide
    ========================================== */
 
@@ -913,15 +864,6 @@ html:has([data-essay]) {
   /* Portrait triptych — reduce height */
   .essay-slide.essay-triptych--portrait .essay-triptych__item .photo-img {
     height: 50dvh;
-  }
-
-  /* Mini gallery — 2 columns on mobile */
-  .essay-mini-gallery__grid {
-    columns: 2;
-  }
-
-  .essay-mini-gallery__grid--cols-2 {
-    columns: 2;
   }
 
   /* Nav dots hidden on mobile */
