@@ -102,3 +102,144 @@ const hasCaption = captionTitle || captionMeta;
     </div>
   )}
 </section>
+
+<style>
+  .essay-full-bleed {
+    padding: 0;
+  }
+
+  .essay-full-bleed__img {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* .photo-wrap / picture / .photo-img from <Photo> child component */
+  .essay-full-bleed__img :global(.photo-wrap) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .essay-full-bleed__img :global(.photo-wrap picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .essay-slide .essay-full-bleed__img :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Portrait / contain — natural sizing, centered, no black bars */
+  .essay-full-bleed--contain .essay-full-bleed__img {
+    position: relative;
+    inset: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .essay-full-bleed--contain .essay-full-bleed__img :global(.photo-wrap) {
+    width: auto;
+    height: auto;
+    max-height: 100dvh;
+    max-width: 100%;
+  }
+
+  .essay-slide.essay-full-bleed--contain .essay-full-bleed__img :global(.photo-img) {
+    width: auto;
+    height: auto;
+    max-height: 100dvh;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  /* Blurred LQIP backdrop for contain slides */
+  .essay-full-bleed__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+    filter: blur(40px) brightness(0.4) saturate(1.2);
+    transform: scale(1.15);
+  }
+
+  /* Text overlay */
+  .essay-full-bleed__overlay {
+    position: relative;
+    z-index: 1;
+    color: var(--fx-paper);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    padding: var(--space-2xl) var(--container-padding);
+    width: 100%;
+  }
+
+  .essay-full-bleed__overlay--bottom-left {
+    align-self: flex-end;
+    text-align: left;
+    max-width: 680px;
+  }
+
+  .essay-full-bleed__overlay--bottom-center {
+    align-self: flex-end;
+    text-align: center;
+  }
+
+  .essay-full-bleed__overlay--center {
+    align-self: center;
+    text-align: center;
+  }
+
+  /* Scrim for text readability */
+  .essay-full-bleed--scrim::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.6) 0%,
+      rgba(0, 0, 0, 0.2) 40%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
+    z-index: 0;
+  }
+
+  /* Caption bar below image */
+  .essay-full-bleed__caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-sm) var(--container-padding);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: rgba(255, 252, 240, 0.7);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+  }
+
+  .essay-full-bleed__caption-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-sm);
+    font-style: italic;
+    color: rgba(255, 252, 240, 0.9);
+  }
+
+  /* Portrait devices — portrait images can fill more of the screen */
+  @media (orientation: portrait) {
+    .essay-full-bleed--contain .essay-full-bleed__img :global(.photo-wrap),
+    .essay-slide.essay-full-bleed--contain .essay-full-bleed__img :global(.photo-img) {
+      max-height: 92dvh;
+      max-width: 100%;
+    }
+  }
+</style>

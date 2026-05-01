@@ -51,3 +51,98 @@ const orientation = isPortrait ? 'portrait' : 'landscape';
   </div>
   {caption && <div class="essay-triptych__caption">{caption}</div>}
 </section>
+
+<style>
+  .essay-triptych {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .essay-triptych__images {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .essay-triptych__images--gap-none {
+    gap: 0;
+  }
+
+  .essay-triptych__images--gap-tight {
+    gap: var(--space-sm);
+  }
+
+  .essay-triptych__images--gap-normal {
+    gap: var(--space-lg);
+    padding: 0 var(--space-lg);
+  }
+
+  .essay-triptych__item {
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  /* .photo-wrap / .photo-img from <Photo> child component */
+  .essay-triptych__item :global(.photo-wrap) {
+    width: 100%;
+  }
+
+  .essay-slide .essay-triptych__item :global(.photo-img) {
+    width: 100%;
+    display: block;
+  }
+
+  /* Landscape triptych — width-filling, height follows naturally */
+  .essay-slide.essay-triptych--landscape .essay-triptych__item :global(.photo-img) {
+    height: auto;
+  }
+
+  /* Portrait triptych — height-constrained, centered */
+  .essay-triptych--portrait .essay-triptych__images {
+    align-items: center;
+  }
+
+  .essay-triptych--portrait .essay-triptych__item {
+    flex: none !important;
+  }
+
+  .essay-slide.essay-triptych--portrait .essay-triptych__item :global(.photo-img) {
+    width: auto;
+    max-width: 100%;
+    height: 75dvh;
+  }
+
+  /* :has(.essay-placeholder) — :global() inside :has() so the test matches
+     placeholder elements rendered by <EssayPlaceholder> child component */
+  .essay-triptych--portrait .essay-triptych__item:has(:global(.essay-placeholder)) {
+    flex: 1 !important;
+  }
+
+  .essay-triptych__caption {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-sm) var(--container-padding);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 768px) {
+    /* Landscape triptych wraps 2+1 */
+    .essay-triptych--landscape .essay-triptych__images {
+      flex-wrap: wrap;
+    }
+
+    .essay-triptych--landscape .essay-triptych__item:last-child {
+      flex-basis: 100%;
+      max-height: 35dvh;
+    }
+
+    /* Portrait triptych — reduce height */
+    .essay-slide.essay-triptych--portrait .essay-triptych__item :global(.photo-img) {
+      height: 50dvh;
+    }
+  }
+</style>

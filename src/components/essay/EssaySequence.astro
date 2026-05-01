@@ -33,3 +33,13 @@ const { orientation, photos } = Astro.props;
   <script type="application/json" data-sequence-photos set:html={JSON.stringify(photos)}></script>
   <slot />
 </div>
+
+<style>
+  @media (orientation: landscape) {
+    .essay-sequence--portrait { display: none; }
+  }
+
+  @media (orientation: portrait) {
+    .essay-sequence--landscape { display: none; }
+  }
+</style>

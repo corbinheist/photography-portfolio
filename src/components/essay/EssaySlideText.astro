@@ -21,3 +21,84 @@ const { align = 'center' } = Astro.props;
     <slot />
   </div>
 </section>
+
+<style>
+  .essay-text {
+    padding: var(--space-2xl) var(--container-padding);
+  }
+
+  .essay-text__inner {
+    max-width: 680px;
+    width: 100%;
+  }
+
+  .essay-text--center {
+    text-align: center;
+  }
+
+  .essay-text--center .essay-text__inner {
+    margin-inline: auto;
+  }
+
+  .essay-text--left .essay-text__inner {
+    margin-right: auto;
+  }
+
+  /* Children of __inner come from <slot> with the parent page's cid — :global() */
+  .essay-text--center .essay-text__inner :global(p) {
+    margin-inline: auto;
+  }
+
+  .essay-text__inner :global(h1),
+  .essay-text__inner :global(h2),
+  .essay-text__inner :global(h3) {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-md);
+  }
+
+  .essay-text__inner :global(h1) {
+    font-size: var(--text-3xl);
+  }
+
+  .essay-text__inner :global(h2) {
+    font-size: var(--text-2xl);
+  }
+
+  .essay-text__inner :global(h3) {
+    font-size: var(--text-xl);
+  }
+
+  .essay-text__inner :global(p) {
+    font-size: var(--text-lg);
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    max-width: 60ch;
+  }
+
+  .essay-text__inner :global(p + p) {
+    margin-top: var(--space-md);
+  }
+
+  .essay-text__inner :global(p strong) {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .essay-text__inner :global(.overline) {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin-bottom: var(--space-md);
+  }
+
+  @media (max-height: 500px) {
+    .essay-text {
+      padding: var(--space-lg) var(--container-padding);
+    }
+  }
+</style>

@@ -143,3 +143,235 @@ const isDossier = !!dossierNum;
     )}
   </div>
 </section>
+
+<style>
+  .essay-colophon {
+    padding: var(--space-2xl) var(--container-padding);
+  }
+
+  .essay-colophon__inner {
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  .essay-colophon__overline {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-warm);
+    margin-bottom: var(--space-md);
+  }
+
+  .essay-colophon__heading {
+    font-family: var(--font-heading);
+    font-size: var(--text-2xl);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-xl);
+  }
+
+  .essay-colophon__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md) var(--space-xl);
+    margin-bottom: var(--space-xl);
+  }
+
+  .essay-colophon__field dt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    margin-bottom: 4px;
+  }
+
+  .essay-colophon__field dd {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .essay-colophon__back {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+    color: var(--color-warm);
+    text-decoration: none;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .essay-colophon__back:hover {
+    color: var(--color-warm-light);
+  }
+
+  /* Next story teaser card */
+  .essay-colophon__next {
+    position: relative;
+    display: block;
+    border-radius: 6px;
+    overflow: hidden;
+    aspect-ratio: 3 / 2;
+    text-decoration: none;
+  }
+
+  .essay-colophon__next-img {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* .photo-wrap / picture / .photo-img from <Photo> child component */
+  .essay-colophon__next-img :global(.photo-wrap) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .essay-colophon__next-img :global(.photo-wrap picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .essay-colophon__next-img :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  .essay-colophon__next:hover :global(.photo-img) {
+    transform: scale(1.03);
+  }
+
+  .essay-colophon__next-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-lg) var(--space-md);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .essay-colophon__next-kicker {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 252, 240, 0.6);
+  }
+
+  .essay-colophon__next-title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    color: var(--fx-paper);
+  }
+
+  /* Dossier variant */
+  .essay-colophon--dossier .essay-colophon__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 100%;
+    align-items: stretch;
+  }
+
+  .essay-colophon--dossier .essay-colophon__head {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 680px;
+  }
+
+  .essay-colophon--dossier .essay-colophon__heading {
+    margin-bottom: 0;
+  }
+
+  .essay-colophon--dossier .essay-colophon__manifest {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .essay-colophon--dossier .essay-colophon__manifest-cell {
+    padding: 20px 24px;
+    border-right: 1px solid var(--color-border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .essay-colophon--dossier .essay-colophon__manifest-cell:last-child {
+    border-right: none;
+  }
+
+  .essay-colophon--dossier .essay-colophon__manifest-k {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .essay-colophon--dossier .essay-colophon__manifest-v {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    color: var(--color-text);
+  }
+
+  .essay-colophon--dossier .essay-colophon__next {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 24px;
+    align-items: center;
+    padding: 24px 0;
+    border-top: 1px solid var(--color-border-subtle);
+    border-radius: 0;
+    aspect-ratio: auto;
+  }
+
+  .essay-colophon--dossier .essay-colophon__next-img {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: #000;
+    width: 240px;
+    height: auto;
+  }
+
+  .essay-colophon--dossier .essay-colophon__next-overlay {
+    position: static;
+    background: none;
+    padding: 0;
+  }
+
+  @media (max-width: 768px) {
+    .essay-colophon__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .essay-colophon__next {
+      aspect-ratio: 16 / 9;
+    }
+
+    .essay-colophon--dossier .essay-colophon__manifest {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .essay-colophon--dossier .essay-colophon__next {
+      grid-template-columns: 1fr;
+    }
+
+    .essay-colophon--dossier .essay-colophon__next-img {
+      width: 100%;
+    }
+  }
+</style>

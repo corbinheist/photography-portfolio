@@ -18,6 +18,330 @@ body[data-pitch-korman] {
 }
 
 /* ==========================================
+   Replicated base styles (from EssaySlide* components)
+   Source: src/components/essay/EssaySlide{FullBleed,ImageText,Diptych,Triptych}.astro
+   Owned here so this pitch can drop its essay.css dependency.
+   ========================================== */
+
+/* Slide base */
+.essay-slide {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  scroll-snap-align: start;
+}
+
+/* Full-Bleed */
+.essay-full-bleed {
+  padding: 0;
+}
+
+.essay-full-bleed__img {
+  position: absolute;
+  inset: 0;
+}
+
+.essay-full-bleed__img .photo-wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.essay-full-bleed__img .photo-wrap picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.essay-slide .essay-full-bleed__img .photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.essay-full-bleed__overlay {
+  position: relative;
+  z-index: 1;
+  color: var(--fx-paper);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  padding: var(--space-2xl) var(--container-padding);
+  width: 100%;
+}
+
+.essay-full-bleed__overlay--bottom-left {
+  align-self: flex-end;
+  text-align: left;
+  max-width: 680px;
+}
+
+.essay-full-bleed--scrim::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.2) 40%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  z-index: 0;
+}
+
+/* Image + Text Split */
+.essay-image-text {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  min-height: 100dvh;
+  padding: 0;
+}
+
+.essay-image-text--flip {
+  grid-template-columns: 45fr 55fr;
+}
+
+.essay-image-text__image {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+
+.essay-image-text__image .photo-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.essay-image-text__image .photo-wrap picture {
+  display: block;
+  height: 100%;
+}
+
+.essay-slide .essay-image-text__image .photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.essay-image-text--flip .essay-image-text__image {
+  order: 2;
+}
+
+.essay-image-text--flip .essay-image-text__prose {
+  order: 1;
+}
+
+.essay-image-text__prose {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-xl);
+  max-width: 680px;
+}
+
+.essay-image-text__prose h2,
+.essay-image-text__prose h3 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-md);
+}
+
+.essay-image-text__prose h2 {
+  font-size: var(--text-2xl);
+}
+
+.essay-image-text__prose h3 {
+  font-size: var(--text-xl);
+}
+
+.essay-image-text__prose p {
+  font-size: var(--text-lg);
+  line-height: 1.65;
+  color: var(--color-text-muted);
+  max-width: 55ch;
+}
+
+.essay-image-text__prose p + p {
+  margin-top: var(--space-md);
+}
+
+.essay-image-text__prose p strong {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.essay-image-text__prose blockquote {
+  border-left: 2px solid var(--color-accent);
+  padding-left: var(--space-md);
+  margin: var(--space-lg) 0;
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+
+/* Diptych */
+.essay-diptych {
+  flex-direction: column;
+  padding: 0;
+}
+
+.essay-diptych__images {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+.essay-diptych__images--gap-tight {
+  gap: var(--space-sm);
+}
+
+.essay-diptych__item {
+  overflow: hidden;
+  min-width: 0;
+}
+
+.essay-diptych__item .photo-wrap {
+  width: 100%;
+}
+
+.essay-slide .essay-diptych__item .photo-img {
+  width: 100%;
+  display: block;
+}
+
+.essay-slide.essay-diptych--landscape .essay-diptych__item .photo-img {
+  height: auto;
+}
+
+.essay-diptych--portrait .essay-diptych__images {
+  align-items: center;
+}
+
+.essay-diptych--portrait .essay-diptych__item {
+  flex: none !important;
+}
+
+.essay-slide.essay-diptych--portrait .essay-diptych__item .photo-img {
+  width: auto;
+  max-width: 100%;
+  height: 85dvh;
+}
+
+.essay-diptych__caption {
+  width: 100%;
+  text-align: center;
+  padding: var(--space-sm) var(--container-padding);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  letter-spacing: 0.04em;
+}
+
+/* Triptych */
+.essay-triptych {
+  flex-direction: column;
+  padding: 0;
+}
+
+.essay-triptych__images {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
+}
+
+.essay-triptych__images--gap-tight {
+  gap: var(--space-sm);
+}
+
+.essay-triptych__item {
+  overflow: hidden;
+  min-width: 0;
+}
+
+.essay-triptych__item .photo-wrap {
+  width: 100%;
+}
+
+.essay-slide .essay-triptych__item .photo-img {
+  width: 100%;
+  display: block;
+}
+
+.essay-triptych--portrait .essay-triptych__images {
+  align-items: center;
+}
+
+.essay-triptych--portrait .essay-triptych__item {
+  flex: none !important;
+}
+
+.essay-slide.essay-triptych--portrait .essay-triptych__item .photo-img {
+  width: auto;
+  max-width: 100%;
+  height: 75dvh;
+}
+
+.essay-triptych__caption {
+  width: 100%;
+  text-align: center;
+  padding: var(--space-sm) var(--container-padding);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  letter-spacing: 0.04em;
+}
+
+/* Responsive — image-text + diptych + triptych */
+@media (max-width: 768px) {
+  .essay-image-text {
+    grid-template-columns: 1fr;
+  }
+
+  .essay-image-text__image {
+    position: relative;
+    min-height: 50dvh;
+  }
+
+  .essay-image-text--flip .essay-image-text__image {
+    order: 0;
+  }
+
+  .essay-image-text--flip .essay-image-text__prose {
+    order: 0;
+  }
+
+  .essay-image-text__prose {
+    padding: var(--space-xl) var(--container-padding);
+  }
+
+  .essay-diptych--landscape .essay-diptych__images {
+    max-height: 40dvh;
+  }
+
+  .essay-slide.essay-diptych--portrait .essay-diptych__item .photo-img {
+    height: 60dvh;
+  }
+
+  .essay-slide.essay-triptych--portrait .essay-triptych__item .photo-img {
+    height: 50dvh;
+  }
+}
+
+/* Print — slide reset */
+@media print {
+  .essay-slide {
+    min-height: auto;
+    height: 100vh;
+    break-after: page;
+    break-inside: avoid;
+    scroll-snap-align: unset;
+  }
+}
+
+/* ==========================================
    Slide Typography Overrides
    ========================================== */
 

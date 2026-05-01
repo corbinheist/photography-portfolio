@@ -26,3 +26,57 @@ const { heading, leftLabel, rightLabel } = Astro.props;
     <slot name="right" />
   </div>
 </section>
+
+<style>
+  .essay-prose-columns {
+    padding: 96px 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+    max-width: 1120px;
+    margin: 0 auto;
+    align-content: center;
+  }
+
+  .essay-prose-columns__heading {
+    grid-column: 1 / -1;
+    font-family: var(--font-heading);
+    font-weight: var(--heading-weight, 500);
+    font-size: clamp(2rem, 1.6rem + 1.5vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 0 0 8px;
+  }
+
+  .essay-prose-columns__col {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .essay-prose-columns__col .essay-ov {
+    margin-bottom: 4px;
+  }
+
+  /* <p> elements come in via <slot> from the parent page — :global() lets
+     the descendant match without requiring this component's cid. */
+  .essay-prose-columns__col :global(p) {
+    font-size: var(--text-lg);
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  .essay-prose-columns__col :global(p + p) {
+    margin-top: var(--space-md);
+  }
+
+  @media (max-width: 768px) {
+    .essay-prose-columns {
+      grid-template-columns: 1fr;
+      padding: 64px var(--container-padding);
+      gap: 40px;
+    }
+  }
+</style>

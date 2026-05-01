@@ -69,3 +69,87 @@ const {
     />
   </div>
 </section>
+
+<style>
+  .essay-map-inset {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100dvh;
+    align-items: stretch;
+  }
+
+  .essay-map-inset__card {
+    padding: 72px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 20px;
+    border-right: 1px solid var(--color-border-subtle);
+  }
+
+  .essay-map-inset__card h2 {
+    font-family: var(--font-heading);
+    font-weight: var(--heading-weight, 500);
+    font-size: clamp(2rem, 1.6rem + 1.5vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    margin: 0;
+  }
+
+  .essay-map-inset__card p {
+    font-size: 15px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  .essay-map-inset__meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    line-height: 1.9;
+    margin-top: 12px;
+  }
+
+  .essay-map-inset__meta-row {
+    display: flex;
+  }
+
+  .essay-map-inset__meta-k {
+    color: var(--color-text-faint);
+    display: inline-block;
+    width: 96px;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  .essay-map-inset__viz {
+    position: relative;
+    background: var(--color-surface);
+  }
+
+  /* .map-container is rendered inside <Map> child component */
+  .essay-map-inset__viz :global(.map-container) {
+    width: 100%;
+    height: 100dvh;
+  }
+
+  @media (max-width: 768px) {
+    .essay-map-inset {
+      grid-template-columns: 1fr;
+    }
+
+    .essay-map-inset__card {
+      border-right: none;
+      border-bottom: 1px solid var(--color-border-subtle);
+      padding: 48px var(--container-padding);
+    }
+
+    .essay-map-inset__viz {
+      min-height: 300px;
+    }
+  }
+</style>
