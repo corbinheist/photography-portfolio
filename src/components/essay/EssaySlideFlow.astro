@@ -10,3 +10,78 @@
     <slot />
   </div>
 </section>
+
+<style>
+  .essay-flow {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-2xl) var(--container-padding);
+  }
+
+  .essay-flow__inner {
+    max-width: 680px;
+    margin-inline: auto;
+  }
+
+  /* All children of __inner come from <slot> — :global() for unscoped match */
+  .essay-flow__inner :global(h2),
+  .essay-flow__inner :global(h3) {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-md);
+    margin-top: var(--space-xl);
+  }
+
+  .essay-flow__inner :global(h2) {
+    font-size: var(--text-2xl);
+  }
+
+  .essay-flow__inner :global(h3) {
+    font-size: var(--text-xl);
+  }
+
+  .essay-flow__inner :global(p) {
+    font-size: var(--text-lg);
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    max-width: 60ch;
+  }
+
+  .essay-flow__inner :global(p + p) {
+    margin-top: var(--space-md);
+  }
+
+  .essay-flow__inner :global(p strong) {
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .essay-flow__inner :global(blockquote) {
+    border-left: 2px solid var(--color-accent);
+    padding-left: var(--space-md);
+    margin: var(--space-lg) 0;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  /* Inline photos within flow sections — .photo-wrap from <Photo>, .essay-flow__caption
+     hand-authored by the parent page in slot content; both need :global() */
+  .essay-flow__inner :global(.photo-wrap) {
+    margin: var(--space-xl) 0;
+  }
+
+  .essay-flow__inner :global(.photo-wrap + .essay-flow__caption) {
+    margin-top: calc(-1 * var(--space-xl) + var(--space-sm));
+    margin-bottom: var(--space-xl);
+  }
+
+  :global(.essay-flow__caption) {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    letter-spacing: 0.04em;
+  }
+</style>
