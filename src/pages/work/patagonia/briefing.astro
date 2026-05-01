@@ -6,7 +6,7 @@ import EssaySlideStats from '@components/essay/EssaySlideStats.astro';
 import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
 import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
 import EssayDivider from '@components/essay/EssayDivider.astro';
-import patagoniaRegions from '@data/maps/patagonia-regions.json';
+import briefingRegions from '@data/maps/patagonia-briefing-regions.json';
 import EssaySlideTimeline from '@components/essay/EssaySlideTimeline.astro';
 import EssaySlideGear from '@components/essay/EssaySlideGear.astro';
 
@@ -36,7 +36,7 @@ const markers = [
 
       <div class="briefing-cover__body">
         <p class="essay-ov essay-ov--warm">
-          <span class="essay-ov__diamond">&#9670;</span> BRIEFING ISSUED &middot; 50&deg;55&prime;S 72&deg;24&prime;W
+          <span class="essay-ov__diamond">&#9670;</span> BRIEFING ISSUED &middot; 01 MAY 2026 &middot; 60.19&deg;N 11.10&deg;E &middot; AKERSHUS, NOR
         </p>
         <h1 class="briefing-cover__title">The Patagonia Expedition Briefing</h1>
         <p class="briefing-cover__deck">
@@ -99,7 +99,7 @@ const markers = [
     center={[-72.68, -50.94]}
     zoom={9.5}
     markers={markers}
-    regions={patagoniaRegions as any}
+    regions={briefingRegions as any}
   />
 
   <!-- 4. Stats — what's known, before the day count moves -->
