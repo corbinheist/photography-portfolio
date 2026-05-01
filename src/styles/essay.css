@@ -22,105 +22,6 @@ html:has([data-essay]) {
 }
 
 /* ==========================================
-   Image + Text Split Slide
-   ========================================== */
-
-.essay-image-text {
-  display: grid;
-  grid-template-columns: 55fr 45fr;
-  min-height: 100dvh;
-  padding: 0;
-}
-
-.essay-image-text--flip {
-  grid-template-columns: 45fr 55fr;
-}
-
-.essay-image-text__image {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-}
-
-.essay-image-text__image .photo-wrap {
-  flex: 1;
-  min-width: 0;
-}
-
-.essay-image-text__image .photo-wrap picture {
-  display: block;
-  height: 100%;
-}
-
-.essay-slide .essay-image-text__image .photo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Portrait images in splits — anchor to top so faces aren't cropped */
-.essay-slide.essay-image-text--portrait .essay-image-text__image .photo-img {
-  object-position: top center;
-}
-
-.essay-image-text--flip .essay-image-text__image {
-  order: 2;
-}
-
-.essay-image-text--flip .essay-image-text__prose {
-  order: 1;
-}
-
-.essay-image-text__prose {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: var(--space-2xl) var(--space-xl);
-  max-width: 680px;
-}
-
-.essay-image-text__prose h2,
-.essay-image-text__prose h3 {
-  font-family: var(--font-heading);
-  font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: var(--space-md);
-}
-
-.essay-image-text__prose h2 {
-  font-size: var(--text-2xl);
-}
-
-.essay-image-text__prose h3 {
-  font-size: var(--text-xl);
-}
-
-.essay-image-text__prose p {
-  font-size: var(--text-lg);
-  line-height: 1.65;
-  color: var(--color-text-muted);
-  max-width: 55ch;
-}
-
-.essay-image-text__prose p + p {
-  margin-top: var(--space-md);
-}
-
-.essay-image-text__prose p strong {
-  color: var(--color-text);
-  font-weight: 500;
-}
-
-.essay-image-text__prose blockquote {
-  border-left: 2px solid var(--color-accent);
-  padding-left: var(--space-md);
-  margin: var(--space-lg) 0;
-  font-style: italic;
-  color: var(--color-text-muted);
-}
-
-/* ==========================================
    Diptych Slide
    ========================================== */
 
@@ -327,10 +228,6 @@ html:has([data-essay]) {
     EssayPlaceholder.astro)
    ========================================== */
 
-.essay-image-text:has(.essay-placeholder) {
-  align-items: stretch;
-}
-
 .essay-diptych--portrait .essay-diptych__item:has(.essay-placeholder) {
   flex: 1 !important;
 }
@@ -344,28 +241,6 @@ html:has([data-essay]) {
    ========================================== */
 
 @media (max-width: 768px) {
-  /* Image-text splits stack */
-  .essay-image-text {
-    grid-template-columns: 1fr;
-  }
-
-  .essay-image-text__image {
-    position: relative;
-    min-height: 50dvh;
-  }
-
-  .essay-image-text--flip .essay-image-text__image {
-    order: 0;
-  }
-
-  .essay-image-text--flip .essay-image-text__prose {
-    order: 0;
-  }
-
-  .essay-image-text__prose {
-    padding: var(--space-xl) var(--container-padding);
-  }
-
   /* Landscape diptychs — limit height on small screens */
   .essay-diptych--landscape .essay-diptych__images {
     max-height: 40dvh;
