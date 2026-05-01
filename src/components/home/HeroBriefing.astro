@@ -12,6 +12,7 @@ interface HeroSlide {
   meta: string;
   time: string;
   status: string;
+  href: string;
   url: string;
   width: number;
   height: number;
@@ -115,7 +116,7 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
   </div>
 
   {/* ── Caption rail ── */}
-  <div class="hero__caption">
+  <a class="hero__caption" href={slides[0]?.href || '/work'} data-hero-link>
     <div class="caption__overline" data-hero-location>{slides[0]?.location || ''}</div>
     <h1 class="caption__title" data-hero-title>
       {slides[0]?.title || ''}<span class="caption__period">.</span>
@@ -125,7 +126,7 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
         <em>{slides[0].caption}</em>
       </p>
     )}
-  </div>
+  </a>
 
   {/* ── EXIF bar ── */}
   <div class="hero__exif">
@@ -181,7 +182,7 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
   const slides: Array<{
     id: string; title: string; location: string; caption: string;
     lat: string; lon: string; elev: string; meta: string;
-    time: string; status: string;
+    time: string; status: string; href: string;
   }> = JSON.parse(slidesJson);
 
   const pictureEls = section.querySelectorAll<HTMLElement>('[data-slide-index]');
@@ -198,6 +199,7 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
   const elevEl = section.querySelector('[data-hero-elev]')!;
   const metaEl = section.querySelector('[data-hero-meta]')!;
   const timeEl = section.querySelector('[data-hero-time]')!;
+  const linkEl = section.querySelector('[data-hero-link]') as HTMLAnchorElement;
 
   let current = 0;
   let timer: ReturnType<typeof setInterval>;
@@ -233,6 +235,7 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
     coordsEl.textContent = `${s.lat}, ${s.lon}`;
     metaEl.textContent = s.meta;
     timeEl.textContent = s.time;
+    if (linkEl) linkEl.href = s.href || '/work';
   }
 
   function goTo(index: number) {
@@ -502,6 +505,9 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
     left: 34px;
     right: 34px;
     z-index: 3;
+    text-decoration: none;
+    color: inherit;
+    display: block;
   }
 
   .caption__overline {
