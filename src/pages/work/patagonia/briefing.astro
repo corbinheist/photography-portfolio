@@ -13,9 +13,7 @@ import EssaySlideGear from '@components/essay/EssaySlideGear.astro';
 const markers = [
   { lng: -72.4,  lat: -50.917, label: 'Estancia Cerro Guido', num: '01' },
   { lng: -72.95, lat: -50.94,  label: 'Torres del Paine',     num: '02' },
-  { lng: -72.8,  lat: -51.0,   label: 'Lago Sarmiento',       num: '03' },
-  { lng: -72.78, lat: -50.99,  label: 'Laguna Amarga',        num: '04' },
-  { lng: -73.1,  lat: -50.97,  label: 'Lago Pehoé',           num: '05' },
+  { lng: -72.8,  lat: -51.02,  label: 'Lago Sarmiento',       num: '03' },
 ];
 ---
 
@@ -98,8 +96,8 @@ const markers = [
       { label: 'Coords', value: '50°55′S 72°24′W' },
       { label: 'Window', value: 'May 03 — May 09, 2026' },
     ]}
-    center={[-72.75, -50.97]}
-    zoom={8}
+    center={[-72.68, -50.94]}
+    zoom={9.5}
     markers={markers}
     regions={patagoniaRegions as any}
   />
