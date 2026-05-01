@@ -1463,93 +1463,6 @@ html:has([data-essay]) {
 }
 
 /* ==========================================
-   Contact Sheet Slide
-   ========================================== */
-
-.essay-contact-sheet {
-  padding: 80px 56px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.essay-contact-sheet__head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 24px;
-}
-
-.essay-contact-sheet__head h3 {
-  font-family: var(--font-heading);
-  font-weight: var(--heading-weight, 500);
-  font-size: clamp(1.375rem, 1.15rem + 1vw, 2rem);
-  line-height: 1.15;
-  letter-spacing: -0.015em;
-  margin: 8px 0 0;
-}
-
-.essay-contact-sheet__count {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-  text-align: right;
-}
-
-.essay-contact-sheet__grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 4px;
-}
-
-.essay-contact-sheet__cell {
-  position: relative;
-  aspect-ratio: 3 / 2;
-  overflow: hidden;
-  background: #000;
-}
-
-.essay-contact-sheet__cell .photo-wrap {
-  width: 100%;
-  height: 100%;
-}
-
-.essay-contact-sheet__cell .photo-wrap picture {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.essay-slide .essay-contact-sheet__cell .photo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.essay-contact-sheet__num {
-  position: absolute;
-  top: 4px;
-  left: 6px;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--fx-paper);
-  mix-blend-mode: difference;
-  letter-spacing: 0.1em;
-}
-
-.essay-contact-sheet__foot {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-  display: flex;
-  justify-content: space-between;
-}
-
-/* ==========================================
    Related Dossiers Slide
    ========================================== */
 
@@ -1907,15 +1820,6 @@ html:has([data-essay]) {
 
   .essay-gear__card:last-child {
     border-bottom: none;
-  }
-
-  /* Contact sheet */
-  .essay-contact-sheet {
-    padding: 48px var(--container-padding);
-  }
-
-  .essay-contact-sheet__grid {
-    grid-template-columns: repeat(3, 1fr);
   }
 
   /* Related */
