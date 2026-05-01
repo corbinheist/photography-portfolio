@@ -1034,25 +1034,6 @@ html:has([data-essay]) {
   color: var(--color-warm);
 }
 
-/* Numbered divider */
-.essay-divider {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 28px 56px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-}
-
-.essay-divider__rule {
-  flex: 1;
-  height: 1px;
-  background: var(--color-border-subtle);
-}
-
 /* EXIF strip */
 .essay-exif-strip {
   display: grid;
@@ -2451,11 +2432,6 @@ html:has([data-essay]) {
   .essay-hero__top {
     flex-direction: column;
     gap: 8px;
-  }
-
-  /* Divider */
-  .essay-divider {
-    padding: 20px var(--container-padding);
   }
 
   /* EXIF strip */
