@@ -76,13 +76,6 @@ html:has([data-essay]) {
 }
 
 /* ==========================================
-   Placeholder :has() rules
-   (subject is the parent slide class — these will move with their parent
-    component migrations; the rest of placeholder styles live in
-    EssayPlaceholder.astro)
-   ========================================== */
-
-/* ==========================================
    Responsive
    ========================================== */
 
