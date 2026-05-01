@@ -52,3 +52,91 @@ const orientation = isPortrait ? 'portrait' : 'landscape';
   </div>
   {caption && <div class="essay-diptych__caption">{caption}</div>}
 </section>
+
+<style>
+  .essay-diptych {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .essay-diptych__images {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .essay-diptych__images--gap-none {
+    gap: 0;
+  }
+
+  .essay-diptych__images--gap-tight {
+    gap: var(--space-sm);
+  }
+
+  .essay-diptych__images--gap-normal {
+    gap: var(--space-lg);
+    padding: 0 var(--space-lg);
+  }
+
+  .essay-diptych__item {
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  /* .photo-wrap / .photo-img from <Photo> child component */
+  .essay-diptych__item :global(.photo-wrap) {
+    width: 100%;
+  }
+
+  .essay-slide .essay-diptych__item :global(.photo-img) {
+    width: 100%;
+    display: block;
+  }
+
+  /* Landscape diptych — width-filling, height follows naturally */
+  .essay-slide.essay-diptych--landscape .essay-diptych__item :global(.photo-img) {
+    height: auto;
+  }
+
+  /* Portrait diptych — height-constrained, centered horizontally */
+  .essay-diptych--portrait .essay-diptych__images {
+    align-items: center;
+  }
+
+  .essay-diptych--portrait .essay-diptych__item {
+    flex: none !important;
+  }
+
+  .essay-slide.essay-diptych--portrait .essay-diptych__item :global(.photo-img) {
+    width: auto;
+    max-width: 100%;
+    height: 85dvh;
+  }
+
+  /* :has(.essay-placeholder) — descendant rendered by <EssayPlaceholder> child;
+     :global() inside :has() ensures the test matches without requiring a cid */
+  .essay-diptych--portrait .essay-diptych__item:has(:global(.essay-placeholder)) {
+    flex: 1 !important;
+  }
+
+  .essay-diptych__caption {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-sm) var(--container-padding);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-faint);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 768px) {
+    .essay-diptych--landscape .essay-diptych__images {
+      max-height: 40dvh;
+    }
+
+    .essay-slide.essay-diptych--portrait .essay-diptych__item :global(.photo-img) {
+      height: 60dvh;
+    }
+  }
+</style>
