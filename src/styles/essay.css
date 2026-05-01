@@ -1034,41 +1034,6 @@ html:has([data-essay]) {
   color: var(--color-warm);
 }
 
-/* EXIF strip */
-.essay-exif-strip {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  border-top: 1px solid var(--color-border-subtle);
-  border-bottom: 1px solid var(--color-border-subtle);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  background: var(--color-bg);
-}
-
-.essay-exif-strip__cell {
-  padding: 10px 14px;
-  border-right: 1px solid var(--color-border-subtle);
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.essay-exif-strip__cell:last-child {
-  border-right: none;
-}
-
-.essay-exif-strip__label {
-  color: var(--color-text-faint);
-}
-
-.essay-exif-strip__value {
-  color: var(--color-text);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-}
-
 /* ==========================================
    Dossier Chrome Bar
    ========================================== */
@@ -2432,19 +2397,6 @@ html:has([data-essay]) {
   .essay-hero__top {
     flex-direction: column;
     gap: 8px;
-  }
-
-  /* EXIF strip */
-  .essay-exif-strip {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .essay-exif-strip__cell:nth-child(3) {
-    border-right: none;
-  }
-
-  .essay-exif-strip__cell:nth-child(n + 4) {
-    border-top: 1px solid var(--color-border-subtle);
   }
 
   /* Stats */
