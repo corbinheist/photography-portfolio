@@ -1,11 +1,10 @@
 title: Japan
-description: Counter seats, station platforms, and afternoon light in Tokyo's oldest neighborhoods.
-albums:
-  - tokyo-kissaten
+description: Counter seats, station platforms, and afternoon light in Tokyo's
+  oldest neighborhoods.
 coverPhoto: l1000308-2
 sortOrder: 2
 map:
-  center: [139.72, 35.68]
+  center: [ 139.72, 35.68 ]
   zoom: 11
   regionsFile: japan-collection-regions.json
   markers:
@@ -14,3 +13,5 @@ map:
       lat: 35.68
       num: "01"
       target: /work/japan/tokyo-kissaten
+archiveAlbums:
+  - tokyo-kissaten

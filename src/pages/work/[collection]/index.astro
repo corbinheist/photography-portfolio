@@ -8,20 +8,24 @@ export async function getStaticPaths() {
   const collections = await getCollection('photoCollections');
   const albums = await getCollection('albums');
   const photos = await getCollection('photos');
+  const essays = await getCollection('essays');
 
   return collections.map((collection) => ({
     params: { collection: collection.id },
     props: {
       collection,
       albums: albums
-        .filter((a) => collection.data.albums.includes(a.id))
+        .filter((a) => collection.data.archiveAlbums.includes(a.id))
         .sort((a, b) => a.data.sortOrder - b.data.sortOrder),
+      essays: (collection.data.essays ?? [])
+        .map((id) => essays.find((e) => e.id === id))
+        .filter((e): e is NonNullable<typeof e> => Boolean(e)),
       photos,
     },
   }));
 }
 
-const { collection, albums, photos } = Astro.props;
+const { collection, albums, essays, photos } = Astro.props;
 
 // Load map regions if the collection defines map data
 let mapRegions: any = null;
@@ -95,22 +99,26 @@ function findPhoto(id: string) {
             />
           );
         })}
-      {collection.data.essays?.map((essay: any) => (
-        <AlbumCard
-          href={`/work/${collection.id}/${essay.slug}`}
-          title={essay.title}
-          description={essay.description}
-          location="Photo Essay"
-          coverPhoto={{
-            url: essay.coverImage.url,
-            width: essay.coverImage.width,
-            height: essay.coverImage.height,
-            lqip: essay.coverImage.lqip,
-            title: essay.title,
-          }}
-          photoCount={essay.photoCount}
-        />
-      ))}
+      {essays.map((essay: any) => {
+        const slug = essay.id.replace(new RegExp(`^${collection.id}-`), '');
+        const cover = essay.data.photos[essay.data.coverPhotoIndex] ?? essay.data.photos[0];
+        return (
+          <AlbumCard
+            href={`/work/${collection.id}/${slug}`}
+            title={essay.data.title}
+            description={essay.data.description}
+            location="Photo Essay"
+            coverPhoto={{
+              url: cover.url,
+              width: cover.width,
+              height: cover.height,
+              lqip: cover.lqip,
+              title: essay.data.title,
+            }}
+            photoCount={essay.data.photos.length}
+          />
+        );
+      })}
     </div>
   </div>
 </PageLayout>

@@ -2,10 +2,12 @@
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import Photo from '@components/photo/Photo.astro';
-import Map from '@components/Map.astro';
+import MapComponent from '@components/Map.astro';
 
 const collections = await getCollection('photoCollections');
 const allPhotos = await getCollection('photos');
+const allEssayEntries = await getCollection('essays');
+const essayById = new Map(allEssayEntries.map((e) => [e.id, e]));
 
 const sortedCollections = collections.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
 
@@ -63,7 +65,7 @@ const photosByCollection: FilmPhoto[][] = [];
 collectionsWithMaps.forEach((c, i) => {
   const num = String(i + 1).padStart(2, '0');
   const bucket: FilmPhoto[] = [];
-  for (const albumId of c.data.albums) {
+  for (const albumId of c.data.archiveAlbums) {
     const album = allAlbums.find((a) => a.id === albumId);
     if (!album || album.data.draft) continue;
     for (const photoId of album.data.photos.slice(0, 6)) {
@@ -116,7 +118,7 @@ collectionsWithMaps.forEach((c, i) => {
 
   // Derive year from first album with a date
   let year: string | null = null;
-  for (const albumId of c.data.albums) {
+  for (const albumId of c.data.archiveAlbums) {
     const album = allAlbums.find((a) => a.id === albumId);
     if (album?.data.date) {
       year = album.data.date.slice(0, 4);
@@ -126,23 +128,27 @@ collectionsWithMaps.forEach((c, i) => {
 
   if (c.data.essays?.length) {
     // Each essay becomes a story entry
-    for (const essay of c.data.essays) {
+    for (const essayId of c.data.essays) {
+      const essay = essayById.get(essayId);
+      if (!essay) continue;
+      const slug = essay.id.replace(new RegExp(`^${c.id}-`), '');
+      const cover = essay.data.photos[essay.data.coverPhotoIndex] ?? essay.data.photos[0];
       stories.push({
-        id: `${c.id}/${essay.slug}`,
+        id: `${c.id}/${slug}`,
         collectionId: c.id,
-        title: essay.title,
-        description: essay.description || c.data.description || '',
+        title: essay.data.title,
+        description: essay.data.description || c.data.description || '',
         kind: 'essay',
-        slug: `/work/${c.id}/${essay.slug}`,
-        coverUrl: essay.coverImage.url,
-        coverWidth: essay.coverImage.width,
-        coverHeight: essay.coverImage.height,
-        coverLqip: essay.coverImage.lqip,
+        slug: `/work/${c.id}/${slug}`,
+        coverUrl: cover.url,
+        coverWidth: cover.width,
+        coverHeight: cover.height,
+        coverLqip: cover.lqip,
         location: c.data.title,
         lng, lat,
         markerNum: num,
         year,
-        photoCount: essay.photoCount,
+        photoCount: essay.data.photos.length,
       });
     }
   } else {
@@ -163,7 +169,7 @@ collectionsWithMaps.forEach((c, i) => {
       lng, lat,
       markerNum: num,
       year,
-      photoCount: c.data.albums.length,
+      photoCount: c.data.archiveAlbums.length,
     });
   }
 });
@@ -194,7 +200,7 @@ const storyCount = stories.length;
       <!-- Map + Dossier grid -->
       <div class="map-hero__grid">
         <div class="map-hero__map">
-          <Map
+          <MapComponent
             center={[10, 25]}
             zoom={1.8}
             markers={worldMarkers}
@@ -331,7 +337,7 @@ const storyCount = stories.length;
               {collection.data.description && (
                 <p class="collection-desc">{collection.data.description}</p>
               )}
-              <span class="collection-count">{collection.data.albums.length} albums <span class="collection-arrow">&rarr;</span></span>
+              <span class="collection-count">{collection.data.archiveAlbums.length} albums <span class="collection-arrow">&rarr;</span></span>
             </div>
           </a>
         );

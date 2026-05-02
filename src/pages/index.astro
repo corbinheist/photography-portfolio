@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
 import HeroBriefing from '@components/home/HeroBriefing.astro';
 import DispatchCallout from '@components/home/DispatchCallout.astro';
@@ -9,7 +9,14 @@ import ColophonTeaser from '@components/home/ColophonTeaser.astro';
 
 const photos = await getCollection('photos');
 const albums = await getCollection('albums');
+const essaysCollection = await getCollection('essays');
 const collections = await getCollection('photoCollections');
+
+const essayById = new Map(essaysCollection.map((e) => [e.id, e]));
+function resolveEssayIds(ids: string[] | undefined) {
+  if (!ids) return [];
+  return ids.map((id) => essayById.get(id)).filter((e): e is NonNullable<typeof e> => Boolean(e));
+}
 
 const sortedCollections = collections.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
 
@@ -19,7 +26,7 @@ function resolveCollectionCover(collection: typeof collections[number]) {
     const photo = photos.find((p) => p.id === collection.data.coverPhoto);
     if (photo) return photo;
   }
-  for (const albumId of collection.data.albums) {
+  for (const albumId of collection.data.archiveAlbums) {
     const album = albums.find((a) => a.id === albumId);
     if (album?.data.coverPhoto) {
       const photo = photos.find((p) => p.id === album.data.coverPhoto);
@@ -40,7 +47,7 @@ function resolveHeroCover(collection: typeof collections[number]) {
   if (defaultCover && defaultCover.data.width >= defaultCover.data.height) return defaultCover;
 
   // Search albums for a landscape photo
-  for (const albumId of collection.data.albums) {
+  for (const albumId of collection.data.archiveAlbums) {
     const album = albums.find((a) => a.id === albumId);
     if (!album) continue;
     for (const photoId of album.data.photos) {
@@ -59,7 +66,7 @@ function resolvePortraitCover(collection: typeof collections[number]) {
   const defaultCover = resolveCollectionCover(collection);
   if (defaultCover && defaultCover.data.height > defaultCover.data.width) return defaultCover;
 
-  for (const albumId of collection.data.albums) {
+  for (const albumId of collection.data.archiveAlbums) {
     const album = albums.find((a) => a.id === albumId);
     if (!album) continue;
     for (const photoId of album.data.photos) {
@@ -74,7 +81,7 @@ function resolvePortraitCover(collection: typeof collections[number]) {
 // Count total frames in a collection's albums
 function countFrames(collection: typeof collections[number]): number {
   let count = 0;
-  for (const albumId of collection.data.albums) {
+  for (const albumId of collection.data.archiveAlbums) {
     const album = albums.find((a) => a.id === albumId);
     if (album) count += album.data.photos.length;
   }
@@ -83,8 +90,8 @@ function countFrames(collection: typeof collections[number]): number {
 
 // Derive status from collection data
 function deriveStatus(collection: typeof collections[number]): string {
-  if (collection.data.albums.length === 0) return 'DRAFT';
-  const hasAllDraft = collection.data.albums.every((albumId: string) => {
+  if (collection.data.archiveAlbums.length === 0) return 'DRAFT';
+  const hasAllDraft = collection.data.archiveAlbums.every((albumId: string) => {
     const album = albums.find((a) => a.id === albumId);
     return album?.data.draft;
   });
@@ -105,8 +112,8 @@ const heroSlides = sortedCollections
     if (!cover || !c.data.map) return null;
     const [lng, lat] = c.data.map.center;
     const exif = cover.data.exif;
-    const firstAlbum = c.data.albums.length
-      ? albums.find((a) => a.id === c.data.albums[0])
+    const firstAlbum = c.data.archiveAlbums.length
+      ? albums.find((a) => a.id === c.data.archiveAlbums[0])
       : null;
 
     // Mobile art direction — use portrait cover if available and different from desktop
@@ -117,14 +124,14 @@ const heroSlides = sortedCollections
       id: c.id,
       title: c.data.title,
       location: c.data.description || '',
-      caption: c.data.essays?.[0]?.description || '',
+      caption: resolveEssayIds(c.data.essays)[0]?.data.description || '',
       lat: fmtCoord(lat, 'N', 'S'),
       lon: fmtCoord(lng, 'E', 'W'),
       elev: '—',
       meta: exif
         ? [exif.camera?.split(' ').pop(), exif.focalLength, exif.aperture, `ISO ${exif.iso}`]
             .filter(Boolean).join(' · ')
-        : `${c.data.albums.length} ALBUMS`,
+        : `${c.data.archiveAlbums.length} ALBUMS`,
       time: firstAlbum?.data.date || '',
       status: deriveStatus(c),
       href: `/work/${c.id}`,
@@ -229,16 +236,17 @@ const allEssays: Array<{
 }> = [];
 let essayNum = 0;
 for (const c of sortedCollections) {
-  if (!c.data.essays) continue;
-  for (const essay of c.data.essays) {
+  for (const essay of resolveEssayIds(c.data.essays)) {
     essayNum++;
+    // Entry id encodes `<collectionId>-<slug>`; the slug is the path segment.
+    const slug = essay.id.replace(new RegExp(`^${c.id}-`), '');
     allEssays.push({
       num: String(essayNum).padStart(2, '0'),
-      title: essay.title,
-      description: essay.description || '',
+      title: essay.data.title,
+      description: essay.data.description || '',
       collection: c.data.title,
       location: c.data.title,
-      href: `/work/${c.id}/${essay.slug}`,
+      href: `/work/${c.id}/${slug}`,
     });
   }
 }

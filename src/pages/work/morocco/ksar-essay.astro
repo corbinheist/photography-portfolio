@@ -20,90 +20,10 @@ import EssaySlideText from '@components/essay/EssaySlideText.astro';
 import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
 import EssaySlideRelated from '@components/essay/EssaySlideRelated.astro';
 import EssayDivider from '@components/essay/EssayDivider.astro';
+import { getEntry } from 'astro:content';
 
-/**
- * Photo data — ordered by export number (001–011).
- * Each entry maps to a CDN-hosted image with AVIF/WebP srcset.
- */
-const photos = [
-  /* 0 — 001-CNH_3628: Figure along ksar wall, palm oasis */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-001-cnh_3628',
-    width: 8192, height: 5464,
-    lqip: 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA==',
-    title: 'Ksar Tamnougalt',
-    exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/4', shutter: '1/1000s', iso: 400 },
-  },
-  /* 1 — 002-CNH_3087: Figure through narrow doorway, arched passage */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-002-cnh_3087',
-    width: 4168, height: 6248,
-    lqip: 'data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAAAwBQCdASoUAB4APzmEvVavJ6YjsBgIAeAnCUAToAIpVHvnqn8ADapzMysFMuoZyMCTwADN21rNcTPYwZhM57UDNWWx5wE6Mv07XHJ9oIT1Wlaq0HvUdiADMNcqH71aqgAP1/0nxQ7VgQv4UbZKfIjrZ1B+Hpg+z8DlO/YHjtfbmjLze1O4IYCbV6deAAAA',
-    title: 'Entering the Ksar',
-    exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.2', shutter: '1/8000s', iso: 1600 },
-  },
-  /* 2 — 003-CNH_3137: Portrait at wooden door */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-003-cnh_3137',
-    width: 8192, height: 5464,
-    lqip: 'data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJYwCdAB4d+uLLls3eRtAAyU9ndI9vwVQhZTGZhHVXQgSrch6vbW7rHPdxdN2m9Z+VRT0STAA=',
-    title: 'The Guide',
-    exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2', shutter: '1/2500s', iso: 1250 },
-  },
-  /* 3 — 004-CNH_3160: Silhouette in arched corridor, candlelight */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-004-cnh_3160',
-    width: 5464, height: 8192,
-    lqip: 'data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAADQBACdASoUAB4APy1+uFOuqCWisAwB0CWJbAC2yCHfUY+SJwq9IIK34Bg1Sfcb8AD+7o7rFBdBEVjp9YT0MviZnvLjonZMwnKcLyt8Akll+ISUoJbd7iCwo5lJmSZaajxE/rRAAqtGSNgJSNJ9JDKk1BarxYB5twGNfh1AZOkB1AAA',
-    title: 'The Corridor',
-    exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/1.2', shutter: '1/100s', iso: 1600 },
-  },
-  /* 4 — 005-CNH_0440: Figure mid-stride through courtyard, Moorish arches */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-005-cnh_0440',
-    width: 6989, height: 4661,
-    lqip: 'data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAABQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJbACdABhDKYhZQAD+6/0SQQvdQOJylYjnc2B+kb0htBME3CKfeJt+Xcko7lwP1mH9dXhnJR6qVh7kDmNuHPVMmsoOH8Yni6zMTNn6FFuoqmAA',
-    title: 'Through the Courtyard',
-    exif: { camera: 'Canon EOS R5m2', lens: 'RF35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/1.8', shutter: '1/60s', iso: 1600 },
-  },
-  /* 5 — 006-CNH_3186: Geometric lattice ceiling, arches looking up */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-006-cnh_3186',
-    width: 8192, height: 5464,
-    lqip: 'data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAACwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJYgCdABhkrGk/fEmpAAD9rd2JdSNxzmFUly12srx3u4dag4F+/hbMN8/HCtCQUZMFMh93AS8u6jDdKQR90I6Ahf1arynde9BP72fCQQAAAA==',
-    title: 'Ceiling Geometry',
-    exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.2', shutter: '1/640s', iso: 1600 },
-  },
-  /* 6 — 007-CNH_3403: Overhead courtyard, lone blue figure */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-007-cnh_3403',
-    width: 5464, height: 8192,
-    lqip: 'data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAACQBQCdASoUAB4APzmQulWvKiWjMBgIAeAnCWYAnQd4AD73L1Xwyw48opgDIrzx1a3v3On0AAD+40FU5mpkMYZgaTIZahnKXFe5yRRkeXWMMnUrSH1Wy0SJta2S4wDxXEFTMed68Dl3AQtwQTQlmKVeGz0CGqs/kqmvmMhvqMRbZgS5Ew8gd7+ZM2u35o+jvnGCDuuJAwANNnjZ+9WsoWrbRqCyvCtYSnhM1Fz9aSaAAA==',
-    title: 'Courtyard from Above',
-    exif: { camera: 'Canon EOS R5', lens: 'RF24-70mm F2.8 L IS USM', focalLength: '24mm', aperture: 'f/2.8', shutter: '1/100s', iso: 2000 },
-  },
-  /* 7 — 008-CNH_3229: Environmental portrait through arches at balcony */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-008-cnh_3229',
-    width: 7971, height: 5316,
-    lqip: 'data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAAAQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJYwAAQu5gFQAA/uvk+BNxoYfkSpWaY+PEoUnyUWrRUA/1BnSDiAAA',
-    title: 'Through the Arches',
-    exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.2', shutter: '1/320s', iso: 1600 },
-  },
-  /* 8 — 009-CNH_3530: Interior window, ironwork, textiles */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-009-cnh_3530',
-    width: 8192, height: 5464,
-    lqip: 'data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYgC7ACFT8T1xGvjzSWdAAP7ZQWlPrR+rrazA8X0teyChvca/keWVgRzlERCaAAA=',
-    title: 'Interior Light',
-    exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.8', shutter: '1/640s', iso: 1600 },
-  },
-  /* 9 — 010-CNH_0533: Rooftop view, lattice shade, Draa Valley */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-010-cnh_0533',
-    width: 5464, height: 8192,
-    lqip: 'data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAADQBQCdASoUAB4APzmMvFWvKaYjMBgIAeAnCUAW30GWCOD1XtYk9YciCFY3eNZ/ZJyP7lCyuzHgAPxw+Eph+VXtcwoQUxHHY+hsNOSrDhgKk9NvW/6uNJ634FMOajSfubIGaloF+QUUlGS1AmX1Ufo4S97Ayquhc7daGIZNluoPSwVWhGpndHGZyzwJB+0N8mq4p3+sfMjnhXoW1m8/iut9UVgEhMeYF0ON/KxRzoZnZiZAAAA=',
-    title: 'The Rooftop',
-    exif: { camera: 'Canon EOS R5m2', lens: 'RF35mm F1.4 L VCM', focalLength: '35mm', aperture: 'f/4.5', shutter: '1/3200s', iso: 400 },
-  },
-  /* 10 — 011-CNH_3581: Figure walking out through arched doorway */ {
-    url: 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-011-cnh_3581',
-    width: 5464, height: 8192,
-    lqip: 'data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAADQBACdASoUAB4APzmIulQvKSWjMAgB4CcJQBhmhDv8fnh5gDE8qe+q2xRR/zBOAAD+69AkP20/3mA/XM6W5s/Jf54tWE0LWIlXtv3OwNRmYuYcIQkDWqpX0IuXkvAtbGGCmw24UEdNZVB1xVlZKYkBEqoNangA',
-    title: 'Departure',
-    exif: { camera: 'Canon EOS R5', lens: 'RF50mm F1.2 L USM', focalLength: '50mm', aperture: 'f/2.8', shutter: '1/3200s', iso: 400 },
-  },
-];
+const essay = await getEntry('essays', 'morocco-ksar-essay');
+const photos = essay!.data.photos;
 
 const nextStoryData = {
   title: 'Nomads of Djebel Saghro',

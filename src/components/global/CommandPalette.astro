@@ -11,7 +11,7 @@ const paletteItems = [
     .sort((a, b) => a.data.sortOrder - b.data.sortOrder)
     .flatMap((c) => {
       const colAlbums = albums
-        .filter((a) => c.data.albums.includes(a.id) && !a.data.draft)
+        .filter((a) => c.data.archiveAlbums.includes(a.id) && !a.data.draft)
         .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
       return [
         { title: c.data.title.toLowerCase(), url: `/work/${c.id}`, hidden: false },

@@ -1,10 +1,9 @@
 title: Patagonia
 description: Wind, granite, and the end of the road.
-albums: []
 primaryHref: /work/patagonia/briefing
 sortOrder: 7
 map:
-  center: [-72.5, -50.5]
+  center: [ -72.5, -50.5 ]
   zoom: 5.5
   regionsFile: patagonia-regions.json
   markers:
@@ -18,3 +17,4 @@ map:
       lat: -50.94
       num: "02"
       target: /work/patagonia
+archiveAlbums: []

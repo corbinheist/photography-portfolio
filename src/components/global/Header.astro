@@ -11,6 +11,8 @@ const { minimal = false } = Astro.props;
 
 const collections = (await getCollection('photoCollections'))
   .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+const allEssays = await getCollection('essays');
+const essayById = new Map(allEssays.map((e) => [e.id, e]));
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
@@ -93,19 +95,25 @@ const navLinks = [
                 class:list={['nav-sub', { 'nav-sub--active': currentPath === '/work' || currentPath === '/work/' }]}
               >All collections</a>
               {collections.map((c) => {
-                const essays = c.data.essays ?? [];
+                const essayIds = c.data.essays ?? [];
                 return (
                   <>
                     <a
                       href={`/work/${c.id}`}
                       class:list={['nav-sub', { 'nav-sub--active': currentPath.startsWith(`/work/${c.id}`) }]}
                     >{c.data.title}</a>
-                    {essays.map((essay) => (
-                      <a
-                        href={`/work/${c.id}/${essay.slug}`}
-                        class:list={['nav-sub nav-sub--essay', { 'nav-sub--active': currentPath === `/work/${c.id}/${essay.slug}` || currentPath === `/work/${c.id}/${essay.slug}/` }]}
-                      >{essay.title}</a>
-                    ))}
+                    {essayIds.map((essayId) => {
+                      const essay = essayById.get(essayId);
+                      if (!essay) return null;
+                      const slug = essay.id.replace(new RegExp(`^${c.id}-`), '');
+                      const href = `/work/${c.id}/${slug}`;
+                      return (
+                        <a
+                          href={href}
+                          class:list={['nav-sub nav-sub--essay', { 'nav-sub--active': currentPath === href || currentPath === `${href}/` }]}
+                        >{essay.data.title}</a>
+                      );
+                    })}
                   </>
                 );
               })}
