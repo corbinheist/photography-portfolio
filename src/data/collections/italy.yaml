@@ -1,9 +1,8 @@
 title: Italy
 description: Dolomites, lake towns, and the light that makes everything look ancient.
-albums: []
 sortOrder: 3
 map:
-  center: [11.5, 44.5]
+  center: [ 11.5, 44.5 ]
   zoom: 5.5
   regionsFile: italy-regions.json
   markers:
@@ -12,3 +11,4 @@ map:
       lat: 44.5
       num: "01"
       target: /work/italy
+archiveAlbums: []

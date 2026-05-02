@@ -1,11 +1,9 @@
 title: Norway
 description: Rorbuer harbors, autumn fjords, and the road south to Oslo.
-albums:
-  - norway-test
 coverPhoto: 2025_c_n_wedding_0157
 sortOrder: 6
 map:
-  center: [12.5, 64.0]
+  center: [ 12.5, 64.0 ]
   zoom: 4.5
   regionsFile: norway-regions.json
   markers:
@@ -19,3 +17,5 @@ map:
       lat: 59.92
       num: "02"
       target: /work/norway/norway-test
+archiveAlbums:
+  - norway-test

@@ -80,23 +80,14 @@ const photoCollections = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
-    albums: z.array(z.string()).describe('Ordered list of album IDs'),
+    archiveAlbums: z
+      .array(z.string())
+      .default([])
+      .describe('Album IDs surfaced as archive (legacy albums); essays are the primary unit.'),
     essays: z
-      .array(
-        z.object({
-          slug: z.string(),
-          title: z.string(),
-          description: z.string().optional(),
-          coverImage: z.object({
-            url: z.string(),
-            width: z.number(),
-            height: z.number(),
-            lqip: z.string(),
-          }),
-          photoCount: z.number(),
-        }),
-      )
-      .optional(),
+      .array(z.string())
+      .optional()
+      .describe('Ordered list of essay entry IDs in the `essays` content collection.'),
     coverPhoto: z.string().optional().describe('Reference to a photo ID'),
     primaryHref: z.string().optional().describe('Override link for world map marker (defaults to /work/<id>)'),
     sortOrder: z.number().default(0),

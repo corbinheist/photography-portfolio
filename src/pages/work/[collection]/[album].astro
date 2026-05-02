@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   const paths: any[] = [];
 
   for (const collection of collections) {
-    for (const albumId of collection.data.albums) {
+    for (const albumId of collection.data.archiveAlbums) {
       const album = albums.find((a) => a.id === albumId);
       if (!album || album.data.draft) continue;
 

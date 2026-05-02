@@ -1,9 +1,8 @@
 title: United Kingdom
 description: Stone, rain, and the green that comes from both.
-albums: []
 sortOrder: 5
 map:
-  center: [-1.5, 54.0]
+  center: [ -1.5, 54.0 ]
   zoom: 5.5
   regionsFile: uk-regions.json
   markers:
@@ -12,3 +11,4 @@ map:
       lat: 54.0
       num: "01"
       target: /work/uk
+archiveAlbums: []

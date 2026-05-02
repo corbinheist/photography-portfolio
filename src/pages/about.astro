@@ -11,6 +11,8 @@ const ksarLqip = 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0
 // ── Build dynamic ledger from collections, albums, and essays ──
 const allCollections = await getCollection('photoCollections');
 const allAlbums = await getCollection('albums');
+const allEssayEntries = await getCollection('essays');
+const essayById = new Map(allEssayEntries.map((e) => [e.id, e]));
 
 type LedgerEntry = {
   date: string;
@@ -23,11 +25,11 @@ type LedgerEntry = {
 const ledger: LedgerEntry[] = [];
 
 for (const collection of allCollections) {
-  const essays = collection.data.essays ?? [];
+  const essayIds = collection.data.essays ?? [];
 
   // Derive earliest album date for the collection (used as fallback)
   let collectionDate: string | null = null;
-  for (const albumId of collection.data.albums) {
+  for (const albumId of collection.data.archiveAlbums) {
     const album = allAlbums.find((a) => a.id === albumId);
     if (album?.data.date) {
       collectionDate = album.data.date;
@@ -35,8 +37,8 @@ for (const collection of allCollections) {
     }
   }
 
-  // Each album becomes a ledger entry
-  for (const albumId of collection.data.albums) {
+  // Each archived album becomes a ledger entry
+  for (const albumId of collection.data.archiveAlbums) {
     const album = allAlbums.find((a) => a.id === albumId);
     if (!album || album.data.draft) continue;
 
@@ -54,16 +56,19 @@ for (const collection of allCollections) {
   }
 
   // Each essay becomes a ledger entry
-  for (const essay of essays) {
+  for (const essayId of essayIds) {
+    const essay = essayById.get(essayId);
+    if (!essay) continue;
     const date = collectionDate;
     if (!date) continue;
 
+    const slug = essay.id.replace(new RegExp(`^${collection.id}-`), '');
     ledger.push({
       date: date.replace('-', '.'),
-      place: `${collection.data.title} · ${essay.title}`,
-      note: essay.description || collection.data.description || essay.title,
-      count: `${essay.photoCount} frames`,
-      href: `/work/${collection.id}/${essay.slug}`,
+      place: `${collection.data.title} · ${essay.data.title}`,
+      note: essay.data.description || collection.data.description || essay.data.title,
+      count: `${essay.data.photos.length} frames`,
+      href: `/work/${collection.id}/${slug}`,
     });
   }
 }
@@ -73,7 +78,7 @@ ledger.sort((a, b) => b.date.localeCompare(a.date));
 
 // Compute stats
 const collectionsWithContent = allCollections.filter(
-  (c) => c.data.albums.length > 0 || (c.data.essays?.length ?? 0) > 0,
+  (c) => c.data.archiveAlbums.length > 0 || (c.data.essays?.length ?? 0) > 0,
 );
 const totalEssays = allCollections.reduce((n, c) => n + (c.data.essays?.length ?? 0), 0);
 const totalRegions = allCollections.filter((c) => c.data.map).length;
