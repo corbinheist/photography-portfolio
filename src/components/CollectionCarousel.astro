@@ -1,0 +1,217 @@
+---
+/**
+ * CollectionCarousel — round-robin filmstrip of photos pulled from a
+ * collection's linked essays. Click on a frame goes to
+ * `/work/<collection>/<essay-slug>` (essay reader handles the frame index
+ * via lightbox).
+ *
+ * Desktop horizontal scroll only; mobile treatment lands in Phase 5.
+ */
+
+interface Photo {
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  title?: string;
+}
+
+interface EssayInput {
+  /** The essay entry's full content collection ID, e.g. `morocco-wise-essay` */
+  id: string;
+  /** Slug portion of the entry id (last segment, used for the URL) */
+  slug: string;
+  title: string;
+  photos: Photo[];
+}
+
+interface Props {
+  collectionId: string;
+  essays: EssayInput[];
+  /** Cap frames per essay to keep the strip from getting absurd */
+  perEssay?: number;
+}
+
+const { collectionId, essays, perEssay = 8 } = Astro.props;
+
+interface StripFrame {
+  url: string;
+  lqip: string;
+  alt: string;
+  essayTitle: string;
+  href: string;
+  frameIndex: number;
+  globalIndex: number;
+}
+
+// Round-robin: deal one frame from each essay in turn.
+const buckets = essays
+  .map((e) => e.photos.slice(0, perEssay).map((p, i) => ({ photo: p, essay: e, frameIndex: i })))
+  .filter((b) => b.length > 0);
+
+const frames: StripFrame[] = [];
+const longest = Math.max(...buckets.map((b) => b.length), 0);
+let g = 0;
+for (let round = 0; round < longest; round++) {
+  for (const bucket of buckets) {
+    if (round >= bucket.length) continue;
+    const { photo, essay, frameIndex } = bucket[round];
+    frames.push({
+      url: photo.url,
+      lqip: photo.lqip,
+      alt: photo.title ?? essay.title,
+      essayTitle: essay.title,
+      href: `/work/${collectionId}/${essay.slug}`,
+      frameIndex,
+      globalIndex: g++,
+    });
+  }
+}
+---
+
+{frames.length > 0 && (
+  <section class="cc" aria-label="Photos from this collection">
+    <div class="cc__head">
+      <span class="cc__overline">FRAMES &middot; ALL ESSAYS</span>
+      <span class="cc__count">{frames.length} photos &middot; {essays.length} essays</span>
+    </div>
+    <div class="cc__track" data-cc-track>
+      {frames.map((f) => (
+        <a href={f.href} class="cc__frame" data-essay={f.essayTitle}>
+          <img
+            src={`${f.url}/${f.url.split('/').pop()}-640.webp`}
+            alt={f.alt}
+            class="cc__img"
+            loading="lazy"
+            decoding="async"
+            style={`background-image: url(${f.lqip}); background-size: cover;`}
+          />
+          <div class="cc__overlay">
+            <span class="cc__frame-num">N&deg; {String(f.globalIndex + 1).padStart(2, '0')}</span>
+            <span class="cc__essay">{f.essayTitle}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+)}
+
+<style>
+  .cc {
+    border-top: 1px solid var(--color-border-subtle);
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding: var(--space-md) 0;
+    margin: var(--space-2xl) 0;
+  }
+
+  .cc__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 var(--container-padding);
+    margin-bottom: var(--space-sm);
+  }
+
+  .cc__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .cc__count {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .cc__track {
+    display: flex;
+    gap: 4px;
+    padding: 0 var(--container-padding);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .cc__track::-webkit-scrollbar {
+    height: 6px;
+  }
+  .cc__track::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+  }
+
+  .cc__frame {
+    position: relative;
+    flex: 0 0 auto;
+    width: 280px;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cc__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    transition: transform 400ms var(--ease-out-quart), filter 200ms ease;
+    filter: brightness(0.92) saturate(0.95);
+  }
+
+  .cc__frame:hover .cc__img {
+    transform: scale(1.04);
+    filter: brightness(1) saturate(1);
+  }
+
+  .cc__overlay {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-sm);
+    opacity: 0;
+    transition: opacity 200ms ease;
+    pointer-events: none;
+  }
+
+  .cc__frame:hover .cc__overlay,
+  .cc__frame:focus-visible .cc__overlay {
+    opacity: 1;
+  }
+
+  .cc__frame-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: rgba(255, 252, 240, 0.85);
+    background: rgba(16, 15, 15, 0.6);
+    padding: 3px 6px;
+  }
+
+  .cc__essay {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fx-paper);
+    background: rgba(16, 15, 15, 0.7);
+    padding: 3px 8px;
+    text-align: right;
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>

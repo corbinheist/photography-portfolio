@@ -75,6 +75,11 @@ const essays = defineCollection({
   }),
 });
 
+const collectionIntros = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/data/collections' }),
+  schema: z.object({}).passthrough().optional(),
+});
+
 const photoCollections = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/data/collections' }),
   schema: z.object({
@@ -139,4 +144,4 @@ const blog = defineCollection({
   loader: substackLoader(),
 });
 
-export const collections = { photos, albums, essays, photoCollections, settings, blog };
+export const collections = { photos, albums, essays, collectionIntros, photoCollections, settings, blog };
