@@ -1,0 +1,314 @@
+---
+/**
+ * CollectionCarousel — round-robin filmstrip of photos pulled from a
+ * collection's linked essays. Click on a frame goes to
+ * `/work/<collection>/<essay-slug>` (essay reader handles the frame index
+ * via lightbox).
+ *
+ * Desktop horizontal scroll only; mobile treatment lands in Phase 5.
+ */
+
+interface Photo {
+  url: string;
+  width: number;
+  height: number;
+  lqip: string;
+  title?: string;
+}
+
+interface EssayInput {
+  /** The essay entry's full content collection ID, e.g. `morocco-wise-essay` */
+  id: string;
+  /** Slug portion of the entry id (last segment, used for the URL) */
+  slug: string;
+  title: string;
+  photos: Photo[];
+}
+
+interface Props {
+  collectionId: string;
+  essays: EssayInput[];
+  /** Cap frames per essay to keep the strip from getting absurd */
+  perEssay?: number;
+  /** Map of essay slug → list of marker `num` strings that point at that
+   * essay. Used to highlight matching frames when a marker is hovered. */
+  slugToMarkerNums?: Record<string, string[]>;
+}
+
+const { collectionId, essays, perEssay = 8, slugToMarkerNums = {} } = Astro.props;
+
+// True total across the linked essays (independent of the strip cap)
+const totalEssayFrames = essays.reduce((n, e) => n + e.photos.length, 0);
+
+interface StripFrame {
+  url: string;
+  lqip: string;
+  alt: string;
+  essayTitle: string;
+  essaySlug: string;
+  markerNums: string;
+  href: string;
+  frameIndex: number;
+  globalIndex: number;
+}
+
+// Round-robin: deal one frame from each essay in turn.
+const buckets = essays
+  .map((e) => e.photos.slice(0, perEssay).map((p, i) => ({ photo: p, essay: e, frameIndex: i })))
+  .filter((b) => b.length > 0);
+
+const frames: StripFrame[] = [];
+const longest = Math.max(...buckets.map((b) => b.length), 0);
+let g = 0;
+for (let round = 0; round < longest; round++) {
+  for (const bucket of buckets) {
+    if (round >= bucket.length) continue;
+    const { photo, essay, frameIndex } = bucket[round];
+    frames.push({
+      url: photo.url,
+      lqip: photo.lqip,
+      alt: photo.title ?? essay.title,
+      essayTitle: essay.title,
+      essaySlug: essay.slug,
+      markerNums: (slugToMarkerNums[essay.slug] ?? []).join(','),
+      href: `/work/${collectionId}/${essay.slug}`,
+      frameIndex,
+      globalIndex: g++,
+    });
+  }
+}
+---
+
+{frames.length > 0 && (
+  <section class="cc" aria-label="Photos from this collection">
+    <div class="cc__track" data-cc-track>
+      {frames.map((f) => (
+        <a
+          href={f.href}
+          class="cc__frame"
+          data-essay-slug={f.essaySlug}
+          data-marker-nums={f.markerNums}
+        >
+          <div class="cc__sprocket cc__sprocket--top"></div>
+          <span class="cc__frame-num">{String(f.globalIndex + 1).padStart(2, '0')}</span>
+          <img
+            src={`${f.url}/${f.url.split('/').pop()}-640.webp`}
+            alt={f.alt}
+            class="cc__img"
+            loading="lazy"
+            decoding="async"
+            style={`background-image: url(${f.lqip}); background-size: cover;`}
+          />
+          <span class="cc__essay-label">{f.essayTitle}</span>
+          <div class="cc__sprocket cc__sprocket--bottom"></div>
+        </a>
+      ))}
+      <div class="cc__leader">
+        <span class="cc__leader-text">END</span>
+      </div>
+    </div>
+    <div class="cc__foot">
+      <span class="cc__count">{totalEssayFrames} frames &middot; {`${essays.length} ${essays.length === 1 ? 'essay' : 'essays'}`}</span>
+    </div>
+  </section>
+)}
+
+<script>
+  function wireCarouselHighlight() {
+    const frames = document.querySelectorAll<HTMLElement>('.cc__frame[data-marker-nums]');
+    if (frames.length === 0) return;
+
+    function setActiveNum(num: string | null) {
+      for (const f of frames) {
+        const list = (f.dataset.markerNums ?? '').split(',').filter(Boolean);
+        const match = num !== null && list.includes(num);
+        f.classList.toggle('cc__frame--active', match);
+      }
+    }
+
+    // map-init.ts toggles `.map-marker--active` on the relevant marker
+    // for both direct marker hover AND region polygon hover. Watch that
+    // class so we react to either.
+    const update = () => {
+      const active = document.querySelector<HTMLElement>('.map-marker--active[data-marker-num]');
+      setActiveNum(active?.dataset.markerNum ?? null);
+    };
+
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
+      subtree: true,
+    });
+
+    // Initial sync in case map already painted before this script runs.
+    update();
+  }
+
+  document.addEventListener('astro:page-load', wireCarouselHighlight);
+</script>
+
+<style>
+  .cc {
+    padding: 0;
+    margin: 0 0 var(--space-2xl);
+  }
+
+  .cc__foot {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--space-xs) var(--container-padding);
+  }
+
+  .cc__count {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .cc__track {
+    display: flex;
+    gap: 4px;
+    padding: 0 var(--container-padding);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+
+  .cc__track::-webkit-scrollbar {
+    height: 6px;
+  }
+  .cc__track::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 3px;
+  }
+
+  .cc__frame {
+    position: relative;
+    flex: 0 0 auto;
+    width: 280px;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: filter 200ms ease, opacity 200ms ease;
+  }
+
+  /* Map → carousel highlight: when a marker is hovered, frames not
+     belonging to that essay dim back so the matching ones read clearly. */
+  .cc__track:has(.cc__frame--active) .cc__frame:not(.cc__frame--active) {
+    opacity: 0.35;
+  }
+  .cc__frame--active {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+
+  /* Sprocket holes — top + bottom strip mimicking 35mm perforations. */
+  .cc__sprocket {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 8px;
+    z-index: 1;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0 3px,
+      rgba(0, 0, 0, 0.55) 3px 7px
+    );
+    pointer-events: none;
+  }
+
+  .cc__sprocket--top {
+    top: 0;
+  }
+
+  .cc__sprocket--bottom {
+    bottom: 0;
+  }
+
+  /* Frame number — corner mono inset like the /work film roll */
+  .cc__frame-num {
+    position: absolute;
+    top: 10px;
+    left: 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(255, 252, 240, 0.4);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .cc__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-repeat: no-repeat;
+    transition: transform 400ms var(--ease-out-quart), filter 200ms ease;
+    filter: brightness(0.7) saturate(0.85);
+  }
+
+  .cc__frame:hover .cc__img {
+    transform: scale(1.04);
+    filter: brightness(1) saturate(1);
+  }
+
+  /* Essay label — appears on hover, sits above the bottom sprocket */
+  .cc__essay-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    padding: 4px 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fx-paper);
+    background: rgba(16, 15, 15, 0.7);
+    opacity: 0;
+    transition: opacity 150ms ease;
+    z-index: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cc__frame:hover .cc__essay-label,
+  .cc__frame:focus-visible .cc__essay-label {
+    opacity: 1;
+  }
+
+  /* Tail leader at the end of the strip */
+  .cc__leader {
+    flex: 0 0 auto;
+    width: 100px;
+    aspect-ratio: 3 / 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 4px,
+      var(--color-border-subtle) 4px,
+      var(--color-border-subtle) 5px
+    );
+  }
+
+  .cc__leader-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    background: var(--color-bg);
+    padding: 2px 8px;
+  }
+</style>

@@ -1,0 +1,134 @@
+---
+import Photo from './Photo.astro';
+
+interface Props {
+  href: string;
+  num: string;
+  title: string;
+  description?: string;
+  photoCount: number;
+  cover: {
+    url: string;
+    width: number;
+    height: number;
+    lqip: string;
+    title: string;
+  };
+}
+
+const { href, num, title, description, photoCount, cover } = Astro.props;
+---
+
+<a href={href} class="essay-card">
+  <div class="essay-card__top">
+    <span class="essay-card__num">N&deg; {num}</span>
+    <span class="essay-card__count">{photoCount} frames</span>
+  </div>
+  <div class="essay-card__photo">
+    <Photo
+      url={cover.url}
+      width={cover.width}
+      height={cover.height}
+      lqip={cover.lqip}
+      alt={cover.title}
+      sizes="(max-width: 768px) 100vw, 50vw"
+    />
+    <div class="essay-card__hover">OPEN ESSAY &rarr;</div>
+  </div>
+  <div class="essay-card__info">
+    <h3 class="essay-card__title">{title}</h3>
+    {description && <p class="essay-card__desc">{description}</p>}
+  </div>
+</a>
+
+<style>
+  .essay-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .essay-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .essay-card__num {
+    color: var(--color-accent);
+  }
+
+  .essay-card__photo {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .essay-card__photo :global(.photo-img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  .essay-card:hover .essay-card__photo :global(.photo-img) {
+    transform: scale(1.03);
+  }
+
+  .essay-card__hover {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fx-paper);
+    background: rgba(16, 15, 15, 0.75);
+    padding: 6px 10px;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 200ms ease, transform 200ms ease;
+  }
+
+  .essay-card:hover .essay-card__hover,
+  .essay-card:focus-visible .essay-card__hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .essay-card__info {
+    padding-top: var(--space-sm);
+  }
+
+  .essay-card__title {
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    color: var(--color-text);
+    transition: color var(--duration-fast) ease;
+  }
+
+  .essay-card:hover .essay-card__title {
+    color: var(--color-accent);
+  }
+
+  .essay-card__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-top: var(--space-xs);
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

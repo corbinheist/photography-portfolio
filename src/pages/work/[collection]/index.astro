@@ -1,7 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import PageLayout from '@layouts/PageLayout.astro';
+import Container from '@components/ui/Container.astro';
 import AlbumCard from '@components/photo/AlbumCard.astro';
+import EssayCard from '@components/photo/EssayCard.astro';
+import CollectionCarousel from '@components/CollectionCarousel.astro';
 import Map from '@components/Map.astro';
 
 export async function getStaticPaths() {
@@ -10,24 +13,28 @@ export async function getStaticPaths() {
   const photos = await getCollection('photos');
   const essays = await getCollection('essays');
 
-  return collections.map((collection) => ({
-    params: { collection: collection.id },
-    props: {
-      collection,
-      albums: albums
-        .filter((a) => collection.data.archiveAlbums.includes(a.id))
-        .sort((a, b) => a.data.sortOrder - b.data.sortOrder),
-      essays: (collection.data.essays ?? [])
-        .map((id) => essays.find((e) => e.id === id))
-        .filter((e): e is NonNullable<typeof e> => Boolean(e)),
-      photos,
-    },
-  }));
+  return collections.map((collection) => {
+    const collectionEssays = (collection.data.essays ?? [])
+      .map((id) => essays.find((e) => e.id === id))
+      .filter((e): e is NonNullable<typeof e> => Boolean(e));
+
+    return {
+      params: { collection: collection.id },
+      props: {
+        collection,
+        albums: albums
+          .filter((a) => collection.data.archiveAlbums.includes(a.id))
+          .sort((a, b) => a.data.sortOrder - b.data.sortOrder),
+        essays: collectionEssays,
+        photos,
+      },
+    };
+  });
 }
 
 const { collection, albums, essays, photos } = Astro.props;
 
-// Load map regions if the collection defines map data
+// Map regions/route
 let mapRegions: any = null;
 let mapRoute: any = null;
 if (collection.data.map) {
@@ -43,25 +50,50 @@ if (collection.data.map) {
 function findPhoto(id: string) {
   return photos.find((p: any) => p.id === id);
 }
+
+// Carousel input — strip collectionId prefix from each essay id to get the slug
+const carouselEssays = essays.map((e: any) => ({
+  id: e.id,
+  slug: e.id.replace(new RegExp(`^${collection.id}-`), ''),
+  title: e.data.title,
+  photos: e.data.photos,
+}));
+
+// Slug → list of map marker `num`s pointing at that essay's URL.
+// Used by the carousel to highlight frames when a marker is hovered.
+const slugToMarkerNums: Record<string, string[]> = {};
+for (const m of collection.data.map?.markers ?? []) {
+  if (!m.num) continue;
+  const segments = m.target.split('/').filter(Boolean);
+  // Expect target like `/work/<collection>/<slug>` — last segment is the slug
+  const slug = segments[segments.length - 1];
+  if (!slug || slug === collection.id) continue;
+  (slugToMarkerNums[slug] ??= []).push(m.num);
+}
+
+const visibleAlbums = albums.filter((a: any) => !a.data.draft);
 ---
 
 <PageLayout
   title={collection.data.title}
   description={collection.data.description}
 >
-  <div class="collection-header reveal">
-    <nav class="breadcrumb">
-      <a href="/work">Work</a>
-      <span>/</span>
-      <span>{collection.data.title}</span>
-    </nav>
-    <h1>{collection.data.title}</h1>
-    {collection.data.description && (
-      <p class="collection-desc">{collection.data.description}</p>
-    )}
-  </div>
+  <Container>
+    <div class="collection-header reveal">
+      <nav class="breadcrumb">
+        <a href="/work">Work</a>
+        <span>/</span>
+        <span>{collection.data.title}</span>
+      </nav>
+      <h1>{collection.data.title}</h1>
+      {collection.data.description && (
+        <p class="collection-tagline">{collection.data.description}</p>
+      )}
+    </div>
+  </Container>
+
   {collection.data.map && (
-    <div class="map-section map-section--full-bleed">
+    <div class="map-section map-section--full-bleed map-section--compact">
       <Map
         center={collection.data.map.center}
         zoom={collection.data.map.zoom}
@@ -73,64 +105,86 @@ function findPhoto(id: string) {
       />
     </div>
   )}
-  <div class="collection-grid-wrap">
-    <div class="albums-grid stagger-children">
-      {albums
-        .filter((a: any) => !a.data.draft)
-        .map((album: any) => {
-          const cover = findPhoto(album.data.coverPhoto);
-          if (!cover) return null;
 
-          return (
-            <AlbumCard
-              href={`/work/${collection.id}/${album.id}`}
-              title={album.data.title}
-              description={album.data.description}
-              location={album.data.location}
-              date={album.data.date}
-              coverPhoto={{
-                url: cover.data.url,
-                width: cover.data.width,
-                height: cover.data.height,
-                lqip: cover.data.lqip,
-                title: cover.data.title,
-              }}
-              photoCount={album.data.photos.length}
-            />
-          );
-        })}
-      {essays.map((essay: any) => {
-        const slug = essay.id.replace(new RegExp(`^${collection.id}-`), '');
-        const cover = essay.data.photos[essay.data.coverPhotoIndex] ?? essay.data.photos[0];
-        return (
-          <AlbumCard
-            href={`/work/${collection.id}/${slug}`}
-            title={essay.data.title}
-            description={essay.data.description}
-            location="Photo Essay"
-            coverPhoto={{
-              url: cover.url,
-              width: cover.width,
-              height: cover.height,
-              lqip: cover.lqip,
-              title: essay.data.title,
-            }}
-            photoCount={essay.data.photos.length}
-          />
-        );
-      })}
-    </div>
-  </div>
+  <CollectionCarousel
+    collectionId={collection.id}
+    essays={carouselEssays}
+    slugToMarkerNums={slugToMarkerNums}
+  />
+
+  {essays.length > 0 && (
+    <Container>
+      <section class="essay-section">
+        <header class="essay-section__head">
+          <span class="essay-section__overline">ESSAYS</span>
+          <h2 class="essay-section__heading">From the field.</h2>
+        </header>
+        <div class="essay-section__grid stagger-children">
+          {essays.map((essay: any, i: number) => {
+            const slug = essay.id.replace(new RegExp(`^${collection.id}-`), '');
+            const cover = essay.data.photos[essay.data.coverPhotoIndex] ?? essay.data.photos[0];
+            return (
+              <EssayCard
+                href={`/work/${collection.id}/${slug}`}
+                num={String(i + 1).padStart(2, '0')}
+                title={essay.data.title}
+                description={essay.data.description}
+                photoCount={essay.data.photos.length}
+                cover={{
+                  url: cover.url,
+                  width: cover.width,
+                  height: cover.height,
+                  lqip: cover.lqip,
+                  title: essay.data.title,
+                }}
+              />
+            );
+          })}
+        </div>
+      </section>
+    </Container>
+  )}
+
+  {visibleAlbums.length > 0 && (
+    <Container>
+      <details class="archive">
+        <summary class="archive__summary">
+          <span class="archive__overline">ARCHIVE</span>
+          <span class="archive__label">{visibleAlbums.length} {visibleAlbums.length === 1 ? 'album' : 'albums'}</span>
+          <span class="archive__caret">&plus;</span>
+        </summary>
+        <div class="archive__grid stagger-children">
+          {visibleAlbums.map((album: any) => {
+            const cover = findPhoto(album.data.coverPhoto);
+            if (!cover) return null;
+            return (
+              <AlbumCard
+                href={`/work/${collection.id}/${album.id}`}
+                title={album.data.title}
+                description={album.data.description}
+                location={album.data.location}
+                date={album.data.date}
+                coverPhoto={{
+                  url: cover.data.url,
+                  width: cover.data.width,
+                  height: cover.data.height,
+                  lqip: cover.data.lqip,
+                  title: cover.data.title,
+                }}
+                photoCount={album.data.photos.length}
+              />
+            );
+          })}
+        </div>
+      </details>
+    </Container>
+  )}
 </PageLayout>
 
 <style>
   .collection-header {
-    padding: var(--space-xl) var(--container-padding) var(--space-md);
-  }
-
-  .collection-grid-wrap {
-    padding-inline: var(--container-padding);
-    padding-bottom: var(--space-3xl);
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-md);
   }
 
   .breadcrumb {
@@ -144,31 +198,135 @@ function findPhoto(id: string) {
   .breadcrumb a {
     transition: color var(--duration-fast) ease;
   }
-
   .breadcrumb a:hover {
     color: var(--color-accent);
   }
 
-  .collection-desc {
+  .collection-tagline {
     font-size: var(--text-lg);
     color: var(--color-text-muted);
     margin-top: var(--space-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .albums-grid {
+  /* Override the global full-bleed map so map + carousel read as one
+     band. Drop the trailing padding that creates dead space below. */
+  .map-section--compact {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .map-section--compact :global(.map-container) {
+    height: 75vh;
+    min-height: 480px;
+    max-height: 800px;
+  }
+
+  /* ── Essay section ── */
+  .essay-section {
+    padding: var(--space-2xl) 0;
+  }
+
+  .essay-section__head {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .essay-section__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+
+  .essay-section__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(36px, 4.5vw, 56px);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .essay-section__grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--space-xl);
   }
 
   @media (min-width: 768px) {
-    .albums-grid {
+    .essay-section__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* ── Archive details ── */
+  .archive {
+    padding: var(--space-md) 0 var(--space-3xl);
+    border-top: 1px solid var(--color-border-subtle);
+    margin-top: var(--space-xl);
+  }
+
+  .archive__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) 0;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .archive__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .archive__overline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .archive__label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--color-text-muted);
+  }
+
+  .archive__caret {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--color-text-faint);
+    transition: transform 200ms ease;
+  }
+
+  .archive[open] .archive__caret {
+    transform: rotate(45deg);
+  }
+
+  .archive__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+    padding-top: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .archive__grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   @media (min-width: 1024px) {
-    .albums-grid {
+    .archive__grid {
       grid-template-columns: repeat(3, 1fr);
     }
   }
