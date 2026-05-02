@@ -30,15 +30,23 @@ interface Props {
   essays: EssayInput[];
   /** Cap frames per essay to keep the strip from getting absurd */
   perEssay?: number;
+  /** Map of essay slug → list of marker `num` strings that point at that
+   * essay. Used to highlight matching frames when a marker is hovered. */
+  slugToMarkerNums?: Record<string, string[]>;
 }
 
-const { collectionId, essays, perEssay = 8 } = Astro.props;
+const { collectionId, essays, perEssay = 8, slugToMarkerNums = {} } = Astro.props;
+
+// True total across the linked essays (independent of the strip cap)
+const totalEssayFrames = essays.reduce((n, e) => n + e.photos.length, 0);
 
 interface StripFrame {
   url: string;
   lqip: string;
   alt: string;
   essayTitle: string;
+  essaySlug: string;
+  markerNums: string;
   href: string;
   frameIndex: number;
   globalIndex: number;
@@ -61,6 +69,8 @@ for (let round = 0; round < longest; round++) {
       lqip: photo.lqip,
       alt: photo.title ?? essay.title,
       essayTitle: essay.title,
+      essaySlug: essay.slug,
+      markerNums: (slugToMarkerNums[essay.slug] ?? []).join(','),
       href: `/work/${collectionId}/${essay.slug}`,
       frameIndex,
       globalIndex: g++,
@@ -71,13 +81,16 @@ for (let round = 0; round < longest; round++) {
 
 {frames.length > 0 && (
   <section class="cc" aria-label="Photos from this collection">
-    <div class="cc__head">
-      <span class="cc__overline">FRAMES &middot; ALL ESSAYS</span>
-      <span class="cc__count">{frames.length} photos &middot; {essays.length} essays</span>
-    </div>
     <div class="cc__track" data-cc-track>
       {frames.map((f) => (
-        <a href={f.href} class="cc__frame" data-essay={f.essayTitle}>
+        <a
+          href={f.href}
+          class="cc__frame"
+          data-essay-slug={f.essaySlug}
+          data-marker-nums={f.markerNums}
+        >
+          <div class="cc__sprocket cc__sprocket--top"></div>
+          <span class="cc__frame-num">{String(f.globalIndex + 1).padStart(2, '0')}</span>
           <img
             src={`${f.url}/${f.url.split('/').pop()}-640.webp`}
             alt={f.alt}
@@ -86,38 +99,65 @@ for (let round = 0; round < longest; round++) {
             decoding="async"
             style={`background-image: url(${f.lqip}); background-size: cover;`}
           />
-          <div class="cc__overlay">
-            <span class="cc__frame-num">N&deg; {String(f.globalIndex + 1).padStart(2, '0')}</span>
-            <span class="cc__essay">{f.essayTitle}</span>
-          </div>
+          <span class="cc__essay-label">{f.essayTitle}</span>
+          <div class="cc__sprocket cc__sprocket--bottom"></div>
         </a>
       ))}
+      <div class="cc__leader">
+        <span class="cc__leader-text">END</span>
+      </div>
+    </div>
+    <div class="cc__foot">
+      <span class="cc__count">{totalEssayFrames} frames &middot; {`${essays.length} ${essays.length === 1 ? 'essay' : 'essays'}`}</span>
     </div>
   </section>
 )}
 
+<script>
+  function wireCarouselHighlight() {
+    const frames = document.querySelectorAll<HTMLElement>('.cc__frame[data-marker-nums]');
+    if (frames.length === 0) return;
+
+    function setActiveNum(num: string | null) {
+      for (const f of frames) {
+        const list = (f.dataset.markerNums ?? '').split(',').filter(Boolean);
+        const match = num !== null && list.includes(num);
+        f.classList.toggle('cc__frame--active', match);
+      }
+    }
+
+    // map-init.ts toggles `.map-marker--active` on the relevant marker
+    // for both direct marker hover AND region polygon hover. Watch that
+    // class so we react to either.
+    const update = () => {
+      const active = document.querySelector<HTMLElement>('.map-marker--active[data-marker-num]');
+      setActiveNum(active?.dataset.markerNum ?? null);
+    };
+
+    const observer = new MutationObserver(update);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
+      subtree: true,
+    });
+
+    // Initial sync in case map already painted before this script runs.
+    update();
+  }
+
+  document.addEventListener('astro:page-load', wireCarouselHighlight);
+</script>
+
 <style>
   .cc {
-    border-top: 1px solid var(--color-border-subtle);
-    border-bottom: 1px solid var(--color-border-subtle);
-    padding: var(--space-md) 0;
-    margin: var(--space-2xl) 0;
+    padding: 0;
+    margin: 0 0 var(--space-2xl);
   }
 
-  .cc__head {
+  .cc__foot {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    padding: 0 var(--container-padding);
-    margin-bottom: var(--space-sm);
-  }
-
-  .cc__overline {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--color-accent);
+    justify-content: flex-end;
+    padding: var(--space-xs) var(--container-padding);
   }
 
   .cc__count {
@@ -156,6 +196,53 @@ for (let round = 0; round < longest; round++) {
     scroll-snap-align: start;
     text-decoration: none;
     color: inherit;
+    display: block;
+    transition: filter 200ms ease, opacity 200ms ease;
+  }
+
+  /* Map → carousel highlight: when a marker is hovered, frames not
+     belonging to that essay dim back so the matching ones read clearly. */
+  .cc__track:has(.cc__frame--active) .cc__frame:not(.cc__frame--active) {
+    opacity: 0.35;
+  }
+  .cc__frame--active {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+
+  /* Sprocket holes — top + bottom strip mimicking 35mm perforations. */
+  .cc__sprocket {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 8px;
+    z-index: 1;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0 3px,
+      rgba(0, 0, 0, 0.55) 3px 7px
+    );
+    pointer-events: none;
+  }
+
+  .cc__sprocket--top {
+    top: 0;
+  }
+
+  .cc__sprocket--bottom {
+    bottom: 0;
+  }
+
+  /* Frame number — corner mono inset like the /work film roll */
+  .cc__frame-num {
+    position: absolute;
+    top: 10px;
+    left: 6px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: rgba(255, 252, 240, 0.4);
+    z-index: 2;
+    pointer-events: none;
   }
 
   .cc__img {
@@ -164,7 +251,7 @@ for (let round = 0; round < longest; round++) {
     object-fit: cover;
     background-repeat: no-repeat;
     transition: transform 400ms var(--ease-out-quart), filter 200ms ease;
-    filter: brightness(0.92) saturate(0.95);
+    filter: brightness(0.7) saturate(0.85);
   }
 
   .cc__frame:hover .cc__img {
@@ -172,46 +259,56 @@ for (let round = 0; round < longest; round++) {
     filter: brightness(1) saturate(1);
   }
 
-  .cc__overlay {
+  /* Essay label — appears on hover, sits above the bottom sprocket */
+  .cc__essay-label {
     position: absolute;
-    left: 10px;
+    left: 0;
+    right: 0;
     bottom: 10px;
-    right: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: var(--space-sm);
-    opacity: 0;
-    transition: opacity 200ms ease;
-    pointer-events: none;
-  }
-
-  .cc__frame:hover .cc__overlay,
-  .cc__frame:focus-visible .cc__overlay {
-    opacity: 1;
-  }
-
-  .cc__frame-num {
+    padding: 4px 8px;
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: rgba(255, 252, 240, 0.85);
-    background: rgba(16, 15, 15, 0.6);
-    padding: 3px 6px;
-  }
-
-  .cc__essay {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
+    font-size: 9px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--fx-paper);
     background: rgba(16, 15, 15, 0.7);
-    padding: 3px 8px;
-    text-align: right;
-    max-width: 70%;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    z-index: 2;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .cc__frame:hover .cc__essay-label,
+  .cc__frame:focus-visible .cc__essay-label {
+    opacity: 1;
+  }
+
+  /* Tail leader at the end of the strip */
+  .cc__leader {
+    flex: 0 0 auto;
+    width: 100px;
+    aspect-ratio: 3 / 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 4px,
+      var(--color-border-subtle) 4px,
+      var(--color-border-subtle) 5px
+    );
+  }
+
+  .cc__leader-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    background: var(--color-bg);
+    padding: 2px 8px;
   }
 </style>
