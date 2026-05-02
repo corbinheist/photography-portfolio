@@ -4,23 +4,53 @@ import EssaySlideText from '@components/essay/EssaySlideText.astro';
 import EssaySlideMapInset from '@components/essay/EssaySlideMapInset.astro';
 import EssaySlideStats from '@components/essay/EssaySlideStats.astro';
 import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
-import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
 import EssayDivider from '@components/essay/EssayDivider.astro';
 import briefingRegions from '@data/maps/patagonia-briefing-regions.json';
 import EssaySlideTimeline from '@components/essay/EssaySlideTimeline.astro';
 import EssaySlideGear from '@components/essay/EssaySlideGear.astro';
+import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
+import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
 
 const markers = [
   { lng: -72.4,  lat: -50.917, label: 'Estancia Cerro Guido', num: '01' },
   { lng: -72.95, lat: -50.94,  label: 'Torres del Paine',     num: '02' },
   { lng: -72.8,  lat: -51.02,  label: 'Lago Sarmiento',       num: '03' },
 ];
+
+const CDN = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos';
+
+const photos = [
+  /* 0 — Dodging Thunderheads at 13,000m */ {
+    url: `${CDN}/heist-patagonia-briefing-001-thunderheads`,
+    width: 5584, height: 8368,
+    lqip: 'data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAACwBACdASoUAB4APzmEt1QvKCUjMBgMAeAnCWUAgR4EXzDvjQ5gVhXerBfDHUUAAP7o4Vtr/WP9lIUO3o3wx6pVGCFHDNS4S+rDTEijBtvRwdDFSA4J3a794VDhwAAA',
+    alt: 'Wing and engine silhouetted against predawn sky, low cloud deck below at FL280, sunrise band on horizon.',
+  },
+  /* 1 — Aconcagua emerging at first light */ {
+    url: `${CDN}/heist-patagonia-briefing-002-aconcagua-emerge`,
+    width: 5584, height: 8368,
+    lqip: 'data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACwBACdASoUAB4APzmOvFgvKaWjqAqp4CcJQBA8IG6kIxk8jADW65DV8X/6diwAAP7jQs4Rh9z4tvSIXjvKNJhWhTm9poVmv+l83Jec5W67GWq6HpYJGXXz8MTpfPpTRQUirqiZQa8HQhB364gAA==',
+    alt: 'Aconcagua summit catching first light through aircraft window, cordillera below in shadow.',
+  },
+  /* 2 — Aconcagua summit, fuller frame */ {
+    url: `${CDN}/heist-patagonia-briefing-003-aconcagua-summit`,
+    width: 5102, height: 7646,
+    lqip: 'data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAAAQBQCdASoUAB4APzGAtlOuqCUit/VYAdAmCWwAnQB5l2lEy2ACKwN2SU1eoZFM3rIAAP73l/w0fsiPpt+QBI4LqJreb/5+HLEZXxO5cWpTJ7BR6Vo9m1ykrSoseJGxps1WtneO34uGmuwUq8awuJxrAbNGcjhOVOsMseqPdMP8UVo/7lrirKwK/8VAAA==',
+    alt: 'Aconcagua sunrise, summit halo against gradient sky, cordillera unspooling below.',
+  },
+  /* 3 — Sunrise overwing, Westbound */ {
+    url: `${CDN}/heist-patagonia-briefing-004-overwing-westbound`,
+    width: 8368, height: 5584,
+    lqip: 'data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAAAQBACdASoUAA0APzmIvlOvKScisAgB4CcJYgCsAGopmfSJBstlRAzoAAD+6l1/3astkTPJdbt7Nk7fBvSb+FuiBIofPOdRjhKPzpzzbIGugg6gbjggMNE49ZeiBS4WAAA=',
+    alt: 'Sunburst off wingtip leading edge with cordillera ridgeline below, distant Aconcagua on horizon.',
+  },
+];
 ---
 
 <ProjectLayout
   title="The Patagonia Expedition Briefing"
   description="Pre-trip briefing — Estancia Cerro Guido, Torres del Paine. Six days, three altitudes, one window."
-  dossier={{ num: '014', label: 'PATAGONIA · BRIEFING', totalFrames: 18 }}
+  dossier={{ num: '014', label: 'PATAGONIA · BRIEFING', totalFrames: 22 }}
 >
 
   <!-- 1. Briefing card — text-only hero (no frames yet) -->
@@ -341,19 +371,142 @@ const markers = [
     </p>
   </EssaySlideText>
 
-  <!-- 8. Colophon — placeholder, replaced on return -->
-  <EssaySlideColophon
-    dossierNum="014"
-    title="The Patagonia Expedition Briefing"
-    location="Magallanes, Chile"
-    coords="50°55′S 72°24′W"
-    dates="May 03 — May 09, 2026"
-    camera="TBD on return"
-    frames="Pending"
-    collection="patagonia"
-  >
-    Briefing issued before departure. Updated on return with the album.
-  </EssaySlideColophon>
+  <EssayDivider num="09" label="IX · EN ROUTE" />
+
+  <!-- Flash report — in-transit dispatch from FL430 -->
+  <EssaySlideText align="center">
+    <div class="flash-report">
+      <p class="essay-ov essay-ov--warm">
+        <span class="essay-ov__diamond">&#9670;</span> FLASH &middot; FLASH &middot; FLASH
+      </p>
+
+      <pre class="flash-report__header">DTG:  020900Z MAY 26
+FROM: SEAT 14A / FL430
+TO:   ALL STATIONS
+RE:   APPROACH SCL</pre>
+
+      <p class="flash-report__bluf">
+        <strong>BLUF</strong> &mdash; 13,000m. Andes lit. ETA 0540L.
+      </p>
+
+      <p class="flash-report__body">
+        Departed MAD 2330L. Overnight nominal until 0700Z &mdash; line of CBs
+        vicinity 32&deg;S, deviation south, ate 40nm to weather.
+      </p>
+
+      <p class="flash-report__body">
+        Sunrise found Aconcagua first. 6,961m of granite catching light
+        before the cabin knew it was morning. Cordillera unspooling
+        east-to-west, pink &rarr; gold &rarr; white. Deck below at FL280.
+      </p>
+
+      <p class="flash-report__body">
+        Cabin dark. Window open. Q2 at the glass &mdash; 28mm Summilux,
+        one body, no choices. Frames captured: ridgelines, summit halo,
+        the line where shadow pulls back across the spine of a continent.
+      </p>
+
+      <p class="flash-report__body">
+        Descent commenced. SCL ground 9&deg;C, calm. Onward PNT +4.
+      </p>
+
+      <p class="flash-report__sig">ENDEX.<br />// CH</p>
+    </div>
+  </EssaySlideText>
+
+  <!-- Frame 1 — Dodging thunderheads (portrait → fit:contain via FullBleed auto-detect) -->
+  <EssaySlideFullBleed
+    url={photos[0].url}
+    width={photos[0].width}
+    height={photos[0].height}
+    lqip={photos[0].lqip}
+    alt={photos[0].alt}
+    lightboxIndex={0}
+    captionTitle="Dodging thunderheads at 13,000m"
+    captionMeta="FL430 · 0700Z · ~32°S · Deviation south, 40 nm to weather"
+  />
+
+  <!-- Frame 4 — Sunrise overwing, westbound -->
+  <EssaySlideFullBleed
+    url={photos[3].url}
+    width={photos[3].width}
+    height={photos[3].height}
+    lqip={photos[3].lqip}
+    alt={photos[3].alt}
+    lightboxIndex={3}
+    captionTitle="Sunrise overwing, westbound"
+    captionMeta="FL430 · Cordillera, post-frontal"
+  />
+
+  <!-- Frames 2 + 3 — Aconcagua sunrise diptych -->
+  <EssaySlideDiptych
+    photos={[
+      { url: photos[1].url, width: photos[1].width, height: photos[1].height, lqip: photos[1].lqip, alt: photos[1].alt, lightboxIndex: 1 },
+      { url: photos[2].url, width: photos[2].width, height: photos[2].height, lqip: photos[2].lqip, alt: photos[2].alt, lightboxIndex: 2 },
+    ]}
+    caption="Aconcagua sunrise — 6,961 m, first light before the cabin knew it was morning."
+  />
+
+  <!-- Dossier log — chronological table replacing the en-route + end-of-dossier colophons -->
+  <section class="essay-slide dossier-log">
+    <div class="dossier-log__inner">
+      <div class="dossier-log__top">
+        <div class="dossier-log__stamp">
+          <span class="dossier-log__stamp-mark"></span>
+          <span>FIELD &middot; LOG</span>
+        </div>
+        <div>014 &middot; END OF DOSSIER</div>
+      </div>
+
+      <div class="dossier-log__head">
+        <p class="essay-ov essay-ov--warm">
+          <span class="essay-ov__diamond">&#9670;</span> 014 &middot; DOSSIER LOG
+        </p>
+        <h2 class="dossier-log__title">The Patagonia Expedition Briefing</h2>
+        <p class="dossier-log__deck">
+          Briefing issued before departure. En-route dispatch added 02 May 2026.
+          Updated again on return with the album.
+        </p>
+      </div>
+
+      <table class="dossier-log__table">
+        <thead>
+          <tr>
+            <th scope="col">Phase</th>
+            <th scope="col">DTG</th>
+            <th scope="col">Position</th>
+            <th scope="col">Status</th>
+            <th scope="col">Frames</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Briefing issued</th>
+            <td data-label="DTG">01 MAY 2026</td>
+            <td data-label="Position">60.19&deg;N 11.10&deg;E &middot; Akershus, NOR</td>
+            <td data-label="Status">Pre-trip</td>
+            <td data-label="Frames">&mdash;</td>
+          </tr>
+          <tr class="dossier-log__row--active">
+            <th scope="row">En route</th>
+            <td data-label="DTG">02 MAY 2026 &middot; 0900Z</td>
+            <td data-label="Position">FL430 &middot; SCL approach &middot; ETA 0540L</td>
+            <td data-label="Status"><strong>In transit</strong></td>
+            <td data-label="Frames">4</td>
+          </tr>
+          <tr>
+            <th scope="row">Expedition window</th>
+            <td data-label="DTG">May 03 &mdash; May 09, 2026</td>
+            <td data-label="Position">50&deg;55&prime;S 72&deg;24&prime;W &middot; Magallanes, CHL</td>
+            <td data-label="Status">Pending</td>
+            <td data-label="Frames">TBD on return</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <a href="/work/patagonia" class="dossier-log__back">&larr; Back to Patagonia</a>
+    </div>
+  </section>
 
   <script>
     document.addEventListener('astro:page-load', () => {
@@ -532,5 +685,278 @@ const markers = [
     font-size: 13px;
     font-weight: 400;
     letter-spacing: 0.04em;
+  }
+
+  /* Flash report — mono editorial card lifted from briefing-cover stamp aesthetic */
+  :global(.flash-report) {
+    font-family: var(--font-mono);
+    border: 1px solid var(--color-border-subtle);
+    padding: 2em 2.2em;
+    background: color-mix(in srgb, var(--color-bg) 92%, var(--color-warm) 8%);
+    text-align: left;
+  }
+
+  :global(.flash-report .essay-ov) {
+    margin-bottom: 1.6em;
+  }
+
+  :global(.flash-report__header) {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    color: var(--color-text);
+    background: none;
+    padding: 0 0 1.4em;
+    margin: 0 0 1.4em;
+    border-bottom: 1px solid var(--color-border-subtle);
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  :global(.flash-report__bluf) {
+    font-family: var(--font-mono) !important;
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+    letter-spacing: 0.02em;
+    color: var(--color-text) !important;
+    margin: 0 0 1.6em !important;
+    max-width: none !important;
+  }
+
+  :global(.flash-report__bluf strong) {
+    color: var(--color-warm) !important;
+    letter-spacing: 0.08em;
+  }
+
+  :global(.flash-report__body) {
+    font-family: var(--font-mono) !important;
+    font-size: 13px !important;
+    line-height: 1.7 !important;
+    letter-spacing: 0.01em;
+    color: var(--color-text-muted) !important;
+    margin: 0 0 1.2em !important;
+    max-width: none !important;
+  }
+
+  :global(.flash-report__sig) {
+    font-family: var(--font-mono) !important;
+    font-size: 12px !important;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint) !important;
+    margin: 1.8em 0 0 !important;
+    padding-top: 1.4em;
+    border-top: 1px solid var(--color-border-subtle);
+    max-width: none !important;
+  }
+
+  @media (max-width: 720px) {
+    :global(.flash-report) {
+      padding: 1.4em 1.4em;
+    }
+    :global(.flash-report__header),
+    :global(.flash-report__body) {
+      font-size: 12px !important;
+    }
+  }
+
+  /* Dossier log — chronological table merging en-route update + end-of-dossier colophon */
+  .dossier-log {
+    position: relative;
+    padding: 0;
+    background:
+      radial-gradient(ellipse at 70% 60%, rgba(184, 92, 56, 0.05), transparent 60%),
+      var(--color-bg);
+    overflow: hidden;
+  }
+
+  .dossier-log::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--color-border-subtle) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-border-subtle) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  .dossier-log__inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2.4em;
+    padding: 8vh 8vw;
+  }
+
+  .dossier-log__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .dossier-log__stamp {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+
+  .dossier-log__stamp-mark {
+    width: 8px;
+    height: 8px;
+    background: var(--color-warm);
+    border-radius: 50%;
+    animation: briefing-pulse 2s ease-in-out infinite;
+  }
+
+  .dossier-log__head {
+    max-width: 880px;
+  }
+
+  .dossier-log__head .essay-ov {
+    color: var(--color-warm);
+    margin-bottom: 0.8em;
+  }
+
+  .dossier-log__title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.5em;
+    color: var(--color-text);
+  }
+
+  .dossier-log__deck {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    line-height: 1.55;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .dossier-log__table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  .dossier-log__table thead th {
+    text-align: left;
+    padding: 14px 18px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: color-mix(in srgb, var(--color-bg) 60%, transparent);
+  }
+
+  .dossier-log__table tbody th,
+  .dossier-log__table tbody td {
+    text-align: left;
+    padding: 18px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--color-border-subtle);
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+
+  .dossier-log__table tbody th {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    color: var(--color-text);
+    letter-spacing: -0.01em;
+    width: 22%;
+  }
+
+  .dossier-log__table tbody tr:last-child th,
+  .dossier-log__table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .dossier-log__row--active {
+    background: color-mix(in srgb, var(--color-warm) 6%, transparent);
+  }
+
+  .dossier-log__row--active th {
+    color: var(--color-warm);
+  }
+
+  .dossier-log__row--active td strong {
+    color: var(--color-warm);
+    font-weight: 500;
+  }
+
+  .dossier-log__back {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-warm);
+    text-decoration: none;
+    align-self: flex-start;
+    transition: color var(--duration-fast) ease;
+  }
+
+  .dossier-log__back:hover {
+    color: var(--color-warm-light, var(--color-warm));
+  }
+
+  @media (max-width: 720px) {
+    .dossier-log__inner {
+      padding: 5vh 5vw;
+      gap: 1.8em;
+    }
+    .dossier-log__table {
+      font-size: 12px;
+    }
+    .dossier-log__table thead {
+      display: none;
+    }
+    .dossier-log__table tbody tr {
+      display: grid;
+      grid-template-columns: 1fr;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+    .dossier-log__table tbody tr:last-child {
+      border-bottom: none;
+    }
+    .dossier-log__table tbody th,
+    .dossier-log__table tbody td {
+      padding: 4px 0;
+      border-bottom: none;
+      width: auto;
+    }
+    .dossier-log__table tbody th {
+      font-size: var(--text-lg);
+      margin-bottom: 4px;
+    }
+    .dossier-log__table tbody td::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-text-faint);
+      margin-top: 6px;
+    }
   }
 </style>
