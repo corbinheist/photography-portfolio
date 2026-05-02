@@ -46,7 +46,6 @@ const albums = defineCollection({
 const essays = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/data/essays' }),
   schema: z.object({
-    slug: z.string(),
     collectionId: z.string(),
     title: z.string(),
     description: z.string().optional(),
@@ -59,7 +58,7 @@ const essays = defineCollection({
         width: z.number().int().positive(),
         height: z.number().int().positive(),
         lqip: z.string(),
-        title: z.string().optional(),
+        title: z.string(),
         exif: z
           .object({
             camera: z.string().optional(),

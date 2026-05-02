@@ -8,10 +8,14 @@
  *   pnpm tsx scripts/lift-essay-photos.ts --essay=wise-essay
  *   pnpm tsx scripts/lift-essay-photos.ts --write
  *
- * Out of scope (this iteration): rewriting the .astro file to import the
- * lifted YAML, mutating collection YAMLs (essay reference list,
- * `albums` → `archiveAlbums` rename). Those land in a follow-up pass once
- * the YAML output shape is approved.
+ * What --write does (in order, per-essay):
+ *   1. Emits src/data/essays/<collectionId>-<slug>.yaml.
+ *   2. Rewrites the .astro file: removes the inline `const photos = [...]`
+ *      and any `const CDN = '...'`, inserts an `import { getEntry }`
+ *      and an `await getEntry('essays', '<id>')` lookup.
+ *   3. Mutates the collection YAML: replaces the legacy `essays: [{}]`
+ *      blob with a string-id reference list and renames `albums:`
+ *      to `archiveAlbums:`.
  */
 
 import fs from 'node:fs';
@@ -28,7 +32,6 @@ interface Photo {
 }
 
 interface EssayDoc {
-  slug: string;
   collectionId: string;
   title: string;
   description?: string;
@@ -49,6 +52,8 @@ const SKIP_FILES = new Set(['index.astro', 'briefing.astro']);
 const args = process.argv.slice(2);
 const dryRun = !args.includes('--write');
 const printYaml = args.includes('--print');
+const printRewrite = args.includes('--print-rewrite');
+const mutateCollections = args.includes('--collections');
 const filter = args.find((a) => a.startsWith('--essay='))?.split('=')[1];
 
 type EssayPath = { collectionId: string; slug: string; absPath: string };
@@ -175,6 +180,207 @@ function deriveCoverIndex(photos: Photo[], coverUrl?: string): number {
   return idx >= 0 ? idx : 0;
 }
 
+/**
+ * Find the byte range [start, endExclusive) of the full
+ * `const photos = [ ... ];` declaration including the trailing semicolon.
+ * Walks the source bracket-by-bracket, tracking strings and comments so
+ * brackets inside them don't fool the depth counter.
+ */
+function findPhotosDeclRange(source: string): { start: number; end: number } {
+  const declMatch = source.match(/const\s+photos\s*=\s*\[/);
+  if (!declMatch || declMatch.index === undefined) {
+    throw new Error('no `const photos = [` declaration found in source');
+  }
+  const declStart = declMatch.index;
+  const openBracket = source.indexOf('[', declStart);
+
+  // If a /** ... */ doc comment immediately precedes the declaration (only
+  // whitespace between), absorb it — its content describes the array we're
+  // about to delete and would otherwise dangle. Find the LAST doc comment
+  // in `before`, then only absorb it if nothing but whitespace separates
+  // its `*/` from `declStart`.
+  let start = declStart;
+  const before = source.slice(0, declStart);
+  const docCommentRe = /\/\*\*[\s\S]*?\*\//g;
+  let lastDocComment: RegExpExecArray | null = null;
+  let m: RegExpExecArray | null;
+  while ((m = docCommentRe.exec(before)) !== null) {
+    lastDocComment = m;
+  }
+  if (lastDocComment) {
+    const tail = before.slice(lastDocComment.index + lastDocComment[0].length);
+    if (/^\s*$/.test(tail)) {
+      start = lastDocComment.index;
+    }
+  }
+
+  let depth = 0;
+  let inString: string | null = null;
+  let inComment: 'line' | 'block' | null = null;
+  let escape = false;
+  let closeBracket = -1;
+
+  for (let i = openBracket; i < source.length; i++) {
+    const ch = source[i];
+    const next = source[i + 1];
+
+    if (inComment === 'line') { if (ch === '\n') inComment = null; continue; }
+    if (inComment === 'block') {
+      if (ch === '*' && next === '/') { inComment = null; i++; }
+      continue;
+    }
+    if (inString) {
+      if (escape) { escape = false; continue; }
+      if (ch === '\\') { escape = true; continue; }
+      if (ch === inString) { inString = null; continue; }
+      if (inString === '`' && ch === '$' && next === '{') {
+        let braceDepth = 1;
+        i += 2;
+        while (i < source.length && braceDepth > 0) {
+          if (source[i] === '{') braceDepth++;
+          else if (source[i] === '}') braceDepth--;
+          i++;
+        }
+        i--;
+      }
+      continue;
+    }
+    if (ch === '/' && next === '/') { inComment = 'line'; i++; continue; }
+    if (ch === '/' && next === '*') { inComment = 'block'; i++; continue; }
+    if (ch === '"' || ch === "'" || ch === '`') { inString = ch; continue; }
+
+    if (ch === '[') depth++;
+    else if (ch === ']') {
+      depth--;
+      if (depth === 0) { closeBracket = i; break; }
+    }
+  }
+  if (closeBracket === -1) throw new Error('unmatched `[` in photos declaration');
+
+  let end = closeBracket + 1;
+  if (source[end] === ';') end++;
+  return { start, end };
+}
+
+/**
+ * Rewrite an essay .astro file to consume photo data from the `essays`
+ * content collection instead of the inline array.
+ *
+ * Removes:  `const CDN = '...';` (when present)
+ *           `const photos = [ ... ];`
+ * Inserts:  `import { getEntry } from 'astro:content';` (if missing)
+ *           `const essay = await getEntry('essays', '<id>');`
+ *           `const photos = essay!.data.photos;`
+ */
+function rewriteEssayAstro(
+  source: string,
+  collectionId: string,
+  slug: string,
+): string {
+  const fmStart = source.indexOf('---');
+  if (fmStart !== 0) throw new Error('expected file to start with ---');
+  const fmContentStart = source.indexOf('\n', fmStart) + 1;
+  const fmContentEnd = source.indexOf('\n---', fmContentStart);
+  if (fmContentEnd === -1) throw new Error('frontmatter close delimiter not found');
+
+  let fm = source.slice(fmContentStart, fmContentEnd);
+
+  // 1. Replace the photos declaration with the lookup.
+  const range = findPhotosDeclRange(fm);
+  const id = `${collectionId}-${slug}`;
+  const lookup =
+    `const essay = await getEntry('essays', '${id}');\n` +
+    `const photos = essay!.data.photos;`;
+  fm = fm.slice(0, range.start) + lookup + fm.slice(range.end);
+
+  // 2. Remove `const CDN = '...';` line if present (no longer used).
+  fm = fm.replace(
+    /^const\s+CDN\s*=\s*['"`][^'"`]+['"`]\s*;?\s*\n+/m,
+    '',
+  );
+
+  // 3. Ensure `import { getEntry } from 'astro:content';` is present.
+  if (!/import[^;]*\bgetEntry\b[^;]*from\s*['"]astro:content['"]/.test(fm)) {
+    // Insert after the LAST top-level import statement.
+    const importRe = /^import\s+[\s\S]*?from\s*['"][^'"]+['"]\s*;?$/gm;
+    let lastImportEnd = 0;
+    let m: RegExpExecArray | null;
+    while ((m = importRe.exec(fm)) !== null) {
+      lastImportEnd = m.index + m[0].length;
+    }
+    if (lastImportEnd === 0) {
+      // No imports found — prepend.
+      fm = `import { getEntry } from 'astro:content';\n` + fm;
+    } else {
+      fm =
+        fm.slice(0, lastImportEnd) +
+        `\nimport { getEntry } from 'astro:content';` +
+        fm.slice(lastImportEnd);
+    }
+  }
+
+  return source.slice(0, fmContentStart) + fm + source.slice(fmContentEnd);
+}
+
+interface CollectionYamlMutation {
+  collectionPath: string;
+  changed: boolean;
+  renamedAlbums: boolean;
+  replacedEssaysBlob: boolean;
+  newEssaysList: string[] | null;
+}
+
+/**
+ * Mutate a collection YAML text:
+ *   - Rename `albums:` → `archiveAlbums:`
+ *   - Replace `essays: [{...}]` blob with `essays: [<id>, ...]` string refs
+ * Comment-preserving via `yaml.parseDocument`. Pure (no I/O).
+ */
+function applyCollectionYamlMutation(
+  yamlText: string,
+  collectionId: string,
+): { text: string; mutation: CollectionYamlMutation } {
+  const doc = YAML.parseDocument(yamlText);
+  let renamedAlbums = false;
+  let replacedEssaysBlob = false;
+  let newEssaysList: string[] | null = null;
+
+  if (doc.has('albums')) {
+    const albumsNode = doc.get('albums', true);
+    doc.delete('albums');
+    doc.set('archiveAlbums', albumsNode);
+    renamedAlbums = true;
+  }
+
+  // doc.get('essays') returns a YAMLSeq node, not a plain JS array, so
+  // round-trip via toJS() to inspect the shape.
+  const essaysJS = (doc.toJS() as { essays?: unknown }).essays;
+  const isBlobList =
+    Array.isArray(essaysJS) &&
+    essaysJS.length > 0 &&
+    typeof essaysJS[0] === 'object' &&
+    essaysJS[0] !== null &&
+    'slug' in (essaysJS[0] as object);
+  if (isBlobList) {
+    newEssaysList = (essaysJS as { slug: string }[])
+      .filter((e) => typeof e.slug === 'string')
+      .map((e) => `${collectionId}-${e.slug}`);
+    doc.set('essays', newEssaysList);
+    replacedEssaysBlob = true;
+  }
+
+  return {
+    text: doc.toString(),
+    mutation: {
+      collectionPath: '',
+      changed: renamedAlbums || replacedEssaysBlob,
+      renamedAlbums,
+      replacedEssaysBlob,
+      newEssaysList,
+    },
+  };
+}
+
 function main() {
   const essays = findEssayFiles();
   if (essays.length === 0) {
@@ -203,7 +409,6 @@ function main() {
       const coverPhotoIndex = deriveCoverIndex(photos, blob.coverImage?.url);
 
       const doc: EssayDoc = {
-        slug,
         collectionId,
         title: blob.title ?? slug,
         ...(blob.description ? { description: blob.description } : {}),
@@ -227,12 +432,26 @@ function main() {
         console.log('   ─────────────────────────');
       }
 
+      // 2. Compute the .astro rewrite.
+      const rewritten = rewriteEssayAstro(source, collectionId, slug);
+      const rewriteBytesDelta = rewritten.length - source.length;
+
+      if (printRewrite) {
+        const head = rewritten.split('\n').slice(0, 30).join('\n');
+        console.log('   ────── rewritten frontmatter (first 30 lines) ──────');
+        console.log(head.split('\n').map((l) => `   │ ${l}`).join('\n'));
+        console.log('   ────────────────────────────────────────────────────');
+      }
+
       if (dryRun) {
-        console.log(`   [dry-run] would write ${yamlOut.length} bytes`);
+        console.log(`   [dry-run] yaml:    ${yamlOut.length} bytes`);
+        console.log(`   [dry-run] rewrite: ${rewriteBytesDelta >= 0 ? '+' : ''}${rewriteBytesDelta} bytes vs original`);
       } else {
         if (!fs.existsSync(ESSAYS_DIR)) fs.mkdirSync(ESSAYS_DIR, { recursive: true });
         fs.writeFileSync(outPath, yamlOut, 'utf-8');
-        console.log(`   ✓ wrote (${yamlOut.length} bytes)`);
+        fs.writeFileSync(absPath, rewritten, 'utf-8');
+        console.log(`   ✓ wrote yaml (${yamlOut.length} bytes)`);
+        console.log(`   ✓ rewrote .astro (${rewriteBytesDelta >= 0 ? '+' : ''}${rewriteBytesDelta} bytes)`);
       }
       okCount++;
     } catch (err) {
@@ -242,7 +461,42 @@ function main() {
     console.log();
   }
 
-  console.log(`Done. ${okCount} processed, ${skipCount} skipped.`);
+  if (!mutateCollections) {
+    console.log();
+    console.log('Skipping collection YAML mutations (pass --collections to apply).');
+    console.log(`Done. ${okCount} essays processed, ${skipCount} skipped.`);
+    if (dryRun) console.log('Re-run with --write to apply.');
+    return;
+  }
+
+  // 3. Mutate collection YAMLs (rename albums → archiveAlbums; replace essays blob).
+  console.log('── collection YAMLs ──');
+  const collectionFiles = fs
+    .readdirSync(COLLECTIONS_DIR)
+    .filter((f) => f.endsWith('.yaml'));
+  for (const cf of collectionFiles) {
+    const collectionId = cf.replace(/\.yaml$/, '');
+    const cPath = path.join(COLLECTIONS_DIR, cf);
+    const before = fs.readFileSync(cPath, 'utf-8');
+    const { text: after, mutation } = applyCollectionYamlMutation(before, collectionId);
+
+    if (!mutation.changed) {
+      console.log(`   ${collectionId}: unchanged`);
+      continue;
+    }
+
+    const parts: string[] = [];
+    if (mutation.renamedAlbums) parts.push('albums→archiveAlbums');
+    if (mutation.replacedEssaysBlob) parts.push(`essays→[${mutation.newEssaysList?.join(', ')}]`);
+    console.log(`   ${collectionId}: ${parts.join(' · ')}`);
+
+    if (!dryRun) {
+      fs.writeFileSync(cPath, after, 'utf-8');
+    }
+  }
+
+  console.log();
+  console.log(`Done. ${okCount} essays processed, ${skipCount} skipped.`);
   if (dryRun) console.log('Re-run with --write to apply.');
 }
 
