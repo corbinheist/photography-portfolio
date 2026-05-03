@@ -1,10 +1,12 @@
 ---
 /**
- * Map inset slide — location card + real MapLibre map.
- * Two-column layout: left has text card with metadata,
- * right hosts the reusable <Map> component (MapLibre GL).
+ * Map inset slide — location card on the left, persistent-map slot on
+ * the right. The right column does NOT mount its own MapLibre instance;
+ * instead the persistent map (in BaseLayout) docks into this slot when
+ * the slide enters viewport. The data attrs on the slot tell the
+ * persistent-map controller where to fly the camera and which markers
+ * to surface.
  */
-import Map from '@components/Map.astro';
 
 interface MarkerDef {
   lng: number;
@@ -23,7 +25,12 @@ interface Props {
   markers?: MarkerDef[];
   regions?: GeoJSON.FeatureCollection;
   route?: GeoJSON.Feature;
-  theme?: string;
+  /**
+   * Optional collection-id binding so the persistent map can surface
+   * the same regional polygon set that lives on /work/[collection].
+   * Falls back to no-collection (markers + route only).
+   */
+  collectionId?: string;
 }
 
 const {
@@ -35,7 +42,7 @@ const {
   markers = [],
   regions,
   route,
-  theme = 'default',
+  collectionId,
 } = Astro.props;
 ---
 
@@ -57,16 +64,17 @@ const {
     )}
   </div>
 
-  <div class="essay-map-inset__viz">
-    <Map
-      center={center}
-      zoom={zoom}
-      markers={markers}
-      regions={regions}
-      route={route}
-      interactive={false}
-      theme={theme}
-    />
+  <div
+    class="essay-map-inset__viz"
+    data-map-inset-slot
+    data-map-target-center={JSON.stringify(center)}
+    data-map-target-zoom={String(zoom)}
+    data-map-active-collection={collectionId}
+    data-map-inset-markers={markers.length > 0 ? JSON.stringify(markers) : undefined}
+    data-map-inset-route={route ? JSON.stringify(route) : undefined}
+    data-map-inset-regions={regions ? JSON.stringify(regions) : undefined}
+  >
+    <!-- Persistent map (in BaseLayout) docks here on scroll. -->
   </div>
 </section>
 
@@ -126,15 +134,12 @@ const {
     letter-spacing: 0.12em;
   }
 
+  /* Slot reserves the right column. The persistent map (in BaseLayout,
+     position: fixed) paints over it — events pass through. */
   .essay-map-inset__viz {
     position: relative;
     background: var(--color-surface);
-  }
-
-  /* .map-container is rendered inside <Map> child component */
-  .essay-map-inset__viz :global(.map-container) {
-    width: 100%;
-    height: 100dvh;
+    pointer-events: none;
   }
 
   @media (max-width: 768px) {

@@ -51,6 +51,8 @@ const photos = [
   title="The Patagonia Expedition Briefing"
   description="Pre-trip briefing — Estancia Cerro Guido, Torres del Paine. Six days, three altitudes, one window."
   dossier={{ num: '014', label: 'PATAGONIA · BRIEFING', totalFrames: 22 }}
+  mapLayout="hidden"
+  mapActiveCollection="patagonia"
 >
 
   <!-- 1. Briefing card — text-only hero (no frames yet) -->
@@ -128,6 +130,7 @@ const photos = [
     ]}
     center={[-72.98, -51.02]}
     zoom={8.5}
+    collectionId="patagonia"
     markers={markers}
     regions={briefingRegions as any}
   />

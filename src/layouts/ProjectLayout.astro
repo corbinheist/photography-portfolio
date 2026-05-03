@@ -21,15 +21,38 @@ interface Props {
     /** Total image frames in the essay */
     totalFrames: number;
   };
+  mapLayout?: 'world' | 'region' | 'hidden';
+  mapTargetCenter?: [number, number];
+  mapTargetZoom?: number;
+  mapActiveCollection?: string;
 }
 
-const { title, description, image, snap = false, progress = false, dossier } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  snap = false,
+  progress = false,
+  dossier,
+  mapLayout,
+  mapTargetCenter,
+  mapTargetZoom,
+  mapActiveCollection,
+} = Astro.props;
 const isDossier = !!dossier;
 const isSnap = snap || isDossier;
 const showOldProgress = progress && !isDossier;
 ---
 
-<BaseLayout title={title} description={description} image={image}>
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  mapLayout={mapLayout}
+  mapTargetCenter={mapTargetCenter}
+  mapTargetZoom={mapTargetZoom}
+  mapActiveCollection={mapActiveCollection}
+>
   {isSnap && (
     <script is:inline>
       document.body.setAttribute('data-essay', '');

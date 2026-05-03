@@ -195,13 +195,12 @@ const visibleAlbums = albums.filter((a: any) => !a.data.draft);
   }
 
   /* Persistent-map placeholder — reserves vertical space matching the
-     map shell (which is position: fixed in BaseLayout). The carousel
-     follows immediately below. Pass through pointer events so the map
-     beneath catches hover/click. */
+     map shell (which is position: fixed in BaseLayout). Sized so the
+     carousel below lands in-view at scroll=0 on a standard desktop. */
   .map-section--persistent {
-    height: 75vh;
-    min-height: 480px;
-    max-height: 800px;
+    height: calc(100dvh - 460px);
+    min-height: 360px;
+    max-height: 720px;
     padding: 0;
     margin: 0;
     pointer-events: none;
