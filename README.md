@@ -61,16 +61,31 @@ Fonts are loaded via Google Fonts in `BaseLayout.astro` — no local files neede
 
 ## Content Architecture
 
-Content is organized as YAML files in a three-level hierarchy, with optional photo essays and map data per collection:
+The site is **geocentric**: collections represent regions of the world, and essays are the canonical content unit within a region. Albums survive as a legacy archive on each collection page.
 
 ```
-Collections → Albums → Photos
- (e.g. "Morocco" → "Nomads of Djebel Saghro" → individual photos)
-      └──→ Essays (snap-scroll photo stories)
-      └──→ Map (interactive MapLibre GL map with routes + markers)
+Collection (region)            e.g. "Morocco"
+   ├── Essay (story)               "The Bougmez Underfoot"
+   │     └── Photos[]              ordered photo manifest
+   ├── Essay …
+   └── archiveAlbums[]              legacy album refs (collapsed by default)
+
+Photos (atomic) ── referenced by essays + albums
+Settings (site-wide)
 ```
 
-Each level lives in its own directory under `src/data/` and is validated by Zod schemas in `src/content.config.ts`.
+Each piece is a YAML file under `src/data/`, validated by Zod schemas in `src/content.config.ts`. The relevant content collections are:
+
+| Collection | Source | What it carries |
+|---|---|---|
+| `photos` | `src/data/photos/*.yaml` | A single photo: CDN url, dimensions, lqip, EXIF, tags |
+| `albums` | `src/data/albums/*.yaml` | A flat ordered list of photo IDs (legacy unit; archive only) |
+| `essays` | `src/data/essays/*.yaml` | An essay's full photo manifest, ordered, with optional EXIF per frame |
+| `photoCollections` | `src/data/collections/*.yaml` | A region: title, intro, map config, list of essay IDs, archive album IDs |
+| `settings` | `src/data/settings.yaml` | Site-wide config |
+| `blog` | Substack RSS (custom loader) | Notes / journal posts |
+
+Essay entries are referenced from collections by ID (e.g. `morocco-wise-essay`) — the filename is the source of truth, not a `slug` field.
 
 ### Photos (`src/data/photos/*.yaml`)
 
@@ -94,6 +109,8 @@ sortOrder: 1
 
 ### Albums (`src/data/albums/*.yaml`)
 
+Albums are the legacy unit. They still exist for galleries that haven't been turned into essays. On collection pages they show in a collapsed `<details>` archive section.
+
 ```yaml
 title: Iceland 2024
 description: Southern Iceland — northern lights, black sand, glaciers.
@@ -101,7 +118,6 @@ coverPhoto: iceland-001          # references a photo ID
 photos:                           # ordered list of photo IDs
   - iceland-001
   - iceland-002
-  - iceland-003
 date: "2024-09"
 location: Iceland
 layout: masonry                   # masonry | grid | horizontal-scroll
@@ -109,36 +125,57 @@ draft: false
 sortOrder: 1
 ```
 
+### Essays (`src/data/essays/<collection>-<slug>.yaml`)
+
+The canonical "supercharged album" — a full photo manifest with optional per-frame EXIF, plus essay-level metadata. Each essay's `.astro` page reads its photos via `getEntry('essays', '<id>')`.
+
+```yaml
+collectionId: morocco
+title: The Bougmez Underfoot
+description: One day in Morocco's High Atlas — gorge, pass, and darkness.
+coverPhotoIndex: 0                # which photo is the cover
+photos:
+  - url: https://cdn.example.com/photos/heist-wise-essay-027-cnh_4995
+    width: 8192
+    height: 5464
+    lqip: data:image/webp;base64,…
+    title: Into the Gorge
+    exif:                         # optional
+      camera: Canon R5m2
+      lens: RF 50mm f/1.2
+      iso: 400
+  - …
+```
+
+The migration script that lifts inline `const photos = [...]` arrays from essay `.astro` files into these YAMLs lives at `scripts/lift-essay-photos.ts` (default `--dry-run`; pass `--write` to apply).
+
 ### Collections (`src/data/collections/*.yaml`)
 
 ```yaml
 title: Morocco
-description: Atlas to Sahara — trade routes, kasbahs, and nomadic life.
-albums:
-  - morocco                       # ordered list of album IDs
-essays:                           # optional snap-scroll photo essays
-  - slug: nomads-essay
-    title: Nomads of Djebel Saghro
-    description: Semi-nomadic Amazigh herders in the Anti-Atlas.
-    coverImage:
-      url: https://cdn.example.com/photos/morocco-001
-      width: 2400
-      height: 1600
-      lqip: data:image/webp;base64,...
-    photoCount: 24
+description: Nomad camps, trail running, and the terrain between the Atlas and the Sahara.
+archiveAlbums:                    # legacy albums shown in the archive <details>
+  - morocco
+essays:                            # ordered essay entry IDs
+  - morocco-nomads-essay
+  - morocco-ksar-essay
+  - morocco-wise-essay
 coverPhoto: morocco-001
-sortOrder: 1
-map:                              # optional interactive map
-  center: [-6.5, 31.8]           # [lng, lat]
-  zoom: 6
+sortOrder: 8
+map:                               # optional regional map
+  center: [-6.9, 31.2]            # [lng, lat]
+  zoom: 7.8
   regionsFile: morocco-regions.json
   routeFile: morocco-route.json
   markers:
-    - label: Marrakech
-      lng: -8.0
-      lat: 31.63
-      target: morocco
+    - label: Aït Bougmez Valley
+      lng: -6.30
+      lat: 31.62
+      num: "06"
+      target: /work/morocco/wise-essay
 ```
+
+Markers carry a `target` URL — clicking them navigates straight to the essay (or album) they represent. The collection page filters carousel frames by which marker's region the user is hovering, so each region polygon "owns" a set of frames.
 
 ### Site Settings (`src/data/settings.yaml`)
 
@@ -174,6 +211,14 @@ The landing page uses a briefing/dossier design language:
 | `ManifestSection` | Numbered list of all collections with status, coordinates, and frame counts |
 | `EssaysPreview` | Latest photo essays as a numbered list |
 | `ColophonTeaser` | About/colophon section teaser |
+
+### `/work` — region dossier
+
+`/work/index.astro` is the world view. Right-hand panel lists all regions; each row is a collapsible button (`.dossier-collection`) that expands to show its essays nested underneath. The world map shows one numbered marker per region. On mobile the dossier panel becomes a bottom sheet (`.story-sheet`); tapping a region opens a sheet with its essays.
+
+### `/work/[collection]` — region page
+
+A real region page. Top-down: breadcrumb + title + tagline → regional map → photo carousel (round-robin frames from every linked essay, with sprocket-perforated film-roll styling) → essay cards (`EssayCard`) → `<details>` archive of legacy albums. The carousel's frame highlight is wired to map-marker hover via a `MutationObserver` on `.map-marker--active`, so hovering "Aït Bougmez Valley" (a marker that targets wise-essay) lights up the wise-essay frames in the strip.
 
 ### Navigation: SideRail + CommandPalette
 
@@ -239,9 +284,49 @@ The `<Photo />` component renders a `<picture>` element with AVIF/WebP `srcset` 
 
 ## Maps
 
-Each collection can include an interactive map (MapLibre GL + MapTiler tiles) showing the travel route, region boundaries, and album markers. Map configuration lives in the collection YAML (`map` field) and geospatial data lives in `src/data/maps/` as GeoJSON files.
+The site has **one persistent MapLibre instance** that lives in `BaseLayout` and survives every page swap via `transition:persist="map"`. Pages don't mount their own map — they declare a layout role + target camera state, and the persistent shell does the rest.
 
-The `<Map />` component (`src/components/Map.astro`) is reusable — it renders on collection landing pages with region highlights, route lines, and clickable markers that link to albums. GeoJSON boundary and route files are stored in `src/data/maps/`.
+### Layout roles
+
+`<body data-map-layout>` selects a role per page:
+
+| Role | When | What it shows |
+|---|---|---|
+| `world` | `/work` | World view, all regions' country polygons + numbered markers |
+| `region` | `/work/[collection]` | Zoomed to that region's center; only its sub-region polygons + markers |
+| `inset` | Active essay map slide (`EssaySlideMapInset`) | Smaller rect sized to the slide; flies further into the essay's specific zoom |
+| `hidden` | Everywhere else (`/about`, `/blog`, etc.) | Map shell collapsed; instance stays alive |
+
+### Slot-driven positioning
+
+The persistent map is `position: fixed`, but its rect is JS-driven, not CSS-driven. Pages mark a slot element with `data-map-presence-anchor` (`/work` uses `.map-hero__map`, `/work/[collection]` uses `.map-section--persistent`). A `requestAnimationFrame` loop in `persistent-map-init.ts` reads the slot's `getBoundingClientRect()` every frame and writes the result into `--map-shell-{top,left,width,height}` on `<body>`, so the map *appears* to scroll with the page even though it's fixed-positioned. Essay map slides take over the slot via an `IntersectionObserver` on `[data-map-inset-slot]`.
+
+### Markers + regions
+
+`PersistentMap.astro` SSR-aggregates **all** collection markers + region polygons from every collection YAML and the matching `*-country.json` / `*-regions.json` files in `src/data/maps/`. Each entity is tagged with `view` (`world` | `region`) and `collectionId`; the runtime controller filters by current layout role:
+
+- **Region polygons** — `map.setFilter('regions-fill', ['all', ['==', ['get', 'view'], 'region'], ['==', ['get', 'collectionId'], '<id>']])` etc. Re-applied on `map.once('idle', …)` so the asynchronously-added `regions-hatch` layer doesn't slip through unfiltered.
+- **DOM markers** — toggle a `.map-marker--inactive` class per marker based on view + active collection.
+
+Marker `num` is globally unique (`world-01`, `morocco-01`, …) so highlight wiring across collections doesn't collide; a separate `displayNum` keeps the visible badge clean (`01`).
+
+### Camera
+
+`map.flyTo({ center, zoom, duration: 1200, essential: true })` animates the camera on every page swap. `prefers-reduced-motion: reduce` substitutes `jumpTo`. The persistent map is `interactive: false` — the camera is app-controlled; users can't scroll-zoom away from the declared view.
+
+### Click behavior
+
+- **Desktop `/work`**: clicking a marker / region locks the map (highlight + auto-expand the matching dossier row).
+- **Desktop region / inset / hidden**: clicking navigates directly to the marker's `target`.
+- **Mobile (anywhere)**: clicking always navigates. No lock.
+
+### Files
+
+- `src/components/PersistentMap.astro` — SSR aggregation + the `<div transition:persist="map">` shell
+- `src/scripts/persistent-map-init.ts` — runtime controller (rect tracking, camera, filtering, observers)
+- `src/scripts/map-init.ts` — generic MapLibre setup (still used for any page that mounts a `<Map>` directly; exposes `__map`, `__setLocked`, `__setHovered` on its container so external scripts can drive the map)
+- `src/components/Map.astro` — the reusable Map component the persistent shell wraps
+- `src/data/maps/*.json` — per-collection region polygons and routes
 
 ## Animation System
 
@@ -291,14 +376,17 @@ photography-portfolio/
 │   │   ├── essay/              # EssaySlide* components, EssaySequence, EssayPlaceholder
 │   │   ├── global/             # Header, Footer, SideRail, CommandPalette, ThemeToggle, SEO, SubscribeForm, SubscribeBanner
 │   │   ├── home/               # HeroBriefing, DispatchCallout, ManifestSection, EssaysPreview, ColophonTeaser, etc.
-│   │   ├── photo/              # Photo, PhotoGrid, AlbumCard, PhotoLightbox
+│   │   ├── photo/              # Photo, PhotoGrid, AlbumCard, EssayCard, PhotoLightbox
 │   │   ├── ui/                 # Button, Container
-│   │   └── Map.astro           # Reusable MapLibre GL map component
+│   │   ├── CollectionCarousel.astro  # Round-robin film-roll on /work/[collection]
+│   │   ├── PersistentMap.astro       # SSR-aggregated persistent map shell
+│   │   └── Map.astro                 # Reusable MapLibre GL map component
 │   ├── content.config.ts       # Zod schemas for all content collections
 │   ├── data/
-│   │   ├── albums/             # Album YAML files
-│   │   ├── collections/        # Collection YAML files
-│   │   ├── maps/               # GeoJSON files (regions, routes, country boundaries)
+│   │   ├── albums/             # Album YAML files (legacy unit; archive only)
+│   │   ├── collections/        # Region YAML files (essays + archiveAlbums)
+│   │   ├── essays/             # Per-essay photo manifests
+│   │   ├── maps/               # GeoJSON: country polygons, sub-region polygons, routes
 │   │   ├── loaders/
 │   │   │   └── substack-loader.ts
 │   │   ├── photos/             # Photo YAML files
@@ -335,6 +423,9 @@ photography-portfolio/
 │   │   ├── essay-nav.ts        # Essay keyboard nav, progress bar, nav dots
 │   │   ├── lightbox.ts         # Fullscreen photo viewer logic
 │   │   ├── map-init.ts         # MapLibre GL map initialization
+│   │   ├── persistent-map-init.ts # Persistent-map runtime: rect tracker,
+│   │   │                          # camera, region/marker filters, observers
+│   │   ├── work-map-interaction.ts # Region dossier coordinator on /work
 │   │   ├── subscribe.ts        # Email subscribe form logic
 │   │   └── theme.ts            # Dark/light mode persistence
 │   └── styles/
@@ -511,27 +602,57 @@ sortOrder: 1
 
 Then add the album ID to a collection's `albums` list in `src/data/collections/`.
 
+### New Essay
+
+An essay is a `.astro` page under `src/pages/work/<collection>/<slug>.astro` plus a YAML photo manifest at `src/data/essays/<collection>-<slug>.yaml`. The fastest path is to author the essay's slide composition inline in the `.astro` (using `EssaySlideHero`, `EssaySlideMapInset`, etc.) and lift the photo array via the migration script:
+
+```sh
+# 1. Drop a `const photos = [{...}, …]` array at the top of the .astro,
+#    referencing CDN URLs, dimensions, and lqip blobs.
+# 2. Add the essay's metadata (title, description) to the parent
+#    collection YAML's `essays:` reference list — but for the lift script
+#    to pick up title/description, just add a temporary blob first:
+#
+#    essays:
+#      - slug: my-new-essay
+#        title: My New Essay
+#        description: …
+
+# 3. Run the lifter (default --dry-run)
+pnpm tsx scripts/lift-essay-photos.ts --essay=my-new-essay
+pnpm tsx scripts/lift-essay-photos.ts --essay=my-new-essay --print  # show YAML
+pnpm tsx scripts/lift-essay-photos.ts --essay=my-new-essay --write  # apply
+
+# 4. The lifter rewrites the .astro to read photos from the content
+#    collection (`getEntry('essays', 'morocco-my-new-essay')`).
+```
+
+Once lifted, the essay is referenced from the collection by its content-collection ID (filename without extension), e.g. `morocco-my-new-essay`.
+
 ### New Collection
 
 Create a YAML file in `src/data/collections/`:
 
 ```yaml
 title: My Collection
-description: Description here.
-albums:
+description: Region tagline.
+archiveAlbums:                   # legacy albums (optional)
   - album-id
+essays:                          # essay entry IDs (filename stems)
+  - mycollection-essay-one
 coverPhoto: photo-id
 sortOrder: 1
-map:                            # optional
+map:                             # optional regional map
   center: [-8.0, 31.6]
   zoom: 6
-  regionsFile: my-regions.json  # place in src/data/maps/
+  regionsFile: my-regions.json   # place in src/data/maps/
   routeFile: my-route.json
   markers:
     - label: Marrakech
       lng: -8.0
       lat: 31.63
-      target: album-id
+      num: "01"
+      target: /work/my-collection/some-essay
 ```
 
-The new collection will automatically appear at `/work/` and generate routes at `/work/[collection-id]/`. If a `map` is configured, the collection landing page will render an interactive map.
+The new collection automatically appears at `/work/` (in the dossier panel) and at `/work/[collection-id]/`. If a `map` is configured, the persistent map flies to its center on navigation.
