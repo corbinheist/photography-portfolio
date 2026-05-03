@@ -1,5 +1,7 @@
 # Work Refactor — Geocentric Hierarchy
 
+**Status: shipped.** Phases 1–5 are merged to `main` and deployed. Phase 4b part 2 (home page hero) is intentionally deferred. See [Phase rollout](#phase-rollout) for the as-built record + [What changed vs. the plan](#what-changed-vs-the-plan) for divergences.
+
 **Goal:** Restore the `Work → Collection → Essay` tree as the navigational spine of the site. Essays absorb albums (albums become archive). Collection pages become real region pages with their own copy and a carousel aggregated from their essays. The world map zooms continuously across page transitions, site-wide.
 
 **Non-goals:** redesigning the essay reader, reworking blog/notes, touching the gallery page, mobile experience (deferred to a final pass).
@@ -335,6 +337,34 @@ Ship order: **1 → 2 → 3 → 4 → 5.** 1 is pure data and merges cleanly. 2 
 ## Out of scope for this refactor
 
 - Redesigning the essay slide library
-- Touching `/work/patagonia/briefing.astro` (it's a dispatch, not an essay — leave structure)
 - New typography or color tokens
-- Folding essay map insets into the persistent map (deferred — they stay as standalone Map instances in v1 of Phase 4)
+
+## Phase rollout (as built)
+
+| Phase | PR | Status | Notes |
+|---|---|---|---|
+| 1 — Data lift | #49 | ✅ Shipped | `scripts/lift-essay-photos.ts` + new `essays` content collection + `albums` → `archiveAlbums` rename + 8 consumer files updated |
+| 2 — Collection page rebuild | #50 | ✅ Shipped | Region page layout: header → map → carousel → essay cards → archive. Subsequent commits dropped the `.md` intro and switched to a single tagline (per design feedback) |
+| 3 — Work dossier nesting | #51 | ✅ Shipped | Collapsible collection rows, nested essay anchors, year filter intact |
+| 4a — Persistent map (work pages) | #52, #53 | ✅ Shipped | `PersistentMap.astro` + `persistent-map-init.ts` covering `/work` and `/work/[collection]`. Live marker + `interactive: false` restored in #53 |
+| 4b — Persistent map across essays + dispatch | #54 | ✅ Shipped | Inset role, IntersectionObserver-driven scroll docking on `EssaySlideMapInset`. Patagonia briefing folded in |
+| 4b part 2 — Home page hero | — | ⏸ Deferred | Held at user's request to spend more design time |
+| 5 — Mobile pass | #55 | ✅ Shipped | Dossier sheet, carousel/inset reflow, presence-aware map fade. Plus a unification refactor (rAF rect tracker drives all layout roles, not just inset) |
+
+## What changed vs. the plan
+
+- **Intro markdown sidecar dropped.** Phase 2 originally added `src/data/collections/morocco.md` rendered above the map. After review the duplicate copy and weird placement read as "bad copypasta." We dropped the sidecar entirely; the collection page header is now a single-line tagline only. The `collectionIntros` content collection was added then removed in the same PR cycle — it's not in the schema today.
+- **Persistent map scope: 4a + 4b, with 4b part 2 deferred.** The original plan called for site-wide persistence in one PR. The advisor split it: 4a for `/work` ↔ `/work/[collection]`, 4b for essays + dispatch. The home page hero (4b part 2) is held — it needs design work before code.
+- **Class-based layout transitions → rAF rect tracker.** The plan called for class-based CSS positioning per layout role (`world` / `region` / `hidden`). Inset was supposed to be deferred. In practice, the inset slot needed scroll-aware position tracking (essay map slides aren't in fixed locations), so we built the rAF-based slot tracker for inset first. Then user feedback on the fixed/pinned feel of world/region prompted us to **unify everything around the rAF tracker** — every visible layout reads its rect from a slot's `getBoundingClientRect()` every frame. Static CSS positioning rules removed.
+- **Lock behavior on /work scoped to desktop.** Mobile tap-to-lock-then-tap-essay-row felt like friction. Mobile clicks navigate directly; desktop world view keeps lock + dossier auto-expand.
+- **Filmstrip ownership.** Briefly tried `position: fixed` on the filmstrip during Phase 5 to match the persistent map; reverted to `position: absolute` inside `.map-hero` once the rAF unification landed (the map now scrolls with `.map-hero`, so the filmstrip naturally goes with it).
+- **Essay marker prefixing.** To avoid `num` collisions across collections in a single map instance, marker nums are prefixed (`world-NN`, `morocco-NN`). The visible badge uses a separate `displayNum` so it still reads "01".
+- **Patagonia briefing was originally out of scope** — folded into 4b since it uses `EssaySlideMapInset` like the essays do, so it benefits from the same inset behavior for free.
+
+## Lessons worth remembering
+
+- Astro 5's glob loader treats a top-level `slug` field as the entry ID, overriding the filename. The schema deliberately omits `slug`.
+- `regions-hatch` is added asynchronously in `map-init` after the crosshatch image loads; `setFilter` calls before `map.once('idle', …)` silently miss it.
+- A `position: fixed` element with `width: 0; height: 0` lets MapLibre init at 0×0 and never recover. The persistent shell defaults to viewport-fill (`100vw × 100vh`) but stays invisible until the controller adds `.is-ready`.
+- `astro check` OOMs on a stale `dist/`. Always `rm -rf dist .astro node_modules/.astro` before debugging build failures.
+- `transition:persist` keeps the DOM element across page swaps. The map's MapLibre instance + canvas + tile cache survive, so `flyTo` on `astro:after-swap` is what actually animates the camera between pages.
