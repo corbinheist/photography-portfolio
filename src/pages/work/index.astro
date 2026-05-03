@@ -176,7 +176,7 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
            PersistentMap (in BaseLayout) paints into the same viewport
            area via fixed positioning + CSS variables. -->
       <div class="map-hero__grid">
-        <div class="map-hero__map" aria-hidden="true">
+        <div class="map-hero__map" aria-hidden="true" data-map-presence-anchor>
           <!-- Coordinate readout overlays the persistent map -->
           <div class="work-coord-readout" data-coord-readout>
             <span class="work-coord-readout__text">Hover a region · {collectionCount} regions &middot; {totalEssayCount} essays</span>
@@ -742,6 +742,9 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
   }
 
   /* ── Film-roll strip ── */
+  /* Filmstrip overlays the bottom of the .map-hero. Scrolls with the
+     hero naturally — when the hero scrolls past, filmstrip goes with
+     it (and the map, which tracks .map-hero__map's bbox, follows too). */
   .film-roll {
     position: absolute;
     bottom: 0;
@@ -1035,6 +1038,69 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
     .story-sheet__content {
       padding: 0 var(--space-md) var(--space-lg);
     }
+
+    /* Sheet content built by the script: head + essay list */
+    :global(.story-sheet__head) {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0 var(--space-md);
+      border-bottom: 1px solid var(--color-border-subtle);
+      margin-bottom: var(--space-md);
+    }
+
+    :global(.story-sheet__num) {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--color-warm);
+      flex-shrink: 0;
+      margin-top: 6px;
+      width: 24px;
+    }
+
+    :global(.story-sheet__title-block) {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    :global(.story-sheet__title) {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+
+    :global(.story-sheet__meta) {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-faint);
+    }
+
+    :global(.story-sheet__essays) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    :global(.story-sheet__cta) {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--color-warm);
+      text-decoration: none;
+      padding: 10px 16px;
+      border: 1px solid var(--color-warm);
+      border-radius: 4px;
+    }
   }
 
   /* ── Responsive: hide dossier on mobile ── */
@@ -1051,6 +1117,29 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
       flex-direction: column;
       gap: var(--space-xs);
       align-items: flex-start;
+    }
+
+    /* Year tabs scroll horizontally rather than clip when there are
+       more years than fit. */
+    .work-year-tabs {
+      width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 4px;
+    }
+    .work-year-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .work-year-tab,
+    .work-year-label {
+      flex: 0 0 auto;
+    }
+    .work-story-count {
+      flex: 0 0 auto;
+      margin-left: auto;
+      padding-right: var(--container-padding);
     }
 
     .film-roll--collapsed {

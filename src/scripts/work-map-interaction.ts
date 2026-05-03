@@ -25,6 +25,11 @@ function init() {
   const collections = Array.from(
     document.querySelectorAll<HTMLElement>('.dossier-collection[data-dossier-collection]'),
   );
+  const sheet = document.querySelector<HTMLElement>('[data-story-sheet]');
+  const sheetBackdrop = document.querySelector<HTMLElement>('[data-story-sheet-backdrop]');
+  const sheetDrawer = document.querySelector<HTMLElement>('[data-story-sheet-drawer]');
+  const sheetContent = document.querySelector<HTMLElement>('[data-story-sheet-content]');
+  const isMobile = () => window.matchMedia('(max-width: 1023px)').matches;
 
   if (collections.length === 0) return;
 
@@ -142,6 +147,85 @@ function init() {
     });
   });
 
+  // ── Mobile bottom sheet ──
+  function openSheet(node: HTMLElement) {
+    if (!sheet || !sheetContent) return;
+    const num = node.dataset.storyMarker || '';
+    const title =
+      node.querySelector('.dossier-collection__title')?.textContent ?? '';
+    const meta = node.querySelector('.dossier-collection__meta')?.textContent ?? '';
+    const cid = node.dataset.dossierCollection ?? '';
+    const essaysHTML = node.querySelector('.dossier-collection__essays')?.innerHTML ?? '';
+
+    sheetContent.innerHTML = `
+      <div class="story-sheet__head">
+        <span class="story-sheet__num">${num.replace('world-', '')}</span>
+        <div class="story-sheet__title-block">
+          <h3 class="story-sheet__title">${title}</h3>
+          <span class="story-sheet__meta">${meta}</span>
+        </div>
+      </div>
+      ${essaysHTML
+        ? `<div class="story-sheet__essays">${essaysHTML}</div>`
+        : `<a class="story-sheet__cta" href="/work/${cid}">Open region ${title} &rarr;</a>`}
+    `;
+    sheet.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeSheet() {
+    if (!sheet) return;
+    sheet.setAttribute('aria-hidden', 'true');
+  }
+
+  sheetBackdrop?.addEventListener('click', () => {
+    closeSheet();
+    if (mapContainer && (mapContainer as any).__setLocked) {
+      (mapContainer as any).__setLocked(null);
+    }
+  });
+
+  // Swipe-to-dismiss on the drawer
+  if (sheetDrawer) {
+    let touchStartY = 0;
+    let touchCurrentY = 0;
+    let tracking = false;
+
+    sheetDrawer.addEventListener(
+      'touchstart',
+      (e) => {
+        if (sheetDrawer.scrollTop > 0) return;
+        touchStartY = e.touches[0].clientY;
+        touchCurrentY = touchStartY;
+        tracking = true;
+      },
+      { passive: true },
+    );
+
+    sheetDrawer.addEventListener(
+      'touchmove',
+      (e) => {
+        if (!tracking) return;
+        touchCurrentY = e.touches[0].clientY;
+        const dy = touchCurrentY - touchStartY;
+        if (dy > 0) sheetDrawer.style.transform = `translateY(${dy}px)`;
+      },
+      { passive: true },
+    );
+
+    sheetDrawer.addEventListener('touchend', () => {
+      if (!tracking) return;
+      tracking = false;
+      const dy = touchCurrentY - touchStartY;
+      if (dy > 80) {
+        closeSheet();
+        if (mapContainer && (mapContainer as any).__setLocked) {
+          (mapContainer as any).__setLocked(null);
+        }
+      }
+      sheetDrawer.style.transform = '';
+    });
+  }
+
   // ── Listen for map events (region/marker hover or lock) ──
   document.addEventListener('work-story-change', ((e: CustomEvent) => {
     const { num, locked } = e.detail;
@@ -153,16 +237,21 @@ function init() {
       node.classList.toggle('dossier-collection--active', match && num !== null);
     });
 
-    // Auto-expand the locked collection
+    // Auto-expand the locked collection on desktop, open the sheet on mobile
     if (locked && num) {
       const node = collections.find((c) => c.dataset.storyMarker === num);
       if (node) {
-        collapseAllExcept(node);
-        setExpanded(node, true);
+        if (isMobile()) {
+          openSheet(node);
+        } else {
+          collapseAllExcept(node);
+          setExpanded(node, true);
+        }
       }
     }
     if (!locked && !num) {
       collapseAllExcept(null);
+      closeSheet();
     }
 
     // Coord readout
