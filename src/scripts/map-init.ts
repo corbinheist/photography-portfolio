@@ -418,14 +418,16 @@ function init() {
       map.on('click', 'regions-fill', (e) => {
         const feat = e.features?.[0];
         const num = feat?.properties?.num;
-        if (num) {
-          // If setLocked exists (Work page), use lock behavior
-          if ((container as any).__setLocked) {
-            (container as any).__setLocked(num);
-          } else {
-            const marker = markers.find((m) => m.num === num);
-            if (marker?.target) navigateTo(marker.target);
-          }
+        if (!num) return;
+        // Lock behavior only matters on /work's world view; on region /
+        // inset layouts a region click should navigate to that polygon's
+        // marker target.
+        const layout = document.body.dataset.mapLayout;
+        if (layout === 'world' && (container as any).__setLocked) {
+          (container as any).__setLocked(num);
+        } else {
+          const marker = markers.find((m) => m.num === num);
+          if (marker?.target) navigateTo(marker.target);
         }
       });
 
@@ -609,7 +611,11 @@ function init() {
 
         if (m.target) {
           el.addEventListener('click', () => {
-            if ((container as any).__setLocked) {
+            // Lock behavior is only meaningful on /work's world view (where
+            // a dossier panel listens for work-story-change). On region /
+            // inset / hidden layouts, clicking a marker should navigate.
+            const layout = document.body.dataset.mapLayout;
+            if (layout === 'world' && (container as any).__setLocked) {
               setLocked(m.num ?? null);
             } else {
               navigateTo(m.target!);

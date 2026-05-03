@@ -35,6 +35,8 @@ const photos = essay!.data.photos;
   title="Nomads of Djebel Saghro"
   description="A day with the Ait Atta — tea, bread, herds, and firelight in Morocco's volcanic highlands."
   dossier={{ num: '011', label: 'NOMADS', totalFrames: 26 }}
+  mapLayout="hidden"
+  mapActiveCollection="morocco"
 >
 
   <!-- ======= HERO ======= -->
@@ -86,6 +88,7 @@ const photos = essay!.data.photos;
     ]}
     center={[-5.85, 31.25]}
     zoom={7.5}
+    collectionId="morocco"
     regions={moroccoRegions as any}
     markers={[
       { lng: -5.85, lat: 31.25, label: 'Djebel Saghro', num: '01' },

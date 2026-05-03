@@ -26,6 +26,8 @@ const photos = essay!.data.photos;
   title="The Bougmez Underfoot"
   description="One day in Morocco's High Atlas — gorge, pass, and darkness. A Wise Ultra Running assignment."
   dossier={{ num: '013', label: 'WISE', totalFrames: 24 }}
+  mapLayout="hidden"
+  mapActiveCollection="morocco"
 >
 
   <!-- 1. Hero — runner trailing mule into gorge -->
@@ -72,6 +74,7 @@ const photos = essay!.data.photos;
     ]}
     center={[-6.38, 31.61]}
     zoom={11}
+    collectionId="morocco"
     markers={[
       { lng: -6.45, lat: 31.68, label: 'Aït Bougmez Valley', num: '01' },
       { lng: -6.38, lat: 31.62, label: 'Happy Valley Gorge', num: '02' },

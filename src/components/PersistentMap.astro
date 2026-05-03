@@ -194,8 +194,9 @@ const liveMarker = { lng: -70.65, lat: -33.45, label: 'SANTIAGO, CHL' };
     height: auto;
   }
 
-  /* Region view — full-width band below the breadcrumb header on
-     /work/[collection]. Lives below SideRail edge. */
+  /* Region view — band below the breadcrumb header on
+     /work/[collection]. Sized so map + carousel + header fit in a
+     standard desktop viewport without scrolling. */
   :global(body[data-map-layout='region']) {
     --map-shell-top: 220px;
     --map-shell-left: var(--rail-width, 180px);
@@ -209,7 +210,29 @@ const liveMarker = { lng: -70.65, lat: -33.45, label: 'SANTIAGO, CHL' };
     left: var(--map-shell-left);
     right: 0;
     width: auto;
-    height: 75vh;
+    /* Subtract header (~220px) + carousel (~240px including foot caption
+       + breathing) so the filmstrip lands in-view at scroll=0. */
+    height: calc(100dvh - 460px);
+    min-height: 360px;
+    max-height: 720px;
+  }
+
+  /* Inset view — controller computes a precise rect from the
+     [data-map-inset-slot] placeholder's getBoundingClientRect and
+     writes those values into --map-shell-{top,left,width,height}. */
+  :global(body[data-map-layout='inset']) #persistent-map {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    top: var(--map-shell-top, 0);
+    left: var(--map-shell-left, 0);
+    right: auto;
+    bottom: auto;
+    width: var(--map-shell-width, 100%);
+    height: var(--map-shell-height, 100dvh);
+    /* Inset moves with scroll — keep the camera animation but drop the
+       layout-rect transition so the rect tracks the slot tightly. */
+    transition: opacity 200ms ease, visibility 200ms ease;
   }
 
   /* Mobile: no SideRail; map fills full width. Dossier panel collapses
