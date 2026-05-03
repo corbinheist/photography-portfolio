@@ -272,6 +272,8 @@ function deactivateInset(slot: HTMLElement) {
 }
 
 let insetObserver: IntersectionObserver | null = null;
+let presenceObserver: IntersectionObserver | null = null;
+let presenceVisible = true;
 
 function teardownInsetObserver() {
   insetObserver?.disconnect();
@@ -280,6 +282,51 @@ function teardownInsetObserver() {
     activeSlot = null;
     stopTracking();
   }
+}
+
+function teardownPresenceObserver() {
+  presenceObserver?.disconnect();
+  presenceObserver = null;
+  presenceVisible = true;
+}
+
+/**
+ * Hide the persistent map when its presence anchor scrolls out of view.
+ * Pages that surface the map mark a placeholder element with
+ * `data-map-presence-anchor`; when it leaves the viewport, the body's
+ * data-map-layout flips to `hidden` (so the map fades out and stops
+ * blocking page content below). When it scrolls back in, the page's
+ * declared layout is restored.
+ */
+function setupPresenceObserver() {
+  teardownPresenceObserver();
+  const anchor = document.querySelector<HTMLElement>('[data-map-presence-anchor]');
+  if (!anchor) return;
+
+  presenceObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          if (presenceVisible) continue;
+          presenceVisible = true;
+          // Don't override an active inset
+          if (activeSlot) continue;
+          document.body.dataset.mapLayout = pageDefaults.layout;
+          syncFromBody();
+        } else {
+          if (!presenceVisible) continue;
+          presenceVisible = false;
+          if (activeSlot) continue;
+          document.body.dataset.mapLayout = 'hidden';
+          syncFromBody();
+        }
+      }
+    },
+    // Trigger as soon as ANY pixel slides out — keeps the map honest
+    // about whether the user can still see "its" section.
+    { threshold: 0 },
+  );
+  presenceObserver.observe(anchor);
 }
 
 function setupInsetObserver() {
@@ -308,6 +355,7 @@ function setupInsetObserver() {
 
 function init() {
   snapshotPageDefaults();
+  presenceVisible = true;
   let attempts = 0;
   const tick = () => {
     attempts++;
@@ -315,6 +363,7 @@ function init() {
       clearActiveState();
       syncFromBody();
       setupInsetObserver();
+      setupPresenceObserver();
       return;
     }
     if (attempts < 20) {
@@ -326,10 +375,13 @@ function init() {
 
 function onSwap() {
   teardownInsetObserver();
+  teardownPresenceObserver();
+  presenceVisible = true;
   snapshotPageDefaults();
   clearActiveState();
   syncFromBody();
   setupInsetObserver();
+  setupPresenceObserver();
 }
 
 document.addEventListener('astro:page-load', init);

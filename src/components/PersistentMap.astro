@@ -235,19 +235,25 @@ const liveMarker = { lng: -70.65, lat: -33.45, label: 'SANTIAGO, CHL' };
     transition: opacity 200ms ease, visibility 200ms ease;
   }
 
-  /* Mobile: no SideRail; map fills full width. Dossier panel collapses
-     entirely on mobile so we don't reserve right margin either. Phase 5
-     will refine this further; this default keeps the page from breaking. */
+  /* Mobile: no SideRail; dossier panel collapses to a bottom sheet, so
+     the map fills the full width above it. */
   @media (max-width: 1023px) {
     :global(body[data-map-layout='world']) {
-      --map-shell-top: 100px;
+      --map-shell-top: 96px;
       --map-shell-left: 0;
       --map-shell-right: 0;
       --map-shell-bottom: 40px;
     }
     :global(body[data-map-layout='region']) {
-      --map-shell-top: 180px;
+      --map-shell-top: 168px;
       --map-shell-left: 0;
+    }
+    :global(body[data-map-layout='region']) #persistent-map {
+      /* Smaller header subtraction on mobile so map + carousel still
+         both have room above the fold. */
+      height: calc(100dvh - 320px);
+      min-height: 280px;
+      max-height: 480px;
     }
   }
 

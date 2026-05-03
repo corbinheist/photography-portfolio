@@ -419,11 +419,11 @@ function init() {
         const feat = e.features?.[0];
         const num = feat?.properties?.num;
         if (!num) return;
-        // Lock behavior only matters on /work's world view; on region /
-        // inset layouts a region click should navigate to that polygon's
-        // marker target.
+        // Mobile: navigate directly. Desktop /work uses lock + dossier
+        // expand; desktop region/inset/hidden navigates too.
+        const isMobile = window.matchMedia('(max-width: 1023px)').matches;
         const layout = document.body.dataset.mapLayout;
-        if (layout === 'world' && (container as any).__setLocked) {
+        if (!isMobile && layout === 'world' && (container as any).__setLocked) {
           (container as any).__setLocked(num);
         } else {
           const marker = markers.find((m) => m.num === num);
@@ -611,11 +611,9 @@ function init() {
 
         if (m.target) {
           el.addEventListener('click', () => {
-            // Lock behavior is only meaningful on /work's world view (where
-            // a dossier panel listens for work-story-change). On region /
-            // inset / hidden layouts, clicking a marker should navigate.
+            const isMobile = window.matchMedia('(max-width: 1023px)').matches;
             const layout = document.body.dataset.mapLayout;
-            if (layout === 'world' && (container as any).__setLocked) {
+            if (!isMobile && layout === 'world' && (container as any).__setLocked) {
               setLocked(m.num ?? null);
             } else {
               navigateTo(m.target!);

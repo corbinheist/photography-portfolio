@@ -83,7 +83,7 @@ const visibleAlbums = albums.filter((a: any) => !a.data.draft);
   </Container>
 
   {collection.data.map && (
-    <div class="map-section map-section--persistent" aria-hidden="true">
+    <div class="map-section map-section--persistent" aria-hidden="true" data-map-presence-anchor>
       <!-- PersistentMap (in BaseLayout) paints into this slot via fixed
            positioning + body[data-map-layout='region']. -->
     </div>
@@ -196,7 +196,7 @@ const visibleAlbums = albums.filter((a: any) => !a.data.draft);
 
   /* Persistent-map placeholder — reserves vertical space matching the
      map shell (which is position: fixed in BaseLayout). Sized so the
-     carousel below lands in-view at scroll=0 on a standard desktop. */
+     carousel below lands in-view at scroll=0. */
   .map-section--persistent {
     height: calc(100dvh - 460px);
     min-height: 360px;
@@ -204,6 +204,14 @@ const visibleAlbums = albums.filter((a: any) => !a.data.draft);
     padding: 0;
     margin: 0;
     pointer-events: none;
+  }
+
+  @media (max-width: 1023px) {
+    .map-section--persistent {
+      height: calc(100dvh - 320px);
+      min-height: 280px;
+      max-height: 480px;
+    }
   }
 
   /* ── Essay section ── */

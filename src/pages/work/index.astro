@@ -158,7 +158,7 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
   mapTargetZoom={1.8}
 >
   {dossierNodes.length > 0 && (
-    <div class="map-hero" id="map-hero">
+    <div class="map-hero" id="map-hero" data-map-presence-anchor>
       <!-- Year filter bar -->
       <div class="work-filter-bar">
         <span class="work-kicker">Work · Essays pinned to the world</span>
@@ -742,16 +742,31 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
   }
 
   /* ── Film-roll strip ── */
+  /* Filmstrip is anchored to the map, not the page — fixed in the
+     viewport at the same horizontal extent as the persistent map. Fades
+     out when the map hides (presence anchor scrolls out of view). */
   .film-roll {
-    position: absolute;
+    position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 3;
+    left: var(--rail-width, 180px);
+    right: 380px;
+    z-index: 2;
     border-top: 1px solid var(--color-border-subtle);
     overflow: hidden;
     background: var(--color-bg);
-    transition: height 400ms var(--ease-out-quart);
+    transition:
+      height 400ms var(--ease-out-quart),
+      opacity 300ms ease,
+      visibility 300ms ease;
+  }
+
+  /* Tie filmstrip visibility to the map's layout state. */
+  :global(body[data-map-layout='hidden']) .film-roll,
+  :global(body[data-map-layout='region']) .film-roll,
+  :global(body[data-map-layout='inset']) .film-roll {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .film-roll--collapsed {
@@ -1035,6 +1050,69 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
     .story-sheet__content {
       padding: 0 var(--space-md) var(--space-lg);
     }
+
+    /* Sheet content built by the script: head + essay list */
+    :global(.story-sheet__head) {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-md);
+      padding: var(--space-sm) 0 var(--space-md);
+      border-bottom: 1px solid var(--color-border-subtle);
+      margin-bottom: var(--space-md);
+    }
+
+    :global(.story-sheet__num) {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--color-warm);
+      flex-shrink: 0;
+      margin-top: 6px;
+      width: 24px;
+    }
+
+    :global(.story-sheet__title-block) {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    :global(.story-sheet__title) {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+
+    :global(.story-sheet__meta) {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-faint);
+    }
+
+    :global(.story-sheet__essays) {
+      display: flex;
+      flex-direction: column;
+    }
+
+    :global(.story-sheet__cta) {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--color-warm);
+      text-decoration: none;
+      padding: 10px 16px;
+      border: 1px solid var(--color-warm);
+      border-radius: 4px;
+    }
   }
 
   /* ── Responsive: hide dossier on mobile ── */
@@ -1051,6 +1129,36 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
       flex-direction: column;
       gap: var(--space-xs);
       align-items: flex-start;
+    }
+
+    /* Year tabs scroll horizontally rather than clip when there are
+       more years than fit. */
+    .work-year-tabs {
+      width: 100%;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 4px;
+    }
+    .work-year-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .work-year-tab,
+    .work-year-label {
+      flex: 0 0 auto;
+    }
+    .work-story-count {
+      flex: 0 0 auto;
+      margin-left: auto;
+      padding-right: var(--container-padding);
+    }
+
+    /* Mobile: no SideRail and no dossier panel reservation; film-roll
+       fills full width. */
+    .film-roll {
+      left: 0;
+      right: 0;
     }
 
     .film-roll--collapsed {

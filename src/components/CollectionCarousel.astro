@@ -311,4 +311,20 @@ for (let round = 0; round < longest; round++) {
     background: var(--color-bg);
     padding: 2px 8px;
   }
+
+  /* Mobile: tighter frames, snap-tighter so each card lands cleanly */
+  @media (max-width: 767px) {
+    .cc__frame {
+      width: 220px;
+    }
+    .cc__leader {
+      width: 80px;
+    }
+    .cc__track {
+      scroll-snap-type: x mandatory;
+    }
+    .cc__sprocket {
+      height: 6px;
+    }
+  }
 </style>
