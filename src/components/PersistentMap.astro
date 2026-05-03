@@ -119,6 +119,11 @@ sortedCollections.forEach((c) => {
 });
 
 const regions = { type: 'FeatureCollection' as const, features };
+
+// "You are here" pin. Update when traveling. Lives here (rather than per
+// page) because the persistent map is owned by BaseLayout — every page
+// that surfaces the map sees the same pin.
+const liveMarker = { lng: -70.65, lat: -33.45, label: 'SANTIAGO, CHL' };
 ---
 
 <div id="persistent-map" data-persistent-map transition:persist="map">
@@ -127,7 +132,8 @@ const regions = { type: 'FeatureCollection' as const, features };
     zoom={1.8}
     markers={markers}
     regions={regions}
-    interactive={true}
+    liveMarker={liveMarker}
+    interactive={false}
     theme="default"
   />
 </div>
