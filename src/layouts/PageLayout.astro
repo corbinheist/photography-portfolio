@@ -12,12 +12,36 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  mapLayout?: 'world' | 'region' | 'hidden';
+  mapTargetCenter?: [number, number];
+  mapTargetZoom?: number;
+  mapActiveCollection?: string;
 }
 
-const { title, description, image, type, noindex } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  type,
+  noindex,
+  mapLayout,
+  mapTargetCenter,
+  mapTargetZoom,
+  mapActiveCollection,
+} = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} image={image} type={type} noindex={noindex}>
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  type={type}
+  noindex={noindex}
+  mapLayout={mapLayout}
+  mapTargetCenter={mapTargetCenter}
+  mapTargetZoom={mapTargetZoom}
+  mapActiveCollection={mapActiveCollection}
+>
   <SideRail />
   <Header />
   <main class="main">

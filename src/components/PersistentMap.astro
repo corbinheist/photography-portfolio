@@ -1,0 +1,252 @@
+---
+/**
+ * Persistent map shell — single MapLibre instance that lives in
+ * BaseLayout and survives page swaps via `transition:persist="map"`.
+ *
+ * SSR-aggregates ALL collection markers + regions and tags each with
+ * `view` ("world" | "region") + `collectionId`. Initialization runs
+ * once via the existing map-init script (it guards against re-init via
+ * `data-map-ready`). The persistent-map-init script handles swap-time
+ * camera animation + visibility filtering by layout role.
+ *
+ * Phase 4a scope: persists across `/work` and `/work/[collection]`.
+ * Other pages keep their existing maps for now; they declare
+ * `data-map-layout="hidden"` so this shell collapses out of view.
+ */
+
+import { getCollection } from 'astro:content';
+import Map from '@components/Map.astro';
+
+const collections = await getCollection('photoCollections');
+const sortedCollections = collections
+  .filter((c) => c.data.map)
+  .sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+
+const regionFiles = import.meta.glob<{ default: any }>(
+  '/src/data/maps/*.json',
+  { eager: true },
+);
+const countryFiles = import.meta.glob<{ default: any }>(
+  '/src/data/maps/*-country.json',
+  { eager: true },
+);
+
+interface AggMarker {
+  collectionId: string;
+  view: 'world' | 'region';
+  num: string;
+  displayNum: string;
+  label: string;
+  lng: number;
+  lat: number;
+  target?: string;
+}
+
+const markers: AggMarker[] = [];
+
+// World-view markers — one per collection, at the collection's center.
+// `num` is prefixed for global uniqueness; `displayNum` is what shows
+// on screen.
+sortedCollections.forEach((c, i) => {
+  const display = String(i + 1).padStart(2, '0');
+  markers.push({
+    collectionId: c.id,
+    view: 'world',
+    num: `world-${display}`,
+    displayNum: display,
+    label: c.data.title,
+    lng: c.data.map!.center[0],
+    lat: c.data.map!.center[1],
+    target: c.data.primaryHref ?? `/work/${c.id}`,
+  });
+});
+
+// Region-view markers — local landmarks defined per collection.
+sortedCollections.forEach((c) => {
+  for (const m of c.data.map!.markers ?? []) {
+    if (!m.num) continue;
+    markers.push({
+      collectionId: c.id,
+      view: 'region',
+      num: `${c.id}-${m.num}`,
+      displayNum: m.num,
+      label: m.label,
+      lng: m.lng,
+      lat: m.lat,
+      target: m.target,
+    });
+  }
+});
+
+// Combine region polygons. Each feature carries `view` + `collectionId`
+// in its properties so the runtime controller can filter via setFilter.
+const features: any[] = [];
+
+sortedCollections.forEach((c, i) => {
+  const num = `world-${String(i + 1).padStart(2, '0')}`;
+  const data = countryFiles[`/src/data/maps/${c.id}-country.json`]?.default;
+  if (!data?.features) return;
+  for (const feat of data.features) {
+    features.push({
+      ...feat,
+      properties: {
+        ...feat.properties,
+        num,
+        view: 'world',
+        collectionId: c.id,
+      },
+    });
+  }
+});
+
+sortedCollections.forEach((c) => {
+  const file = c.data.map!.regionsFile;
+  if (!file) return;
+  const data = regionFiles[`/src/data/maps/${file}`]?.default;
+  if (!data?.features) return;
+  for (const feat of data.features) {
+    const localNum = feat.properties?.num ?? '';
+    features.push({
+      ...feat,
+      properties: {
+        ...feat.properties,
+        num: `${c.id}-${localNum}`,
+        view: 'region',
+        collectionId: c.id,
+      },
+    });
+  }
+});
+
+const regions = { type: 'FeatureCollection' as const, features };
+---
+
+<div id="persistent-map" data-persistent-map transition:persist="map">
+  <Map
+    center={[10, 25]}
+    zoom={1.8}
+    markers={markers}
+    regions={regions}
+    interactive={true}
+    theme="default"
+  />
+</div>
+
+<style>
+  /* Persistent map shell — fixed-positioned, controlled by body[data-map-layout].
+     Pages reserve space via the .map-hero / .map-section--persistent containers
+     that include matching CSS variables. */
+  #persistent-map {
+    position: fixed;
+    /* Above the page's static + positioned-auto content (notably
+       .map-hero__grid which would otherwise catch hovers in the map
+       area) but below pointer-events: auto chrome like the dossier
+       panel — that panel sits in its own grid column outside the map's
+       fixed rect, so it stays interactive. */
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 400ms ease,
+      visibility 400ms ease,
+      top 600ms cubic-bezier(0.16, 1, 0.3, 1),
+      left 600ms cubic-bezier(0.16, 1, 0.3, 1),
+      width 600ms cubic-bezier(0.16, 1, 0.3, 1),
+      height 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+  }
+
+  /* Children fill the shell */
+  #persistent-map :global(.map-container) {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* World view — fills the left column of the .map-hero grid on /work.
+     Reserves space on the right for the 380px dossier panel and on the
+     bottom for the 48px collapsed filmstrip. The left edge respects the
+     desktop SideRail width via --rail-width. */
+  :global(body[data-map-layout='world']) {
+    --map-shell-top: 50px;
+    --map-shell-left: var(--rail-width, 180px);
+    --map-shell-right: 380px;
+    --map-shell-bottom: 48px;
+  }
+  :global(body[data-map-layout='world']) #persistent-map {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    top: var(--map-shell-top);
+    left: var(--map-shell-left);
+    right: var(--map-shell-right);
+    bottom: var(--map-shell-bottom);
+    width: auto;
+    height: auto;
+  }
+
+  /* Region view — full-width band below the breadcrumb header on
+     /work/[collection]. Lives below SideRail edge. */
+  :global(body[data-map-layout='region']) {
+    --map-shell-top: 220px;
+    --map-shell-left: var(--rail-width, 180px);
+    --map-shell-bottom: auto;
+  }
+  :global(body[data-map-layout='region']) #persistent-map {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    top: var(--map-shell-top);
+    left: var(--map-shell-left);
+    right: 0;
+    width: auto;
+    height: 75vh;
+  }
+
+  /* Mobile: no SideRail; map fills full width. Dossier panel collapses
+     entirely on mobile so we don't reserve right margin either. Phase 5
+     will refine this further; this default keeps the page from breaking. */
+  @media (max-width: 1023px) {
+    :global(body[data-map-layout='world']) {
+      --map-shell-top: 100px;
+      --map-shell-left: 0;
+      --map-shell-right: 0;
+      --map-shell-bottom: 40px;
+    }
+    :global(body[data-map-layout='region']) {
+      --map-shell-top: 180px;
+      --map-shell-left: 0;
+    }
+  }
+
+  /* Hidden (default) — keep instance alive but invisible */
+  :global(body[data-map-layout='hidden']) #persistent-map,
+  :global(body:not([data-map-layout])) #persistent-map {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    height: 0;
+  }
+
+  /* Marker visibility filters — bake all markers, hide irrelevant ones.
+     Per-collection filtering in region view is set by the controller via
+     `.map-marker--inactive`. */
+  :global(body[data-map-layout='world']) :global(.map-marker[data-view='region']) {
+    display: none;
+  }
+  :global(body[data-map-layout='region']) :global(.map-marker[data-view='world']) {
+    display: none;
+  }
+  :global(.map-marker--inactive) {
+    display: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #persistent-map {
+      transition: opacity 200ms ease, visibility 200ms ease;
+    }
+  }
+</style>

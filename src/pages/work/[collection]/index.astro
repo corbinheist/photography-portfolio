@@ -5,7 +5,6 @@ import Container from '@components/ui/Container.astro';
 import AlbumCard from '@components/photo/AlbumCard.astro';
 import EssayCard from '@components/photo/EssayCard.astro';
 import CollectionCarousel from '@components/CollectionCarousel.astro';
-import Map from '@components/Map.astro';
 
 export async function getStaticPaths() {
   const collections = await getCollection('photoCollections');
@@ -34,19 +33,6 @@ export async function getStaticPaths() {
 
 const { collection, albums, essays, photos } = Astro.props;
 
-// Map regions/route
-let mapRegions: any = null;
-let mapRoute: any = null;
-if (collection.data.map) {
-  const modules = import.meta.glob<{ default: any }>('/src/data/maps/*.json', { eager: true });
-  if (collection.data.map.regionsFile) {
-    mapRegions = modules[`/src/data/maps/${collection.data.map.regionsFile}`]?.default ?? null;
-  }
-  if (collection.data.map.routeFile) {
-    mapRoute = modules[`/src/data/maps/${collection.data.map.routeFile}`]?.default ?? null;
-  }
-}
-
 function findPhoto(id: string) {
   return photos.find((p: any) => p.id === id);
 }
@@ -59,16 +45,16 @@ const carouselEssays = essays.map((e: any) => ({
   photos: e.data.photos,
 }));
 
-// Slug → list of map marker `num`s pointing at that essay's URL.
-// Used by the carousel to highlight frames when a marker is hovered.
+// Slug → list of marker `num`s pointing at that essay's URL.
+// PersistentMap prefixes regional markers with `<collectionId>-`, so we
+// match that format in the carousel highlight wiring.
 const slugToMarkerNums: Record<string, string[]> = {};
 for (const m of collection.data.map?.markers ?? []) {
   if (!m.num) continue;
   const segments = m.target.split('/').filter(Boolean);
-  // Expect target like `/work/<collection>/<slug>` — last segment is the slug
   const slug = segments[segments.length - 1];
   if (!slug || slug === collection.id) continue;
-  (slugToMarkerNums[slug] ??= []).push(m.num);
+  (slugToMarkerNums[slug] ??= []).push(`${collection.id}-${m.num}`);
 }
 
 const visibleAlbums = albums.filter((a: any) => !a.data.draft);
@@ -77,6 +63,10 @@ const visibleAlbums = albums.filter((a: any) => !a.data.draft);
 <PageLayout
   title={collection.data.title}
   description={collection.data.description}
+  mapLayout="region"
+  mapTargetCenter={collection.data.map?.center}
+  mapTargetZoom={collection.data.map?.zoom}
+  mapActiveCollection={collection.id}
 >
   <Container>
     <div class="collection-header reveal">
@@ -93,16 +83,9 @@ const visibleAlbums = albums.filter((a: any) => !a.data.draft);
   </Container>
 
   {collection.data.map && (
-    <div class="map-section map-section--full-bleed map-section--compact">
-      <Map
-        center={collection.data.map.center}
-        zoom={collection.data.map.zoom}
-        markers={collection.data.map.markers}
-        regions={mapRegions}
-        route={mapRoute}
-        interactive={false}
-        theme="default"
-      />
+    <div class="map-section map-section--persistent" aria-hidden="true">
+      <!-- PersistentMap (in BaseLayout) paints into this slot via fixed
+           positioning + body[data-map-layout='region']. -->
     </div>
   )}
 
@@ -211,16 +194,17 @@ const visibleAlbums = albums.filter((a: any) => !a.data.draft);
     text-overflow: ellipsis;
   }
 
-  /* Override the global full-bleed map so map + carousel read as one
-     band. Drop the trailing padding that creates dead space below. */
-  .map-section--compact {
-    padding-bottom: 0;
-    margin-bottom: 0;
-  }
-  .map-section--compact :global(.map-container) {
+  /* Persistent-map placeholder — reserves vertical space matching the
+     map shell (which is position: fixed in BaseLayout). The carousel
+     follows immediately below. Pass through pointer events so the map
+     beneath catches hover/click. */
+  .map-section--persistent {
     height: 75vh;
     min-height: 480px;
     max-height: 800px;
+    padding: 0;
+    margin: 0;
+    pointer-events: none;
   }
 
   /* ── Essay section ── */

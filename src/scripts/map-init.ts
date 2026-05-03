@@ -25,7 +25,15 @@ interface MarkerDef {
   lat: number;
   label: string;
   num?: string;
+  /** Optional: text shown in the marker num badge. Falls back to `num`.
+   *  Used by PersistentMap to keep `num` unique across views while still
+   *  rendering a clean "01", "02" etc. on screen. */
+  displayNum?: string;
   target?: string;
+  /** Optional: view scope used by PersistentMap for visibility filtering */
+  view?: 'world' | 'region';
+  /** Optional: collection this marker belongs to (for PersistentMap filtering) */
+  collectionId?: string;
 }
 
 /** Flexoki-aligned base colors — selected by site theme */
@@ -396,6 +404,8 @@ function init() {
       // Expose setHovered + deferClear on the container so external scripts can call them
       (container as any).__setHovered = setHovered;
       (container as any).__deferClear = deferClear;
+      // Expose the MapLibre instance for PersistentMap's swap-time controller
+      (container as any).__map = map;
 
       // Hover on map regions
       map.on('mousemove', 'regions-fill', (e) => {
@@ -571,13 +581,16 @@ function init() {
         el.className = 'map-marker map-marker--label-only';
         if (m.target) el.classList.add('map-marker--clickable');
         if (m.num) el.dataset.markerNum = m.num;
+        if (m.view) el.dataset.view = m.view;
+        if (m.collectionId) el.dataset.collectionId = m.collectionId;
 
         const label = document.createElement('div');
         label.className = 'map-marker__label';
-        if (m.num) {
+        const labelNum = m.displayNum ?? m.num;
+        if (labelNum) {
           const numSpan = document.createElement('span');
           numSpan.className = 'map-marker__num';
-          numSpan.textContent = m.num;
+          numSpan.textContent = labelNum;
           label.appendChild(numSpan);
         }
         const nameSpan = document.createElement('span');

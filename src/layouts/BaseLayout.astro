@@ -2,6 +2,7 @@
 import { execSync } from 'node:child_process';
 import { ClientRouter } from 'astro:transitions';
 import SEO from '@components/global/SEO.astro';
+import PersistentMap from '@components/PersistentMap.astro';
 import '@styles/fonts.css';
 import '@styles/global.css';
 import '@styles/animations.css';
@@ -12,9 +13,24 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  /** Persistent map declaration for this page */
+  mapLayout?: 'world' | 'region' | 'hidden';
+  mapTargetCenter?: [number, number];
+  mapTargetZoom?: number;
+  mapActiveCollection?: string;
 }
 
-const { title, description, image, type, noindex } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  type,
+  noindex,
+  mapLayout = 'hidden',
+  mapTargetCenter,
+  mapTargetZoom,
+  mapActiveCollection,
+} = Astro.props;
 const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').toString().trim(); } catch { return 'unknown'; } })();
 ---
 
@@ -97,13 +113,20 @@ const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').t
       })();
     </script>
   </head>
-  <body>
+  <body
+    data-map-layout={mapLayout}
+    data-map-target-center={mapTargetCenter ? JSON.stringify(mapTargetCenter) : undefined}
+    data-map-target-zoom={mapTargetZoom !== undefined ? String(mapTargetZoom) : undefined}
+    data-map-active-collection={mapActiveCollection}
+  >
+    <PersistentMap />
     <slot />
 
     <script>
       import '@scripts/theme';
       import '@scripts/animations/init';
       import '@scripts/analytics';
+      import '@scripts/persistent-map-init';
     </script>
   </body>
 </html>
