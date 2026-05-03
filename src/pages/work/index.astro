@@ -158,7 +158,7 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
   mapTargetZoom={1.8}
 >
   {dossierNodes.length > 0 && (
-    <div class="map-hero" id="map-hero" data-map-presence-anchor>
+    <div class="map-hero" id="map-hero">
       <!-- Year filter bar -->
       <div class="work-filter-bar">
         <span class="work-kicker">Work · Essays pinned to the world</span>
@@ -176,7 +176,7 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
            PersistentMap (in BaseLayout) paints into the same viewport
            area via fixed positioning + CSS variables. -->
       <div class="map-hero__grid">
-        <div class="map-hero__map" aria-hidden="true">
+        <div class="map-hero__map" aria-hidden="true" data-map-presence-anchor>
           <!-- Coordinate readout overlays the persistent map -->
           <div class="work-coord-readout" data-coord-readout>
             <span class="work-coord-readout__text">Hover a region · {collectionCount} regions &middot; {totalEssayCount} essays</span>
@@ -742,31 +742,19 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
   }
 
   /* ── Film-roll strip ── */
-  /* Filmstrip is anchored to the map, not the page — fixed in the
-     viewport at the same horizontal extent as the persistent map. Fades
-     out when the map hides (presence anchor scrolls out of view). */
+  /* Filmstrip overlays the bottom of the .map-hero. Scrolls with the
+     hero naturally — when the hero scrolls past, filmstrip goes with
+     it (and the map, which tracks .map-hero__map's bbox, follows too). */
   .film-roll {
-    position: fixed;
+    position: absolute;
     bottom: 0;
-    left: var(--rail-width, 180px);
-    right: 380px;
-    z-index: 2;
+    left: 0;
+    right: 0;
+    z-index: 3;
     border-top: 1px solid var(--color-border-subtle);
     overflow: hidden;
     background: var(--color-bg);
-    transition:
-      height 400ms var(--ease-out-quart),
-      opacity 300ms ease,
-      visibility 300ms ease;
-  }
-
-  /* Tie filmstrip visibility to the map's layout state. */
-  :global(body[data-map-layout='hidden']) .film-roll,
-  :global(body[data-map-layout='region']) .film-roll,
-  :global(body[data-map-layout='inset']) .film-roll {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+    transition: height 400ms var(--ease-out-quart);
   }
 
   .film-roll--collapsed {
@@ -1152,13 +1140,6 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
       flex: 0 0 auto;
       margin-left: auto;
       padding-right: var(--container-padding);
-    }
-
-    /* Mobile: no SideRail and no dossier panel reservation; film-roll
-       fills full width. */
-    .film-roll {
-      left: 0;
-      right: 0;
     }
 
     .film-roll--collapsed {

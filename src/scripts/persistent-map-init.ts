@@ -3,15 +3,20 @@
  *
  * The map element lives in BaseLayout with `transition:persist="map"` so
  * its DOM (and the MapLibre instance bound to it via map-init) survives
- * page swaps. This script runs the swap-time work plus inset tracking:
+ * page swaps. Camera continuity, region/marker filtering, and rect
+ * tracking happen here.
  *
- *   - Read body data attributes for the page's desired map state.
- *   - Animate camera via `map.flyTo(...)`.
- *   - Filter region polygons by view + active collection (`setFilter`).
- *   - Toggle marker visibility classes by view + active collection.
- *   - When an `[data-map-inset-slot]` is in view (essay map slide),
- *     dock the persistent map into that slot via CSS vars and fly to
- *     the slot's declared center/zoom.
+ * The map's viewport rect is ALWAYS driven by a slot element on the
+ * page — there is no static CSS positioning. The active slot is either:
+ *   - the page's `[data-map-presence-anchor]` placeholder, OR
+ *   - an `[data-map-inset-slot]` from an essay's map slide once it
+ *     scrolls into view (then back to the page anchor when it leaves).
+ *
+ * A rAF loop reads `getBoundingClientRect()` of the active slot every
+ * frame and writes the result into CSS vars on `<body>`, so the
+ * persistent map (position: fixed) follows the slot through scroll,
+ * resize, and view transitions. When no slot is active, the map fades
+ * out via `data-map-layout="hidden"`.
  *
  * Honors `prefers-reduced-motion: reduce` (snap, no fly).
  */
@@ -41,6 +46,7 @@ let pageDefaults: PageDefaults = {
   activeCollection: null,
 };
 
+let pageSlot: HTMLElement | null = null;
 let activeSlot: HTMLElement | null = null;
 let trackRaf = 0;
 
@@ -66,7 +72,6 @@ function readState(): MapState {
 
   const zoomRaw = body.dataset.mapTargetZoom;
   const zoom = zoomRaw ? Number(zoomRaw) : null;
-
   const activeCollection = body.dataset.mapActiveCollection || null;
 
   return { layout, center, zoom, activeCollection };
@@ -181,9 +186,9 @@ function syncFromBody() {
   applyMarkerVisibility(state);
 }
 
-// ── Inset tracking ────────────────────────────────────────────────────
+// ── Slot tracking ─────────────────────────────────────────────────────
 
-/** Read the inset slot's getBoundingClientRect into CSS vars on body. */
+/** Read the active slot's rect into CSS vars on body. */
 function trackSlotRect() {
   if (!activeSlot) return;
   const rect = activeSlot.getBoundingClientRect();
@@ -220,7 +225,6 @@ function stopTracking() {
     trackRaf = 0;
   }
   window.removeEventListener('resize', trackSlotRect);
-  // Clear CSS vars so the next layout role doesn't inherit stale values.
   const body = document.body;
   body.style.removeProperty('--map-shell-top');
   body.style.removeProperty('--map-shell-left');
@@ -228,14 +232,28 @@ function stopTracking() {
   body.style.removeProperty('--map-shell-height');
 }
 
-function activateInset(slot: HTMLElement) {
+function setActiveSlot(slot: HTMLElement | null) {
   if (slot === activeSlot) return;
   activeSlot = slot;
+  const shell = document.getElementById('persistent-map');
+  if (slot) {
+    trackSlotRect();
+    startTracking();
+    // Reveal only once the rect has been written, otherwise the map
+    // would briefly paint at its viewport-fallback size.
+    shell?.classList.add('is-ready');
+  } else {
+    stopTracking();
+    shell?.classList.remove('is-ready');
+  }
+}
 
+// ── Inset slot handling ──────────────────────────────────────────────
+
+function activateInset(slot: HTMLElement) {
   const body = document.body;
   body.dataset.mapLayout = 'inset';
 
-  // Override the page's center/zoom with the slot's specifics.
   const slotCenter = slot.dataset.mapTargetCenter;
   const slotZoom = slot.dataset.mapTargetZoom;
   const slotCollection = slot.dataset.mapActiveCollection;
@@ -246,16 +264,11 @@ function activateInset(slot: HTMLElement) {
     else delete body.dataset.mapActiveCollection;
   }
 
-  trackSlotRect();
-  startTracking();
+  setActiveSlot(slot);
   syncFromBody();
 }
 
-function deactivateInset(slot: HTMLElement) {
-  if (slot !== activeSlot) return;
-  activeSlot = null;
-  stopTracking();
-
+function deactivateInset() {
   const body = document.body;
   body.dataset.mapLayout = pageDefaults.layout;
   if (pageDefaults.center) body.dataset.mapTargetCenter = pageDefaults.center;
@@ -268,65 +281,16 @@ function deactivateInset(slot: HTMLElement) {
     delete body.dataset.mapActiveCollection;
   }
 
+  // Fall back to the page's slot anchor (or hide if none).
+  setActiveSlot(pageSlot);
   syncFromBody();
 }
 
 let insetObserver: IntersectionObserver | null = null;
-let presenceObserver: IntersectionObserver | null = null;
-let presenceVisible = true;
 
 function teardownInsetObserver() {
   insetObserver?.disconnect();
   insetObserver = null;
-  if (activeSlot) {
-    activeSlot = null;
-    stopTracking();
-  }
-}
-
-function teardownPresenceObserver() {
-  presenceObserver?.disconnect();
-  presenceObserver = null;
-  presenceVisible = true;
-}
-
-/**
- * Hide the persistent map when its presence anchor scrolls out of view.
- * Pages that surface the map mark a placeholder element with
- * `data-map-presence-anchor`; when it leaves the viewport, the body's
- * data-map-layout flips to `hidden` (so the map fades out and stops
- * blocking page content below). When it scrolls back in, the page's
- * declared layout is restored.
- */
-function setupPresenceObserver() {
-  teardownPresenceObserver();
-  const anchor = document.querySelector<HTMLElement>('[data-map-presence-anchor]');
-  if (!anchor) return;
-
-  presenceObserver = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          if (presenceVisible) continue;
-          presenceVisible = true;
-          // Don't override an active inset
-          if (activeSlot) continue;
-          document.body.dataset.mapLayout = pageDefaults.layout;
-          syncFromBody();
-        } else {
-          if (!presenceVisible) continue;
-          presenceVisible = false;
-          if (activeSlot) continue;
-          document.body.dataset.mapLayout = 'hidden';
-          syncFromBody();
-        }
-      }
-    },
-    // Trigger as soon as ANY pixel slides out — keeps the map honest
-    // about whether the user can still see "its" section.
-    { threshold: 0 },
-  );
-  presenceObserver.observe(anchor);
 }
 
 function setupInsetObserver() {
@@ -339,31 +303,37 @@ function setupInsetObserver() {
       for (const entry of entries) {
         const slot = entry.target as HTMLElement;
         if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-          activateInset(slot);
+          if (slot !== activeSlot) activateInset(slot);
         } else if (slot === activeSlot && entry.intersectionRatio < 0.25) {
-          deactivateInset(slot);
+          deactivateInset();
         }
       }
     },
     { threshold: [0, 0.25, 0.5, 0.75, 1] },
   );
-
   for (const slot of slots) insetObserver.observe(slot);
 }
 
 // ── Lifecycle ─────────────────────────────────────────────────────────
 
+function bindToPageSlot() {
+  pageSlot = document.querySelector<HTMLElement>('[data-map-presence-anchor]');
+  // Only adopt the page slot when no inset slot is currently active.
+  if (!activeSlot || activeSlot === pageSlot) {
+    setActiveSlot(pageSlot);
+  }
+}
+
 function init() {
   snapshotPageDefaults();
-  presenceVisible = true;
   let attempts = 0;
   const tick = () => {
     attempts++;
     if (getMap()) {
       clearActiveState();
+      bindToPageSlot();
       syncFromBody();
       setupInsetObserver();
-      setupPresenceObserver();
       return;
     }
     if (attempts < 20) {
@@ -375,13 +345,13 @@ function init() {
 
 function onSwap() {
   teardownInsetObserver();
-  teardownPresenceObserver();
-  presenceVisible = true;
+  setActiveSlot(null);
+  pageSlot = null;
   snapshotPageDefaults();
   clearActiveState();
+  bindToPageSlot();
   syncFromBody();
   setupInsetObserver();
-  setupPresenceObserver();
 }
 
 document.addEventListener('astro:page-load', init);

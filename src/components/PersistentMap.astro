@@ -139,131 +139,46 @@ const liveMarker = { lng: -70.65, lat: -33.45, label: 'SANTIAGO, CHL' };
 </div>
 
 <style>
-  /* Persistent map shell — fixed-positioned, controlled by body[data-map-layout].
-     Pages reserve space via the .map-hero / .map-section--persistent containers
-     that include matching CSS variables. */
+  /* Persistent map shell — viewport-sized at init (so MapLibre creates
+     a real-dimension canvas) but invisible until the page declares a
+     visible layout. The rAF tracker then writes the active slot's rect
+     into --map-shell-{top,left,width,height} so the map follows the
+     slot through scroll. */
   #persistent-map {
     position: fixed;
-    /* Above the page's static + positioned-auto content (notably
-       .map-hero__grid which would otherwise catch hovers in the map
-       area) but below pointer-events: auto chrome like the dossier
-       panel — that panel sits in its own grid column outside the map's
-       fixed rect, so it stays interactive. */
     z-index: 1;
     pointer-events: none;
     opacity: 0;
     visibility: hidden;
-    transition:
-      opacity 400ms ease,
-      visibility 400ms ease,
-      top 600ms cubic-bezier(0.16, 1, 0.3, 1),
-      left 600ms cubic-bezier(0.16, 1, 0.3, 1),
-      width 600ms cubic-bezier(0.16, 1, 0.3, 1),
-      height 600ms cubic-bezier(0.16, 1, 0.3, 1);
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 0;
+    transition: opacity 300ms ease, visibility 300ms ease;
+    top: var(--map-shell-top, 0);
+    left: var(--map-shell-left, 0);
+    width: var(--map-shell-width, 100vw);
+    height: var(--map-shell-height, 100vh);
   }
 
-  /* Children fill the shell */
   #persistent-map :global(.map-container) {
     width: 100%;
     height: 100%;
   }
 
-  /* World view — fills the left column of the .map-hero grid on /work.
-     Reserves space on the right for the 380px dossier panel and on the
-     bottom for the 48px collapsed filmstrip. The left edge respects the
-     desktop SideRail width via --rail-width. */
-  :global(body[data-map-layout='world']) {
-    --map-shell-top: 50px;
-    --map-shell-left: var(--rail-width, 180px);
-    --map-shell-right: 380px;
-    --map-shell-bottom: 48px;
-  }
-  :global(body[data-map-layout='world']) #persistent-map {
+  /* Visible whenever the page declares a non-hidden layout AND the
+     controller has computed the rect (avoids a fullscreen flash before
+     the rAF tracker positions the map into its slot). */
+  :global(body[data-map-layout='world']) :global(#persistent-map.is-ready),
+  :global(body[data-map-layout='region']) :global(#persistent-map.is-ready),
+  :global(body[data-map-layout='inset']) :global(#persistent-map.is-ready) {
     pointer-events: auto;
     opacity: 1;
     visibility: visible;
-    top: var(--map-shell-top);
-    left: var(--map-shell-left);
-    right: var(--map-shell-right);
-    bottom: var(--map-shell-bottom);
-    width: auto;
-    height: auto;
   }
 
-  /* Region view — band below the breadcrumb header on
-     /work/[collection]. Sized so map + carousel + header fit in a
-     standard desktop viewport without scrolling. */
-  :global(body[data-map-layout='region']) {
-    --map-shell-top: 220px;
-    --map-shell-left: var(--rail-width, 180px);
-    --map-shell-bottom: auto;
-  }
-  :global(body[data-map-layout='region']) #persistent-map {
-    pointer-events: auto;
-    opacity: 1;
-    visibility: visible;
-    top: var(--map-shell-top);
-    left: var(--map-shell-left);
-    right: 0;
-    width: auto;
-    /* Subtract header (~220px) + carousel (~240px including foot caption
-       + breathing) so the filmstrip lands in-view at scroll=0. */
-    height: calc(100dvh - 460px);
-    min-height: 360px;
-    max-height: 720px;
-  }
-
-  /* Inset view — controller computes a precise rect from the
-     [data-map-inset-slot] placeholder's getBoundingClientRect and
-     writes those values into --map-shell-{top,left,width,height}. */
-  :global(body[data-map-layout='inset']) #persistent-map {
-    pointer-events: auto;
-    opacity: 1;
-    visibility: visible;
-    top: var(--map-shell-top, 0);
-    left: var(--map-shell-left, 0);
-    right: auto;
-    bottom: auto;
-    width: var(--map-shell-width, 100%);
-    height: var(--map-shell-height, 100dvh);
-    /* Inset moves with scroll — keep the camera animation but drop the
-       layout-rect transition so the rect tracks the slot tightly. */
-    transition: opacity 200ms ease, visibility 200ms ease;
-  }
-
-  /* Mobile: no SideRail; dossier panel collapses to a bottom sheet, so
-     the map fills the full width above it. */
-  @media (max-width: 1023px) {
-    :global(body[data-map-layout='world']) {
-      --map-shell-top: 96px;
-      --map-shell-left: 0;
-      --map-shell-right: 0;
-      --map-shell-bottom: 40px;
-    }
-    :global(body[data-map-layout='region']) {
-      --map-shell-top: 168px;
-      --map-shell-left: 0;
-    }
-    :global(body[data-map-layout='region']) #persistent-map {
-      /* Smaller header subtraction on mobile so map + carousel still
-         both have room above the fold. */
-      height: calc(100dvh - 320px);
-      min-height: 280px;
-      max-height: 480px;
-    }
-  }
-
-  /* Hidden (default) — keep instance alive but invisible */
+  /* Hidden (default) — keep instance alive but invisible. */
   :global(body[data-map-layout='hidden']) #persistent-map,
   :global(body:not([data-map-layout])) #persistent-map {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    height: 0;
   }
 
   /* Marker visibility filters — bake all markers, hide irrelevant ones.
