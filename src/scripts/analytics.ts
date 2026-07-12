@@ -91,6 +91,65 @@ function onThemeToggle(e: Event) {
   });
 }
 
+function onDiscoveryClick(e: Event) {
+  const target = e.target as HTMLElement;
+  const marker = target.closest<HTMLElement>('.map-marker');
+  if (marker) {
+    track('map-destination', {
+      page: window.location.pathname,
+      destination: marker.dataset.target
+        || marker.dataset.collectionId
+        || marker.getAttribute('aria-label')
+        || 'unknown',
+    });
+    return;
+  }
+
+  const year = target.closest<HTMLElement>('[data-year]');
+  if (year) {
+    track('archive-filter', {
+      page: window.location.pathname,
+      year: year.dataset.year || 'all',
+    });
+    return;
+  }
+
+  const listDestination = target.closest<HTMLAnchorElement>(
+    '.essay-card, .album-card, .dossier-essay, .nav-sub',
+  );
+  if (listDestination) {
+    track('list-destination', {
+      page: window.location.pathname,
+      destination: listDestination.pathname,
+    });
+  }
+}
+
+let essayObserver: IntersectionObserver | null = null;
+
+function initEssayTracking() {
+  essayObserver?.disconnect();
+  essayObserver = null;
+  if (!document.body.hasAttribute('data-essay')) return;
+
+  const essay = window.location.pathname;
+  track('essay-open', { essay });
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-essay-frame-slide]'))
+    .filter((slide) => slide.offsetParent !== null);
+  const lastSlide = slides.at(-1);
+  if (!lastSlide) return;
+
+  let reported = false;
+  essayObserver = new IntersectionObserver((entries) => {
+    if (!reported && entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.75)) {
+      reported = true;
+      track('essay-last-frame-view', { essay });
+      essayObserver?.disconnect();
+    }
+  }, { threshold: 0.75 });
+  essayObserver.observe(lastSlide);
+}
+
 // --- Core Web Vitals + client errors ---
 let vitalsInitialized = false;
 
@@ -159,15 +218,19 @@ function init() {
   document.addEventListener('click', onLightboxClick, { signal });
   document.addEventListener('click', onOutboundClick, { signal });
   document.addEventListener('click', onThemeToggle, { signal });
+  document.addEventListener('click', onDiscoveryClick, { signal });
   document.addEventListener('submit', onSubscribe, { signal });
   window.addEventListener('error', onClientError, { signal });
   window.addEventListener('unhandledrejection', onUnhandledRejection, { signal });
 
   initUmamiKit();
+  initEssayTracking();
   void initWebVitals();
 }
 
 function cleanup() {
+  essayObserver?.disconnect();
+  essayObserver = null;
   controller?.abort();
   controller = null;
   if (window.__umamiKit) {
