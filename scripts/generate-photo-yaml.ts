@@ -74,7 +74,7 @@ async function extractExif(imagePath: string): Promise<ExifData> {
     }
 
     if (exif.Photo?.DateTimeOriginal) {
-      const d = exif.Photo.DateTimeOriginal;
+      const d: unknown = exif.Photo.DateTimeOriginal;
       if (d instanceof Date) {
         result.date = d.toISOString().split('T')[0];
       } else if (typeof d === 'string') {

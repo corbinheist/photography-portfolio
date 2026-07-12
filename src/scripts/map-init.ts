@@ -181,7 +181,40 @@ function init() {
       maxPitch: 0,
     });
 
+    let styleGeneration = 0;
+    let renderedMarkers: maplibregl.Marker[] = [];
+    let themeObserver: MutationObserver | null = null;
+    let interactionAbort: AbortController | null = null;
+    let styleLayerHandlers: Array<[string, string, (event: any) => void]> = [];
+    let lockedNum: string | null = null;
+
+    const isMarkerActive = (marker: MarkerDef) => {
+      const layout = document.body.dataset.mapLayout;
+      if (layout === 'world') return marker.view === 'world';
+      if (layout === 'region' || layout === 'inset') {
+        return marker.view === 'region'
+          && marker.collectionId === document.body.dataset.mapActiveCollection;
+      }
+      return !marker.view;
+    };
+
     map.on('style.load', () => {
+      const generation = ++styleGeneration;
+      const isCurrentGeneration = () => generation === styleGeneration;
+      styleLayerHandlers.forEach(([type, layer, handler]) => {
+        map.off(type as any, layer, handler);
+      });
+      styleLayerHandlers = [];
+      interactionAbort?.abort();
+      interactionAbort = new AbortController();
+      const interactionSignal = interactionAbort.signal;
+      const onStyleLayer = (type: string, layer: string, handler: (event: any) => void) => {
+        styleLayerHandlers.push([type, layer, handler]);
+        map.on(type as any, layer, handler);
+      };
+      renderedMarkers.forEach((marker) => marker.remove());
+      renderedMarkers = [];
+      themeObserver?.disconnect();
       const BASE_COLORS = getBaseColors(); // Fresh read each time style loads
       const style = map.getStyle();
       if (!style?.layers) return;
@@ -329,6 +362,7 @@ function init() {
       const img = new Image();
       img.src = canvas.toDataURL();
       img.onload = () => {
+        if (!isCurrentGeneration()) return;
         if (!map.hasImage('crosshatch')) {
           map.addImage('crosshatch', img, { sdf: false });
         }
@@ -408,22 +442,25 @@ function init() {
       (container as any).__map = map;
 
       // Hover on map regions
-      map.on('mousemove', 'regions-fill', (e) => {
+      onStyleLayer('mousemove', 'regions-fill', (e) => {
+        if (!isCurrentGeneration()) return;
         const feat = e.features?.[0];
         setHovered(feat?.properties?.num ?? null);
       });
-      map.on('mouseleave', 'regions-fill', () => deferClear());
+      onStyleLayer('mouseleave', 'regions-fill', () => {
+        if (isCurrentGeneration()) deferClear();
+      });
 
       // Click on map regions — lock if on Work page, navigate otherwise
-      map.on('click', 'regions-fill', (e) => {
+      onStyleLayer('click', 'regions-fill', (e) => {
+        if (!isCurrentGeneration()) return;
         const feat = e.features?.[0];
         const num = feat?.properties?.num;
         if (!num) return;
-        // Mobile: navigate directly. Desktop /work uses lock + dossier
-        // expand; desktop region/inset/hidden navigates too.
-        const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+        // The world view selects a region: dossier on desktop, sheet on
+        // mobile. Region and essay maps navigate directly to their target.
         const layout = document.body.dataset.mapLayout;
-        if (!isMobile && layout === 'world' && (container as any).__setLocked) {
+        if (layout === 'world' && (container as any).__setLocked) {
           (container as any).__setLocked(num);
         } else {
           const marker = markers.find((m) => m.num === num);
@@ -449,17 +486,20 @@ function init() {
         slide.querySelectorAll<HTMLElement>('[data-region-num]').forEach((phase) => {
           const num = phase.dataset.regionNum!;
           phase.addEventListener('mouseenter', () => {
+            if (!isCurrentGeneration()) return;
             setHovered(num);
             phase.classList.add('jp-timeline__phase--highlighted');
-          });
+          }, { signal: interactionSignal });
           phase.addEventListener('mouseleave', () => {
+            if (!isCurrentGeneration()) return;
             deferClear();
             phase.classList.remove('jp-timeline__phase--highlighted');
-          });
+          }, { signal: interactionSignal });
           phase.addEventListener('click', () => {
+            if (!isCurrentGeneration()) return;
             const targetId = numToTarget.get(num);
             if (targetId) navigateTo(targetId);
-          });
+          }, { signal: interactionSignal });
         });
       }
 
@@ -481,6 +521,7 @@ function init() {
         let pulseRaf = 0;
         const PULSE_PERIOD = 2000; // ms per cycle
         function animatePulse() {
+          if (!isCurrentGeneration()) return;
           if (!hoveredNum) {
             map.setPaintProperty('regions-pulse', 'line-opacity', 0);
             return;
@@ -528,8 +569,6 @@ function init() {
       }
 
       // ── Lock state for click-to-select ──
-      let lockedNum: string | null = null;
-
       function setLocked(num: string | null) {
         if (num === lockedNum) {
           // Toggle off
@@ -569,10 +608,10 @@ function init() {
 
       // Keyboard: Esc unlocks
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lockedNum) {
+        if (isCurrentGeneration() && e.key === 'Escape' && lockedNum) {
           setLocked(null);
         }
-      });
+      }, { signal: interactionSignal });
 
       // ── DOM markers (label only — positioned at region centroid) ──
       markers.forEach((m) => {
@@ -581,7 +620,13 @@ function init() {
 
         const el = document.createElement('div');
         el.className = 'map-marker map-marker--label-only';
-        if (m.target) el.classList.add('map-marker--clickable');
+        el.classList.toggle('map-marker--inactive', !isMarkerActive(m));
+        if (m.target) {
+          el.classList.add('map-marker--clickable');
+          el.setAttribute('role', 'button');
+          el.tabIndex = 0;
+          el.setAttribute('aria-label', `Open ${m.label}`);
+        }
         if (m.num) el.dataset.markerNum = m.num;
         if (m.view) el.dataset.view = m.view;
         if (m.collectionId) el.dataset.collectionId = m.collectionId;
@@ -601,24 +646,34 @@ function init() {
         label.appendChild(nameSpan);
         el.appendChild(label);
 
-        new maplibregl.Marker({ element: el, anchor: 'center' })
+        const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
           .setLngLat(lngLat)
           .addTo(map);
+        renderedMarkers.push(marker);
 
         // Label hover triggers region highlight
-        el.addEventListener('mouseenter', () => setHovered(m.num ?? null));
-        el.addEventListener('mouseleave', () => { if (!lockedNum) deferClear(); });
+        el.addEventListener('mouseenter', () => {
+          if (isCurrentGeneration()) setHovered(m.num ?? null);
+        }, { signal: interactionSignal });
+        el.addEventListener('mouseleave', () => {
+          if (isCurrentGeneration() && !lockedNum) deferClear();
+        }, { signal: interactionSignal });
 
         if (m.target) {
           el.addEventListener('click', () => {
-            const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+            if (!isCurrentGeneration()) return;
             const layout = document.body.dataset.mapLayout;
-            if (!isMobile && layout === 'world' && (container as any).__setLocked) {
+            if (layout === 'world' && (container as any).__setLocked) {
               setLocked(m.num ?? null);
             } else {
               navigateTo(m.target!);
             }
-          });
+          }, { signal: interactionSignal });
+          el.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter' && event.key !== ' ') return;
+            event.preventDefault();
+            el.click();
+          }, { signal: interactionSignal });
         }
       });
 
@@ -643,13 +698,16 @@ function init() {
         label.appendChild(nameSpan);
         el.appendChild(label);
 
-        new maplibregl.Marker({ element: el, anchor: 'center' })
+        const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
           .setLngLat([liveMarkerData.lng, liveMarkerData.lat])
           .addTo(map);
+        renderedMarkers.push(marker);
       }
 
+      if (lockedNum) setHovered(lockedNum);
+
       // ── Watch for site theme changes (light/dark toggle) ──
-      const observer = new MutationObserver((mutations) => {
+      themeObserver = new MutationObserver((mutations) => {
         for (const m of mutations) {
           if (m.attributeName === 'data-theme') {
             map.setStyle(getStyleUrl());
@@ -657,7 +715,7 @@ function init() {
           }
         }
       });
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     });
   });
 }

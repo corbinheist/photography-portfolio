@@ -59,7 +59,8 @@ Key invariants:
 Click behavior:
 - Desktop `/work` (world layout): click → lock map + auto-expand dossier.
 - Desktop region/inset/hidden: click → navigate to marker target.
-- Mobile (any layout): click → navigate. No lock.
+- Mobile `/work` (world layout): click → lock map + open the story sheet.
+- Mobile region/inset/hidden: click → navigate.
 
 Files:
 - `src/components/PersistentMap.astro` — SSR aggregation + the persistent shell
