@@ -26,14 +26,18 @@ import EssaySlideProseColumns from '@components/essay/EssaySlideProseColumns.ast
 import EssaySlideMapInset from '@components/essay/EssaySlideMapInset.astro';
 import moroccoRegions from '@data/maps/morocco-regions.json';
 import { getEntry } from 'astro:content';
+import { buildPhotoUrl } from '@scripts/utils/photo-widths';
 
 const essay = await getEntry('essays', 'morocco-nomads-essay');
 const photos = essay!.data.photos;
+const shareImage = buildPhotoUrl(photos[essay!.data.coverPhotoIndex].url, photos[essay!.data.coverPhotoIndex].width, 1600);
 ---
 
 <ProjectLayout
   title="Nomads of Djebel Saghro"
   description="A day with the Ait Atta — tea, bread, herds, and firelight in Morocco's volcanic highlands."
+  image={shareImage}
+  location="Djebel Saghro, Morocco"
   dossier={{ num: '011', label: 'NOMADS', totalFrames: 26 }}
   mapLayout="hidden"
   persistentMap

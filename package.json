@@ -17,6 +17,7 @@
     "generate-yaml": "tsx scripts/generate-photo-yaml.ts",
     "fetch-rss": "tsx scripts/fetch-rss.ts",
     "check:bundle": "tsx scripts/check-build-budget.ts",
+    "check:publish": "pnpm build && pnpm exec vitest run && PLAYWRIGHT_REUSE_SERVER=false pnpm test:e2e:built",
     "validate:content": "tsx scripts/validate-content.ts",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -9,6 +9,7 @@ interface Props {
   description?: string;
   image?: string;
   noindex?: boolean;
+  location?: string;
   /** Enable scroll-snap, essay navigation, and essay styles */
   snap?: boolean;
   /** Show scroll progress bar (typically used with snap) */
@@ -34,6 +35,7 @@ const {
   description,
   image,
   noindex,
+  location,
   snap = false,
   progress = false,
   dossier,
@@ -53,6 +55,8 @@ const showOldProgress = progress && !isDossier;
   description={description}
   image={image}
   noindex={noindex}
+  type="article"
+  location={location}
   mapLayout={mapLayout}
   mapTargetCenter={mapTargetCenter}
   mapTargetZoom={mapTargetZoom}

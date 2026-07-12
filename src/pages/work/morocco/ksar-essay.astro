@@ -21,9 +21,11 @@ import EssaySlideQuote from '@components/essay/EssaySlideQuote.astro';
 import EssaySlideRelated from '@components/essay/EssaySlideRelated.astro';
 import EssayDivider from '@components/essay/EssayDivider.astro';
 import { getEntry } from 'astro:content';
+import { buildPhotoUrl } from '@scripts/utils/photo-widths';
 
 const essay = await getEntry('essays', 'morocco-ksar-essay');
 const photos = essay!.data.photos;
+const shareImage = buildPhotoUrl(photos[essay!.data.coverPhotoIndex].url, photos[essay!.data.coverPhotoIndex].width, 1600);
 
 const nextStoryData = {
   title: 'Nomads of Djebel Saghro',
@@ -40,6 +42,8 @@ const nextStoryData = {
 <ProjectLayout
   title="Ksar Tamnougalt"
   description="Inside a fortified village in Morocco's Draa Valley. November 2025."
+  image={shareImage}
+  location="Ksar Tamnougalt, Morocco"
   dossier={{ num: '012', label: 'KSAR', totalFrames: 11 }}
   mapLayout="hidden"
   mapActiveCollection="morocco"

@@ -32,6 +32,9 @@ pnpm dev
 # Type-check and build for production
 pnpm build
 
+# Run the full prepublication build, unit, and browser gate
+pnpm check:publish
+
 # Preview the production build locally
 pnpm preview
 ```
