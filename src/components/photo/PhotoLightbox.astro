@@ -28,7 +28,7 @@ const { photos } = Astro.props;
 const lightboxData = photos.map(({ lqip: _lqip, ...photo }) => photo);
 ---
 
-<div class="lightbox" data-lightbox aria-hidden="true" aria-modal="true" role="dialog" aria-label="Photo viewer">
+<div class="lightbox" data-lightbox aria-hidden="true" aria-modal="true" role="dialog" aria-label="Photo viewer" inert>
   <button class="lightbox-close" data-lightbox-close aria-label="Close viewer">&times;</button>
 
   <div class="lightbox-stage">

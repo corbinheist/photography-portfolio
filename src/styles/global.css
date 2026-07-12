@@ -77,6 +77,7 @@ ol {
   --fx-base-150: #DAD8CE;
   --fx-base-200: #CECDC3;
   --fx-base-300: #B7B5AC;
+  --fx-base-400: #9F9D96;
   --fx-base-500: #6F6E69;
   --fx-base-600: #575653;
   --fx-base-700: #403E3C;
@@ -120,12 +121,13 @@ ol {
 
   --color-text:       var(--fx-base-100);
   --color-text-muted: var(--fx-base-300);
-  --color-text-faint: var(--fx-base-500);
+  --color-text-faint: var(--fx-base-400);
 
-  --color-accent:       var(--hs-forest);
-  --color-accent-hover: var(--hs-moss);
-  --color-accent-deep:  var(--hs-bottle);
-  --color-accent-muted: var(--hs-racing);
+  --color-accent:       var(--hs-moss);
+  --color-accent-hover: var(--hs-sage);
+  --color-accent-deep:  var(--hs-forest);
+  --color-accent-muted: var(--hs-bottle);
+  --color-on-accent:    var(--fx-black);
 
   --color-warm:       var(--hs-rust);
   --color-warm-deep:  var(--hs-oxide);
@@ -198,6 +200,7 @@ ol {
   --color-accent-hover: var(--hs-racing);
   --color-accent-deep:  var(--hs-racing);
   --color-accent-muted: var(--hs-forest);
+  --color-on-accent:    var(--fx-paper);
 
   --color-warm:       var(--hs-oxide);
   --color-warm-deep:  var(--hs-saddle);

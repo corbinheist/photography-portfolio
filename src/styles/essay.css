@@ -129,12 +129,34 @@ html:has([data-essay]) {
    ========================================== */
 
 @media (prefers-reduced-motion: reduce) {
+  html:has([data-essay]) {
+    scroll-snap-type: none;
+  }
+
+  .essay-slide {
+    overflow: visible !important;
+    scroll-snap-align: none;
+  }
+
   .essay-progress {
     transition: none;
   }
 
   .essay-chrome__progress {
     transition: none;
+  }
+}
+
+/* Browser zoom reduces the effective CSS viewport height. Avoid clipping
+   long slide content or forcing mandatory snap in that constrained space. */
+@media (max-height: 600px) {
+  html:has([data-essay]) {
+    scroll-snap-type: none;
+  }
+
+  .essay-slide {
+    overflow: visible !important;
+    scroll-snap-align: none;
   }
 }
 

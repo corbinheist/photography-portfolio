@@ -103,6 +103,7 @@ export function initLightbox() {
   let isOpen = false;
   let previousFocus: Element | null = null;
   let closingFromPopstate = false;
+  const backgroundInerted = new Set<HTMLElement>();
 
   // Preload cache
   const preloadCache = new Map<string, HTMLImageElement>();
@@ -155,13 +156,20 @@ export function initLightbox() {
   }
 
   function setBackgroundInert(inert: boolean) {
+    if (inert) backgroundInerted.clear();
     for (const child of Array.from(document.body.children)) {
       if (child === lightbox) continue;
       if (inert) {
-        (child as HTMLElement).setAttribute?.('inert', '');
-      } else {
-        (child as HTMLElement).removeAttribute?.('inert');
+        const element = child as HTMLElement;
+        if (!element.hasAttribute('inert')) {
+          element.setAttribute('inert', '');
+          backgroundInerted.add(element);
+        }
       }
+    }
+    if (!inert) {
+      backgroundInerted.forEach((element) => element.removeAttribute('inert'));
+      backgroundInerted.clear();
     }
   }
 
@@ -201,6 +209,7 @@ export function initLightbox() {
       img!.alt = photo.title;
       img!.classList.add('is-entering');
       updateInfo(photo, index);
+      lightbox!.removeAttribute('inert');
       lightbox!.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
       isOpen = true;
@@ -252,6 +261,7 @@ export function initLightbox() {
   function close() {
     if (!isOpen) return;
     lightbox!.setAttribute('aria-hidden', 'true');
+    lightbox!.setAttribute('inert', '');
     document.body.style.overflow = '';
     isOpen = false;
 
