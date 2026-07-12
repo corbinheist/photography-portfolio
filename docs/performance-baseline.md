@@ -23,7 +23,9 @@ The MapLibre bundle is the dominant client asset and is currently included throu
 | `/work/morocco` | 141,024 B | 34,382 B |
 | `/work/morocco/wise-essay` | 220,535 B | 43,818 B |
 
-The largest generated page is `/gallery` at approximately 500 KiB raw because it contains metadata for the complete photo catalog.
+After scoping the persistent map to map-bearing routes and removing duplicate lightbox placeholders, `/gallery` fell from approximately 500 KiB to 392 KiB raw. It remains the largest generated page because it contains metadata for the complete photo catalog.
+
+Separating GSAP/Lenis into a post-page-load chunk reduced map-free pages from 160-166 KiB to 32-38 KiB of JavaScript referenced by initial HTML. The 134 KiB animation runtime is fetched after Astro's page-load lifecycle and no longer blocks initial module evaluation.
 
 Essay HTML is larger because photo manifests include responsive image metadata and LQIP data. This is expected, but the build budget prevents accidental unbounded growth.
 
@@ -35,6 +37,8 @@ Essay HTML is larger because photo manifests include responsive image metadata a
 - Total JavaScript: 1,250,000 B
 - Largest CSS asset: 80,000 B
 - Largest HTML page: 525,000 B
+- Referenced JavaScript on map-free pages: 50,000 B raw
+- Map-free pages may not reference MapLibre or the persistent-map runtime
 
 These are regression guards, not final targets. Tighten them after MapLibre lazy loading and image-delivery work land.
 
@@ -46,3 +50,14 @@ These are regression guards, not final targets. Tighten them after MapLibre lazy
 - CLS below 0.1
 
 Core Web Vitals require a running production-like server and browser instrumentation. Capture those measurements as part of the Phase 1 implementation rather than treating static bundle size as a substitute.
+
+The existing self-hosted Umami integration now records standards-compliant `web-vital` events (LCP, CLS, and INP) for full document loads using the official `web-vitals` library, plus hashed `client-error` events. Soft navigations are deliberately excluded because browsers do not expose a standard LCP lifecycle for them. Use production data to replace local estimates after a representative observation window.
+
+## CDN Verification
+
+Representative 640 px and 1600 px AVIF variants were checked against the production CDN. Both returned:
+
+- `cache-control: public, max-age=31536000, immutable`
+- `cf-cache-status: HIT`
+- Correct `image/avif` content type
+- Stable ETag and byte length

@@ -44,6 +44,8 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
           lqip={photo.data.lqip}
           alt={photo.data.title}
           sizes={sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1440px) 33vw, 25vw"}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : 'auto'}
           lightboxIndex={i}
         />
       </div>
@@ -62,6 +64,8 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
           lqip={photo.data.lqip}
           alt={photo.data.title}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : 'auto'}
           lightboxIndex={i}
         />
       </div>
@@ -82,6 +86,7 @@ const aspectPadding = arH && arW ? (arH / arW) * 100 : 66.67;
             alt={photo.data.title}
             sizes="80vw"
             loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : 'auto'}
             lightboxIndex={i}
           />
         </div>

@@ -284,7 +284,7 @@ The `<Photo />` component renders a `<picture>` element with AVIF/WebP `srcset` 
 
 ## Maps
 
-The site has **one persistent MapLibre instance** that lives in `BaseLayout` and survives every page swap via `transition:persist="map"`. Pages don't mount their own map — they declare a layout role + target camera state, and the persistent shell does the rest.
+The site has **one persistent MapLibre instance** conditionally rendered by `BaseLayout`. It survives transitions between map-bearing pages via `transition:persist="map"`; routes that never show a map omit the shell and MapLibre payload entirely. Pages declare a layout role + target camera state, and map-inset essays opt into the shell even though their initial role is hidden.
 
 ### Layout roles
 
@@ -295,7 +295,7 @@ The site has **one persistent MapLibre instance** that lives in `BaseLayout` and
 | `world` | `/work` | World view, all regions' country polygons + numbered markers |
 | `region` | `/work/[collection]` | Zoomed to that region's center; only its sub-region polygons + markers |
 | `inset` | Active essay map slide (`EssaySlideMapInset`) | Smaller rect sized to the slide; flies further into the essay's specific zoom |
-| `hidden` | Everywhere else (`/about`, `/blog`, etc.) | Map shell collapsed; instance stays alive |
+| `hidden` | Non-map slides in an essay that contains a map inset | Map shell collapsed; instance stays alive for the next inset |
 
 ### Slot-driven positioning
 

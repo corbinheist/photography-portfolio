@@ -9,6 +9,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 let lenis: Lenis | null = null;
 let ctx: gsap.Context | null = null;
+let tickerRegistered = false;
+const updateLenis = (time: number) => lenis?.raf(time * 1000);
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -28,9 +30,10 @@ function initLenis() {
 
   // Connect Lenis to GSAP's ticker
   lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((time) => {
-    lenis?.raf(time * 1000);
-  });
+  if (!tickerRegistered) {
+    gsap.ticker.add(updateLenis);
+    tickerRegistered = true;
+  }
   gsap.ticker.lagSmoothing(0);
 }
 
@@ -52,7 +55,7 @@ function initAnimations() {
   });
 }
 
-function init() {
+export function initAnimationsRuntime() {
   // Skip Lenis on pitch/essay pages — native scroll-snap handles paging
   if (!document.body.hasAttribute('data-pitch') && !document.body.hasAttribute('data-essay')) {
     initLenis();
@@ -60,16 +63,16 @@ function init() {
   initAnimations();
 }
 
-function cleanup() {
+export function cleanupAnimationsRuntime() {
+  if (lenis) {
+    lenis.destroy();
+    lenis = null;
+  }
   if (ctx) {
     ctx.revert();
     ctx = null;
   }
   ScrollTrigger.getAll().forEach((t) => t.kill());
 }
-
-// Astro View Transitions lifecycle
-document.addEventListener('astro:page-load', init);
-document.addEventListener('astro:after-swap', cleanup);
 
 export { lenis, prefersReducedMotion };

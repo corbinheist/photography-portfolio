@@ -1,4 +1,4 @@
-import { readdir, stat } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 const distDir = path.join(process.cwd(), process.env.ASTRO_OUT_DIR || 'dist');
@@ -7,7 +7,10 @@ const limits = {
   totalJavaScript: 1_250_000,
   largestCss: 80_000,
   largestHtml: 525_000,
+  mapFreeReferencedJavaScript: 50_000,
 };
+
+const mapFreePages = ['index.html', 'about/index.html', 'blog/index.html', 'gallery/index.html'];
 
 async function walk(directory: string): Promise<string[]> {
   const files: string[] = [];
@@ -52,6 +55,33 @@ if (largestCss?.bytes > limits.largestCss) {
 }
 if (largestHtml?.bytes > limits.largestHtml) {
   failures.push(`Largest HTML page is ${formatBytes(largestHtml.bytes)} (${largestHtml.relative}); limit is ${formatBytes(limits.largestHtml)}.`);
+}
+
+for (const page of mapFreePages) {
+  const htmlSource = await readFile(path.join(distDir, page), 'utf8');
+  const assetPaths = [...htmlSource.matchAll(/(?:src|href)="([^"?]+\.js)"/g)]
+    .map((match) => match[1])
+    .filter((asset, index, all) => all.indexOf(asset) === index);
+  let referencedBytes = 0;
+  for (const asset of assetPaths) {
+    const url = new URL(asset, `https://local.invalid/${page}`);
+    if (url.origin !== 'https://local.invalid') continue;
+    const relative = decodeURIComponent(url.pathname.replace(/^\//, ''));
+    const file = measured.find((entry) => entry.relative === relative);
+    if (!file) {
+      failures.push(`${page} references unresolved local JavaScript asset "${asset}".`);
+      continue;
+    }
+    referencedBytes += file.bytes;
+    const source = await readFile(file.filename, 'utf8');
+    if (source.includes('MapLibre GL JS') || source.includes('maplibregl-map')) {
+      failures.push(`${page} includes MapLibre through ${file.relative} despite being map-free.`);
+    }
+  }
+  if (referencedBytes > limits.mapFreeReferencedJavaScript) {
+    failures.push(`${page} references ${formatBytes(referencedBytes)} of JavaScript; limit is ${formatBytes(limits.mapFreeReferencedJavaScript)}.`);
+  }
+  console.log(`${page}: ${formatBytes(referencedBytes)} referenced JavaScript`);
 }
 
 console.log(`JavaScript: ${formatBytes(totalJavaScript)} total; largest ${formatBytes(largestJavaScript?.bytes ?? 0)} (${largestJavaScript?.relative ?? 'none'})`);
