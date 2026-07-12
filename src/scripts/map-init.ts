@@ -623,6 +623,7 @@ function init() {
         el.classList.toggle('map-marker--inactive', !isMarkerActive(m));
         if (m.target) {
           el.classList.add('map-marker--clickable');
+          el.dataset.target = m.target;
           el.setAttribute('role', 'button');
           el.tabIndex = 0;
           el.setAttribute('aria-label', `Open ${m.label}`);
