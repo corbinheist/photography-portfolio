@@ -5,7 +5,7 @@
  * The `url` prop is the base CDN URL for the photo (without extension/width).
  * Generates srcset for standard widths: 640, 750, 1080, 1600, 2400 (capped at native width)
  */
-import { buildWidthList } from '../../scripts/utils/photo-widths';
+import { buildPhotoUrl, buildWidthList } from '../../scripts/utils/photo-widths';
 
 interface Props {
   url: string;
@@ -44,7 +44,7 @@ function buildSrcset(format: 'avif' | 'webp'): string {
 
 const avifSrcset = buildSrcset('avif');
 const webpSrcset = buildSrcset('webp');
-const fallbackSrc = `${url}/${slug}-1080.webp`;
+const fallbackSrc = buildPhotoUrl(url, width, 1080);
 ---
 
 <div class:list={['photo-wrap', className]} {...(lightboxIndex !== undefined ? { 'data-lightbox-index': lightboxIndex } : {})}>

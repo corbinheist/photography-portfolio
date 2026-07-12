@@ -13,6 +13,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  location?: string;
   /** Persistent map declaration for this page */
   mapLayout?: 'world' | 'region' | 'hidden';
   mapTargetCenter?: [number, number];
@@ -28,6 +29,7 @@ const {
   image,
   type,
   noindex,
+  location,
   mapLayout = 'hidden',
   mapTargetCenter,
   mapTargetZoom,
@@ -62,6 +64,7 @@ const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').t
       image={image}
       type={type}
       noindex={noindex}
+      location={location}
     />
 
     <!-- Umami Analytics -->

@@ -17,14 +17,18 @@ import EssaySlideProseColumns from '@components/essay/EssaySlideProseColumns.ast
 import EssaySlideMapInset from '@components/essay/EssaySlideMapInset.astro';
 import wiseRoute from '@data/maps/wise-route.json';
 import { getEntry } from 'astro:content';
+import { buildPhotoUrl } from '@scripts/utils/photo-widths';
 
 const essay = await getEntry('essays', 'morocco-wise-essay');
 const photos = essay!.data.photos;
+const shareImage = buildPhotoUrl(photos[essay!.data.coverPhotoIndex].url, photos[essay!.data.coverPhotoIndex].width, 1600);
 ---
 
 <ProjectLayout
   title="The Bougmez Underfoot"
   description="One day in Morocco's High Atlas — gorge, pass, and darkness. A Wise Ultra Running assignment."
+  image={shareImage}
+  location="Aït Bougmez, Morocco"
   dossier={{ num: '013', label: 'WISE', totalFrames: 24 }}
   mapLayout="hidden"
   persistentMap

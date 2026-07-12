@@ -5,6 +5,7 @@ interface Props {
   image?: string;
   type?: 'website' | 'article';
   noindex?: boolean;
+  location?: string;
 }
 
 const {
@@ -13,11 +14,56 @@ const {
   image,
   type = 'website',
   noindex = false,
+  location,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 const siteName = 'Corbin Heist';
 const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
+const pathSegments = Astro.url.pathname.split('/').filter(Boolean);
+const breadcrumbItems = [
+  { '@type': 'ListItem', position: 1, name: 'Home', item: new URL('/', Astro.site).href },
+  ...pathSegments.map((segment, index) => ({
+    '@type': 'ListItem',
+    position: index + 2,
+    name: index === pathSegments.length - 1
+      ? title
+      : segment.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()),
+    item: new URL(`/${pathSegments.slice(0, index + 1).join('/')}/`, Astro.site).href,
+  })),
+];
+const author = { '@type': 'Person', '@id': new URL('/#author', Astro.site).href, name: 'Corbin Heist', url: new URL('/', Astro.site).href };
+const graph: Record<string, unknown>[] = [
+  author,
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${canonicalUrl.href}#breadcrumbs`,
+    itemListElement: breadcrumbItems,
+  },
+];
+if (image) {
+  graph.push({ '@type': 'ImageObject', '@id': `${canonicalUrl.href}#primaryimage`, contentUrl: image, url: image });
+}
+graph.push(type === 'article' ? {
+  '@type': 'CreativeWork',
+  '@id': `${canonicalUrl.href}#creativework`,
+  name: title,
+  headline: title,
+  description,
+  url: canonicalUrl.href,
+  author: { '@id': author['@id'] },
+  image: image ? { '@id': `${canonicalUrl.href}#primaryimage` } : undefined,
+  contentLocation: location ? { '@type': 'Place', name: location } : undefined,
+  breadcrumb: { '@id': `${canonicalUrl.href}#breadcrumbs` },
+} : {
+  '@type': 'WebPage',
+  '@id': `${canonicalUrl.href}#webpage`,
+  name: title,
+  description,
+  url: canonicalUrl.href,
+  breadcrumb: { '@id': `${canonicalUrl.href}#breadcrumbs` },
+});
+const structuredData = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
 ---
 
 <title>{fullTitle}</title>
@@ -39,3 +85,5 @@ const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 <meta name="twitter:title" content={fullTitle} />
 <meta name="twitter:description" content={description} />
 {image && <meta name="twitter:image" content={image} />}
+
+{!noindex && <script type="application/ld+json" set:html={structuredData} />}
