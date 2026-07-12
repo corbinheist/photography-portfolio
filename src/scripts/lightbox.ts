@@ -3,7 +3,6 @@ interface LightboxPhoto {
   width: number;
   height: number;
   title: string;
-  lqip: string;
   exif?: {
     camera?: string;
     lens?: string;
@@ -122,20 +121,37 @@ export function initLightbox() {
     if (photo.exif?.shutter) settings.push(photo.exif.shutter);
     if (photo.exif?.iso) settings.push(`ISO ${photo.exif.iso}`);
 
-    const hasExif = gear.length || settings.length;
-    let exifHtml = '';
-    if (hasExif) {
-      const parts: string[] = [];
-      if (gear.length) parts.push(gear.join(' \u00b7 '));
-      if (settings.length) parts.push(settings.join(' \u00b7 '));
-      exifHtml = `<p class="lightbox-exif">${parts.join('<span class="lightbox-exif-sep">\u2014</span>')}</p>`;
+    info!.replaceChildren();
+    if (photo.title) {
+      const title = document.createElement('p');
+      title.className = 'lightbox-title';
+      title.textContent = photo.title;
+      info!.append(title);
     }
+    if (gear.length || settings.length) {
+      const exif = document.createElement('p');
+      exif.className = 'lightbox-exif';
+      if (gear.length) exif.append(gear.join(' \u00b7 '));
+      if (gear.length && settings.length) {
+        const separator = document.createElement('span');
+        separator.className = 'lightbox-exif-sep';
+        separator.textContent = '\u2014';
+        exif.append(separator);
+      }
+      if (settings.length) exif.append(settings.join(' \u00b7 '));
+      info!.append(exif);
+    }
+    const counter = document.createElement('p');
+    counter.className = 'lightbox-counter';
+    counter.textContent = `${index + 1} / ${photos.length}`;
+    info!.append(counter);
+  }
 
-    info!.innerHTML = `
-      ${photo.title ? `<p class="lightbox-title">${photo.title}</p>` : ''}
-      ${exifHtml}
-      <p class="lightbox-counter">${index + 1} / ${photos.length}</p>
-    `;
+  function placeholderFor(index: number) {
+    const source = document.querySelector<HTMLImageElement>(
+      `[data-lightbox-index="${index}"] img`,
+    );
+    return source?.style.backgroundImage || '';
   }
 
   function setBackgroundInert(inert: boolean) {
@@ -178,7 +194,7 @@ export function initLightbox() {
       previousFocus = document.activeElement;
 
       // LQIP background
-      img!.style.backgroundImage = `url(${photo.lqip})`;
+      img!.style.backgroundImage = placeholderFor(index);
       img!.style.backgroundSize = 'cover';
 
       img!.src = newSrc;
@@ -215,7 +231,7 @@ export function initLightbox() {
       updateInfo(photo, index);
       setTimeout(() => {
         // Update LQIP background
-        img!.style.backgroundImage = `url(${photo.lqip})`;
+        img!.style.backgroundImage = placeholderFor(index);
         img!.style.backgroundSize = 'cover';
 
         img!.src = newSrc;

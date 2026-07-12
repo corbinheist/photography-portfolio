@@ -25,6 +25,7 @@ interface Props {
 }
 
 const { photos } = Astro.props;
+const lightboxData = photos.map(({ lqip: _lqip, ...photo }) => photo);
 ---
 
 <div class="lightbox" data-lightbox aria-hidden="true" aria-modal="true" role="dialog" aria-label="Photo viewer">
@@ -48,7 +49,7 @@ const { photos } = Astro.props;
 </div>
 
 <!-- Pass photo data via a hidden JSON script (avoids HTML-encoding issues with <template>) -->
-<script type="application/json" data-lightbox-data set:html={JSON.stringify(photos)}></script>
+<script type="application/json" data-lightbox-data set:html={JSON.stringify(lightboxData)}></script>
 
 <script>
   import { initLightbox } from '@scripts/lightbox';

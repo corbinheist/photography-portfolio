@@ -83,6 +83,7 @@ function buildSrcset(url: string, nativeWidth: number, format: 'avif' | 'webp'):
             width={slide.width}
             height={slide.height}
             loading={i === 0 ? 'eager' : 'lazy'}
+            fetchpriority={i === 0 ? 'high' : 'low'}
             decoding={i === 0 ? 'sync' : 'async'}
             style={`background-image: url(${hasMobile ? slide.mobileLqip : slide.lqip}); background-size: cover;`}
           />

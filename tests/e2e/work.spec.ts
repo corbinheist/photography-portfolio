@@ -1,6 +1,55 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('work interactions', () => {
+  test('map runtime loads only when client navigation reaches a map route', async ({ page }) => {
+    await page.goto('/about');
+    await expect(page.locator('[data-persistent-map]')).toHaveCount(0);
+
+    const aboutHtml = await (await page.request.get('/about')).text();
+    expect(aboutHtml).not.toContain('Map.astro_astro_type_script');
+    expect(aboutHtml).not.toContain('PersistentMap.astro_astro_type_script');
+
+    await page.locator('a[href="/work"]').first().click();
+    await expect(page).toHaveURL(/\/work\/?$/);
+    await expect(page.locator('[data-persistent-map]')).toBeAttached();
+    await expect(page.locator('.map-marker[data-view="world"]').first()).toBeAttached({ timeout: 15_000 });
+
+    await page.locator('[data-map]').evaluate((container: any) => {
+      container.__map.__persistenceTest = 'same-instance';
+    });
+    await page.locator('a[href="/work/morocco"]').last().dispatchEvent('click');
+    await expect(page).toHaveURL(/\/work\/morocco\/?$/);
+    expect(await page.locator('[data-map]').evaluate((container: any) => {
+      return container.__map.__persistenceTest;
+    })).toBe('same-instance');
+
+    await page.locator('[data-side-rail] a[href="/gallery"]').click();
+    await expect(page).toHaveURL(/\/gallery\/?$/);
+    await expect(page.locator('[data-persistent-map]')).toHaveCount(0);
+  });
+
+  test('deferred animation runtime reveals initial content', async ({ page }) => {
+    await page.goto('/gallery');
+    await expect(page.locator('.gallery-header')).not.toHaveCSS('opacity', '0');
+    await expect.poll(async () => {
+      return (await page.locator('html').getAttribute('class'))?.includes('lenis') ?? false;
+    }).toBe(true);
+
+    await page.locator('a[href="/work/morocco/wise-essay"]').first().dispatchEvent('click');
+    await expect(page).toHaveURL(/\/work\/morocco\/wise-essay\/?$/);
+    await expect.poll(async () => {
+      return (await page.locator('html').getAttribute('class'))?.includes('lenis') ?? false;
+    }).toBe(false);
+  });
+
+  test('homepage prioritizes and preloads only the first hero', async ({ page }) => {
+    await page.goto('/');
+    const heroImages = page.locator('[data-hero-briefing] .hero__slide img');
+    await expect(heroImages.first()).toHaveAttribute('fetchpriority', 'high');
+    await expect(heroImages.nth(1)).toHaveAttribute('fetchpriority', 'low');
+    await expect(page.locator('link[rel="preload"][as="image"][fetchpriority="high"]')).toHaveCount(1);
+  });
+
   test('year filtering only changes world markers', async ({ page }) => {
     await page.goto('/work');
 

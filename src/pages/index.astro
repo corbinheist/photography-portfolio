@@ -6,6 +6,7 @@ import DispatchCallout from '@components/home/DispatchCallout.astro';
 import ManifestSection from '@components/home/ManifestSection.astro';
 import EssaysPreview from '@components/home/EssaysPreview.astro';
 import ColophonTeaser from '@components/home/ColophonTeaser.astro';
+import { buildWidthList } from '@scripts/utils/photo-widths';
 
 const photos = await getCollection('photos');
 const albums = await getCollection('albums');
@@ -251,9 +252,50 @@ for (const c of sortedCollections) {
   }
 }
 const latestEssays = allEssays.slice(-3).reverse();
+const primaryHero = heroSlides[0];
+
+function preloadSrcset(url: string, width: number) {
+  const slug = url.split('/').pop() || '';
+  return buildWidthList(width)
+    .map((candidate) => `${url}/${slug}-${candidate}.avif ${candidate}w`)
+    .join(', ');
+}
+
+function preloadHref(url: string, width: number, preferredWidth: number) {
+  const slug = url.split('/').pop() || '';
+  const candidates = buildWidthList(width);
+  const candidate = candidates.filter((item) => item <= preferredWidth).at(-1) ?? candidates.at(-1);
+  return `${url}/${slug}-${candidate}.avif`;
+}
 ---
 
 <PageLayout title="Corbin Heist">
+  {primaryHero && (
+    <Fragment slot="head">
+      <link
+        rel="preload"
+        as="image"
+        type="image/avif"
+        href={preloadHref(primaryHero.url, primaryHero.width, 1600)}
+        imagesrcset={preloadSrcset(primaryHero.url, primaryHero.width)}
+        imagesizes="100vw"
+        media={primaryHero.mobileUrl ? '(min-width: 640px)' : undefined}
+        fetchpriority="high"
+      />
+      {primaryHero.mobileUrl && primaryHero.mobileWidth && (
+        <link
+          rel="preload"
+          as="image"
+          type="image/avif"
+          href={preloadHref(primaryHero.mobileUrl, primaryHero.mobileWidth, 1080)}
+          imagesrcset={preloadSrcset(primaryHero.mobileUrl, primaryHero.mobileWidth)}
+          imagesizes="100vw"
+          media="(max-width: 639px)"
+          fetchpriority="high"
+        />
+      )}
+    </Fragment>
+  )}
   <HeroBriefing slides={heroSlides as any} dossierNum={String(sortedCollections.length).padStart(3, '0')} />
   {dispatchData && (
     <DispatchCallout {...dispatchData} />

@@ -44,7 +44,7 @@ The site uses Astro 5's content layer with Zod schemas in `src/content.config.ts
 
 ## Persistent map architecture
 
-One MapLibre instance lives in `BaseLayout` with `transition:persist="map"`. It survives every page swap. Pages don't mount their own map — they declare a layout role + target camera state via props on `PageLayout` / `ProjectLayout`, and the persistent shell does the rest.
+One MapLibre instance is conditionally rendered by `BaseLayout` with `transition:persist="map"`. It survives swaps between map-bearing pages, but ordinary hidden pages do not render the shell or download MapLibre. Pages declare a layout role + target camera state via props on `PageLayout` / `ProjectLayout`; essays that begin hidden but contain map slides also pass `persistentMap`.
 
 Key invariants:
 

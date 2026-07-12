@@ -25,6 +25,7 @@ interface Props {
   mapTargetCenter?: [number, number];
   mapTargetZoom?: number;
   mapActiveCollection?: string;
+  persistentMap?: boolean;
 }
 
 const {
@@ -38,6 +39,7 @@ const {
   mapTargetCenter,
   mapTargetZoom,
   mapActiveCollection,
+  persistentMap,
 } = Astro.props;
 const isDossier = !!dossier;
 const isSnap = snap || isDossier;
@@ -52,7 +54,9 @@ const showOldProgress = progress && !isDossier;
   mapTargetCenter={mapTargetCenter}
   mapTargetZoom={mapTargetZoom}
   mapActiveCollection={mapActiveCollection}
+  persistentMap={persistentMap}
 >
+  <slot name="head" slot="head" />
   {isSnap && (
     <script is:inline>
       document.body.setAttribute('data-essay', '');

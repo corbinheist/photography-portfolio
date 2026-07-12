@@ -18,6 +18,8 @@ interface Props {
   mapTargetCenter?: [number, number];
   mapTargetZoom?: number;
   mapActiveCollection?: string;
+  /** Keep the map shell available for pages that reveal inset maps later. */
+  persistentMap?: boolean;
 }
 
 const {
@@ -30,7 +32,9 @@ const {
   mapTargetCenter,
   mapTargetZoom,
   mapActiveCollection,
+  persistentMap,
 } = Astro.props;
+const showPersistentMap = persistentMap ?? mapLayout !== 'hidden';
 const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').toString().trim(); } catch { return 'unknown'; } })();
 ---
 
@@ -42,6 +46,7 @@ const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').t
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="build-id" content={buildHash} />
+    <slot name="head" />
 
     <!-- Google Fonts: Vollkorn + IBM Plex Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -119,14 +124,31 @@ const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').t
     data-map-target-zoom={mapTargetZoom !== undefined ? String(mapTargetZoom) : undefined}
     data-map-active-collection={mapActiveCollection}
   >
-    <PersistentMap />
+    {showPersistentMap && <PersistentMap />}
     <slot />
 
     <script>
       import '@scripts/theme';
-      import '@scripts/animations/init';
       import '@scripts/analytics';
-      import '@scripts/persistent-map-init';
+
+      type AnimationRuntime = typeof import('@scripts/animations/init');
+      let animationRuntime: Promise<AnimationRuntime> | null = null;
+      let pageGeneration = 0;
+
+      document.addEventListener('astro:page-load', async () => {
+        const generation = ++pageGeneration;
+        animationRuntime ??= import('@scripts/animations/init');
+        const runtime = await animationRuntime;
+        if (generation === pageGeneration) runtime.initAnimationsRuntime();
+      });
+
+      document.addEventListener('astro:after-swap', async () => {
+        pageGeneration++;
+        if (animationRuntime) {
+          const runtime = await animationRuntime;
+          runtime.cleanupAnimationsRuntime();
+        }
+      });
     </script>
   </body>
 </html>

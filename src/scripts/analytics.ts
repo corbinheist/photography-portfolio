@@ -91,6 +91,51 @@ function onThemeToggle(e: Event) {
   });
 }
 
+// --- Core Web Vitals + client errors ---
+let vitalsInitialized = false;
+
+async function initWebVitals() {
+  if (vitalsInitialized) return;
+  vitalsInitialized = true;
+  const page = window.location.pathname;
+  const { onCLS, onINP, onLCP } = await import('web-vitals');
+  const report = (metric: { name: string; value: number; rating: string }) => {
+    track('web-vital', {
+      page,
+      metric: metric.name,
+      value: metric.name === 'CLS' ? Number(metric.value.toFixed(4)) : Math.round(metric.value),
+      rating: metric.rating,
+    });
+  };
+  onCLS(report);
+  onINP(report);
+  onLCP(report);
+}
+
+function errorCode(message: string) {
+  let hash = 2166136261;
+  for (let index = 0; index < message.length; index++) {
+    hash ^= message.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `E${(hash >>> 0).toString(16).padStart(8, '0')}`;
+}
+
+function onClientError(event: ErrorEvent) {
+  track('client-error', {
+    page: window.location.pathname,
+    code: errorCode(event.message || 'Unknown error'),
+  });
+}
+
+function onUnhandledRejection(event: PromiseRejectionEvent) {
+  const message = event.reason instanceof Error ? event.reason.message : String(event.reason);
+  track('client-error', {
+    page: window.location.pathname,
+    code: errorCode(`Unhandled rejection: ${message}`),
+  });
+}
+
 // --- umami-kit lifecycle ---
 function initUmamiKit() {
   if (window.__umamiKit) window.__umamiKit.destroy();
@@ -115,8 +160,11 @@ function init() {
   document.addEventListener('click', onOutboundClick, { signal });
   document.addEventListener('click', onThemeToggle, { signal });
   document.addEventListener('submit', onSubscribe, { signal });
+  window.addEventListener('error', onClientError, { signal });
+  window.addEventListener('unhandledrejection', onUnhandledRejection, { signal });
 
   initUmamiKit();
+  void initWebVitals();
 }
 
 function cleanup() {
