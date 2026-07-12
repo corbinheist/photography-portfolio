@@ -1,6 +1,15 @@
 export const DISMISSED_KEY = 'subscribe-banner-dismissed';
 export const SUBSCRIBED_KEY = 'subscribe-subscribed';
 export const DISMISS_DAYS = 30;
+let triggerTimeout: ReturnType<typeof setTimeout> | null = null;
+let removeScrollTrigger: (() => void) | null = null;
+
+function clearBannerTrigger() {
+  if (triggerTimeout) clearTimeout(triggerTimeout);
+  triggerTimeout = null;
+  removeScrollTrigger?.();
+  removeScrollTrigger = null;
+}
 
 export function isDismissed(): boolean {
   if (localStorage.getItem(SUBSCRIBED_KEY)) return true;
@@ -13,6 +22,7 @@ export function isDismissed(): boolean {
 function showBanner() {
   const banner = document.querySelector<HTMLElement>('[data-subscribe-banner]');
   if (!banner || isDismissed()) return;
+  banner.removeAttribute('inert');
   banner.setAttribute('aria-hidden', 'false');
 }
 
@@ -20,10 +30,12 @@ function dismissBanner() {
   const banner = document.querySelector<HTMLElement>('[data-subscribe-banner]');
   if (!banner) return;
   banner.setAttribute('aria-hidden', 'true');
+  banner.setAttribute('inert', '');
   localStorage.setItem(DISMISSED_KEY, String(Date.now()));
 }
 
 function setupBannerTrigger() {
+  clearBannerTrigger();
   if (isDismissed()) return;
 
   const isHome = window.location.pathname === '/';
@@ -32,12 +44,16 @@ function setupBannerTrigger() {
     function onScroll() {
       if (window.scrollY > window.innerHeight) {
         showBanner();
-        window.removeEventListener('scroll', onScroll);
+        clearBannerTrigger();
       }
     }
     window.addEventListener('scroll', onScroll, { passive: true });
+    removeScrollTrigger = () => window.removeEventListener('scroll', onScroll);
   } else {
-    setTimeout(showBanner, 8000);
+    triggerTimeout = setTimeout(() => {
+      triggerTimeout = null;
+      showBanner();
+    }, 8000);
   }
 }
 
@@ -95,3 +111,5 @@ export function initSubscribe() {
   setupCloseButton();
   setupBannerTrigger();
 }
+
+document.addEventListener('astro:before-preparation', clearBannerTrigger);

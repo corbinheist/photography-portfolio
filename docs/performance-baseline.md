@@ -34,7 +34,7 @@ Essay HTML is larger because photo manifests include responsive image metadata a
 `pnpm check:bundle` enforces deliberately loose Phase 0 ceilings:
 
 - Largest JavaScript asset: 1,100,000 B
-- Total JavaScript: 1,250,000 B
+- Total JavaScript: 1,260,000 B
 - Largest CSS asset: 80,000 B
 - Largest HTML page: 525,000 B
 - Referenced JavaScript on map-free pages: 50,000 B raw

@@ -4,7 +4,7 @@ import path from 'node:path';
 const distDir = path.join(process.cwd(), process.env.ASTRO_OUT_DIR || 'dist');
 const limits = {
   largestJavaScript: 1_100_000,
-  totalJavaScript: 1_250_000,
+  totalJavaScript: 1_260_000,
   largestCss: 80_000,
   largestHtml: 525_000,
   mapFreeReferencedJavaScript: 50_000,

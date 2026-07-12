@@ -36,7 +36,7 @@ const paletteItems = [
 ];
 ---
 
-<div class="cmd" data-cmd aria-hidden="true">
+<div class="cmd" data-cmd aria-hidden="true" role="dialog" aria-modal="true" aria-label="Site search" inert>
   <div class="cmd__backdrop" data-cmd-close></div>
   <div class="cmd__box">
     <div class="cmd__row">
@@ -62,7 +62,12 @@ const paletteItems = [
 <script type="application/json" data-cmd-items set:html={JSON.stringify(paletteItems)}></script>
 
 <script>
+  let commandPaletteController: AbortController | null = null;
+
   function initCommandPalette() {
+    commandPaletteController?.abort();
+    commandPaletteController = new AbortController();
+    const { signal } = commandPaletteController;
     const cmd = document.querySelector<HTMLElement>('[data-cmd]');
     const input = document.querySelector<HTMLInputElement>('[data-cmd-input]');
     const ghost = document.querySelector<HTMLElement>('[data-cmd-ghost]');
@@ -76,12 +81,15 @@ const paletteItems = [
       JSON.parse(dataEl.textContent || '[]');
     let matchIdx = 0;
     let currentMatches: typeof items = [];
+    let previousFocus: HTMLElement | null = null;
 
     function isOpen() {
       return cmd!.getAttribute('aria-hidden') === 'false';
     }
 
     function open() {
+      previousFocus = document.activeElement as HTMLElement | null;
+      cmd!.removeAttribute('inert');
       cmd!.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
       input!.value = '';
@@ -89,12 +97,17 @@ const paletteItems = [
       currentMatches = [];
       updateGhost('');
       updateDest('');
-      setTimeout(() => input!.focus(), 20);
+      setTimeout(() => {
+        if (isOpen()) input!.focus();
+      }, 20);
     }
 
     function close() {
       cmd!.setAttribute('aria-hidden', 'true');
+      cmd!.setAttribute('inert', '');
       document.body.style.overflow = '';
+      previousFocus?.focus();
+      previousFocus = null;
     }
 
     function navigate(url: string) {
@@ -179,12 +192,12 @@ const paletteItems = [
       if (e.key === 'Escape' && isOpen()) {
         close();
       }
-    });
+    }, { signal });
 
     input!.addEventListener('input', () => {
       matchIdx = 0;
       update();
-    });
+    }, { signal });
 
     input!.addEventListener('keydown', (e) => {
       if (e.key === 'Tab') {
@@ -232,21 +245,21 @@ const paletteItems = [
       if (e.key === 'Escape') {
         close();
       }
-    });
+    }, { signal });
 
     // Click a match
     dest!.addEventListener('click', (e) => {
       const el = (e.target as HTMLElement).closest<HTMLElement>('[data-cmd-url]');
       if (el) navigate(el.dataset.cmdUrl!);
-    });
+    }, { signal });
 
-    backdrop?.addEventListener('click', close);
+    backdrop?.addEventListener('click', close, { signal });
 
     document.querySelectorAll('[data-command-palette-trigger]').forEach((btn) => {
-      btn.addEventListener('click', () => open());
+      btn.addEventListener('click', () => open(), { signal });
     });
 
-    document.addEventListener('astro:before-preparation', close);
+    document.addEventListener('astro:before-preparation', close, { signal });
   }
 
   document.addEventListener('astro:page-load', initCommandPalette);

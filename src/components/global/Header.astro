@@ -31,6 +31,7 @@ const navLinks = [
         type="button"
         aria-label="Toggle menu"
         aria-expanded="false"
+        aria-controls="main-navigation"
         data-menu-toggle
       >
         <span class="menu-bar"></span>
@@ -58,7 +59,7 @@ const navLinks = [
 <div class="nav-backdrop" data-nav-backdrop aria-hidden="true"></div>
 
 <!-- Dropdown sheet -->
-<nav class="nav-dropdown" data-nav-dropdown aria-hidden="true" aria-label="Main navigation">
+<nav id="main-navigation" class="nav-dropdown" data-nav-dropdown aria-hidden="true" aria-label="Main navigation" inert>
   <ul class="nav-list">
     {navLinks.map((link) => {
       const isActive = link.match === '/work'
@@ -72,6 +73,8 @@ const navLinks = [
               class:list={['nav-link', { 'nav-link--active': isActive || currentPath.startsWith('/work/') }]}
               type="button"
               data-nav-accordion
+              aria-expanded="false"
+              aria-controls="work-navigation"
             >
               <span class="nav-link__num">{link.num}</span>
               <span class="nav-link__label">{link.label}</span>
@@ -88,7 +91,7 @@ const navLinks = [
           )}
 
           {link.hasChildren && (
-            <div class="nav-accordion" data-nav-accordion-panel>
+            <div id="work-navigation" class="nav-accordion" data-nav-accordion-panel inert>
               {/* Work index link */}
               <a
                 href="/work"
@@ -141,6 +144,7 @@ const navLinks = [
 
     function openMenu() {
       toggle!.setAttribute('aria-expanded', 'true');
+      dropdown!.removeAttribute('inert');
       dropdown!.setAttribute('aria-hidden', 'false');
       backdrop!.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
@@ -155,6 +159,7 @@ const navLinks = [
     function closeMenu() {
       toggle!.setAttribute('aria-expanded', 'false');
       dropdown!.setAttribute('aria-hidden', 'true');
+      dropdown!.setAttribute('inert', '');
       backdrop!.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
       toggle!.focus();
@@ -212,6 +217,8 @@ const navLinks = [
       accordionBtn.addEventListener('click', () => {
         const expanded = accordionPanel.classList.toggle('nav-accordion--open');
         accordionBtn.classList.toggle('nav-link--expanded', expanded);
+        accordionBtn.setAttribute('aria-expanded', String(expanded));
+        accordionPanel.toggleAttribute('inert', !expanded);
       });
 
       // Auto-expand if currently on a work sub-page
@@ -219,6 +226,8 @@ const navLinks = [
       if (onWorkPage) {
         accordionPanel.classList.add('nav-accordion--open');
         accordionBtn.classList.add('nav-link--expanded');
+        accordionBtn.setAttribute('aria-expanded', 'true');
+        accordionPanel.removeAttribute('inert');
       }
     }
   }
@@ -229,6 +238,7 @@ const navLinks = [
     if (toggle?.getAttribute('aria-expanded') === 'true') {
       toggle.setAttribute('aria-expanded', 'false');
       document.querySelector<HTMLElement>('[data-nav-dropdown]')?.setAttribute('aria-hidden', 'true');
+      document.querySelector<HTMLElement>('[data-nav-dropdown]')?.setAttribute('inert', '');
       document.querySelector<HTMLElement>('[data-nav-backdrop]')?.setAttribute('aria-hidden', 'true');
       document.body.style.overflow = '';
     }
