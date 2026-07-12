@@ -318,7 +318,8 @@ Marker `num` is globally unique (`world-01`, `morocco-01`, …) so highlight wir
 
 - **Desktop `/work`**: clicking a marker / region locks the map (highlight + auto-expand the matching dossier row).
 - **Desktop region / inset / hidden**: clicking navigates directly to the marker's `target`.
-- **Mobile (anywhere)**: clicking always navigates. No lock.
+- **Mobile `/work`**: clicking selects the region and opens its story sheet.
+- **Mobile region / inset / hidden**: clicking navigates directly to the marker target.
 
 ### Files
 

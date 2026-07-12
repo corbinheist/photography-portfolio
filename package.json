@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "pnpm validate:content && astro check && astro build && pnpm check:bundle",
     "preview": "astro preview",
     "preview:start": "tsx scripts/preview.ts start",
     "preview:list": "tsx scripts/preview.ts list",
@@ -16,10 +16,13 @@
     "upload-images": "tsx scripts/upload-to-spaces.ts",
     "generate-yaml": "tsx scripts/generate-photo-yaml.ts",
     "fetch-rss": "tsx scripts/fetch-rss.ts",
+    "check:bundle": "tsx scripts/check-build-budget.ts",
+    "validate:content": "tsx scripts/validate-content.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "test:all": "vitest run && playwright test"
+    "test:e2e": "pnpm build && playwright test",
+    "test:e2e:built": "playwright test",
+    "test:all": "pnpm test && pnpm test:e2e"
   },
   "packageManager": "pnpm@10.29.1",
   "pnpm": {

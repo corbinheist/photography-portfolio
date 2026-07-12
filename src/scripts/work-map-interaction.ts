@@ -29,6 +29,7 @@ function init() {
   const sheetBackdrop = document.querySelector<HTMLElement>('[data-story-sheet-backdrop]');
   const sheetDrawer = document.querySelector<HTMLElement>('[data-story-sheet-drawer]');
   const sheetContent = document.querySelector<HTMLElement>('[data-story-sheet-content]');
+  const sheetClose = document.querySelector<HTMLButtonElement>('[data-story-sheet-close]');
   const isMobile = () => window.matchMedia('(max-width: 1023px)').matches;
 
   if (collections.length === 0) return;
@@ -67,7 +68,7 @@ function init() {
       if (show) visibleCollections++;
     });
 
-    document.querySelectorAll<HTMLElement>('.map-marker--label-only').forEach((el) => {
+    document.querySelectorAll<HTMLElement>('.map-marker--label-only[data-view="world"]').forEach((el) => {
       const num = el.dataset.markerNum;
       if (!num) return;
       const ownerNode = collections.find((c) => c.dataset.storyMarker === num);
@@ -136,6 +137,9 @@ function init() {
       const isOpen = toggle.getAttribute('aria-expanded') === 'true';
       if (isOpen) {
         setExpanded(node, false);
+        if (mapContainer && (mapContainer as any).__setLocked) {
+          (mapContainer as any).__setLocked(null);
+        }
       } else {
         collapseAllExcept(node);
         setExpanded(node, true);
@@ -148,41 +152,102 @@ function init() {
   });
 
   // ── Mobile bottom sheet ──
+  let sheetReturnFocus: HTMLElement | null = null;
+
+  function getSheetFocusable() {
+    if (!sheetDrawer) return [];
+    return Array.from(sheetDrawer.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    ));
+  }
+
   function openSheet(node: HTMLElement) {
-    if (!sheet || !sheetContent) return;
+    if (!sheet || !sheetContent || !sheetDrawer) return;
     const num = node.dataset.storyMarker || '';
     const title =
       node.querySelector('.dossier-collection__title')?.textContent ?? '';
     const meta = node.querySelector('.dossier-collection__meta')?.textContent ?? '';
     const cid = node.dataset.dossierCollection ?? '';
-    const essaysHTML = node.querySelector('.dossier-collection__essays')?.innerHTML ?? '';
+    const sourceEssays = node.querySelector<HTMLElement>('.dossier-collection__essays');
 
-    sheetContent.innerHTML = `
-      <div class="story-sheet__head">
-        <span class="story-sheet__num">${num.replace('world-', '')}</span>
-        <div class="story-sheet__title-block">
-          <h3 class="story-sheet__title">${title}</h3>
-          <span class="story-sheet__meta">${meta}</span>
-        </div>
-      </div>
-      ${essaysHTML
-        ? `<div class="story-sheet__essays">${essaysHTML}</div>`
-        : `<a class="story-sheet__cta" href="/work/${cid}">Open region ${title} &rarr;</a>`}
-    `;
+    const head = document.createElement('div');
+    head.className = 'story-sheet__head';
+    const numEl = document.createElement('span');
+    numEl.className = 'story-sheet__num';
+    numEl.textContent = num.replace('world-', '');
+    const titleBlock = document.createElement('div');
+    titleBlock.className = 'story-sheet__title-block';
+    const titleEl = document.createElement('h3');
+    titleEl.className = 'story-sheet__title';
+    titleEl.id = 'story-sheet-heading';
+    titleEl.textContent = title;
+    const metaEl = document.createElement('span');
+    metaEl.className = 'story-sheet__meta';
+    metaEl.textContent = meta;
+    titleBlock.append(titleEl, metaEl);
+    head.append(numEl, titleBlock);
+    sheetContent.replaceChildren(head);
+
+    if (sourceEssays) {
+      const essays = document.createElement('div');
+      essays.className = 'story-sheet__essays';
+      essays.append(...Array.from(sourceEssays.children, (child) => child.cloneNode(true)));
+      sheetContent.append(essays);
+    } else {
+      const cta = document.createElement('a');
+      cta.className = 'story-sheet__cta';
+      cta.href = `/work/${encodeURIComponent(cid)}`;
+      cta.textContent = `Open region ${title} →`;
+      sheetContent.append(cta);
+    }
+    sheetReturnFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    sheet.inert = false;
     sheet.setAttribute('aria-hidden', 'false');
+    (sheetClose ?? getSheetFocusable()[0] ?? sheetDrawer).focus();
   }
 
   function closeSheet() {
-    if (!sheet) return;
+    if (!sheet || sheet.getAttribute('aria-hidden') === 'true') return;
     sheet.setAttribute('aria-hidden', 'true');
+    sheet.inert = true;
+    sheetReturnFocus?.focus();
+    sheetReturnFocus = null;
   }
 
-  sheetBackdrop?.addEventListener('click', () => {
+  function closeSheetAndUnlock() {
     closeSheet();
     if (mapContainer && (mapContainer as any).__setLocked) {
       (mapContainer as any).__setLocked(null);
     }
-  });
+  }
+
+  sheetBackdrop?.addEventListener('click', closeSheetAndUnlock);
+  sheetClose?.addEventListener('click', closeSheetAndUnlock);
+  sheet?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      closeSheetAndUnlock();
+      return;
+    }
+    if (e.key !== 'Tab') return;
+    const focusable = getSheetFocusable();
+    if (focusable.length === 0) {
+      e.preventDefault();
+      sheetDrawer?.focus();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, { capture: true });
 
   // Swipe-to-dismiss on the drawer
   if (sheetDrawer) {
@@ -217,10 +282,7 @@ function init() {
       tracking = false;
       const dy = touchCurrentY - touchStartY;
       if (dy > 80) {
-        closeSheet();
-        if (mapContainer && (mapContainer as any).__setLocked) {
-          (mapContainer as any).__setLocked(null);
-        }
+        closeSheetAndUnlock();
       }
       sheetDrawer.style.transform = '';
     });

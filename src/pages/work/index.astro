@@ -241,11 +241,25 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
       </div>
 
       <!-- Mobile bottom sheet (hidden on desktop) -->
-      <div class="story-sheet" data-story-sheet aria-hidden="true">
+      <div
+        class="story-sheet"
+        data-story-sheet
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="story-sheet-heading"
+        aria-hidden="true"
+        inert
+      >
         <div class="story-sheet__backdrop" data-story-sheet-backdrop></div>
-        <div class="story-sheet__drawer" data-story-sheet-drawer>
+        <div class="story-sheet__drawer" data-story-sheet-drawer tabindex="-1">
           <div class="story-sheet__handle">
             <span class="story-sheet__handle-bar"></span>
+            <button
+              class="story-sheet__close"
+              type="button"
+              data-story-sheet-close
+              aria-label="Close region details"
+            >&times;</button>
           </div>
           <div class="story-sheet__content" data-story-sheet-content>
           </div>
@@ -1035,6 +1049,24 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
       background: var(--color-border);
     }
 
+    .story-sheet__close {
+      position: absolute;
+      top: 6px;
+      right: var(--space-sm);
+      width: 36px;
+      height: 36px;
+      border: 0;
+      background: transparent;
+      color: var(--color-text-muted);
+      font: 24px/1 var(--font-sans);
+      cursor: pointer;
+    }
+
+    .story-sheet__close:focus-visible {
+      outline: 1px solid var(--color-text);
+      outline-offset: 2px;
+    }
+
     .story-sheet__content {
       padding: 0 var(--space-md) var(--space-lg);
     }
@@ -1167,6 +1199,10 @@ const totalEssayCount = dossierNodes.reduce((n, d) => n + d.essays.length, 0);
     if (!hero || !content) return;
 
     document.addEventListener('keydown', (e) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.isContentEditable || target?.closest('a, button, input, select, textarea')) {
+        return;
+      }
       if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
         // If we're still viewing the map hero, snap to content
         if (window.scrollY < hero.offsetHeight * 0.5) {

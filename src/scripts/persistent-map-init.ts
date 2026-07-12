@@ -111,6 +111,9 @@ function applyMarkerVisibility(state: MapState) {
     '[data-persistent-map] .map-marker[data-view]',
   );
   for (const el of markers) {
+    // Year filtering on /work uses an inline display override. The map DOM
+    // persists across routes, so clear that page-local state on every sync.
+    el.style.removeProperty('display');
     const view = el.dataset.view;
     const cid = el.dataset.collectionId;
     let active = false;
