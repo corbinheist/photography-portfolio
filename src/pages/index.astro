@@ -2,118 +2,234 @@
 import { getCollection } from 'astro:content';
 import SiteLayout from '@layouts/SiteLayout.astro';
 import Photo from '@components/photo/Photo.astro';
+import StoryHero from '@components/story/StoryHero.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
-import { formatStoryDate, loadManifest, resolvePhoto, storyUrl } from '@scripts/utils/story-manifest';
+import { formatStoryDate, loadManifest, orderedImageIds, resolvePhoto, storyUrl } from '@scripts/utils/story-manifest';
 
 const stories = (await getCollection('stories', (story) => !story.data.draft))
   .sort((a, b) => a.data.order - b.data.order)
-  .map((story) => ({ story, cover: resolvePhoto(story.id, loadManifest(story.id), story.data.cover) }));
+  .map((story, index) => {
+    const manifest = loadManifest(story.id);
+    const order = orderedImageIds(story.body ?? '');
+    const cover = resolvePhoto(story.id, manifest, story.data.cover);
+    // The lead story's hero already shows its cover, so its index row uses the next photograph.
+    const thumbId = index === 0 ? order.find((id) => id !== story.data.cover) ?? story.data.cover : story.data.cover;
+    return {
+      story,
+      href: storyUrl(story.id, story.data.url),
+      number: String(index + 1).padStart(2, '0'),
+      frames: order.length,
+      cover,
+      thumb: resolvePhoto(story.id, manifest, thumbId),
+    };
+  });
 
 const [lead] = stories;
 ---
 
 <SiteLayout
-  title="Corbin Heist"
+  title="Heist Studio · Corbin Heist"
   description="Documentary photography of people and the work they do outdoors."
   image={lead && buildPhotoUrl(lead.cover.url, lead.cover.width, 1600)}
 >
   {lead && (
-    <a href={storyUrl(lead.story.id, lead.story.data.url)} class="home-hero">
-      <Photo url={lead.cover.url} width={lead.cover.width} height={lead.cover.height} lqip={lead.cover.lqip} alt={lead.cover.alt} sizes="100vw" loading="eager" fetchpriority="high" />
-    </a>
+    <StoryHero
+      photo={lead.cover}
+      title={lead.story.data.title}
+      summary={lead.story.data.summary}
+      overline={[`N° ${lead.number}`, lead.story.data.place, formatStoryDate(lead.story.data.date), `${lead.frames} frames`].join(' · ')}
+      cta={{ href: lead.href, label: 'Open the story' }}
+      transitionName={`cover-${lead.story.id}`}
+      headingLevel="h2"
+    />
   )}
 
-  <section class="home-intro">
-    <!-- PENDING APPROVAL (STU-20): positioning sentence, option A. -->
-    <h1 class="home-intro__line">
-      Documentary photography of people and the work they do outdoors: nomad families in the High Atlas, ultrarunners in the Bougmez, kissaten counters in Tokyo.
-    </h1>
+  <section class="statement">
+    <!-- PENDING APPROVAL (STU-20): positioning sentence. -->
+    <h1>Documentary photography of people and the work they do outdoors: nomad families in the High Atlas, ultrarunners in the Bougmez, kissaten counters in Tokyo.</h1>
   </section>
 
-  <ol class="home-stories">
-    {stories.map(({ story, cover }) => (
-      <li>
-        <a href={storyUrl(story.id, story.data.url)} class="home-story">
-          <Photo url={cover.url} width={cover.width} height={cover.height} lqip={cover.lqip} alt={cover.alt} sizes="(max-width: 767px) 100vw, 50vw" />
-          <p class="home-story__meta">{[story.data.place, formatStoryDate(story.data.date), story.data.client].filter(Boolean).join(' · ')}</p>
-          <h2 class="home-story__title">{story.data.title}</h2>
-          <p class="home-story__summary">{story.data.summary}</p>
-        </a>
-      </li>
-    ))}
-  </ol>
+  <section id="work" class="ledger" aria-labelledby="work-heading">
+    <header class="ledger__head">
+      <h2 id="work-heading" class="mono-label">Selected stories</h2>
+      <p class="mono-label tabular">{stories.length} stories · {stories.reduce((sum, s) => sum + s.frames, 0)} frames</p>
+    </header>
+    <ol>
+      {stories.map(({ story, href, number, frames, thumb }, index) => (
+        <li>
+          <a href={href} class="ledger__row">
+            <span class="ledger__num mono-label tabular">N° {number}</span>
+            <span class="ledger__thumb" style={index > 0 ? `view-transition-name: cover-${story.id}` : undefined}>
+              <Photo url={thumb.url} width={thumb.width} height={thumb.height} lqip={thumb.lqip} alt={thumb.alt} sizes="(max-width: 767px) 100vw, 360px" />
+            </span>
+            <span class="ledger__text">
+              <span class="ledger__title">{story.data.title}</span>
+              <span class="ledger__summary">{story.data.summary}</span>
+              {story.data.client && <span class="ledger__client mono-label">Commission · {story.data.client}</span>}
+            </span>
+            <span class="ledger__facts mono-label tabular">
+              <span>{story.data.place}</span>
+              <span>{formatStoryDate(story.data.date)}</span>
+              <span class="ledger__frames">{frames} frames</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
 
-  <section class="home-outro">
-    <p>I live at the foot of Rattlesnake Mountain, in the Snoqualmie Valley. The camera comes because I'm going anyway.</p>
-    <p><a href="mailto:corbin@heist.studio">corbin@heist.studio</a></p>
+  <section class="outro">
+    <p class="outro__line">I live at the foot of Rattlesnake Mountain, in the Snoqualmie Valley. The camera comes because I'm going anyway.</p>
+    <p class="outro__commission">Have a story worth spending time with? I take a small number of documentary and editorial commissions each year.</p>
+    <a class="outro__email" href="mailto:corbin@heist.studio">corbin@heist.studio</a>
   </section>
 </SiteLayout>
 
 <style>
-  .home-hero :global(img) {
-    width: 100%;
-    max-height: 85svh;
-    object-fit: cover;
+  .statement {
+    padding: clamp(5rem, 12vw, 9rem) var(--container-padding) clamp(3rem, 8vw, 6rem);
   }
 
-  .home-intro,
-  .home-outro {
-    width: min(41rem, 100% - 2 * var(--container-padding));
-    margin: var(--space-2xl) auto;
-  }
-
-  .home-intro__line {
+  .statement h1 {
+    max-width: 30ch;
     font-family: var(--font-heading);
-    font-size: var(--text-2xl);
     font-weight: 400;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
+    font-size: clamp(1.75rem, 3.2vw, 2.75rem);
+    line-height: 1.22;
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
   }
 
-  .home-stories {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 28rem), 1fr));
-    gap: var(--space-2xl) var(--space-xl);
+  .ledger {
     padding-inline: var(--container-padding);
   }
 
-  .home-story :global(img) {
+  .ledger__head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .ledger__head h2 {
+    font-weight: 400;
+  }
+
+  .ledger li {
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .ledger__row {
+    display: grid;
+    grid-template-columns: 7ch minmax(220px, 360px) 1fr 22ch;
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+    align-items: start;
+    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .ledger__num {
+    padding-top: 0.35em;
+  }
+
+  .ledger__thumb :global(img) {
     width: 100%;
     aspect-ratio: 3 / 2;
     object-fit: cover;
+    opacity: 0.88;
+    transition: opacity 240ms ease;
   }
 
-  .home-story__meta {
-    margin-top: var(--space-sm);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-text-faint);
+  .ledger__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
   }
 
-  .home-story__title {
+  .ledger__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    transition: color 200ms ease;
+  }
+
+  .ledger__summary {
+    max-width: 52ch;
+    color: var(--color-text-muted);
+  }
+
+  .ledger__client {
     margin-top: var(--space-xs);
+    color: var(--hs-ember);
+  }
+
+  .ledger__facts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    text-align: right;
+    padding-top: 0.35em;
+  }
+
+  .ledger__frames {
+    color: var(--hs-moss);
+  }
+
+  .ledger__row:hover .ledger__thumb :global(img) {
+    opacity: 1;
+  }
+
+  .ledger__row:hover .ledger__title {
+    color: var(--hs-moss);
+  }
+
+  @media (max-width: 899px) {
+    .ledger__row {
+      grid-template-columns: 1fr;
+      gap: var(--space-sm);
+    }
+
+    .ledger__num { order: 2; padding-top: 0; }
+    .ledger__thumb { order: 1; }
+    .ledger__text { order: 3; }
+
+    .ledger__facts {
+      order: 4;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0 1.2em;
+      text-align: left;
+    }
+  }
+
+  .outro {
+    max-width: calc(41rem + 2 * var(--container-padding));
+    padding: clamp(5rem, 10vw, 8rem) var(--container-padding) 0;
+  }
+
+  .outro__line {
     font-family: var(--font-heading);
     font-size: var(--text-xl);
-    font-weight: 400;
-    letter-spacing: -0.02em;
+    line-height: 1.35;
   }
 
-  .home-story__summary {
-    margin-top: var(--space-xs);
+  .outro__commission {
+    margin-top: var(--space-md);
     color: var(--color-text-muted);
   }
 
-  .home-story:hover .home-story__title {
-    color: var(--color-accent);
+  .outro__email {
+    display: inline-block;
+    margin-top: var(--space-md);
+    font-family: var(--font-mono);
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: var(--hs-moss);
+    border-bottom: 1px solid currentColor;
   }
 
-  .home-outro {
-    color: var(--color-text-muted);
-  }
-
-  .home-outro a {
-    color: var(--color-accent);
+  .outro__email:hover {
+    color: var(--hs-ember);
   }
 </style>

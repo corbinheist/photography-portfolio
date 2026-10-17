@@ -22,38 +22,90 @@ const { title, description, image, type, noindex, location } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
       rel="stylesheet"
     />
     <slot name="head" />
     <SEO title={title} description={description} image={image} type={type} noindex={noindex} location={location} />
     <script is:inline defer src="https://analytics.heist.studio/script.js" data-website-id="c305a664-d222-41eb-937a-8309bf7208f0" data-domains="heist.studio"></script>
-    <!-- Dark by default; follow the system setting. No toggle. -->
-    <script is:inline>
-      (function () {
-        var query = window.matchMedia('(prefers-color-scheme: light)');
-        function apply() { document.documentElement.setAttribute('data-theme', query.matches ? 'light' : 'dark'); }
-        apply();
-        query.addEventListener('change', apply);
-      })();
-    </script>
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <Header />
-    <main class="site-main">
+    <main id="main" class="site-main">
       <slot />
     </main>
     <Footer />
   </body>
 </html>
 
-<style>
+<style is:global>
+  :root {
+    --header-h: 64px;
+  }
+
+  @media (max-width: 767px) {
+    :root {
+      --header-h: 56px;
+    }
+  }
+
+  /* Cross-document view transitions: the index cover grows into the story hero where the browser supports it. */
+  @view-transition {
+    navigation: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition {
+      navigation: none;
+    }
+  }
+
+  html {
+    scroll-padding-top: calc(var(--header-h) + 56px);
+  }
+
   .site-main {
     min-height: 100dvh;
+  }
+
+  /* Pages without a hero start below the fixed header. */
+  .site-main:not(:has([data-hero])) {
+    padding-top: var(--header-h);
+  }
+
+  .skip-link {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 100;
+    padding: 0.6em 1em;
+    background: var(--fx-paper);
+    color: var(--fx-black);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus {
+    transform: none;
+  }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-faint);
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
   }
 </style>

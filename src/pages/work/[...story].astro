@@ -4,7 +4,7 @@ import StoryLayout from '@layouts/StoryLayout.astro';
 import Image from '@components/story/Image.astro';
 import Pair from '@components/story/Pair.astro';
 import Quote from '@components/story/Quote.astro';
-import { loadManifest, storyUrl } from '@scripts/utils/story-manifest';
+import { loadManifest, orderedImageIds, storyUrl } from '@scripts/utils/story-manifest';
 
 export async function getStaticPaths() {
   // STORIES_INCLUDE_DRAFTS=1 builds draft stories for a local preview. Production builds omit them.
@@ -13,16 +13,22 @@ export async function getStaticPaths() {
     .sort((a, b) => a.data.order - b.data.order);
   return stories.map((story, index) => ({
     params: { story: storyUrl(story.id, story.data.url).replace(/^\/work\/|\/$/g, '') },
-    props: { story, next: stories.length > 1 ? stories[(index + 1) % stories.length] : undefined },
+    props: {
+      story,
+      number: index + 1,
+      prev: index > 0 ? stories[index - 1] : undefined,
+      next: index < stories.length - 1 ? stories[index + 1] : undefined,
+    },
   }));
 }
 
-const { story, next } = Astro.props;
+const { story, number, prev, next } = Astro.props;
 const photos = loadManifest(story.id);
-Astro.locals.story = { slug: story.id, photos };
-const { Content } = await render(story);
+const order = orderedImageIds(story.body ?? '');
+Astro.locals.story = { slug: story.id, photos, numbers: new Map(order.map((id, index) => [id, index + 1])) };
+const { Content, headings } = await render(story);
 ---
 
-<StoryLayout story={story} photos={photos} next={next}>
+<StoryLayout story={story} photos={photos} number={number} frames={order.length} chapters={headings.filter((h) => h.depth === 2)} prev={prev} next={next}>
   <Content components={{ Image, Pair, Quote }} />
 </StoryLayout>

@@ -2,32 +2,74 @@
 import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
 import SiteLayout from './SiteLayout.astro';
+import StoryHero from '@components/story/StoryHero.astro';
+import Photo from '@components/photo/Photo.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
-import { formatStoryDate, resolvePhoto, storyUrl, type StoryManifest } from '@scripts/utils/story-manifest';
+import {
+  formatCoords,
+  formatStoryDate,
+  kitFromExif,
+  loadManifest,
+  resolvePhoto,
+  storyUrl,
+  type StoryManifest,
+} from '@scripts/utils/story-manifest';
 import '@styles/story.css';
 
+type Story = CollectionEntry<'stories'>;
+
 interface Props {
-  story: CollectionEntry<'stories'>;
+  story: Story;
   photos: StoryManifest;
-  next?: CollectionEntry<'stories'>;
+  number: number;
+  frames: number;
+  chapters: { slug: string; text: string }[];
+  prev?: Story;
+  next?: Story;
 }
 
-const { story, photos, next } = Astro.props;
-const { title, place, date, summary, cover, client, theme, credits } = story.data;
+const { story, photos, number, frames, chapters, prev, next } = Astro.props;
+const { title, place, date, summary, cover, client, theme, credits, region, coords, elevation_m } = story.data;
 const coverPhoto = resolvePhoto(story.id, photos, cover);
 const settings = await getEntry('settings', 'settings');
-const overline = [place, formatStoryDate(date), client].filter(Boolean).join(' · ');
+const num = String(number).padStart(2, '0');
+const when = formatStoryDate(date);
+const ordered = [...(Astro.locals.story?.numbers.keys() ?? [])].map((id) => photos.get(id)).filter((photo) => photo !== undefined);
+const kit = kitFromExif(ordered);
+
+const facts = [
+  { label: 'Place', value: place },
+  region && { label: 'Region', value: region },
+  coords && { label: 'Coords', value: formatCoords(coords), measured: true },
+  elevation_m !== undefined && { label: 'Elev.', value: `${elevation_m.toLocaleString('en-GB')} m`, measured: true },
+  { label: 'Date', value: when },
+  { label: 'Frames', value: String(frames), measured: true },
+  client && { label: 'Client', value: client },
+].filter(Boolean) as { label: string; value: string; measured?: boolean }[];
+
+const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data.cover);
 ---
 
-<SiteLayout title={title} description={summary} image={buildPhotoUrl(coverPhoto.url, coverPhoto.width, 1600)} type="article" location={place}>
+<SiteLayout title={`${title} · Heist Studio`} description={summary} image={buildPhotoUrl(coverPhoto.url, coverPhoto.width, 1600)} type="article" location={place}>
   <article class="story" data-story data-story-theme={theme}>
-    <header class="story-header">
-      <p class="story-overline">{overline}</p>
-      <h1 class="story-title">{title}</h1>
-      <p class="story-summary">{summary}</p>
-    </header>
+    <StoryHero
+      photo={coverPhoto}
+      title={title}
+      summary={summary}
+      overline={[`N° ${num}`, place, when].join(' · ')}
+      facts={facts}
+      chapters={chapters}
+      transitionName={`cover-${story.id}`}
+    />
 
-    <div class="story-body">
+    <div class="story-bar" aria-label="Story position">
+      <a class="story-bar__back" href="/#work"><span aria-hidden="true">←</span> All work</a>
+      <p class="story-bar__title"><span class="tabular">N° {num}</span> · {title}<span class="story-bar__chapter" data-story-chapter></span></p>
+      <p class="story-bar__frame tabular">Frame <span data-story-frame>01</span> / {String(frames).padStart(2, '0')}<span class="story-bar__pct"> · <span data-story-pct>0</span>%</span></p>
+      <span class="story-bar__progress" data-story-progress></span>
+    </div>
+
+    <div class="story-body" id="story-body">
       <slot />
     </div>
 
@@ -36,13 +78,32 @@ const overline = [place, formatStoryDate(date), client].filter(Boolean).join(' �
         <div><dt>Photography</dt><dd>{settings?.data.author.name}</dd></div>
         {client && <div><dt>Client</dt><dd>{client}</dd></div>}
         {credits.map((credit) => <div><dt>{credit.role}</dt><dd>{credit.name}</dd></div>)}
+        {kit.length > 0 && <div><dt>Kit</dt><dd>{kit.join(' · ')}</dd></div>}
+        <div><dt>Record</dt><dd class="tabular">{frames} frames · {when} · {place}</dd></div>
       </dl>
-      {next && (
-        <a class="story-next" href={storyUrl(next.id, next.data.url)}>
-          <span class="story-overline">Next story</span>
-          <span class="story-next__title">{next.data.title}</span>
-        </a>
-      )}
+
+      <p class="story-end__ask">Have a story worth spending time with? <a href="mailto:corbin@heist.studio">corbin@heist.studio</a></p>
     </footer>
+
+    {next && nextCover && (
+      <a class="story-next" href={storyUrl(next.id, next.data.url)}>
+        <Photo url={nextCover.url} width={nextCover.width} height={nextCover.height} lqip={nextCover.lqip} alt={nextCover.alt} sizes="100vw" />
+        <span class="story-next__body">
+          <span class="mono-label">Next · N° {String(number + 1).padStart(2, '0')}</span>
+          <span class="story-next__title">{next.data.title}</span>
+          <span class="story-next__summary">{next.data.summary}</span>
+        </span>
+      </a>
+    )}
+
+    <nav class="story-pager" aria-label="More stories">
+      {prev ? <a href={storyUrl(prev.id, prev.data.url)}><span aria-hidden="true">←</span> Previous · {prev.data.title}</a> : <span></span>}
+      <a href="/#work">All work <span aria-hidden="true">↑</span></a>
+    </nav>
   </article>
+
+  <script>
+    import { initStoryNav } from '@scripts/story-nav';
+    initStoryNav();
+  </script>
 </SiteLayout>

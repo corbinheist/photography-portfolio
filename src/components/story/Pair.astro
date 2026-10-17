@@ -9,14 +9,17 @@ interface Props {
 
 const { ids, captions = [] } = Astro.props;
 if (ids.length !== 2) throw new Error(`Story "${Astro.locals.story?.slug}": <Pair> needs exactly two ids, got ${ids.length}`);
-const photos = ids.map((id) => storyPhoto(Astro.locals, id));
+const photos = ids.map((id) => ({ id, photo: storyPhoto(Astro.locals, id), frame: Astro.locals.story?.numbers.get(id) }));
 ---
 
 <div class="story-pair">
-  {photos.map((photo, index) => (
-    <figure class="story-figure" style={`--ratio: ${photo.width / photo.height}`}>
+  {photos.map(({ photo, frame }, index) => (
+    <figure class="story-figure" style={`--ratio: ${photo.width / photo.height}`} data-frame={frame}>
       <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 767px) 100vw, 50vw" />
-      {captions[index] && <figcaption class="story-caption">{captions[index]}</figcaption>}
+      <figcaption class="story-caption">
+        {frame && <span class="story-caption__num tabular">{String(frame).padStart(2, '0')}</span>}
+        {captions[index] && <span>{captions[index]}</span>}
+      </figcaption>
     </figure>
   ))}
 </div>

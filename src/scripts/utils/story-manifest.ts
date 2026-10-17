@@ -113,3 +113,47 @@ export function formatStoryDate(date: string): string {
   const [year, month] = date.split('-');
   return month ? new Date(Number(year), Number(month) - 1).toLocaleString('en-GB', { month: 'long', year: 'numeric' }) : year;
 }
+
+/**
+ * Image ids in reading order, with <Image> and <Pair> interleaved as they appear in the MDX.
+ * A photograph that appears twice keeps its first position.
+ */
+export function orderedImageIds(mdx: string): string[] {
+  const ordered: string[] = [];
+  const pattern = /<Image\b[^>]*?\bid\s*=\s*(?:"([^"]*)"|'([^']*)'|\{\s*["']([^"']*)["']\s*\})|<Pair\b[^>]*?\bids\s*=\s*\{\s*\[([^\]]*)\]\s*\}/g;
+  for (const match of mdx.matchAll(pattern)) {
+    const ids = match[4] !== undefined ? [...match[4].matchAll(/["']([^"']+)["']/g)].map((item) => item[1]) : [match[1] ?? match[2] ?? match[3]];
+    for (const id of ids) if (!ordered.includes(id)) ordered.push(id);
+  }
+  return ordered;
+}
+
+/** Format decimal degrees as 31°16′N 5°59′W. */
+export function formatCoords({ lat, lon }: { lat: number; lon: number }): string {
+  const part = (value: number, positive: string, negative: string) => {
+    const abs = Math.abs(value);
+    const degrees = Math.floor(abs);
+    const minutes = Math.round((abs - degrees) * 60);
+    return `${degrees}°${String(minutes).padStart(2, '0')}′${value >= 0 ? positive : negative}`;
+  };
+  return `${part(lat, 'N', 'S')} ${part(lon, 'E', 'W')}`;
+}
+
+/** The cameras and lenses that the EXIF of the given photographs names, most used first. */
+export function kitFromExif(photos: StoryPhoto[]): string[] {
+  const counts = new Map<string, number>();
+  for (const photo of photos) {
+    for (const item of [photo.exif?.camera, photo.exif?.lens]) {
+      if (item) counts.set(item, (counts.get(item) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([item]) => item.replace(/^Canon Canon /, 'Canon '));
+}
+
+/** The EXIF line for a caption, for example "Canon EOS R5m2 · 50mm · f/4 · 1/2500s". */
+export function exifLine(photo: StoryPhoto): string | undefined {
+  const exif = photo.exif;
+  if (!exif) return undefined;
+  const parts = [exif.camera, exif.focalLength, exif.aperture, exif.shutter].filter(Boolean);
+  return parts.length ? parts.join(' · ') : undefined;
+}

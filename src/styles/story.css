@@ -2,6 +2,7 @@
    Story — one MDX story at /work/<slug>/
    ========================================== */
 
+/* Gentle snap only: full-bleed frames and the title card align; prose scrolls freely. */
 html:has([data-story]) {
   scroll-snap-type: y proximity;
 }
@@ -13,137 +14,393 @@ html:has([data-story]) {
   }
 }
 
-.story {
-  padding-block: var(--space-3xl) var(--space-2xl);
+.story .hero {
+  scroll-snap-align: start;
 }
 
-/* Text blocks share one column of about 65 characters of body text. A rem width keeps
-   headings and paragraphs aligned (ch resolves against each element's own font size). */
-.story-header,
+/* ── Sticky story bar: appears once the title card has scrolled away ── */
+
+.story-bar {
+  position: fixed;
+  z-index: 40;
+  top: var(--header-h);
+  inset-inline: 0;
+  height: 44px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-md);
+  padding-inline: var(--container-padding);
+  background: rgb(16 15 15 / 0.9);
+  border-bottom: 1px solid var(--color-border-subtle);
+  backdrop-filter: blur(10px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  animation: bar-in linear both;
+  animation-timeline: scroll(root);
+  animation-range: 70svh 95svh;
+}
+
+@keyframes bar-in {
+  from { opacity: 0; translate: 0 -8px; visibility: hidden; }
+  to { opacity: 1; translate: 0 0; visibility: visible; }
+}
+
+.story-bar a {
+  color: var(--color-text-muted);
+}
+
+.story-bar a:hover {
+  color: var(--color-text);
+}
+
+.story-bar__title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.story-bar__chapter {
+  color: var(--color-text);
+}
+
+.story-bar__frame {
+  color: var(--color-text);
+}
+
+.story-bar__pct {
+  color: var(--hs-moss);
+}
+
+.story-bar__progress {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 2px;
+  width: 100%;
+  background: var(--hs-moss);
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+}
+
+/* ── Body: one text column, figures at three sizes ── */
+
+.story-body {
+  padding-block: clamp(4rem, 9vw, 7rem) var(--space-2xl);
+  counter-reset: chapter;
+}
+
 .story-body > *,
 .story-end {
   width: min(41rem, 100% - 2 * var(--container-padding));
   margin-inline: auto;
 }
 
-.story-overline,
-.story-caption,
-.story-credits dt {
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  font-variant-caps: all-small-caps;
-  letter-spacing: 0.08em;
-  color: var(--color-text-faint);
-}
-
-.story-title {
-  margin-block: var(--space-sm) var(--space-md);
-}
-
-.story-summary {
-  font-size: var(--text-lg);
-  color: var(--color-text-muted);
-}
-
-.story-header {
-  margin-bottom: var(--space-2xl);
-}
-
 .story-body > p,
 .story-body > ul,
 .story-body > ol {
   margin-bottom: var(--space-md);
+  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  line-height: 1.7;
+  color: var(--color-text);
 }
 
-.story-body > h2,
+.story-body > ul,
+.story-body > ol {
+  padding-left: 1.2em;
+  list-style: disc;
+}
+
+/* A chapter: a long pause, a mono number, a Vollkorn title. */
+.story-body > h2 {
+  counter-increment: chapter;
+  margin-block: clamp(6rem, 12vw, 10rem) var(--space-lg);
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.story-body > h2::before {
+  content: 'Chapter ' counter(chapter, decimal-leading-zero);
+  display: block;
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hs-moss);
+}
+
 .story-body > h3 {
-  margin-block: var(--space-xl) var(--space-md);
+  margin-block: var(--space-2xl) var(--space-sm);
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  line-height: 1.15;
 }
-
-/* ── Images: natural proportions, at most one viewport high ── */
 
 .story-body > .story-figure,
 .story-body > .story-pair {
-  width: 100%;
-  margin-block: var(--space-2xl);
-  scroll-snap-align: center;
+  margin-block: clamp(3rem, 7vw, 6rem);
 }
 
-.story-figure .photo-wrap .photo-img {
-  width: min(100%, 100svh * var(--ratio));
-  height: auto;
-  max-height: 100svh;
+/* wide (default): inside the page margins, natural proportions, at most 90% of the screen high */
+.story-body > .story-figure--wide {
+  width: calc(100% - 2 * var(--container-padding));
+  max-width: 1600px;
+}
+
+.story-figure .photo-wrap,
+.story-figure img {
   margin-inline: auto;
 }
 
-.story-caption {
-  margin-top: var(--space-sm);
-  text-align: center;
+.story-figure--wide img {
+  width: min(100%, 90svh * var(--ratio));
 }
 
-.story-pair {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-sm);
-  align-items: start;
+/* full: edge to edge, the frames that carry the story */
+.story-body > .story-figure--full {
+  width: 100%;
+  scroll-snap-align: center;
+}
+
+.story-figure--full img {
+  width: 100%;
+  max-height: 100svh;
+  object-fit: cover;
+}
+
+.story-figure--full .story-caption {
   padding-inline: var(--container-padding);
 }
 
+/* inset: a narrower plate for portraits and details */
+.story-body > .story-figure--inset {
+  width: min(720px, 100% - 2 * var(--container-padding));
+}
+
+.story-figure--inset img {
+  width: min(100%, 80svh * var(--ratio));
+}
+
+.story-body > .story-pair {
+  width: calc(100% - 2 * var(--container-padding));
+  max-width: 1600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  align-items: start;
+}
+
+.story-pair img {
+  width: 100%;
+}
+
 @media (max-width: 767px) {
-  .story-pair {
+  .story-body > .story-pair {
     grid-template-columns: 1fr;
+  }
+}
+
+.story-caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 1.2em;
+  margin-top: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+}
+
+.story-caption__num {
+  color: var(--hs-moss);
+}
+
+.story-caption__exif {
+  color: var(--color-text-faint);
+  opacity: 0.75;
+}
+
+/* Photographs come up out of the dark as they enter. Subtle: the frame is already there. */
+@supports (animation-timeline: view()) {
+  .story-figure img {
+    animation: frame-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+
+  @keyframes frame-up {
+    from { opacity: 0.4; }
   }
 }
 
 /* ── Quote ── */
 
 .story-body > .story-quote {
-  margin-block: var(--space-2xl);
+  margin-block: clamp(4rem, 8vw, 7rem);
 }
 
 .story-quote blockquote {
   font-family: var(--font-heading);
-  font-size: var(--text-2xl);
   font-style: italic;
-  line-height: 1.3;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 .story-quote .story-caption {
-  text-align: left;
+  margin-top: var(--space-md);
 }
 
-/* ── End: credits and the next story ── */
+/* ── End: credits, the ask, the next story ── */
 
 .story-end {
-  margin-top: var(--space-3xl);
-  padding-top: var(--space-lg);
+  padding-block: var(--space-2xl);
   border-top: 1px solid var(--color-border);
-  display: grid;
-  gap: var(--space-xl);
-}
-
-.story-credits {
-  display: grid;
-  gap: var(--space-xs);
 }
 
 .story-credits div {
   display: grid;
-  grid-template-columns: 12ch 1fr;
-  align-items: baseline;
+  grid-template-columns: 9rem 1fr;
+  gap: var(--space-md);
+  padding-block: 0.7em;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.story-credits dt {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+}
+
+.story-credits dd {
+  color: var(--color-text);
+}
+
+.story-end__ask {
+  margin-top: var(--space-xl);
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  line-height: 1.3;
+}
+
+.story-end__ask a {
+  display: block;
+  margin-top: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  color: var(--hs-moss);
 }
 
 .story-next {
-  display: grid;
-  gap: var(--space-xs);
+  position: relative;
+  display: block;
+  height: 72svh;
+  min-height: 420px;
+  overflow: hidden;
+}
+
+.story-next .photo-wrap,
+.story-next img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 1.2s var(--ease-out-expo);
+}
+
+.story-next:hover img {
+  scale: 1.02;
+}
+
+.story-next::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top right, rgb(16 15 15 / 0.88), rgb(16 15 15 / 0.3) 50%, transparent 75%);
+}
+
+.story-next__body {
+  position: absolute;
+  z-index: 1;
+  left: clamp(1.5rem, 4.5vw, 4rem);
+  bottom: clamp(2rem, 6svh, 4rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: min(760px, 80vw);
 }
 
 .story-next__title {
   font-family: var(--font-heading);
-  font-size: var(--text-2xl);
-  transition: color var(--duration-fast) ease;
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  color: var(--fx-paper);
 }
 
-.story-next:hover .story-next__title {
-  color: var(--color-accent);
+.story-next__summary {
+  max-width: 48ch;
+  color: rgb(255 252 240 / 0.82);
+}
+
+.story-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-lg) var(--container-padding);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.story-pager a {
+  color: var(--color-text-muted);
+}
+
+.story-pager a:hover {
+  color: var(--hs-moss);
+}
+
+@media (max-width: 767px) {
+  .story-bar {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+  }
+
+  .story-bar__title,
+  .story-bar__pct {
+    display: none;
+  }
+
+  .story-credits div {
+    grid-template-columns: 1fr;
+    gap: 0.2em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .story-bar {
+    animation: none;
+  }
+
+  .story-figure img {
+    animation: none;
+  }
+
+  .story-next img {
+    transition: none;
+  }
 }
