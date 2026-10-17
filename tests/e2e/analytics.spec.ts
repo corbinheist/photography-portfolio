@@ -21,7 +21,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('tracks essay opens and last-frame visibility', async ({ page }) => {
-  await page.goto('/work/morocco/wise-essay');
+  await page.goto('/work/morocco/ksar-essay');
   await expect.poll(async () => page.evaluate(() => {
     return window.__analyticsEvents.some((event) => event.name === 'essay-open');
   })).toBe(true);
