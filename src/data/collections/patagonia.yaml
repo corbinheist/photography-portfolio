@@ -17,4 +17,6 @@ map:
       lat: -50.94
       num: "02"
       target: /work/patagonia
+essays:
+  - patagonia-urth-essay
 archiveAlbums: []

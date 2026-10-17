@@ -23,15 +23,43 @@ type FilmPhoto = {
   albumUrl: string;
 };
 
-// Gather photos per collection (up to 6 each)
+// Gather photos per collection (up to 6 each). Essays are the primary
+// unit; archiveAlbums are the legacy fallback. Sample from essays first,
+// then top up from archive albums if a collection has fewer than 6.
 const photosByCollection: FilmPhoto[][] = [];
 collectionsWithMaps.forEach((c, i) => {
   const num = `world-${String(i + 1).padStart(2, '0')}`;
   const bucket: FilmPhoto[] = [];
+  const TARGET = 6;
+
+  // Essays first — pull cover-ish frames from each essay until target hit.
+  const essayIds = c.data.essays ?? [];
+  for (const essayId of essayIds) {
+    if (bucket.length >= TARGET) break;
+    const essay = essayById.get(essayId);
+    if (!essay) continue;
+    const cover = essay.data.coverPhotoIndex ?? 0;
+    const photos = essay.data.photos;
+    // Take cover first, then walk forward — natural progression of selects.
+    const order = [cover, ...photos.map((_, idx) => idx).filter((idx) => idx !== cover)];
+    for (const idx of order) {
+      if (bucket.length >= TARGET) break;
+      const p = photos[idx];
+      if (!p) continue;
+      bucket.push({
+        url: p.url, width: p.width, height: p.height, lqip: p.lqip,
+        collectionId: c.id, collectionTitle: c.data.title,
+        markerNum: num, albumUrl: `/work/${c.id}/${essayId.replace(`${c.id}-`, '')}`,
+      });
+    }
+  }
+
+  // Archive albums fill the remainder if the collection still has room.
   for (const albumId of c.data.archiveAlbums) {
+    if (bucket.length >= TARGET) break;
     const album = allAlbums.find((a) => a.id === albumId);
     if (!album || album.data.draft) continue;
-    for (const photoId of album.data.photos.slice(0, 6)) {
+    for (const photoId of album.data.photos.slice(0, TARGET - bucket.length)) {
       const photo = findPhoto(photoId);
       if (!photo) continue;
       bucket.push({
@@ -41,6 +69,7 @@ collectionsWithMaps.forEach((c, i) => {
       });
     }
   }
+
   if (bucket.length) photosByCollection.push(bucket);
 });
 

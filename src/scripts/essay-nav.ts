@@ -284,3 +284,14 @@ function initEssayNav() {
 }
 
 document.addEventListener('astro:page-load', initEssayNav);
+
+// Fallback: if the script loads after astro:page-load already fired
+// (intermittent race in dev/HMR + view-transitions), kick off init
+// directly when the body already has [data-essay].
+if (
+  typeof document !== 'undefined' &&
+  document.readyState !== 'loading' &&
+  document.body?.hasAttribute('data-essay')
+) {
+  initEssayNav();
+}

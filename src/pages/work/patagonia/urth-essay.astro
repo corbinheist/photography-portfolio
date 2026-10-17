@@ -1,0 +1,262 @@
+---
+import ProjectLayout from '@layouts/ProjectLayout.astro';
+import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
+import EssaySlideHero from '@components/essay/EssaySlideHero.astro';
+import EssaySlideFullBleed from '@components/essay/EssaySlideFullBleed.astro';
+import EssaySlideImageText from '@components/essay/EssaySlideImageText.astro';
+import EssaySlideDiptych from '@components/essay/EssaySlideDiptych.astro';
+import EssaySlideText from '@components/essay/EssaySlideText.astro';
+import EssayDivider from '@components/essay/EssayDivider.astro';
+import EssaySlideMapInset from '@components/essay/EssaySlideMapInset.astro';
+import EssaySlideContactSheet from '@components/essay/EssaySlideContactSheet.astro';
+import EssaySlideColophon from '@components/essay/EssaySlideColophon.astro';
+import { getEntry } from 'astro:content';
+
+const essay = await getEntry('essays', 'patagonia-urth-essay');
+const photos = essay!.data.photos;
+---
+
+<ProjectLayout
+  title="Cold Hands"
+  description="[DECK]"
+  dossier={{ num: '015', label: 'URTH', totalFrames: 14 }}
+  mapLayout="hidden"
+  mapTargetCenter={[-72.4, -50.917]}
+  mapTargetZoom={8}
+  mapActiveCollection="patagonia"
+>
+
+  <!-- 1. Hero — Cuernos at first light (slot 0) -->
+  <EssaySlideHero
+    url={photos[0].url}
+    width={photos[0].width}
+    height={photos[0].height}
+    lqip={photos[0].lqip}
+    alt={photos[0].title}
+    lightboxIndex={0}
+    dossierNum="015"
+    sequenceNum="N° 04"
+    overline="URTH &times; PATAGONIA"
+    title="Cold Hands"
+    deck="[DECK]"
+    manifest={{
+      region: '[REGION]',
+      coords: "[COORDS]",
+      date: '[DATE]',
+      frames: '14',
+    }}
+  />
+
+  <!-- 2. Title card -->
+  <EssaySlideText align="center">
+    <p class="overline">URTH &times; PATAGONIA</p>
+    <h2>Cold Hands</h2>
+    <p>
+      [PROSE: 1&ndash;2 sentences. The URTH brief, the south, the photographer at work.]
+    </p>
+  </EssaySlideText>
+
+  <!-- 3. Map inset -->
+  <EssaySlideMapInset
+    heading="Cerro Guido, Chile"
+    center={[-72.4, -50.917]}
+    zoom={8}
+    collectionId="patagonia"
+    markers={[
+      { lng: -72.4, lat: -50.917, label: 'Cerro Guido, CHILE', num: '01' },
+    ]}
+  />
+
+  <!-- ======= I · APPROACH ======= -->
+  <EssayDivider num="01" label="I &middot; APPROACH" />
+
+  <!-- Slot 1 — Predawn through windshield -->
+  <EssaySlideFullBleed
+    url={photos[1].url}
+    width={photos[1].width}
+    height={photos[1].height}
+    lqip={photos[1].lqip}
+    alt={photos[1].title}
+    lightboxIndex={1}
+    fit="contain"
+    frameSlide
+  />
+
+  <!-- Slot 2 — Convoy at Dusk (was right side of dropped diptych) -->
+  <EssaySlideFullBleed
+    url={photos[2].url}
+    width={photos[2].width}
+    height={photos[2].height}
+    lqip={photos[2].lqip}
+    alt={photos[2].title}
+    lightboxIndex={2}
+    frameSlide
+  />
+
+  <!-- ======= II · IN HAND ======= -->
+  <EssayDivider num="02" label="II &middot; IN HAND" />
+
+  <!-- Slot 3 — Kit on moss, flat-lay with URTH strap -->
+  <EssaySlideFullBleed
+    url={photos[3].url}
+    width={photos[3].width}
+    height={photos[3].height}
+    lqip={photos[3].lqip}
+    alt={photos[3].title}
+    lightboxIndex={3}
+    fit="contain"
+    frameSlide
+  />
+
+  <!-- Slots 4 + 5 — URTH filter case + bag-open (portrait diptych) -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[4], alt: photos[4].title, lightboxIndex: 4 },
+      { ...photos[5], alt: photos[5].title, lightboxIndex: 5 },
+    ]}
+    gap="tight"
+    frameSlide
+  />
+
+  <!-- Slot 6 — Telephoto + pack with mountain backdrop -->
+  <EssaySlideImageText
+    url={photos[6].url}
+    width={photos[6].width}
+    height={photos[6].height}
+    lqip={photos[6].lqip}
+    alt={photos[6].title}
+    lightboxIndex={6}
+    frameSlide
+  >
+    <h3>Kit in Landscape</h3>
+    <p>
+      [PROSE: short note on the Helios pack &mdash; gear in the field, not the studio. URTH's bonus context shot.]
+    </p>
+  </EssaySlideImageText>
+
+  <!-- Slot 7 — Loading the frame, film reload, the "Cold Hands" title beat -->
+  <EssaySlideFullBleed
+    url={photos[7].url}
+    width={photos[7].width}
+    height={photos[7].height}
+    lqip={photos[7].lqip}
+    alt={photos[7].title}
+    lightboxIndex={7}
+    fit="contain"
+    captionTitle="Cold hands"
+    frameSlide
+  />
+
+  <!-- ======= III · IN THE FIELD ======= -->
+  <EssayDivider num="03" label="III &middot; IN THE FIELD" />
+
+  <!-- Slot 8 — Quiet Watch (was right side of dropped diptych) -->
+  <EssaySlideFullBleed
+    url={photos[8].url}
+    width={photos[8].width}
+    height={photos[8].height}
+    lqip={photos[8].lqip}
+    alt={photos[8].title}
+    lightboxIndex={8}
+    frameSlide
+  />
+
+  <!-- Slot 9 — Down in the grass, the work -->
+  <EssaySlideFullBleed
+    url={photos[9].url}
+    width={photos[9].width}
+    height={photos[9].height}
+    lqip={photos[9].lqip}
+    alt={photos[9].title}
+    lightboxIndex={9}
+    frameSlide
+  />
+
+  <!-- Slots 10 + 11 — Eye to Eye + Kit at the Truck (portrait diptych) -->
+  <EssaySlideDiptych
+    photos={[
+      { ...photos[10], alt: photos[10].title, lightboxIndex: 10 },
+      { ...photos[11], alt: photos[11].title, lightboxIndex: 11 },
+    ]}
+    gap="tight"
+    frameSlide
+  />
+
+  <!-- Slot 12 — At the Toyota, environmental portrait, section closer -->
+  <EssaySlideFullBleed
+    url={photos[12].url}
+    width={photos[12].width}
+    height={photos[12].height}
+    lqip={photos[12].lqip}
+    alt={photos[12].title}
+    lightboxIndex={12}
+    frameSlide
+  />
+
+  <!-- ======= IV · LIGHT ======= -->
+  <EssayDivider num="04" label="IV &middot; LIGHT" />
+
+  <!-- Slot 13 — Empty plain, blue hour -->
+  <EssaySlideFullBleed
+    url={photos[13].url}
+    width={photos[13].width}
+    height={photos[13].height}
+    lqip={photos[13].lqip}
+    alt={photos[13].title}
+    lightboxIndex={13}
+    frameSlide
+  />
+
+  <!-- Slot 0 (reused) — Cuernos, First Light as standalone landscape -->
+  <EssaySlideFullBleed
+    url={photos[0].url}
+    width={photos[0].width}
+    height={photos[0].height}
+    lqip={photos[0].lqip}
+    alt={photos[0].title}
+    lightboxIndex={0}
+    frameSlide
+  />
+
+  <!-- Slot 14 — Three Pillars, the closer (Canon R1 loaner) -->
+  <EssaySlideFullBleed
+    url={photos[14].url}
+    width={photos[14].width}
+    height={photos[14].height}
+    lqip={photos[14].lqip}
+    alt={photos[14].title}
+    lightboxIndex={14}
+    frameSlide
+  />
+
+  <!-- ======= APPENDIX ======= -->
+
+  <!-- Contact sheet — all selects -->
+  <EssaySlideContactSheet
+    heading="DOSSIER 015 &middot; PROOF SHEET"
+    caption="Selected frames."
+    photos={photos.map((p, i) => ({
+      url: p.url,
+      width: p.width,
+      height: p.height,
+      lqip: p.lqip,
+      alt: p.title,
+      lightboxIndex: i,
+    }))}
+    footerLeft="HEIST.STUDIO / FIELD"
+    footerRight="URTH &times; PATAGONIA &middot; APR 2026"
+  />
+
+  <!-- Colophon -->
+  <EssaySlideColophon
+    dossierNum="015"
+    title="Cold Hands"
+    location="Cerro Guido, Chile"
+    dates="[DATES]"
+    camera="[CAMERA]"
+    frames="14"
+    collection="patagonia"
+  />
+
+  <PhotoLightbox photos={photos} />
+</ProjectLayout>

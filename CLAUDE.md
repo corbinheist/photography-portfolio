@@ -56,6 +56,8 @@ Key invariants:
 - `regions-hatch` is added asynchronously by `map-init.ts` after the crosshatch image loads. Re-apply `setFilter` on `map.once('idle', …)` after the initial call, or it'll silently miss.
 - `interactive: false` on the persistent map. The camera is app-controlled (`map.flyTo` on swap). Don't enable scroll/zoom — users would drift away from the declared view.
 
+**Live "you are here" marker — update on every new post.** `PersistentMap.astro` defines a single hard-coded `liveMarker` constant (`{ lng, lat, label }`) that pulses on the world view to show where Corbin currently is. It's site-wide, not per-page. **Whenever a new essay or post ships, update this marker** to the location the new work was made. Search `PersistentMap.astro` for `const liveMarker` — single-line change. Label format is `"PLACE, CC"` in caps (e.g. `"CERRO GUIDO, CHL"`).
+
 Click behavior:
 - Desktop `/work` (world layout): click → lock map + auto-expand dossier.
 - Desktop region/inset/hidden: click → navigate to marker target.
