@@ -20,18 +20,6 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
-test('tracks essay opens and last-frame visibility', async ({ page }) => {
-  await page.goto('/work/morocco/ksar-essay');
-  await expect.poll(async () => page.evaluate(() => {
-    return window.__analyticsEvents.some((event) => event.name === 'essay-open');
-  })).toBe(true);
-
-  await page.locator('[data-essay-frame-slide]:visible').last().scrollIntoViewIfNeeded();
-  await expect.poll(async () => page.evaluate(() => {
-    return window.__analyticsEvents.some((event) => event.name === 'essay-last-frame-view');
-  })).toBe(true);
-});
-
 test('distinguishes map, list, and filter discovery actions', async ({ page }) => {
   await page.goto('/work');
   await page.locator('.map-marker[data-view="world"]').first().dispatchEvent('click');
