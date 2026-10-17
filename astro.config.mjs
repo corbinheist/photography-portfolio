@@ -8,7 +8,7 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         const pathname = new URL(page).pathname;
-        return !pathname.startsWith('/pitch/') && pathname !== '/essays/example/';
+        return !pathname.startsWith('/pitch/');
       },
     }),
   ],
