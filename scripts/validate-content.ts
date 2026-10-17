@@ -119,6 +119,8 @@ const [photos, albums, essays, collections, staticRoutes, mapFiles] = await Prom
 ]);
 
 const routes = new Set(staticRoutes);
+// A published story may take over a legacy album URL; the album route then skips that album.
+const albumRoutes = new Set<string>();
 const mapFileSet = new Set(mapFiles.filter((file) => file.endsWith('.json')));
 const albumOwners = new Map<string, string>();
 const referencedMaps = new Set<string>();
@@ -161,6 +163,7 @@ for (const [collectionId, collection] of collections) {
     }
     albumOwners.set(albumId, collectionId);
     routes.add(`/work/${collectionId}/${albumId}`);
+    albumRoutes.add(`/work/${collectionId}/${albumId}`);
   }
 
   if (collection.coverPhoto && !photos.has(collection.coverPhoto)) {
@@ -268,7 +271,7 @@ for (const filename of storyFiles) {
   for (const problem of validateStory(slug, data, body, manifest)) error('story.reference-invalid', problem);
   const url = storyUrl(slug, typeof data.url === 'string' ? data.url : undefined);
   const route = url.replace(/\/$/, '');
-  if (routes.has(route)) error('story.route-collision', `${slug}: URL "${url}" is already a page`);
+  if (routes.has(route) && !albumRoutes.has(route)) error('story.route-collision', `${slug}: URL "${url}" is already a page`);
   if (!data.draft) routes.add(route);
 }
 

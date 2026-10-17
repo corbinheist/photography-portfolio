@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { storyUrl } from '@scripts/utils/story-manifest';
 import ProjectLayout from '@layouts/ProjectLayout.astro';
 import PhotoGrid from '@components/photo/PhotoGrid.astro';
 import PhotoLightbox from '@components/photo/PhotoLightbox.astro';
@@ -8,6 +9,8 @@ export async function getStaticPaths() {
   const collections = await getCollection('photoCollections');
   const albums = await getCollection('albums');
   const photos = await getCollection('photos');
+  // A published story that uses an album URL replaces the album page at that URL.
+  const storyUrls = new Set((await getCollection('stories', (s) => !s.data.draft)).map((s) => storyUrl(s.id, s.data.url)));
 
   const paths: any[] = [];
 
@@ -15,6 +18,7 @@ export async function getStaticPaths() {
     for (const albumId of collection.data.archiveAlbums) {
       const album = albums.find((a) => a.id === albumId);
       if (!album || album.data.draft) continue;
+      if (storyUrls.has(`/work/${collection.id}/${album.id}/`)) continue;
 
       const albumPhotos = album.data.photos
         .map((photoId: string) => photos.find((p) => p.id === photoId))
