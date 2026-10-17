@@ -157,8 +157,21 @@ The migration script that lifts inline `const photos = [...]` arrays from essay 
 
 A story is the new content unit. One story is two files and needs no Astro edits:
 
-1. `src/data/story-photos/<slug>.yaml`: the photo manifest. It is a list of entries with `id` (the last path segment of the CDN url), `url`, `width`, `height`, `lqip`, `alt`, and optional `title` and `exif`. To convert a legacy album or essay, run `pnpm tsx scripts/story-manifest-from-legacy.ts album|essay <source-id> [slug]`. The script copies each `title` into `alt`, so review every `alt` before you publish.
+1. `src/data/story-photos/<slug>.yaml`: the photo manifest. It is a list of entries with `id` (the last path segment of the CDN url), `url`, `width`, `height`, `lqip`, `alt`, and optional `title` and `exif`. `pnpm photos <slug>` writes it from the source images. To convert a legacy album or essay, run `pnpm tsx scripts/story-manifest-from-legacy.ts album|essay <source-id> [slug]`. That script copies each `title` into `alt`, so review every `alt` before you publish.
 2. `src/content/stories/<slug>.mdx`: the story.
+
+To publish a new story:
+
+1. Put the source images in `_raw/<slug>/`. The file stem becomes the photo id: `Harbour Dawn.jpg` becomes `harbour-dawn`.
+2. Run `pnpm photos <slug>`. The command processes the images into `_processed/<slug>/<id>/` (AVIF and WebP at the standard widths, and an LQIP), uploads the variants to `photos/<id>/` on DigitalOcean Spaces (it skips files that the bucket already has), and writes `src/data/story-photos/<slug>.yaml`. It needs `DO_SPACES_CDN_ENDPOINT` for the urls, and the Spaces credentials for the upload.
+3. Write the `alt` text for each new entry in the manifest. A new entry has `alt: ""`, and `pnpm validate:content` fails on an empty `alt`. You can also add a `title`.
+4. Write `src/content/stories/<slug>.mdx`.
+5. Run `pnpm build`.
+
+Run `pnpm photos <slug>` again after you add images. A re-run keeps `alt`, `title`, every other field that you wrote, and the entry order. It refreshes `url`, `width`, `height`, `lqip`, and the `exif` values that the image carries. It appends new images at the end and never deletes an entry. It prints a warning for each entry that has no image in `_raw/<slug>/`; delete that entry by hand if the photo has left the story. Flags:
+
+- `--dry-run`: process into a temporary directory, skip the upload, print the manifest diff, and write nothing to the repository. Without `DO_SPACES_CDN_ENDPOINT`, the dry run uses `https://cdn.example.invalid` in the urls.
+- `--no-upload`: process and write the manifest, but skip the upload.
 
 ```mdx
 ---
@@ -294,7 +307,7 @@ See `/essays/example` for a kitchen-sink demo of every slide type.
 
 ## Image Pipeline
 
-Process raw photos into responsive, CDN-ready variants:
+Process raw photos into responsive, CDN-ready variants. These steps write the legacy `src/data/photos/` files. For a story, use `pnpm photos <slug>` (see [Stories](#stories-srccontentstoriesslugmdx)), which runs the same processing and upload code.
 
 ```sh
 # 1. Drop photos into _raw/
@@ -400,7 +413,9 @@ photography-portfolio/
 ├── scripts/                    # Node.js image pipeline scripts
 │   ├── process-images.ts       # Sharp resize + format conversion + LQIP
 │   ├── upload-to-spaces.ts     # S3 upload to DO Spaces
-│   ├── generate-photo-yaml.ts  # EXIF extraction + YAML generation
+│   ├── generate-photo-yaml.ts  # EXIF extraction + YAML generation (legacy photos)
+│   ├── photos.ts               # pnpm photos <slug>: process, upload, and write a story manifest
+│   ├── lib/                    # Shared pipeline functions (image-pipeline, spaces, story-photo-merge, photos)
 │   ├── fetch-rss.ts            # Substack RSS feed fetcher
 │   └── preview.ts              # Local preview server management
 ├── tests/
