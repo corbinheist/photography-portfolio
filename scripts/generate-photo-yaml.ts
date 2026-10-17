@@ -9,9 +9,8 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import sharp from 'sharp';
-import exifReader from 'exif-reader';
 import YAML from 'yaml';
+import { extractExif } from './lib/image-pipeline';
 
 const PROCESSED_DIR = path.resolve('_processed');
 const PHOTOS_DIR = path.resolve('src/data/photos');
@@ -25,67 +24,6 @@ interface Manifest {
   height: number;
   lqip: string;
   variants: { format: string; width: number; path: string }[];
-}
-
-interface ExifData {
-  camera?: string;
-  lens?: string;
-  focalLength?: string;
-  aperture?: string;
-  shutter?: string;
-  iso?: number;
-  date?: string;
-}
-
-async function extractExif(imagePath: string): Promise<ExifData> {
-  try {
-    const metadata = await sharp(imagePath).metadata();
-    if (!metadata.exif) return {};
-
-    const exif = exifReader(metadata.exif);
-    const result: ExifData = {};
-
-    if (exif.Image?.Make && exif.Image?.Model) {
-      result.camera = `${exif.Image.Make} ${exif.Image.Model}`.trim();
-    } else if (exif.Image?.Model) {
-      result.camera = exif.Image.Model;
-    }
-
-    if (exif.Photo?.LensModel) {
-      result.lens = exif.Photo.LensModel;
-    }
-
-    if (exif.Photo?.FocalLength) {
-      result.focalLength = `${exif.Photo.FocalLength}mm`;
-    }
-
-    if (exif.Photo?.FNumber) {
-      result.aperture = `f/${exif.Photo.FNumber}`;
-    }
-
-    if (exif.Photo?.ExposureTime) {
-      const time = exif.Photo.ExposureTime;
-      result.shutter = time >= 1 ? `${time}s` : `1/${Math.round(1 / time)}s`;
-    }
-
-    if (exif.Photo?.ISOSpeedRatings) {
-      const iso = exif.Photo.ISOSpeedRatings;
-      result.iso = Array.isArray(iso) ? iso[0] : iso;
-    }
-
-    if (exif.Photo?.DateTimeOriginal) {
-      const d: unknown = exif.Photo.DateTimeOriginal;
-      if (d instanceof Date) {
-        result.date = d.toISOString().split('T')[0];
-      } else if (typeof d === 'string') {
-        result.date = d.replace(/(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3').split(' ')[0];
-      }
-    }
-
-    return result;
-  } catch {
-    return {};
-  }
 }
 
 async function main() {

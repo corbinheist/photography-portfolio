@@ -7,66 +7,18 @@
  * Usage: pnpm upload-images
  *
  * Required env vars: DO_SPACES_KEY, DO_SPACES_SECRET, DO_SPACES_BUCKET, DO_SPACES_REGION
+ *
+ * The upload functions live in scripts/lib/spaces.ts.
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { S3Client, PutObjectCommand, HeadObjectCommand } from '@aws-sdk/client-s3';
+import { getConfig, photoObjectKey, spacesStore, uploadFiles, type UploadItem } from './lib/spaces';
 
 const PROCESSED_DIR = path.resolve('_processed');
 
-function getConfig() {
-  const key = process.env.DO_SPACES_KEY;
-  const secret = process.env.DO_SPACES_SECRET;
-  const bucket = process.env.DO_SPACES_BUCKET;
-  const region = process.env.DO_SPACES_REGION || 'nyc3';
-
-  if (!key || !secret || !bucket) {
-    console.error('Missing required environment variables:');
-    console.error('  DO_SPACES_KEY, DO_SPACES_SECRET, DO_SPACES_BUCKET');
-    console.error('\nCopy .env.example to .env and fill in your credentials.');
-    process.exit(1);
-  }
-
-  return { key, secret, bucket, region };
-}
-
-function getContentType(ext: string): string {
-  const types: Record<string, string> = {
-    '.webp': 'image/webp',
-    '.avif': 'image/avif',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.png': 'image/png',
-  };
-  return types[ext] || 'application/octet-stream';
-}
-
-async function objectExists(
-  client: S3Client,
-  bucket: string,
-  key: string,
-): Promise<boolean> {
-  try {
-    await client.send(new HeadObjectCommand({ Bucket: bucket, Key: key }));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 async function main() {
-  const config = getConfig();
-
-  const client = new S3Client({
-    endpoint: `https://${config.region}.digitaloceanspaces.com`,
-    region: config.region,
-    credentials: {
-      accessKeyId: config.key,
-      secretAccessKey: config.secret,
-    },
-    forcePathStyle: false,
-  });
+  const store = spacesStore(getConfig());
 
   if (!fs.existsSync(PROCESSED_DIR)) {
     console.error(`Processed directory not found: ${PROCESSED_DIR}`);
@@ -85,43 +37,17 @@ async function main() {
 
   console.log(`Uploading ${slugDirs.length} image set(s) to DO Spaces...\n`);
 
-  let uploaded = 0;
-  let skipped = 0;
-
-  for (const slug of slugDirs) {
+  // Only files are variants. `pnpm photos` writes _processed/<story>/<id>/ subdirectories,
+  // and this script does not upload them; `pnpm photos` uploads its own output.
+  const items: UploadItem[] = slugDirs.flatMap((slug) => {
     const slugDir = path.join(PROCESSED_DIR, slug);
-    const files = fs.readdirSync(slugDir);
+    return fs
+      .readdirSync(slugDir)
+      .filter((file) => fs.statSync(path.join(slugDir, file)).isFile())
+      .map((file) => ({ key: photoObjectKey(slug, file), path: path.join(slugDir, file) }));
+  });
 
-    for (const file of files) {
-      const filePath = path.join(slugDir, file);
-      const ext = path.extname(file).toLowerCase();
-      const s3Key = `photos/${slug}/${file}`;
-
-      // Check if already uploaded
-      const exists = await objectExists(client, config.bucket, s3Key);
-      if (exists) {
-        skipped++;
-        continue;
-      }
-
-      const body = fs.readFileSync(filePath);
-      const contentType = getContentType(ext);
-
-      await client.send(
-        new PutObjectCommand({
-          Bucket: config.bucket,
-          Key: s3Key,
-          Body: body,
-          ContentType: contentType,
-          ACL: 'public-read',
-          CacheControl: 'public, max-age=31536000, immutable',
-        }),
-      );
-
-      uploaded++;
-      console.log(`  Uploaded: ${s3Key}`);
-    }
-  }
+  const { uploaded, skipped } = await uploadFiles(store, items);
 
   console.log(`\nDone. Uploaded: ${uploaded}, Skipped (existing): ${skipped}`);
 }
