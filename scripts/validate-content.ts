@@ -122,6 +122,7 @@ const routes = new Set(staticRoutes);
 const mapFileSet = new Set(mapFiles.filter((file) => file.endsWith('.json')));
 const albumOwners = new Map<string, string>();
 const referencedMaps = new Set<string>();
+const essayRoutes = new Map<string, string>();
 
 for (const [collectionId, collection] of collections) {
   routes.add(`/work/${collectionId}`);
@@ -143,7 +144,10 @@ for (const [collectionId, collection] of collections) {
     const slug = essayId.startsWith(`${collectionId}-`)
       ? essayId.slice(collectionId.length + 1)
       : essayId;
-    routes.add(`/work/${collectionId}/${slug}`);
+    // A story with a `url` override can replace the essay page, so only a page registers the route here.
+    const route = `/work/${collectionId}/${slug}`;
+    if (staticRoutes.has(route)) routes.add(route);
+    else essayRoutes.set(route, essayId);
   }
 
   for (const albumId of albumIds) {
@@ -266,6 +270,10 @@ for (const filename of storyFiles) {
   const route = url.replace(/\/$/, '');
   if (routes.has(route)) error('story.route-collision', `${slug}: URL "${url}" is already a page`);
   if (!data.draft) routes.add(route);
+}
+
+for (const [route, essayId] of essayRoutes) {
+  if (!routes.has(route)) error('collection.essay-route-missing', `${essayId}: no page or story serves "${route}"`);
 }
 
 for (const filename of await readdir(path.join(root, STORY_PHOTOS_DIR))) {
