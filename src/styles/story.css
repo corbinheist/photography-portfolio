@@ -6,15 +6,23 @@ html:has([data-story]) {
   scroll-snap-type: y proximity;
 }
 
+/* Snap moves the page without user input. Turn it off for reduced motion and for short viewports. */
+@media (prefers-reduced-motion: reduce), (max-height: 600px) {
+  html:has([data-story]) {
+    scroll-snap-type: none;
+  }
+}
+
 .story {
   padding-block: var(--space-3xl) var(--space-2xl);
 }
 
-/* Text blocks sit in a 65ch column. Figures span the full width. */
+/* Text blocks share one column of about 65 characters of body text. A rem width keeps
+   headings and paragraphs aligned (ch resolves against each element's own font size). */
 .story-header,
 .story-body > *,
 .story-end {
-  width: min(65ch, 100% - 2 * var(--container-padding));
+  width: min(41rem, 100% - 2 * var(--container-padding));
   margin-inline: auto;
 }
 
