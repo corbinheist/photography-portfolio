@@ -2,8 +2,10 @@ import { expect, test } from '@playwright/test';
 
 test.describe('publishing controls', () => {
   test('pitches are noindexed', async ({ page }) => {
-    await page.goto('/pitch/brand');
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    for (const route of ['/pitch/brand', '/pitch/the-korman-archive']) {
+      await page.goto(route);
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
+    }
   });
 
   test('sitemap contains public work and excludes internal routes', async ({ request }) => {

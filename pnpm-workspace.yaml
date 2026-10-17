@@ -1,1 +1,4 @@
+packages:
+  - decks
+
 onlyBuiltDependencies: esbuild,sharp

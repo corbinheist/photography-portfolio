@@ -1,0 +1,97 @@
+---
+import { execSync } from 'node:child_process';
+import SEO from '@components/global/SEO.astro';
+import '@styles/tokens.css';
+import '@styles/base.css';
+import '@styles/animations.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  location?: string;
+}
+
+const { title, description, image, type, noindex = true, location } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const buildHash = (() => { try { return execSync('git rev-parse --short HEAD').toString().trim(); } catch { return 'unknown'; } })();
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="build-id" content={buildHash} />
+    <slot name="head" />
+
+    <!-- Google Fonts: Vollkorn + IBM Plex Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Vollkorn:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+      rel="stylesheet"
+    />
+
+    <SEO
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      noindex={noindex}
+      location={location}
+    />
+
+    <!-- Umami Analytics -->
+    <script
+      is:inline
+      defer
+      src="https://analytics.heist.studio/script.js"
+      data-website-id="c305a664-d222-41eb-937a-8309bf7208f0"
+      data-domains="heist.studio"
+    ></script>
+
+    <!-- Umami Kit: time-on-page heartbeat + scroll depth -->
+    <script is:inline defer src={`${base}/scripts/umami-kit.js`}></script>
+
+    <!-- Inline theme script to prevent flash -->
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem('theme');
+        var theme = stored === 'light' || stored === 'dark'
+          ? stored
+          : window.matchMedia('(prefers-color-scheme: light)').matches
+            ? 'light'
+            : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+
+    <!-- Inline rail-width script to prevent layout flash -->
+    <script is:inline>
+      (function () {
+        if (window.innerWidth >= 1024) {
+          var stored = localStorage.getItem('rail-collapsed');
+          if (stored !== null) {
+            document.documentElement.style.setProperty(
+              '--rail-width',
+              stored === '1' ? '52px' : '180px'
+            );
+          }
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+
+    <script>
+      import '@scripts/theme';
+      import '@scripts/analytics';
+      import '@scripts/animations';
+    </script>
+  </body>
+</html>

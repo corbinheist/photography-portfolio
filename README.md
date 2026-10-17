@@ -29,8 +29,11 @@ pnpm install
 # Start dev server (http://localhost:4321)
 pnpm dev
 
-# Type-check and build for production
+# Type-check and build for production (the site, then the decks into dist/pitch/)
 pnpm build
+
+# Start the pitch-deck dev server (http://localhost:4321/pitch/)
+pnpm dev:decks
 
 # Run the full prepublication build, unit, and browser gate
 pnpm check:publish
@@ -232,9 +235,15 @@ Albums use `ProjectLayout` with no props (no snap, no progress). The side rail d
 
 `PageLayout` wraps standard pages (gallery, work index, about, blog) with Header, Footer, and SubscribeBanner.
 
-### PitchLayout (client decks)
+### Pitch decks (`decks/`)
 
-Specialized layouts for client pitch presentations under `/pitch/`. Variants include `JapanPitchLayout`, `KormanPitchLayout`, and `ArchivePitchLayout` for project-specific styling.
+The client pitch decks are a separate Astro project in `decks/`. The site does not build them. The decks project shares no code with the site: it has its own copies of the design tokens (`decks/src/styles/tokens.css`), the base styles, the SideRail, the CommandPalette, and the map component. A change to the site design does not change the decks, and a change to the decks does not change the site.
+
+- Pages: `decks/src/pages/<name>.astro`. Layouts: `PitchLayout`, `JapanPitchLayout`, `KormanPitchLayout`, `ArchivePitchLayout`.
+- URLs: `decks/astro.config.mjs` sets `base: '/pitch'` and writes to `dist/pitch/`. A deck at `decks/src/pages/<name>.astro` is served at `/pitch/<name>/`.
+- Build order: `pnpm build` builds the site first and the decks second, because the site build empties `dist/`. `pnpm build:decks` builds only the decks.
+- Every deck is `noindex`. The site sitemap does not include the decks, because the site does not build them.
+- Public files for the decks go in `decks/public/` and are served under `/pitch/`. Reference them from CSS with a root path (`/images/pc12-hero.webp`); the build adds the `/pitch` base.
 
 ### Homepage
 
@@ -392,7 +401,6 @@ photography-portfolio/
 │   ├── favicon.svg
 │   ├── robots.txt
 │   ├── fonts/                  # Local font files (if any)
-│   ├── images/                 # Static images (pitch deck assets)
 │   └── scripts/                # Third-party scripts (analytics)
 ├── scripts/                    # Node.js image pipeline scripts
 │   ├── process-images.ts       # Sharp resize + format conversion + LQIP
@@ -428,11 +436,7 @@ photography-portfolio/
 │   ├── layouts/
 │   │   ├── BaseLayout.astro    # HTML shell, ClientRouter, fonts, theme, rail-width flash prevention
 │   │   ├── ProjectLayout.astro # Albums + essays: SideRail, CommandPalette, optional snap-scroll
-│   │   ├── PageLayout.astro    # Standard pages: Header, Footer, SubscribeBanner
-│   │   ├── PitchLayout.astro   # Client pitch decks
-│   │   ├── JapanPitchLayout.astro
-│   │   ├── KormanPitchLayout.astro
-│   │   └── ArchivePitchLayout.astro
+│   │   └── PageLayout.astro    # Standard pages: Header, Footer, SubscribeBanner
 │   ├── pages/
 │   │   ├── index.astro
 │   │   ├── gallery.astro               # All photos (masonry grid + lightbox)
@@ -446,7 +450,6 @@ photography-portfolio/
 │   │   │       └── [album].astro       # Single album gallery
 │   │   ├── essays/
 │   │   │   └── example.astro           # Kitchen-sink essay slide demo
-│   │   ├── pitch/                      # Client pitch decks
 │   │   ├── about.astro
 │   │   ├── blog.astro
 │   │   └── 404.astro
@@ -466,8 +469,16 @@ photography-portfolio/
 │       ├── fonts.css           # Font-stack declarations (Google Fonts loaded in BaseLayout)
 │       ├── essay.css           # Snap-scroll essay slide layouts + responsive rules
 │       ├── animations.css      # Animation initial states + reduced motion
-│       ├── map.css             # MapLibre GL map styling
-│       └── pitch.css           # Pitch deck base styles (+ per-deck variants)
+│       └── map.css             # MapLibre GL map styling
+├── decks/                      # Pitch decks: a separate Astro project, built into dist/pitch/
+│   ├── astro.config.mjs        # base: '/pitch', outDir: ../dist/pitch
+│   ├── public/                 # Deck images and umami-kit.js, served under /pitch/
+│   └── src/
+│       ├── pages/              # One file per deck → /pitch/<name>/
+│       ├── layouts/            # BaseLayout + the four pitch layouts
+│       ├── components/         # Copies of SideRail, CommandPalette, SEO, ThemeToggle, Map
+│       ├── scripts/            # pitch-nav.ts, reveals, theme, map-init, umami-kit start
+│       └── styles/             # tokens.css, base.css, pitch*.css
 ├── _raw/                       # Drop raw photos here (gitignored)
 ├── vitest.config.ts
 ├── playwright.config.ts
@@ -543,7 +554,7 @@ The workflow at `.github/workflows/deploy.yml` runs on every push to `main`:
 1. Installs dependencies with pnpm
 2. Runs unit tests (`pnpm test`)
 3. Attempts to fetch fresh Substack RSS (falls back to cached file if blocked)
-4. Runs `astro check` (type checking) and `astro build`
+4. Runs `pnpm build`: `astro check` and `astro build` for the site, then the same for the decks project into `dist/pitch/`
 5. Installs Playwright and runs e2e tests against the build
 6. SCPs the `dist/` directory to the droplet
 7. Reloads Nginx

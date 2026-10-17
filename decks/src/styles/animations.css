@@ -1,0 +1,52 @@
+/* ==========================================
+   Reusable animation classes
+   Applied by GSAP — these set initial states
+   ========================================== */
+
+/* Reveal: fade up */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+/* Reveal: fade in (no translate) */
+.fade-in {
+  opacity: 0;
+}
+
+/* Reveal: mask (clip-path) */
+.mask-reveal {
+  clip-path: inset(100% 0 0 0);
+}
+
+/* Stagger children */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Parallax image wrapper */
+.parallax-wrap {
+  overflow: hidden;
+}
+
+.parallax-wrap img {
+  will-change: transform;
+}
+
+/* ==========================================
+   Reduced motion
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .fade-in,
+  .stagger-children > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .mask-reveal {
+    clip-path: none !important;
+  }
+}

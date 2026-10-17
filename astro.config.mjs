@@ -11,12 +11,7 @@ export default defineConfig({
   },
   integrations: [
     mdx(),
-    sitemap({
-      filter: (page) => {
-        const pathname = new URL(page).pathname;
-        return !pathname.startsWith('/pitch/');
-      },
-    }),
+    sitemap(),
   ],
   outDir: process.env.ASTRO_OUT_DIR || 'dist',
   build: {

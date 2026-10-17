@@ -110,6 +110,11 @@ async function start(): Promise<void> {
     stdio: 'inherit',
     env: { ...process.env, ASTRO_OUT_DIR: outDir },
   });
+  // The decks build into <outDir>/pitch, so it runs after the site build.
+  execSync(`pnpm --dir decks exec astro build`, {
+    stdio: 'inherit',
+    env: { ...process.env, ASTRO_OUT_DIR: outDir },
+  });
 
   // Find free port
   const usedPorts = entries.map((e) => e.port);
