@@ -140,36 +140,6 @@ Three images side by side. Same orientation logic as diptych.
 
 ---
 
-### Mini Gallery (`EssaySlideMiniGallery`)
-
-Masonry grid of 4-12 images in a single slide.
-
-```astro
-<EssaySlideMiniGallery
-  photos={galleryPhotos.map((p, i) => ({
-    ...p,
-    alt: p.title,
-    lightboxIndex: startIndex + i,
-  }))}
-  columns={3}
-  caption="Camp life, Djebel Saghro"
-/>
-```
-
-**Props:**
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `photos` | `PhotoData[]` | required | 4-12 photos |
-| `columns` | `2 \| 3` | `3` | Column count (drops to 2 on mobile) |
-| `caption` | string | — | Shared caption below |
-
-**Use for:** Camp life details, gear/process shots, contact-sheet feel, any moment where density matters more than individual emphasis.
-
-**Tip:** Mix portrait and landscape images for a natural masonry feel. Pure landscape grids look like a table.
-
----
-
 ### Text (`EssaySlideText`)
 
 Full-viewport text slide. No images.
