@@ -30,5 +30,5 @@ photos:
 date: "2024-06"
 location: Lofoten & Oslo, Norway
 layout: masonry
-draft: false
+draft: true
 sortOrder: 1

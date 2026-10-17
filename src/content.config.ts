@@ -135,8 +135,29 @@ const settings = defineCollection({
   }),
 });
 
+const stories = defineCollection({
+  loader: glob({ pattern: '*.mdx', base: './src/content/stories' }),
+  schema: z.object({
+    title: z.string(),
+    place: z.string(),
+    date: z.string().regex(/^\d{4}(-\d{2})?$/, 'date must be a quoted "YYYY" or "YYYY-MM" string'),
+    summary: z.string(),
+    cover: z.string().describe('Image id in src/data/story-photos/<slug>.yaml'),
+    order: z.number(),
+    draft: z.boolean().default(false),
+    client: z.string().optional(),
+    theme: z.enum(['korman']).optional(),
+    url: z
+      .string()
+      .regex(/^\/work\/[a-z0-9\-/]+\/$/, 'url must look like /work/<path>/')
+      .optional()
+      .describe('Override for the default /work/<slug>/ URL'),
+    credits: z.array(z.object({ role: z.string(), name: z.string() })).default([]),
+  }),
+});
+
 const blog = defineCollection({
   loader: substackLoader(),
 });
 
-export const collections = { photos, albums, essays, photoCollections, settings, blog };
+export const collections = { photos, albums, essays, photoCollections, settings, stories, blog };

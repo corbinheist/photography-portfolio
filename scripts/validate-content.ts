@@ -1,6 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parse } from 'yaml';
+import { loadManifest, splitFrontmatter, storyUrl, validateStory, STORY_PHOTOS_DIR } from '../src/scripts/utils/story-manifest';
 
 type RecordMap = Map<string, any>;
 type Diagnostic = { level: 'error' | 'warning'; code: string; message: string };
@@ -118,9 +119,12 @@ const [photos, albums, essays, collections, staticRoutes, mapFiles] = await Prom
 ]);
 
 const routes = new Set(staticRoutes);
+// A published story may take over a legacy album URL; the album route then skips that album.
+const albumRoutes = new Set<string>();
 const mapFileSet = new Set(mapFiles.filter((file) => file.endsWith('.json')));
 const albumOwners = new Map<string, string>();
 const referencedMaps = new Set<string>();
+const essayRoutes = new Map<string, string>();
 
 for (const [collectionId, collection] of collections) {
   routes.add(`/work/${collectionId}`);
@@ -142,7 +146,10 @@ for (const [collectionId, collection] of collections) {
     const slug = essayId.startsWith(`${collectionId}-`)
       ? essayId.slice(collectionId.length + 1)
       : essayId;
-    routes.add(`/work/${collectionId}/${slug}`);
+    // A story with a `url` override can replace the essay page, so only a page registers the route here.
+    const route = `/work/${collectionId}/${slug}`;
+    if (staticRoutes.has(route)) routes.add(route);
+    else essayRoutes.set(route, essayId);
   }
 
   for (const albumId of albumIds) {
@@ -156,6 +163,7 @@ for (const [collectionId, collection] of collections) {
     }
     albumOwners.set(albumId, collectionId);
     routes.add(`/work/${collectionId}/${albumId}`);
+    albumRoutes.add(`/work/${collectionId}/${albumId}`);
   }
 
   if (collection.coverPhoto && !photos.has(collection.coverPhoto)) {
@@ -247,6 +255,35 @@ for (const [essayId, essay] of essays) {
   }
 }
 
+const storyFiles = (await readdir(path.join(root, 'src/content/stories'))).filter((file) => file.endsWith('.mdx')).sort();
+const storySlugs = new Set<string>();
+for (const filename of storyFiles) {
+  const slug = path.basename(filename, '.mdx');
+  storySlugs.add(slug);
+  const { data, body } = splitFrontmatter(await readFile(path.join(root, 'src/content/stories', filename), 'utf8'));
+  let manifest;
+  try {
+    manifest = loadManifest(slug, root);
+  } catch (cause) {
+    error('story.manifest-invalid', (cause as Error).message);
+    continue;
+  }
+  for (const problem of validateStory(slug, data, body, manifest)) error('story.reference-invalid', problem);
+  const url = storyUrl(slug, typeof data.url === 'string' ? data.url : undefined);
+  const route = url.replace(/\/$/, '');
+  if (routes.has(route) && !albumRoutes.has(route)) error('story.route-collision', `${slug}: URL "${url}" is already a page`);
+  if (!data.draft) routes.add(route);
+}
+
+for (const [route, essayId] of essayRoutes) {
+  if (!routes.has(route)) error('collection.essay-route-missing', `${essayId}: no page or story serves "${route}"`);
+}
+
+for (const filename of await readdir(path.join(root, STORY_PHOTOS_DIR))) {
+  const slug = path.basename(filename, '.yaml');
+  if (filename.endsWith('.yaml') && !storySlugs.has(slug)) warning('story.manifest-orphan', `${STORY_PHOTOS_DIR}/${filename}: no story uses it`);
+}
+
 for (const collection of collections.values()) {
   if (collection.primaryHref && !routes.has(collection.primaryHref)) {
     error('collection.primary-route-missing', `primaryHref "${collection.primaryHref}" does not resolve`);
@@ -302,6 +339,6 @@ for (const diagnostic of diagnostics) {
 
 const errors = diagnostics.filter((item) => item.level === 'error').length;
 const warnings = diagnostics.length - errors;
-console.log(`Validated ${collections.size} collections, ${essays.size} essays, ${albums.size} albums, ${photos.size} photos, and ${mapFileSet.size} maps.`);
+console.log(`Validated ${collections.size} collections, ${essays.size} essays, ${storyFiles.length} stories, ${albums.size} albums, ${photos.size} photos, and ${mapFileSet.size} maps.`);
 console.log(`${errors} error(s), ${warnings} warning(s).`);
 if (errors > 0) process.exitCode = 1;

@@ -84,6 +84,7 @@ Each piece is a YAML file under `src/data/`, validated by Zod schemas in `src/co
 | `photos` | `src/data/photos/*.yaml` | A single photo: CDN url, dimensions, lqip, EXIF, tags |
 | `albums` | `src/data/albums/*.yaml` | A flat ordered list of photo IDs (legacy unit; archive only) |
 | `essays` | `src/data/essays/*.yaml` | An essay's full photo manifest, ordered, with optional EXIF per frame |
+| `stories` | `src/content/stories/*.mdx` | One story: frontmatter plus MDX body. Photos come from `src/data/story-photos/<slug>.yaml` |
 | `photoCollections` | `src/data/collections/*.yaml` | A region: title, intro, map config, list of essay IDs, archive album IDs |
 | `settings` | `src/data/settings.yaml` | Site-wide config |
 | `blog` | Substack RSS (custom loader) | Notes / journal posts |
@@ -151,6 +152,38 @@ photos:
 ```
 
 The migration script that lifts inline `const photos = [...]` arrays from essay `.astro` files into these YAMLs lives at `scripts/lift-essay-photos.ts` (default `--dry-run`; pass `--write` to apply).
+
+### Stories (`src/content/stories/<slug>.mdx`)
+
+A story is the new content unit. One story is two files and needs no Astro edits:
+
+1. `src/data/story-photos/<slug>.yaml`: the photo manifest. It is a list of entries with `id` (the last path segment of the CDN url), `url`, `width`, `height`, `lqip`, `alt`, and optional `title` and `exif`. To convert a legacy album or essay, run `pnpm tsx scripts/story-manifest-from-legacy.ts album|essay <source-id> [slug]`. The script copies each `title` into `alt`, so review every `alt` before you publish.
+2. `src/content/stories/<slug>.mdx`: the story.
+
+```mdx
+---
+title: Tokyo Kissaten
+place: Tokyo, Japan
+date: "2025-08"          # quoted
+summary: Counter seats and afternoon light in Tokyo's oldest coffee shops.
+cover: l1000308-2        # an id in the manifest
+order: 3                 # sort key for the "next story" link
+draft: true              # default false; a draft has no route and no sitemap entry
+client: Optional client
+theme: korman            # optional; only `korman` exists
+url: /work/morocco/nomads-essay/   # optional; default is /work/<slug>/
+credits:                 # optional
+  - { role: Guide, name: Bassouz }
+---
+
+Prose in Markdown.
+
+<Image id="l1000292" caption="Platform Through Glass" />
+<Pair ids={["l1000310-2", "l1000316-2"]} captions={["Weber EG-1", "Iced Coffee on Copper"]} />
+<Quote cite="Name">Quoted text.</Quote>
+```
+
+The components need no import. `src/pages/work/[...story].astro` renders every story that is not a draft through `src/layouts/StoryLayout.astro`. An unknown image id fails the build and names the story and the id. `pnpm validate:content` also checks image ids, the cover id, empty `alt` values, and URL collisions with existing pages. To preview drafts, build with `STORIES_INCLUDE_DRAFTS=1`.
 
 ### Collections (`src/data/collections/*.yaml`)
 

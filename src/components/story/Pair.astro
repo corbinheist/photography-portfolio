@@ -1,0 +1,22 @@
+---
+import Photo from '@components/photo/Photo.astro';
+import { storyPhoto } from '@scripts/utils/story-manifest';
+
+interface Props {
+  ids: [string, string];
+  captions?: [string?, string?];
+}
+
+const { ids, captions = [] } = Astro.props;
+if (ids.length !== 2) throw new Error(`Story "${Astro.locals.story?.slug}": <Pair> needs exactly two ids, got ${ids.length}`);
+const photos = ids.map((id) => storyPhoto(Astro.locals, id));
+---
+
+<div class="story-pair">
+  {photos.map((photo, index) => (
+    <figure class="story-figure" style={`--ratio: ${photo.width / photo.height}`}>
+      <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 767px) 100vw, 50vw" />
+      {captions[index] && <figcaption class="story-caption">{captions[index]}</figcaption>}
+    </figure>
+  ))}
+</div>

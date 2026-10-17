@@ -11,11 +11,10 @@ map:
       lng: 14.40
       lat: 68.20
       num: "01"
-      target: /work/norway/norway-test
+      target: /work/lofoten-oslo
     - label: Oslo
       lng: 10.75
       lat: 59.92
       num: "02"
-      target: /work/norway/norway-test
-archiveAlbums:
-  - norway-test
+      target: /work/lofoten-oslo
+archiveAlbums: []

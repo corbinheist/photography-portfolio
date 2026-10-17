@@ -27,13 +27,14 @@ CSS files in `src/styles/` are large and reliably stall the `Write` tool. **Alwa
 
 ## Content collections
 
-The site uses Astro 5's content layer with Zod schemas in `src/content.config.ts`. Six collections:
+The site uses Astro 5's content layer with Zod schemas in `src/content.config.ts`. Seven collections:
 
 - `photos` — atomic photos (yaml in `src/data/photos/`)
 - `albums` — legacy ordered photo lists (yaml in `src/data/albums/`)
 - `essays` — full per-essay photo manifest (yaml in `src/data/essays/`)
 - `photoCollections` — regions (yaml in `src/data/collections/`)
 - `settings` — site-wide config (`src/data/settings.yaml`)
+- `stories` — MDX stories (`src/content/stories/<slug>.mdx`). Photo manifests live in `src/data/story-photos/<slug>.yaml` and load through `src/scripts/utils/story-manifest.ts`, not a collection, so the build, `validate-content.ts`, and vitest share one loader. See the README "Stories" section.
 - `blog` — Substack RSS via `src/data/loaders/substack-loader.ts`
 
 **Astro 5 glob loader gotcha**: a top-level `slug` field in the YAML overrides the entry ID derived from the filename. The schema for `essays` deliberately omits `slug` — entries are addressed by their filename (e.g. `morocco-wise-essay`).
