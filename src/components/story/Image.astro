@@ -1,0 +1,18 @@
+---
+import Photo from '@components/photo/Photo.astro';
+import { storyPhoto } from '@scripts/utils/story-manifest';
+
+interface Props {
+  id: string;
+  caption?: string;
+}
+
+const { id, caption } = Astro.props;
+const photo = storyPhoto(Astro.locals, id);
+const ratio = photo.width / photo.height;
+---
+
+<figure class="story-figure" style={`--ratio: ${ratio}`}>
+  <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes={`min(100vw, ${Math.round(ratio * 100)}vh)`} />
+  {caption && <figcaption class="story-caption">{caption}</figcaption>}
+</figure>

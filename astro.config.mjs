@@ -1,10 +1,12 @@
 import { defineConfig } from 'astro/config';
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   output: 'static',
   site: 'https://heist.studio',
   integrations: [
+    mdx(),
     sitemap({
       filter: (page) => {
         const pathname = new URL(page).pathname;

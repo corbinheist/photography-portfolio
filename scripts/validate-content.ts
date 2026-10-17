@@ -1,6 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parse } from 'yaml';
+import { loadManifest, splitFrontmatter, storyUrl, validateStory, STORY_PHOTOS_DIR } from '../src/scripts/utils/story-manifest';
 
 type RecordMap = Map<string, any>;
 type Diagnostic = { level: 'error' | 'warning'; code: string; message: string };
@@ -247,6 +248,31 @@ for (const [essayId, essay] of essays) {
   }
 }
 
+const storyFiles = (await readdir(path.join(root, 'src/content/stories'))).filter((file) => file.endsWith('.mdx')).sort();
+const storySlugs = new Set<string>();
+for (const filename of storyFiles) {
+  const slug = path.basename(filename, '.mdx');
+  storySlugs.add(slug);
+  const { data, body } = splitFrontmatter(await readFile(path.join(root, 'src/content/stories', filename), 'utf8'));
+  let manifest;
+  try {
+    manifest = loadManifest(slug, root);
+  } catch (cause) {
+    error('story.manifest-invalid', (cause as Error).message);
+    continue;
+  }
+  for (const problem of validateStory(slug, data, body, manifest)) error('story.reference-invalid', problem);
+  const url = storyUrl(slug, typeof data.url === 'string' ? data.url : undefined);
+  const route = url.replace(/\/$/, '');
+  if (routes.has(route)) error('story.route-collision', `${slug}: URL "${url}" is already a page`);
+  if (!data.draft) routes.add(route);
+}
+
+for (const filename of await readdir(path.join(root, STORY_PHOTOS_DIR))) {
+  const slug = path.basename(filename, '.yaml');
+  if (filename.endsWith('.yaml') && !storySlugs.has(slug)) warning('story.manifest-orphan', `${STORY_PHOTOS_DIR}/${filename}: no story uses it`);
+}
+
 for (const collection of collections.values()) {
   if (collection.primaryHref && !routes.has(collection.primaryHref)) {
     error('collection.primary-route-missing', `primaryHref "${collection.primaryHref}" does not resolve`);
@@ -302,6 +328,6 @@ for (const diagnostic of diagnostics) {
 
 const errors = diagnostics.filter((item) => item.level === 'error').length;
 const warnings = diagnostics.length - errors;
-console.log(`Validated ${collections.size} collections, ${essays.size} essays, ${albums.size} albums, ${photos.size} photos, and ${mapFileSet.size} maps.`);
+console.log(`Validated ${collections.size} collections, ${essays.size} essays, ${storyFiles.length} stories, ${albums.size} albums, ${photos.size} photos, and ${mapFileSet.size} maps.`);
 console.log(`${errors} error(s), ${warnings} warning(s).`);
 if (errors > 0) process.exitCode = 1;

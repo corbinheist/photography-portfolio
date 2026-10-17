@@ -1,0 +1,48 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getEntry } from 'astro:content';
+import ProjectLayout from './ProjectLayout.astro';
+import { buildPhotoUrl } from '@scripts/utils/photo-widths';
+import { resolvePhoto, storyUrl, type StoryManifest } from '@scripts/utils/story-manifest';
+import '@styles/story.css';
+
+interface Props {
+  story: CollectionEntry<'stories'>;
+  photos: StoryManifest;
+  next?: CollectionEntry<'stories'>;
+}
+
+const { story, photos, next } = Astro.props;
+const { title, place, date, summary, cover, client, theme, credits } = story.data;
+const coverPhoto = resolvePhoto(story.id, photos, cover);
+const settings = await getEntry('settings', 'settings');
+const overline = [place, date, client].filter(Boolean).join(' · ');
+---
+
+<ProjectLayout title={title} description={summary} image={buildPhotoUrl(coverPhoto.url, coverPhoto.width, 1600)} location={place}>
+  <article class="story" data-story data-story-theme={theme}>
+    <header class="story-header">
+      <p class="story-overline">{overline}</p>
+      <h1 class="story-title">{title}</h1>
+      <p class="story-summary">{summary}</p>
+    </header>
+
+    <div class="story-body">
+      <slot />
+    </div>
+
+    <footer class="story-end">
+      <dl class="story-credits">
+        <div><dt>Photography</dt><dd>{settings?.data.author.name}</dd></div>
+        {client && <div><dt>Client</dt><dd>{client}</dd></div>}
+        {credits.map((credit) => <div><dt>{credit.role}</dt><dd>{credit.name}</dd></div>)}
+      </dl>
+      {next && (
+        <a class="story-next" href={storyUrl(next.id, next.data.url)}>
+          <span class="story-overline">Next story</span>
+          <span class="story-next__title">{next.data.title}</span>
+        </a>
+      )}
+    </footer>
+  </article>
+</ProjectLayout>
