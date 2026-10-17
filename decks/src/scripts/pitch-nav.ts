@@ -110,4 +110,4 @@ function init() {
   updateCounter();
 }
 
-document.addEventListener('astro:page-load', init);
+init();

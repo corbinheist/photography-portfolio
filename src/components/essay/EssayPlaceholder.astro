@@ -62,8 +62,8 @@ const { id, title, layout } = Astro.props;
   }
 
   /* Layout-specific overrides — parent classes are owned by sibling slide components
-     (EssaySlideFullBleed/ImageText/Diptych/Triptych) and also appear in pitch HTML
-     with no scope, so the parent must use :global() to skip cid-matching. */
+     (EssaySlideFullBleed/ImageText/Diptych/Triptych), so the parent must use
+     :global() to skip cid-matching. */
   :global(.essay-full-bleed__img) .essay-placeholder {
     position: absolute;
     inset: 0;

@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "pnpm validate:content && astro check && astro build && pnpm check:bundle",
+    "build": "pnpm validate:content && astro check && astro build && pnpm build:decks && pnpm check:bundle",
+    "build:decks": "pnpm --dir decks build",
+    "dev:decks": "pnpm --dir decks dev",
     "preview": "astro preview",
     "preview:start": "tsx scripts/preview.ts start",
     "preview:list": "tsx scripts/preview.ts list",

@@ -6,10 +6,7 @@ export default defineConfig({
   site: 'https://heist.studio',
   integrations: [
     sitemap({
-      filter: (page) => {
-        const pathname = new URL(page).pathname;
-        return !pathname.startsWith('/pitch/') && pathname !== '/essays/example/';
-      },
+      filter: (page) => new URL(page).pathname !== '/essays/example/',
     }),
   ],
   outDir: process.env.ASTRO_OUT_DIR || 'dist',

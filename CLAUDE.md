@@ -80,6 +80,10 @@ Files:
 - **Astro scoped styles** use data attributes; `:global(...)` is needed to target child component classes from a parent. The persistent map and dossier sheet styles use `:global()` extensively.
 - **Mobile breakpoint**: `1023px` is the dossier-vs-sheet switch and the SideRail vs no-rail switch. Below that → mobile.
 
+## Pitch decks
+
+The pitch decks live in `decks/`, a separate Astro project in the pnpm workspace. It builds into `dist/pitch/` (`base: '/pitch'`), so the deck URLs stay `/pitch/<name>/`. The site build empties `dist/`, so the root `build` script runs the decks build after the site build. Do not import site code into `decks/` or deck code into `src/`; the decks keep their own copies (tokens, SideRail, CommandPalette, map). `scripts/check-build-budget.ts` ignores `dist/pitch/`.
+
 ## Gotchas
 
 - **Don't use `<template>` for JSON data** — Astro HTML-encodes content (`&quot;` breaks `JSON.parse`). Use `<script type="application/json" set:html={JSON.stringify(data)}>` + `.textContent` instead.

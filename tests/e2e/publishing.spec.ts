@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test.describe('publishing controls', () => {
   test('internal examples and pitches are noindexed', async ({ page }) => {
-    for (const route of ['/essays/example', '/pitch/brand']) {
+    for (const route of ['/essays/example', '/pitch/brand', '/pitch/the-korman-archive']) {
       await page.goto(route);
       await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, nofollow');
     }

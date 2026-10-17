@@ -56,8 +56,8 @@ function initAnimations() {
 }
 
 export function initAnimationsRuntime() {
-  // Skip Lenis on pitch/essay pages — native scroll-snap handles paging
-  if (!document.body.hasAttribute('data-pitch') && !document.body.hasAttribute('data-essay')) {
+  // Skip Lenis on essay pages — native scroll-snap handles paging
+  if (!document.body.hasAttribute('data-essay')) {
     initLenis();
   }
   initAnimations();
