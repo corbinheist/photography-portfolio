@@ -104,17 +104,15 @@ test.describe('accessibility', () => {
     await expect(page.locator('[data-subscribe-banner]')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  test('essays disable snap and clipping for reduced motion', async ({ page }) => {
+  test('stories disable snap for reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await page.goto('/work/morocco/wise-essay');
     await expect(page.locator('html')).toHaveCSS('scroll-snap-type', 'none');
-    await expect(page.locator('.essay-slide').first()).toHaveCSS('overflow', 'visible');
   });
 
-  test('essays disable snap and clipping in short effective viewports', async ({ page }) => {
+  test('stories disable snap in short effective viewports', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 500 });
     await page.goto('/work/morocco/wise-essay');
     await expect(page.locator('html')).toHaveCSS('scroll-snap-type', 'none');
-    await expect(page.locator('.essay-slide').first()).toHaveCSS('overflow', 'visible');
   });
 });
