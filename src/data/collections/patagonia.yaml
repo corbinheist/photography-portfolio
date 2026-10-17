@@ -1,6 +1,5 @@
 title: Patagonia
 description: Wind, granite, and the end of the road.
-primaryHref: /work/patagonia/briefing
 sortOrder: 7
 map:
   center: [ -72.5, -50.5 ]
@@ -11,7 +10,7 @@ map:
       lng: -72.4
       lat: -50.917
       num: "01"
-      target: /work/patagonia/briefing
+      target: /work/patagonia
     - label: Torres del Paine
       lng: -72.95
       lat: -50.94

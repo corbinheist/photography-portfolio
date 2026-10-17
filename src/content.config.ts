@@ -1,6 +1,5 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { substackLoader } from './data/loaders/substack-loader';
 
 const photos = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/data/photos' }),
@@ -156,8 +155,4 @@ const stories = defineCollection({
   }),
 });
 
-const blog = defineCollection({
-  loader: substackLoader(),
-});
-
-export const collections = { photos, albums, essays, photoCollections, settings, stories, blog };
+export const collections = { photos, albums, essays, photoCollections, settings, stories };

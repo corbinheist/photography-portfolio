@@ -1,0 +1,59 @@
+---
+import SEO from '@components/global/SEO.astro';
+import Header from '@components/global/Header.astro';
+import Footer from '@components/global/Footer.astro';
+import '@styles/fonts.css';
+import '@styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  location?: string;
+}
+
+const { title, description, image, type, noindex, location } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <slot name="head" />
+    <SEO title={title} description={description} image={image} type={type} noindex={noindex} location={location} />
+    <script is:inline defer src="https://analytics.heist.studio/script.js" data-website-id="c305a664-d222-41eb-937a-8309bf7208f0" data-domains="heist.studio"></script>
+    <!-- Dark by default; follow the system setting. No toggle. -->
+    <script is:inline>
+      (function () {
+        var query = window.matchMedia('(prefers-color-scheme: light)');
+        function apply() { document.documentElement.setAttribute('data-theme', query.matches ? 'light' : 'dark'); }
+        apply();
+        query.addEventListener('change', apply);
+      })();
+    </script>
+  </head>
+  <body>
+    <Header />
+    <main class="site-main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .site-main {
+    min-height: 100dvh;
+  }
+</style>

@@ -1,10 +1,10 @@
 ---
-import PageLayout from '@layouts/PageLayout.astro';
+import SiteLayout from '@layouts/SiteLayout.astro';
 import Container from '@components/ui/Container.astro';
 import Button from '@components/ui/Button.astro';
 ---
 
-<PageLayout title="Not Found" noindex>
+<SiteLayout title="Not Found" noindex>
   <Container>
     <section class="not-found">
       <h1>404</h1>
@@ -12,7 +12,7 @@ import Button from '@components/ui/Button.astro';
       <Button href="/">Back Home</Button>
     </section>
   </Container>
-</PageLayout>
+</SiteLayout>
 
 <style>
   .not-found {

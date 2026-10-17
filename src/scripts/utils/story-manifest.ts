@@ -107,3 +107,9 @@ export function storyPhoto(locals: App.Locals, id: string): StoryPhoto {
   if (!locals.story) throw new Error(`Image id "${id}": story components render only inside a story route`);
   return resolvePhoto(locals.story.slug, locals.story.photos, id);
 }
+
+/** Format a story date ("YYYY" or "YYYY-MM") for display, for example "August 2025". */
+export function formatStoryDate(date: string): string {
+  const [year, month] = date.split('-');
+  return month ? new Date(Number(year), Number(month) - 1).toLocaleString('en-GB', { month: 'long', year: 'numeric' }) : year;
+}

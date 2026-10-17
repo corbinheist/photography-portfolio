@@ -10,7 +10,7 @@ const limits = {
   mapFreeReferencedJavaScript: 50_000,
 };
 
-const mapFreePages = ['index.html', 'about/index.html', 'blog/index.html', 'gallery/index.html'];
+const mapFreePages = ['index.html', 'about/index.html', 'work/morocco/nomads-essay/index.html'];
 
 async function walk(directory: string): Promise<string[]> {
   const files: string[] = [];

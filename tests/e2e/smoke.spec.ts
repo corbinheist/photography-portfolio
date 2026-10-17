@@ -1,62 +1,54 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('smoke tests — all pages render', () => {
-  const pages = [
-    { path: '/', title: 'Corbin Heist' },
-    { path: '/gallery', heading: 'Gallery' },
-    { path: '/work', heading: 'Work' },
-    { path: '/about', title: 'About' },
-    { path: '/blog', heading: 'Journal' },
-  ];
+const stories = [
+  '/work/morocco/nomads-essay/',
+  '/work/morocco/ksar-essay/',
+  '/work/morocco/wise-essay/',
+  '/work/morocco/morocco/',
+  '/work/japan/tokyo-kissaten/',
+  '/work/lofoten-oslo/',
+];
 
-  for (const { path, title, heading } of pages) {
-    test(`${path} returns 200 with expected content`, async ({ page }) => {
+test.describe('smoke tests', () => {
+  for (const path of ['/', '/about/', ...stories]) {
+    test(`${path} returns 200 and renders main`, async ({ page }) => {
       const response = await page.goto(path);
       expect(response?.status()).toBe(200);
-
-      if (title) {
-        await expect(page).toHaveTitle(new RegExp(title));
-      }
-      if (heading) {
-        await expect(page.locator('h1').first()).toContainText(heading);
-      }
+      await expect(page.locator('main')).toBeAttached();
     });
   }
 
-  test('nav links are reachable from homepage', async ({ page }) => {
-    // Use mobile viewport so the header + dropdown nav are visible
-    await page.setViewportSize({ width: 375, height: 812 });
+  test('the homepage lists every published story', async ({ page }) => {
     await page.goto('/');
-
-    // Open the mobile dropdown nav
-    const toggle = page.locator('[data-menu-toggle]');
-    await toggle.click();
-
-    const nav = page.locator('nav[aria-label="Main navigation"]');
-    await expect(nav).toBeVisible();
-
-    const links = nav.locator('a');
-    const count = await links.count();
-    expect(count).toBeGreaterThanOrEqual(4);
+    for (const path of stories) {
+      await expect(page.locator(`.home-stories a[href="${path}"]`)).toHaveCount(1);
+    }
   });
 
-  test('theme toggle switches between dark and light', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 812 });
+  test('the header has Work, About, and Journal', async ({ page }) => {
+    await page.goto('/about/');
+    const links = page.locator('.site-header nav a');
+    await expect(links).toHaveText(['Work', 'About', 'Journal']);
+    await expect(links.nth(1)).toHaveAttribute('aria-current', 'page');
+  });
+
+  for (const [from, to] of [
+    ['/work', /\/$/],
+    ['/work/morocco', /\/$/],
+    ['/gallery', /\/$/],
+    ['/work/norway/norway-test', /\/work\/lofoten-oslo\/$/],
+  ] as const) {
+    test(`${from} redirects`, async ({ page }) => {
+      await page.goto(from);
+      await expect(page).toHaveURL(to);
+    });
+  }
+
+  test('the theme follows the system colour scheme', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
     await page.goto('/');
-
-    const html = page.locator('html');
-    const initialTheme = await html.getAttribute('data-theme');
-
-    const toggle = page.locator('.header-right [data-theme-toggle]');
-    await expect(toggle).toBeVisible();
-    await toggle.click();
-
-    const newTheme = await html.getAttribute('data-theme');
-    expect(newTheme).not.toBe(initialTheme);
-
-    // Toggle back
-    await toggle.click();
-    const restoredTheme = await html.getAttribute('data-theme');
-    expect(restoredTheme).toBe(initialTheme);
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   });
 });

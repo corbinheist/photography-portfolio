@@ -1,9 +1,9 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
-import ProjectLayout from './ProjectLayout.astro';
+import SiteLayout from './SiteLayout.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
-import { resolvePhoto, storyUrl, type StoryManifest } from '@scripts/utils/story-manifest';
+import { formatStoryDate, resolvePhoto, storyUrl, type StoryManifest } from '@scripts/utils/story-manifest';
 import '@styles/story.css';
 
 interface Props {
@@ -16,10 +16,10 @@ const { story, photos, next } = Astro.props;
 const { title, place, date, summary, cover, client, theme, credits } = story.data;
 const coverPhoto = resolvePhoto(story.id, photos, cover);
 const settings = await getEntry('settings', 'settings');
-const overline = [place, date, client].filter(Boolean).join(' · ');
+const overline = [place, formatStoryDate(date), client].filter(Boolean).join(' · ');
 ---
 
-<ProjectLayout title={title} description={summary} image={buildPhotoUrl(coverPhoto.url, coverPhoto.width, 1600)} location={place}>
+<SiteLayout title={title} description={summary} image={buildPhotoUrl(coverPhoto.url, coverPhoto.width, 1600)} type="article" location={place}>
   <article class="story" data-story data-story-theme={theme}>
     <header class="story-header">
       <p class="story-overline">{overline}</p>
@@ -45,4 +45,4 @@ const overline = [place, date, client].filter(Boolean).join(' · ');
       )}
     </footer>
   </article>
-</ProjectLayout>
+</SiteLayout>

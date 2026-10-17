@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
+import SiteLayout from '@layouts/SiteLayout.astro';
 
 const portraitBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait';
 const portraitLqip = 'data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=';
@@ -101,7 +101,7 @@ const contacts = [
 ];
 ---
 
-<PageLayout title="About" description="I live at the foot of Rattlesnake Mountain. The camera comes because I'm going anyway.">
+<SiteLayout title="About" description="I live at the foot of Rattlesnake Mountain. The camera comes because I'm going anyway.">
 
   {/* Slug bar */}
   <div class="slug-bar">
@@ -280,7 +280,7 @@ const contacts = [
     </div>
   </section>
 
-</PageLayout>
+</SiteLayout>
 
 <style>
   /* ── Shared overline ── */

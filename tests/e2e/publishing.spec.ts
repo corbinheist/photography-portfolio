@@ -16,7 +16,7 @@ test.describe('publishing controls', () => {
     const sitemap = await request.get(sitemapPath);
     expect(sitemap.ok()).toBe(true);
     const xml = await sitemap.text();
-    expect(xml).toContain('https://heist.studio/work/morocco/');
+    expect(xml).toContain('https://heist.studio/work/morocco/nomads-essay/');
     expect(xml).not.toContain('/pitch/');
   });
 
