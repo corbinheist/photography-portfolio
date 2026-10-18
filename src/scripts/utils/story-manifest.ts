@@ -185,3 +185,26 @@ export function frameAnchor(locals: App.Locals, id: string): string | undefined 
   locals.story.anchored.add(id);
   return `frame-${String(frame).padStart(2, '0')}`;
 }
+
+/** A photograph that belongs to no story but stays in the gallery. */
+export const galleryExtraSchema = storyPhotoSchema.extend({
+  place: z.string().min(1),
+  date: z.string().regex(/^\d{4}(-\d{2}(-\d{2})?)?$/),
+});
+
+export type GalleryExtra = z.infer<typeof galleryExtraSchema>;
+
+export const GALLERY_EXTRAS_FILE = 'src/data/gallery-extras.yaml';
+
+/** Load the gallery-only photographs. A missing file means none. */
+export function loadGalleryExtras(root = process.cwd()): GalleryExtra[] {
+  let source: string;
+  try {
+    source = readFileSync(path.join(root, GALLERY_EXTRAS_FILE), 'utf8');
+  } catch {
+    return [];
+  }
+  const result = z.array(galleryExtraSchema).safeParse(parse(source) ?? []);
+  if (!result.success) throw new Error(`${GALLERY_EXTRAS_FILE}: ${result.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; ')}`);
+  return result.data;
+}

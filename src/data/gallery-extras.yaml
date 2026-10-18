@@ -1,0 +1,35 @@
+# Photographs that belong to no story but stay in the gallery.
+# Same fields as a story photo manifest, plus place and date (from EXIF).
+- id: cnh-all-images-0108
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/cnh-all-images-0108
+  width: 2560
+  height: 3840
+  lqip: data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAAAwBQCdASoUAB4APzmQvFgvKaWjqAqp4CcJaQAIEAYUhHPghaOr4NvCpqH+KO0QH+po5AD+8L3y6thswOtzejTRnQnLWGUBZedfewJkzE7ruTvNgpuV44ybQV+vi872muBzUpmSd/btoxxQkHymkcwoP47FAr8zw5fmHc1+XxYT1to13xHuTDfqUkHI8C5U5g40TeK73AiwIJbAAAA=
+  alt: An open studded wooden door onto a tiled street, a motorcyclist passing in
+    a blur
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD. RICOH GR IIIx
+    lens: Ricoh GR IIIx
+    focalLength: 26mm
+    aperture: f/16
+    shutter: 1/30s
+    iso: 400
+    date: "2025-11-08"
+  place: Morocco
+  date: "2025-11-08"
+- id: cnh-all-images-0109
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/cnh-all-images-0109
+  width: 3840
+  height: 2561
+  lqip: data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBYdhZZuxAAA/uRQdR2ku/FWy0Dg8TPDVRRR++dOGdI7ly4miRidbtizQAAA
+  alt: Two riders gallop horses across bare desert hills at dusk
+  exif:
+    camera: Canon Canon EOS R5m2
+    lens: RF50mm F1.2 L USM
+    focalLength: 50mm
+    aperture: f/2.2
+    shutter: 1/60s
+    iso: 400
+    date: "2025-11-09"
+  place: Morocco
+  date: "2025-11-09"

@@ -21,7 +21,7 @@ Node version: `.nvmrc`. Package manager: pnpm (see `packageManager` in `package.
 | -- | -- | -- |
 | `/` | `src/pages/index.astro` | The newest story as a full-bleed title card, then the numbered story index |
 | `/work/<slug>/` | `src/pages/work/[story].astro` + `src/content/stories/<slug>.mdx` | One story |
-| `/gallery/` | `src/pages/gallery.astro` | Every frame of every story; each frame links to its place in the story |
+| `/gallery/` | `src/pages/gallery.astro` | Every frame of every story (each links to its place in the story), plus the gallery-only photographs |
 | `/about/` | `src/pages/about.astro` | About, the ledger of stories, correspondence, commissions |
 | `/pitch/*` | `decks/` (separate Astro project) | Client and brand decks, `noindex` |
 
@@ -75,6 +75,8 @@ Each `##` heading is a chapter: it appears in the title card and in the sticky s
 `pnpm validate:content` checks every story: the manifest exists and parses, every image id exists, every image has alt text, the cover exists, the slug is kebab-case, no story sets a `url`, and no story URL is also a redirect source.
 
 Drafts (`draft: true`) build only with `STORIES_INCLUDE_DRAFTS=1`.
+
+**Gallery-only photographs:** a photograph that belongs to no story but should stay in the gallery goes in `src/data/gallery-extras.yaml`, with the same fields as a story manifest entry plus `place` and a quoted `date` (from EXIF). It sorts by date among the stories and is not a link.
 
 ## Project structure
 
