@@ -36,6 +36,7 @@ const [lead] = stories;
     <StoryHero
       photo={lead.cover}
       title={lead.story.data.title}
+      summary={lead.story.data.summary}
       overline={[`N° ${lead.number}`, lead.story.data.place, formatStoryDate(lead.story.data.date), `${lead.frames} frames`].join(' · ')}
       cta={{ href: lead.href, label: 'Open the story' }}
       transitionName={`cover-${lead.story.id}`}
