@@ -1,6 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { loadManifest, splitFrontmatter, storyUrl, validateStory, STORY_PHOTOS_DIR } from '../src/scripts/utils/story-manifest';
+import { GALLERY_EXTRAS_FILE, loadGalleryExtras, loadManifest, splitFrontmatter, storyUrl, validateStory, STORY_PHOTOS_DIR } from '../src/scripts/utils/story-manifest';
 
 type Diagnostic = { level: 'error' | 'warning'; code: string; message: string };
 
@@ -43,12 +43,26 @@ for (const filename of await readdir(path.join(root, STORY_PHOTOS_DIR))) {
   if (filename.endsWith('.yaml') && !slugs.has(slug)) warning('story.manifest-orphan', `${STORY_PHOTOS_DIR}/${filename}: no story uses it`);
 }
 
+// Gallery-only photographs: valid entries, unique ids, real alt text.
+let extras: ReturnType<typeof loadGalleryExtras> = [];
+try {
+  extras = loadGalleryExtras(root);
+} catch (cause) {
+  error('gallery.extras-invalid', (cause as Error).message);
+}
+const extraIds = new Set<string>();
+for (const photo of extras) {
+  if (extraIds.has(photo.id)) error('gallery.extra-duplicate', `${GALLERY_EXTRAS_FILE}: duplicate id "${photo.id}"`);
+  extraIds.add(photo.id);
+  if (!photo.alt.trim()) error('gallery.extra-alt-missing', `${GALLERY_EXTRAS_FILE}: "${photo.id}" has no alt text`);
+}
+
 for (const diagnostic of diagnostics) {
   const prefix = diagnostic.level === 'error' ? 'ERROR' : 'WARN ';
   console[diagnostic.level === 'error' ? 'error' : 'warn'](`${prefix} ${diagnostic.code} ${diagnostic.message}`);
 }
 
 const errors = diagnostics.filter((item) => item.level === 'error').length;
-console.log(`Validated ${storyFiles.length} stories and ${redirectSources.size} redirects.`);
+console.log(`Validated ${storyFiles.length} stories, ${extras.length} gallery-only photographs, and ${redirectSources.size} redirects.`);
 console.log(`${errors} error(s), ${diagnostics.length - errors} warning(s).`);
 if (errors > 0) process.exitCode = 1;

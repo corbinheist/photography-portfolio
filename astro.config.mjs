@@ -10,7 +10,9 @@ export default defineConfig({
     '/work/morocco/nomads-essay': '/work/nomads/',
     '/work/morocco/ksar-essay': '/work/ksar/',
     '/work/morocco/wise-essay': '/work/bougmez/',
-    '/work/morocco/morocco': '/work/morocco/',
+    '/work/morocco/morocco': '/',
+    // The Morocco album story was removed (STU-33); its two unique frames stay in the gallery.
+    '/work/morocco': '/',
     '/work/japan/tokyo-kissaten': '/work/tokyo-kissaten/',
     '/work/norway/norway-test': '/work/lofoten-oslo/',
     '/work/patagonia/briefing': '/',

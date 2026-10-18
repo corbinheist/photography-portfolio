@@ -5,7 +5,6 @@ const stories = [
   '/work/bougmez/',
   '/work/nomads/',
   '/work/ksar/',
-  '/work/morocco/',
   '/work/tokyo-kissaten/',
   '/work/lofoten-oslo/',
 ];
@@ -48,6 +47,14 @@ test.describe('smoke tests', () => {
     await link.click();
     await expect(page).toHaveURL(/\/work\/nomads\/#frame-07$/);
     await expect(page.locator('#frame-07')).toHaveAttribute('data-frame', '7');
+  });
+
+  test('the gallery keeps the gallery-only frames, without a story link', async ({ page }) => {
+    await page.goto('/gallery/');
+    const door = page.locator('figure.gallery__frame', { has: page.locator('img[alt^="An open studded wooden door"]') });
+    await expect(door).toHaveCount(1);
+    await expect(door.locator('figcaption')).toHaveText('Morocco · November 2025');
+    await expect(page.locator('figure.gallery__frame img[alt^="Two riders gallop horses"]')).toHaveCount(1);
   });
 
   test('the navigation links to the gallery', async ({ page }) => {
@@ -114,6 +121,8 @@ test.describe('smoke tests', () => {
   for (const [from, to] of [
     ['/work', /\/$/],
     ['/work/japan', /\/$/],
+    ['/work/morocco', /\/$/],
+    ['/work/morocco/morocco', /\/$/],
     ['/work/norway/norway-test', /\/work\/lofoten-oslo\/$/],
     ['/work/morocco/nomads-essay', /\/work\/nomads\/$/],
     ['/work/morocco/wise-essay', /\/work\/bougmez\/$/],
