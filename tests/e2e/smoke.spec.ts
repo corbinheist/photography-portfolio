@@ -125,6 +125,9 @@ test.describe('smoke tests', () => {
     await page.goto('/work/nomads/');
     await expect(page.locator('.hero__facts')).toContainText('31°16′N 5°59′W');
     await expect(page.locator('.hero__facts')).toContainText('35');
+    // Labels are spelled out, never abbreviated.
+    await expect(page.locator('.hero__facts dt')).toContainText(['Place', 'Region', 'Coordinates', 'Date', 'Frames']);
+    await expect(page.locator('.hero__facts')).not.toContainText('Coords');
     await expect(page.locator('.hero__chapters li')).toHaveCount(5);
     // The title card shows the cover as frame 01, so the body starts at frame 02.
     await expect(page.locator('[data-frame]').first()).toHaveAttribute('data-frame', '2');

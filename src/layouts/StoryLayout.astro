@@ -6,7 +6,7 @@ import StoryHero from '@components/story/StoryHero.astro';
 import Photo from '@components/photo/Photo.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
 import {
-  formatCoords,
+  formatCoordinates,
   formatStoryDate,
   kitFromExif,
   loadManifest,
@@ -30,7 +30,7 @@ interface Props {
 }
 
 const { story, photos, number, frames, chapters, prev, next } = Astro.props;
-const { title, place, date, summary, cover, client, theme, credits, region, coords, elevation_m } = story.data;
+const { title, place, date, summary, cover, client, theme, credits, region, coordinates, elevation_m } = story.data;
 const coverPhoto = resolvePhoto(story.id, photos, cover);
 const settings = await getEntry('settings', 'settings');
 const num = number !== undefined ? String(number).padStart(2, '0') : undefined;
@@ -41,8 +41,8 @@ const kit = kitFromExif(ordered);
 const facts = [
   { label: 'Place', value: place },
   region && { label: 'Region', value: region },
-  coords && { label: 'Coords', value: formatCoords(coords), measured: true },
-  elevation_m !== undefined && { label: 'Elev.', value: `${elevation_m.toLocaleString('en-GB')} m`, measured: true },
+  coordinates && { label: 'Coordinates', value: formatCoordinates(coordinates), measured: true },
+  elevation_m !== undefined && { label: 'Elevation', value: `${elevation_m.toLocaleString('en-GB')} m`, measured: true },
   { label: 'Date', value: when },
   { label: 'Frames', value: String(frames), measured: true },
   client && { label: 'Client', value: client },

@@ -11,7 +11,7 @@ import {
   storyUrl,
   compareStories,
   storyFrames,
-  formatCoords,
+  formatCoordinates,
   validateStory,
   STORY_PHOTOS_DIR,
 } from '../../src/scripts/utils/story-manifest';
@@ -117,10 +117,10 @@ describe('compareStories', () => {
   });
 });
 
-describe('formatCoords', () => {
+describe('formatCoordinates', () => {
   it('formats decimal degrees with hemispheres', () => {
-    expect(formatCoords({ lat: 31.2667, lon: -5.9833 })).toBe('31°16′N 5°59′W');
-    expect(formatCoords({ lat: -50.917, lon: -72.4 })).toBe('50°55′S 72°24′W');
+    expect(formatCoordinates({ latitude: 31.2667, longitude: -5.9833 })).toBe('31°16′N 5°59′W');
+    expect(formatCoordinates({ latitude: -50.917, longitude: -72.4 })).toBe('50°55′S 72°24′W');
   });
 });
 

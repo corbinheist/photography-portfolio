@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import SiteLayout from '@layouts/SiteLayout.astro';
-import { compareStories, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, formatCoordinates, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
 
 const portraitBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait';
 const portraitLqip = 'data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=';
@@ -53,8 +53,8 @@ const contacts = [
   {/* Slug bar */}
   <div class="slug-bar">
     <span>Subject · Heist, Corbin</span>
-    <span>Lat 47.4896 · Lon −121.7854</span>
-    <span>Elev 158m</span>
+    <span>Coordinates {formatCoordinates({ latitude: 47.4896, longitude: -121.7854 })}</span>
+    <span>Elevation 158 m</span>
     <span>Updated · {new Date().toLocaleString('en-GB', { month: 'long', year: 'numeric' })}</span>
   </div>
 
