@@ -53,7 +53,7 @@ test.describe('smoke tests', () => {
   test('a story that is not featured has no number and links within its own tier', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/work/lofoten/');
-    await expect(page.locator('.hero__overline')).not.toContainText('N°');
+    await expect(page.locator('.hero__overline')).not.toContainText('№');
     await expect(page.locator('.sitenav__rail .sitenav__more a[aria-current="page"]')).toHaveText('Lofoten');
     await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/oslo/');
   });
