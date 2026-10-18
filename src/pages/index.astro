@@ -44,8 +44,7 @@ const [lead] = stories;
   )}
 
   <section id="work" class="ledger" aria-labelledby="work-heading">
-    <!-- PENDING APPROVAL (STU-20): positioning sentence. It introduces the index, so it sits with it. -->
-    <h1 class="ledger__statement">Documentary photography of people and the work they do outdoors: nomad families in the High Atlas, ultrarunners in the Bougmez, kissaten counters in Tokyo.</h1>
+    <h1 class="visually-hidden">Heist Studio, documentary photography by Corbin Heist</h1>
     <header class="ledger__head">
       <h2 id="work-heading" class="mono-label">Selected stories</h2>
       <p class="mono-label tabular">{stories.length} stories · {stories.reduce((sum, s) => sum + s.frames, 0)} frames</p>
@@ -84,18 +83,6 @@ const [lead] = stories;
 <style>
   .ledger {
     padding: clamp(1.5rem, 3vw, 2.5rem) var(--container-padding) 0;
-  }
-
-  /* The statement spans the full width of the index it introduces. */
-  .ledger__statement {
-    margin-bottom: clamp(3rem, 6vw, 5rem);
-    font-family: var(--font-heading);
-    font-weight: 400;
-    font-size: clamp(1.75rem, 3.4vw, 3.25rem);
-    line-height: 1.16;
-    letter-spacing: -0.02em;
-    color: rgb(255 252 240 / 0.78);
-    text-wrap: balance;
   }
 
   .ledger__head {
