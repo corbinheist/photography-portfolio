@@ -6,8 +6,11 @@ import StoryHero from '@components/story/StoryHero.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
 import { compareStories, formatStoryDate, loadManifest, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
 
-const stories = (await getCollection('stories', (story) => !story.data.draft))
-  .sort(compareStories)
+const published = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
+
+// Featured stories lead: the hero and the numbered index. The others list under "More stories".
+const stories = published
+  .filter((story) => story.data.featured)
   .map((story, index) => {
     const manifest = loadManifest(story.id);
     const order = storyFrames(story.body ?? '', story.data.cover);
@@ -25,6 +28,18 @@ const stories = (await getCollection('stories', (story) => !story.data.draft))
   });
 
 const [lead] = stories;
+
+const more = published
+  .filter((story) => !story.data.featured)
+  .map((story) => {
+    const manifest = loadManifest(story.id);
+    return {
+      story,
+      href: storyUrl(story.id),
+      frames: storyFrames(story.body ?? '', story.data.cover).length,
+      cover: resolvePhoto(story.id, manifest, story.data.cover),
+    };
+  });
 ---
 
 <SiteLayout
@@ -73,6 +88,28 @@ const [lead] = stories;
       ))}
     </ol>
   </section>
+
+  {more.length > 0 && (
+    <section class="more" aria-labelledby="more-heading">
+      <header class="ledger__head">
+        <h2 id="more-heading" class="mono-label">More stories</h2>
+        <p class="mono-label tabular">{more.length} stories · {more.reduce((sum, s) => sum + s.frames, 0)} frames</p>
+      </header>
+      <ul class="more__grid">
+        {more.map(({ story, href, frames, cover }) => (
+          <li>
+            <a href={href} class="more__card">
+              <span class="more__thumb" style={`view-transition-name: cover-${story.id}`}>
+                <Photo url={cover.url} width={cover.width} height={cover.height} lqip={cover.lqip} alt={cover.alt} sizes="(max-width: 767px) 100vw, 33vw" />
+              </span>
+              <span class="more__title">{story.data.title}</span>
+              <span class="mono-label tabular">{story.data.place} · {formatStoryDate(story.data.date)} · <span class="ledger__frames">{frames} frames</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <section class="outro">
     <p class="outro__line">I live at the foot of Rattlesnake Mountain, in the Snoqualmie Valley. The camera comes because I'm going anyway.</p>
@@ -183,6 +220,48 @@ const [lead] = stories;
       gap: 0 1.2em;
       text-align: left;
     }
+  }
+
+  .more {
+    padding: clamp(4rem, 8vw, 6rem) var(--container-padding) 0;
+  }
+
+  .more__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+    gap: var(--space-xl) var(--space-lg);
+    padding-top: var(--space-lg);
+  }
+
+  .more__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .more__thumb :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    opacity: 0.88;
+    transition: opacity 240ms ease;
+  }
+
+  .more__title {
+    margin-top: var(--space-xs);
+    font-family: var(--font-heading);
+    font-size: var(--text-xl);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    transition: color 200ms ease;
+  }
+
+  .more__card:hover .more__thumb :global(img) {
+    opacity: 1;
+  }
+
+  .more__card:hover .more__title {
+    color: var(--hs-moss);
   }
 
   .outro {

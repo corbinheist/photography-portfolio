@@ -14,7 +14,9 @@ export default defineConfig({
     // The Morocco album story was removed (STU-33); its two unique frames stay in the gallery.
     '/work/morocco': '/',
     '/work/japan/tokyo-kissaten': '/work/tokyo-kissaten/',
-    '/work/norway/norway-test': '/work/lofoten-oslo/',
+    '/work/norway/norway-test': '/work/lofoten/',
+    // Lofoten to Oslo split into two stories (STU-34).
+    '/work/lofoten-oslo': '/work/lofoten/',
     '/work/patagonia/briefing': '/',
     // The region index, the region pages, and the blog were removed.
     '/work': '/',

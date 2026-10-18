@@ -1,16 +1,22 @@
 import { test, expect } from '@playwright/test';
 
+// Featured stories, newest first: the hero, the numbered index, and the rail's main list.
 const stories = [
   '/work/cold-hands/',
   '/work/bougmez/',
   '/work/nomads/',
   '/work/ksar/',
+];
+
+// The other stories, newest first: "More stories".
+const moreStories = [
   '/work/tokyo-kissaten/',
-  '/work/lofoten-oslo/',
+  '/work/lofoten/',
+  '/work/oslo/',
 ];
 
 test.describe('smoke tests', () => {
-  for (const path of ['/', '/about/', '/gallery/', ...stories]) {
+  for (const path of ['/', '/about/', '/gallery/', ...stories, ...moreStories]) {
     test(`${path} returns 200 and renders main`, async ({ page }) => {
       const response = await page.goto(path);
       expect(response?.status()).toBe(200);
@@ -22,6 +28,10 @@ test.describe('smoke tests', () => {
     await page.goto('/');
     for (const path of stories) {
       await expect(page.locator(`.ledger a[href="${path}"]`)).toHaveCount(1);
+    }
+    for (const [index, path] of moreStories.entries()) {
+      await expect(page.locator(`.ledger a[href="${path}"]`)).toHaveCount(0);
+      await expect(page.locator('.more__card').nth(index)).toHaveAttribute('href', path);
     }
   });
 
@@ -35,6 +45,17 @@ test.describe('smoke tests', () => {
     for (const [index, path] of stories.entries()) {
       await expect(rail.locator('.sitenav__stories a').nth(index)).toHaveAttribute('href', path);
     }
+    for (const [index, path] of moreStories.entries()) {
+      await expect(rail.locator('.sitenav__more a').nth(index)).toHaveAttribute('href', path);
+    }
+  });
+
+  test('a story that is not featured has no number and links within its own tier', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/work/lofoten/');
+    await expect(page.locator('.hero__overline')).not.toContainText('N°');
+    await expect(page.locator('.sitenav__rail .sitenav__more a[aria-current="page"]')).toHaveText('Lofoten');
+    await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/oslo/');
   });
 
   test('the gallery shows every frame and links each one to its place in the story', async ({ page }) => {
@@ -123,7 +144,8 @@ test.describe('smoke tests', () => {
     ['/work/japan', /\/$/],
     ['/work/morocco', /\/$/],
     ['/work/morocco/morocco', /\/$/],
-    ['/work/norway/norway-test', /\/work\/lofoten-oslo\/$/],
+    ['/work/norway/norway-test', /\/work\/lofoten\/$/],
+    ['/work/lofoten-oslo', /\/work\/lofoten\/$/],
     ['/work/morocco/nomads-essay', /\/work\/nomads\/$/],
     ['/work/morocco/wise-essay', /\/work\/bougmez\/$/],
     ['/work/japan/tokyo-kissaten', /\/work\/tokyo-kissaten\/$/],

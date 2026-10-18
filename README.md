@@ -29,6 +29,8 @@ Old URLs (`/work/morocco/nomads-essay/`, `/work/<region>`, `/blog`, …) redirec
 
 **Navigation** (`src/components/global/SiteNav.astro`): on desktop, a semi-transparent left rail that lists the stories; the visitor can minimise it into a top bar (the choice is stored in `localStorage`). Phones and tablets always use the top bar. A new story appears in the navigation, the homepage, the gallery, and the About ledger without any code change.
 
+**Tiers:** featured stories (the default) lead the homepage, are numbered N° 01…, and form the rail's main list. Stories with `featured: false` list under "More stories" in the rail and on the homepage, are not numbered, and link previous/next only within their own tier.
+
 **Order:** newest first by the story `date`. A day-precise date (`"2025-11-12"`) sorts above the same month (`"2025-11"`). `order` breaks ties.
 
 ## Publishing a story
@@ -54,6 +56,7 @@ order: 4                               # tiebreak only
 client: URTH                           # optional; shows as a commission
 credits:                               # optional
   - { role: Featuring, name: Alex Strohl }
+featured: true                         # false: listed under "More stories", unnumbered, never the homepage hero
 draft: false
 ---
 

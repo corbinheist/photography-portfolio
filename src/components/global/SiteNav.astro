@@ -6,12 +6,14 @@ const settings = await getEntry('settings', 'settings');
 const journal = settings?.data.substackUrl ?? 'https://corbinheist.substack.com';
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 
-const stories = (await getCollection('stories', (story) => !story.data.draft))
-  .sort(compareStories)
-  .map((story, index) => {
-    const href = storyUrl(story.id);
-    return { href, title: story.data.title, place: story.data.place, num: String(index + 1).padStart(2, '0'), current: path === href };
-  });
+const published = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
+const item = (story: (typeof published)[number], num?: string) => {
+  const href = storyUrl(story.id);
+  return { href, title: story.data.title, place: story.data.place, num, current: path === href };
+};
+// Featured stories are numbered; the others list under "More stories".
+const stories = published.filter((story) => story.data.featured).map((story, index) => item(story, String(index + 1).padStart(2, '0')));
+const more = published.filter((story) => !story.data.featured).map((story) => item(story));
 
 const pages = [
   { href: '/gallery/', label: 'Gallery', current: path.startsWith('/gallery') },
@@ -46,6 +48,16 @@ const pages = [
         </li>
       ))}
     </ol>
+    {more.length > 0 && (
+      <>
+        <p class="sitenav__sublabel">More stories</p>
+        <ul class="sitenav__more">
+          {more.map((story) => (
+            <li><a href={story.href} aria-current={story.current ? 'page' : undefined}>{story.title}</a></li>
+          ))}
+        </ul>
+      </>
+    )}
   </div>
 
   <details class="sitenav__menu">
@@ -64,6 +76,16 @@ const pages = [
           </li>
         ))}
       </ol>
+    {more.length > 0 && (
+      <>
+        <p class="sitenav__sublabel">More stories</p>
+        <ul class="sitenav__more">
+          {more.map((story) => (
+            <li><a href={story.href} aria-current={story.current ? 'page' : undefined}>{story.title}</a></li>
+          ))}
+        </ul>
+      </>
+    )}
       <ul class="sitenav__pages sitenav__pages--panel">
         {pages.map((page) => (
           <li><a href={page.href} rel={page.external ? 'noopener' : undefined}>{page.label}{page.external && <span aria-hidden="true"> ↗</span>}</a></li>
@@ -167,7 +189,8 @@ const pages = [
 
   /* During the rail and bar switch, only the navigation transitions (see the toggle script). */
   html[data-nav-switching] .hero__media,
-  html[data-nav-switching] .ledger__thumb {
+  html[data-nav-switching] .ledger__thumb,
+  html[data-nav-switching] .more__thumb {
     view-transition-name: none !important;
   }
 
@@ -397,6 +420,36 @@ const pages = [
     color: var(--hs-moss);
   }
 
+  .sitenav__sublabel {
+    margin-top: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgb(255 252 240 / 0.1);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(255 252 240 / 0.62);
+  }
+
+  .sitenav__more a {
+    display: block;
+    padding: 0.45rem 0 0.45rem 0.6rem;
+    border-left: 2px solid transparent;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    color: rgb(255 252 240 / 0.72);
+    transition: color 160ms ease;
+  }
+
+  .sitenav__more a:hover,
+  .sitenav__more a[aria-current='page'] {
+    color: var(--fx-paper);
+  }
+
+  .sitenav__more a[aria-current='page'] {
+    border-left-color: var(--hs-moss);
+  }
+
   .sitenav__pages a {
     display: block;
     padding-block: 0.45rem;
@@ -515,7 +568,8 @@ const pages = [
       border-top: 1px solid rgb(255 252 240 / 0.14);
     }
 
-    :global(html:not([data-nav='bar'])) .sitenav__stories a {
+    :global(html:not([data-nav='bar'])) .sitenav__stories a,
+    :global(html:not([data-nav='bar'])) .sitenav__more a {
       margin-left: -0.6rem;
     }
 
