@@ -192,8 +192,14 @@ const Heading = headingLevel;
       --hero-line: rgb(255 252 240 / 0.2);
       --hero-line-strong: rgb(255 252 240 / 0.45);
       --hero-accent: var(--hs-moss);
-      height: 100svh;
-      min-height: 620px;
+      /* The photograph runs past the fold by --hero-tail, and its last --hero-fade dissolves into the
+         page. The fade starts above the fold, so the first screen already shows the photograph
+         giving way, and it completes over a long scroll instead of a short band. */
+      --hero-tail: clamp(10rem, 30svh, 20rem);
+      --hero-fade: clamp(16rem, 52svh, 34rem);
+      --hero-fade-start: calc(100% - var(--hero-fade));
+      height: calc(100svh + var(--hero-tail));
+      min-height: calc(620px + var(--hero-tail));
       overflow: hidden;
     }
 
@@ -217,7 +223,27 @@ const Heading = headingLevel;
       inset: 0;
       /* The bottom of the photograph dissolves into the page, so the hero flows into what follows. */
       background:
-        linear-gradient(to bottom, transparent 56%, rgb(16 15 15 / 0.7) 78%, rgb(16 15 15 / 0.74) 88%, var(--color-bg) 100%),
+        /* The dissolve: the page colour rises over the fade on a smoothstep curve. */
+        linear-gradient(
+          to bottom,
+          transparent var(--hero-fade-start),
+          color-mix(in srgb, var(--color-bg) 3%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.125),
+          color-mix(in srgb, var(--color-bg) 16%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.25),
+          color-mix(in srgb, var(--color-bg) 32%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.375),
+          color-mix(in srgb, var(--color-bg) 50%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.5),
+          color-mix(in srgb, var(--color-bg) 68%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.625),
+          color-mix(in srgb, var(--color-bg) 84%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.75),
+          color-mix(in srgb, var(--color-bg) 97%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.875),
+          var(--color-bg) 100%
+        ),
+        /* The scrim under the text, which thins out as the dissolve takes over. */
+        linear-gradient(
+          to bottom,
+          transparent 34%,
+          rgb(16 15 15 / 0.7) calc(var(--hero-fade-start) - 4%),
+          rgb(16 15 15 / 0.62) calc(var(--hero-fade-start) + var(--hero-fade) * 0.3),
+          rgb(16 15 15 / 0.2) 100%
+        ),
         linear-gradient(to top right, rgb(16 15 15 / 0.8) 0%, rgb(16 15 15 / 0.35) 38%, transparent 68%),
         linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%),
         radial-gradient(ellipse 38% 32% at 100% 0%, rgb(16 15 15 / 0.6), transparent);
@@ -228,7 +254,7 @@ const Heading = headingLevel;
       position: absolute;
       z-index: 1;
       left: calc(var(--rail-offset) + var(--container-padding));
-      bottom: clamp(3rem, 12svh, 7rem);
+      bottom: calc(var(--hero-tail) + clamp(3rem, 12svh, 7rem));
       /* Wide enough for the headline to breathe; with chapters, it stops short of the chapter list. */
       width: min(1080px, 100vw - var(--rail-offset) - 2 * var(--container-padding));
       padding: 0;
@@ -251,7 +277,8 @@ const Heading = headingLevel;
       position: absolute;
       z-index: 1;
       left: calc(50% + var(--rail-offset) / 2);
-      bottom: 1.5rem;
+      bottom: calc(var(--hero-tail) + 1.5rem);
+      color: var(--hero-ink-faint);
       translate: -50% 0;
     }
   }
