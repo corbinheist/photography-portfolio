@@ -12,7 +12,8 @@ interface Fact {
 interface Props {
   photo: StoryPhoto;
   title: string;
-  summary: string;
+  /** Optional: the homepage hero shows only the title and the call to action. */
+  summary?: string;
   overline: string;
   facts?: Fact[];
   chapters?: { slug: string; text: string }[];
@@ -34,7 +35,7 @@ const Heading = headingLevel;
   <div class="hero__body">
     <p class="hero__overline">{overline}</p>
     <Heading class="hero__title">{title}</Heading>
-    <p class="hero__summary">{summary}</p>
+    {summary && <p class="hero__summary">{summary}</p>}
 
     {facts.length > 0 && (
       <dl class="hero__facts">
@@ -206,7 +207,7 @@ const Heading = headingLevel;
     .hero__body {
       position: absolute;
       z-index: 1;
-      left: calc(var(--rail-offset) + clamp(1.5rem, 4.5vw, 4rem));
+      left: calc(var(--rail-offset) + var(--container-padding));
       bottom: clamp(2rem, 7svh, 4.5rem);
       width: min(820px, 62vw);
       padding: 0;

@@ -338,7 +338,7 @@ html:has([data-story]) {
 .story-next__body {
   position: absolute;
   z-index: 1;
-  left: calc(var(--rail-offset) + clamp(1.5rem, 4.5vw, 4rem));
+  left: calc(var(--rail-offset) + var(--container-padding));
   bottom: clamp(2rem, 6svh, 4rem);
   display: flex;
   flex-direction: column;
