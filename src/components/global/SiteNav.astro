@@ -175,7 +175,8 @@ const pages = [
 
   /* Layout variables. Phone and tablet: a 56px top bar. Desktop: the rail by default, or the bar. */
   :root {
-    --rail-w: 15rem;
+    /* Wide enough that the longest story title and place stay on one line (measured: 272px). */
+    --rail-w: 18rem;
     --bar-h: 56px;
     --header-h: var(--bar-h);
     --rail-offset: 0px;
@@ -367,6 +368,19 @@ const pages = [
 
   .sitenav__label:hover {
     color: var(--nav-ink);
+  }
+
+  /* Titles and places stay on one line; a title longer than the rail ends in an ellipsis. */
+  .sitenav__title,
+  .sitenav__place,
+  .sitenav__more a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sitenav__story {
+    min-width: 0;
   }
 
   .sitenav__stories li + li {
