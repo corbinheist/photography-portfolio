@@ -1,0 +1,137 @@
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '@layouts/SiteLayout.astro';
+import Photo from '@components/photo/Photo.astro';
+import { compareStories, loadManifest, orderedImageIds, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
+
+// Every photograph from every published story: newest story first, each in reading order.
+// Each frame links to its place in the story, where it shows full size with its caption.
+const stories = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
+
+const frames = stories.flatMap((story) => {
+  const manifest = loadManifest(story.id);
+  const inBody = new Set(orderedImageIds(story.body ?? ''));
+  return storyFrames(story.body ?? '', story.data.cover).map((id, index) => {
+    const num = String(index + 1).padStart(2, '0');
+    return {
+      key: `${story.id}-${id}`,
+      photo: resolvePhoto(story.id, manifest, id),
+      // A cover that only opens the story (in the title card) links to the top of the story.
+      href: inBody.has(id) ? `${storyUrl(story.id)}#frame-${num}` : storyUrl(story.id),
+      label: `${story.data.title} · ${num}`,
+    };
+  });
+});
+---
+
+<SiteLayout title="Gallery · Heist Studio" description={`Every photograph in the selected stories: ${frames.length} frames.`}>
+  <section class="gallery">
+    <header class="gallery__head">
+      <h1 class="mono-label">Gallery</h1>
+      <p class="mono-label tabular">{frames.length} frames · {stories.length} stories</p>
+    </header>
+
+    <ul class="gallery__wall">
+      {frames.map((frame) => (
+        <li style={`--ratio: ${frame.photo.width / frame.photo.height}`}>
+          <a href={frame.href} class="gallery__frame">
+            <Photo url={frame.photo.url} width={frame.photo.width} height={frame.photo.height} lqip={frame.photo.lqip} alt={frame.photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
+            <span class="gallery__label mono-label">{frame.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+</SiteLayout>
+
+<style>
+  .gallery {
+    padding: clamp(2rem, 5vw, 3.5rem) var(--container-padding) 0;
+  }
+
+  .gallery__head {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding-bottom: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .gallery__head h1 {
+    font-weight: 400;
+  }
+
+  /* Justified rows: every frame keeps its full proportions (no crop), each row has one height,
+     and the order reads left to right, newest story first. */
+  .gallery__wall {
+    --row-h: 9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .gallery__wall { --row-h: 13rem; gap: 0.75rem; }
+  }
+
+  @media (min-width: 1400px) {
+    .gallery__wall { --row-h: 15rem; }
+  }
+
+  .gallery__wall li {
+    flex-grow: calc(var(--ratio) * 100);
+    flex-basis: calc(var(--ratio) * var(--row-h));
+  }
+
+  /* Stops the last row from stretching its few frames across the full width. */
+  .gallery__wall::after {
+    content: '';
+    flex-grow: 1000000;
+  }
+
+  .gallery__frame {
+    position: relative;
+    display: block;
+  }
+
+  .gallery__frame :global(img) {
+    width: 100%;
+    height: auto;
+    opacity: 0.9;
+    transition: opacity 240ms ease;
+  }
+
+  .gallery__label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1.6rem 0.75rem 0.6rem;
+    background: linear-gradient(to top, rgb(16 15 15 / 0.85), transparent);
+    color: var(--fx-paper);
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  .gallery__frame:hover :global(img),
+  .gallery__frame:focus-visible :global(img) {
+    opacity: 1;
+  }
+
+  .gallery__frame:hover .gallery__label,
+  .gallery__frame:focus-visible .gallery__label {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .gallery__frame :global(img) { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery__frame :global(img),
+    .gallery__label {
+      transition: none;
+    }
+  }
+</style>

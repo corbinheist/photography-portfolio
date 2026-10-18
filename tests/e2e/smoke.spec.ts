@@ -11,7 +11,7 @@ const stories = [
 ];
 
 test.describe('smoke tests', () => {
-  for (const path of ['/', '/about/', ...stories]) {
+  for (const path of ['/', '/about/', '/gallery/', ...stories]) {
     test(`${path} returns 200 and renders main`, async ({ page }) => {
       const response = await page.goto(path);
       expect(response?.status()).toBe(200);
@@ -36,6 +36,24 @@ test.describe('smoke tests', () => {
     for (const [index, path] of stories.entries()) {
       await expect(rail.locator('.sitenav__stories a').nth(index)).toHaveAttribute('href', path);
     }
+  });
+
+  test('the gallery shows every frame and links each one to its place in the story', async ({ page }) => {
+    await page.goto('/gallery/');
+    const frames = page.locator('.gallery__frame');
+    expect(await frames.count()).toBeGreaterThan(100);
+    // Nomads frame 07 links to its anchor, and the anchor exists on the story page.
+    const link = page.locator('.gallery__frame[href="/work/nomads/#frame-07"]');
+    await expect(link).toHaveCount(1);
+    await link.click();
+    await expect(page).toHaveURL(/\/work\/nomads\/#frame-07$/);
+    await expect(page.locator('#frame-07')).toHaveAttribute('data-frame', '7');
+  });
+
+  test('the navigation links to the gallery', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+    await expect(page.locator('.sitenav__pages--main a').first()).toHaveText('Gallery');
   });
 
   test('the rail highlights the story being read', async ({ page }) => {
@@ -96,7 +114,6 @@ test.describe('smoke tests', () => {
   for (const [from, to] of [
     ['/work', /\/$/],
     ['/work/japan', /\/$/],
-    ['/gallery', /\/$/],
     ['/work/norway/norway-test', /\/work\/lofoten-oslo\/$/],
     ['/work/morocco/nomads-essay', /\/work\/nomads\/$/],
     ['/work/morocco/wise-essay', /\/work\/bougmez\/$/],

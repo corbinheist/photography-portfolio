@@ -177,3 +177,11 @@ export function storyFrames(mdx: string, cover: string): string[] {
   const ordered = orderedImageIds(mdx);
   return ordered.includes(cover) ? ordered : [cover, ...ordered];
 }
+
+/** The anchor for a photograph's first appearance in a story ("frame-07"); a repeat gets none. */
+export function frameAnchor(locals: App.Locals, id: string): string | undefined {
+  const frame = locals.story?.numbers.get(id);
+  if (!frame || !locals.story || locals.story.anchored.has(id)) return undefined;
+  locals.story.anchored.add(id);
+  return `frame-${String(frame).padStart(2, '0')}`;
+}

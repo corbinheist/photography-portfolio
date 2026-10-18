@@ -25,7 +25,7 @@ export async function getStaticPaths() {
 const { story, number, prev, next } = Astro.props;
 const photos = loadManifest(story.id);
 const order = storyFrames(story.body ?? '', story.data.cover);
-Astro.locals.story = { slug: story.id, photos, numbers: new Map(order.map((id, index) => [id, index + 1])) };
+Astro.locals.story = { slug: story.id, photos, numbers: new Map(order.map((id, index) => [id, index + 1])), anchored: new Set() };
 const { Content, headings } = await render(story);
 ---
 

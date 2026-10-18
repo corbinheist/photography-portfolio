@@ -1,6 +1,6 @@
 ---
 import Photo from '@components/photo/Photo.astro';
-import { storyPhoto } from '@scripts/utils/story-manifest';
+import { frameAnchor, storyPhoto } from '@scripts/utils/story-manifest';
 
 interface Props {
   ids: [string, string];
@@ -9,12 +9,12 @@ interface Props {
 
 const { ids, captions = [] } = Astro.props;
 if (ids.length !== 2) throw new Error(`Story "${Astro.locals.story?.slug}": <Pair> needs exactly two ids, got ${ids.length}`);
-const photos = ids.map((id) => ({ id, photo: storyPhoto(Astro.locals, id), frame: Astro.locals.story?.numbers.get(id) }));
+const photos = ids.map((id) => ({ id, photo: storyPhoto(Astro.locals, id), frame: Astro.locals.story?.numbers.get(id), anchor: frameAnchor(Astro.locals, id) }));
 ---
 
 <div class="story-pair">
-  {photos.map(({ photo, frame }, index) => (
-    <figure class="story-figure" style={`--ratio: ${photo.width / photo.height}`} data-frame={frame}>
+  {photos.map(({ photo, frame, anchor }, index) => (
+    <figure class="story-figure" style={`--ratio: ${photo.width / photo.height}`} data-frame={frame} id={anchor}>
       <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 767px) 100vw, 50vw" />
       <figcaption class="story-caption">
         {frame && <span class="story-caption__num tabular">{String(frame).padStart(2, '0')}</span>}

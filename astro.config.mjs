@@ -14,7 +14,7 @@ export default defineConfig({
     '/work/japan/tokyo-kissaten': '/work/tokyo-kissaten/',
     '/work/norway/norway-test': '/work/lofoten-oslo/',
     '/work/patagonia/briefing': '/',
-    // The region index, the region pages, the gallery, and the blog were removed.
+    // The region index, the region pages, and the blog were removed.
     '/work': '/',
     '/work/france': '/',
     '/work/italy': '/',
@@ -25,7 +25,6 @@ export default defineConfig({
     '/work/patagonia': '/',
     '/work/pnw': '/',
     '/work/uk': '/',
-    '/gallery': '/',
     '/blog': 'https://corbinheist.substack.com',
   },
   integrations: [

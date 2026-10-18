@@ -1,6 +1,6 @@
 ---
 import Photo from '@components/photo/Photo.astro';
-import { exifLine, storyPhoto } from '@scripts/utils/story-manifest';
+import { exifLine, frameAnchor, storyPhoto } from '@scripts/utils/story-manifest';
 
 interface Props {
   id: string;
@@ -17,11 +17,12 @@ const photo = storyPhoto(Astro.locals, id);
 const size = requested ?? (photo.height > photo.width ? 'inset' : 'wide');
 const frame = Astro.locals.story?.numbers.get(id);
 const meta = exif ? exifLine(photo) : undefined;
+const anchor = frameAnchor(Astro.locals, id);
 const ratio = photo.width / photo.height;
 const sizes = size === 'full' ? '100vw' : size === 'inset' ? 'min(100vw, 720px)' : `min(100vw, ${Math.round(ratio * 90)}vh)`;
 ---
 
-<figure class:list={['story-figure', `story-figure--${size}`]} style={`--ratio: ${ratio}`} data-frame={frame}>
+<figure class:list={['story-figure', `story-figure--${size}`]} style={`--ratio: ${ratio}`} data-frame={frame} id={anchor}>
   <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes={sizes} />
   {(caption || meta || frame) && (
     <figcaption class="story-caption">

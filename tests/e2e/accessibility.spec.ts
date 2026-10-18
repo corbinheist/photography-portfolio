@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-const routes = ['/', '/about/', '/work/nomads/', '/work/tokyo-kissaten/'];
+const routes = ['/', '/about/', '/gallery/', '/work/nomads/', '/work/tokyo-kissaten/'];
 
 async function audit(page: Page) {
   await page.emulateMedia({ reducedMotion: 'reduce' });

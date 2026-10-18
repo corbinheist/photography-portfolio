@@ -14,6 +14,7 @@ const stories = (await getCollection('stories', (story) => !story.data.draft))
   });
 
 const pages = [
+  { href: '/gallery/', label: 'Gallery', current: path.startsWith('/gallery') },
   { href: '/about/', label: 'About', current: path.startsWith('/about') },
   { href: journal, label: 'Journal', external: true },
   { href: '/about/#contact', label: 'Contact' },
