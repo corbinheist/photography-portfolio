@@ -104,7 +104,7 @@ tests/e2e/             Playwright: smoke, accessibility (axe), publishing
 
 ## Design
 
-- Tokens in `src/styles/global.css`: Flexoki base (`#100F0F`, `#FFFCF0`), heist greens (`--hs-moss #5CC37E`), warm accents. Dark only.
+- Tokens in `src/styles/global.css`: Flexoki base (`#100F0F`, `#FFFCF0`), heist greens (`--hs-moss #5CC37E` in dark, `--hs-bottle` in light), warm accents. The site follows the visitor's system light or dark setting (CSS `prefers-color-scheme`, no script). Text and scrims set on a photograph stay paper-on-dark in both themes.
 - Type: Vollkorn (titles), IBM Plex Sans (prose), IBM Plex Mono (labels, counts, facts).
 - Motion: CSS only, except `story-nav.ts` and the rail toggle. Cross-document view transitions; `prefers-reduced-motion` turns motion off.
 - The site ships no JavaScript on most pages. `pnpm check:bundle` enforces the budget.

@@ -160,9 +160,12 @@ test.describe('smoke tests', () => {
     });
   }
 
-  test('the site is dark by default, whatever the system setting', async ({ page }) => {
+  test('the site follows the system light or dark setting', async ({ page }) => {
+    const background = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.goto('/about/');
+    expect(await background()).toBe('rgb(16, 15, 15)');
     await page.emulateMedia({ colorScheme: 'light' });
-    await page.goto('/');
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect.poll(background).toBe('rgb(255, 252, 240)');
   });
 });
