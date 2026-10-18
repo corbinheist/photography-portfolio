@@ -52,7 +52,7 @@ const more = published
       photo={lead.cover}
       title={lead.story.data.title}
       summary={lead.story.data.summary}
-      overline={[`N° ${lead.number}`, lead.story.data.place, formatStoryDate(lead.story.data.date), `${lead.frames} frames`].join(' · ')}
+      overline={[`№ ${lead.number}`, lead.story.data.place, formatStoryDate(lead.story.data.date), `${lead.frames} frames`].join(' · ')}
       cta={{ href: lead.href, label: 'Open the story' }}
       transitionName={`cover-${lead.story.id}`}
       headingLevel="h2"
@@ -69,7 +69,7 @@ const more = published
       {stories.map(({ story, href, number, frames, thumb }, index) => (
         <li>
           <a href={href} class="ledger__row">
-            <span class="ledger__num mono-label tabular">N° {number}</span>
+            <span class="ledger__num mono-label tabular">№ {number}</span>
             <span class="ledger__thumb" style={index > 0 ? `view-transition-name: cover-${story.id}` : undefined}>
               <Photo url={thumb.url} width={thumb.width} height={thumb.height} lqip={thumb.lqip} alt={thumb.alt} sizes="(max-width: 767px) 100vw, 360px" />
             </span>
