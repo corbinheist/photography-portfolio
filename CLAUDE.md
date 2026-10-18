@@ -96,7 +96,7 @@ The pitch decks live in `decks/`, a separate Astro project in the pnpm workspace
 
 ## Image pipeline
 
-`_raw/` → `pnpm process-images` → `_processed/` → `pnpm upload-images` → CDN → `pnpm generate-yaml`. Standard widths: 640, 750, 1080, 1600, 2400. Native-width variant is generated when the source falls between breakpoints (e.g. 2048px). `Photo.astro` srcset and `lightbox.ts` both account for this.
+`_raw/` → `pnpm process-images` → `_processed/` → `pnpm upload-images` → CDN → `pnpm generate-yaml`. For a story: `_raw/<slug>/` → `pnpm photos <slug>` → `_processed/<slug>/<id>/`, CDN `photos/<id>/`, and `src/data/story-photos/<slug>.yaml` (the merge keeps hand-written fields). Shared code is in `scripts/lib/`. Standard widths: 640, 750, 1080, 1600, 2400. Native-width variant is generated when the source falls between breakpoints (e.g. 2048px). `Photo.astro` srcset and `lightbox.ts` both account for this.
 
 ## Substack feed
 
