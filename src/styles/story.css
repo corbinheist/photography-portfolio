@@ -32,9 +32,9 @@ html:has([data-story]) {
   align-items: center;
   gap: var(--space-md);
   padding-inline: var(--container-padding);
-  background: var(--glass-bg-strong);
+  /* Solid, the same surface as the top bar, so the two read as one panel. */
+  background: var(--color-bg);
   border-bottom: 1px solid var(--color-border-subtle);
-  backdrop-filter: blur(10px);
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.14em;

@@ -254,10 +254,9 @@ const pages = [
     view-transition-name: sitenav;
     position: fixed;
     z-index: 50;
-    /* Glass: the photographs show through. */
-    background: var(--glass-bg);
-    backdrop-filter: blur(18px) saturate(1.15);
-    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    /* The top bar is solid, the same surface as the story bar below it, so the two read as one
+       panel whatever scrolls behind them. The rail (below) is glass. */
+    background: var(--color-bg);
   }
 
   .wordmark {
@@ -559,6 +558,10 @@ const pages = [
       border-bottom: 0;
       border-right: 1px solid var(--glass-line);
       overflow-y: auto;
+      /* Glass: the photographs show through the rail. */
+      background: var(--glass-bg);
+      backdrop-filter: blur(18px) saturate(1.15);
+      -webkit-backdrop-filter: blur(18px) saturate(1.15);
     }
 
     :global(html:not([data-nav='bar'])) .sitenav .wordmark {
