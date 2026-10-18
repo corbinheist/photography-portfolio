@@ -186,7 +186,9 @@ const Heading = headingLevel;
     }
 
     .hero__media :global(.photo-wrap),
+    .hero__media :global(picture),
     .hero__media :global(img) {
+      display: block;
       height: 100%;
       object-fit: cover;
     }
@@ -208,6 +210,10 @@ const Heading = headingLevel;
       bottom: clamp(2rem, 7svh, 4.5rem);
       width: min(820px, 62vw);
       padding: 0;
+    }
+
+    .hero__overline {
+      white-space: nowrap;
     }
 
     .hero__body > * {

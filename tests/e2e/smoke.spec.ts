@@ -25,11 +25,30 @@ test.describe('smoke tests', () => {
     }
   });
 
-  test('the header has numbered Work, About, Journal, and Contact links', async ({ page }) => {
+  test('the desktop rail lists the stories as one flat list and marks the current page', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/about/');
-    const links = page.locator('.site-header nav a');
-    await expect(links).toHaveText([/01\s*Work/, /02\s*About/, /03\s*Journal/, 'Contact']);
-    await expect(links.nth(1)).toHaveAttribute('aria-current', 'page');
+    const rail = page.locator('nav.rail');
+    await expect(rail).toBeVisible();
+    await expect(rail.locator('.rail__stories a')).toHaveCount(stories.length);
+    await expect(rail.locator('.rail__pages a[aria-current="page"]')).toHaveText('About');
+    for (const [index, path] of stories.entries()) {
+      await expect(rail.locator('.rail__stories a').nth(index)).toHaveAttribute('href', path);
+    }
+  });
+
+  test('the rail highlights the story being read', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/work/morocco/ksar-essay/');
+    await expect(page.locator('nav.rail a[aria-current="page"] .rail__title')).toHaveText('Ksar Tamnougalt');
+  });
+
+  test('on a phone the Stories menu opens the same list', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await expect(page.locator('nav.rail')).toBeHidden();
+    await page.locator('.mbar summary').click();
+    await expect(page.locator('.mbar__panel .rail__stories a')).toHaveCount(stories.length);
   });
 
   test('a story shows its facts, chapters, frame counter, and next story', async ({ page }) => {

@@ -1,0 +1,306 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import { storyUrl } from '@scripts/utils/story-manifest';
+
+const settings = await getEntry('settings', 'settings');
+const journal = settings?.data.substackUrl ?? 'https://corbinheist.substack.com';
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+
+const stories = (await getCollection('stories', (story) => !story.data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((story, index) => {
+    const href = storyUrl(story.id, story.data.url);
+    return { href, title: story.data.title, place: story.data.place, num: String(index + 1).padStart(2, '0'), current: path === href };
+  });
+
+const pages = [
+  { href: '/about/', label: 'About', current: path.startsWith('/about') },
+  { href: journal, label: 'Journal', external: true },
+  { href: '/about/#contact', label: 'Contact' },
+];
+---
+
+<!-- Desktop: a fixed left rail with the stories as one flat list. -->
+<nav class="rail" aria-label="Site">
+  <a href="/" class="wordmark" aria-label="Heist Studio, home" aria-current={path === '/' ? 'page' : undefined}>
+    <span>HEIST</span>
+    <span class="wordmark__accent">STUDIO</span>
+  </a>
+
+  <a href="/#work" class="rail__label">Selected stories <span class="tabular">{String(stories.length).padStart(2, '0')}</span></a>
+  <ol class="rail__stories">
+    {stories.map((story) => (
+      <li>
+        <a href={story.href} aria-current={story.current ? 'page' : undefined}>
+          <span class="rail__num tabular">{story.num}</span>
+          <span class="rail__story">
+            <span class="rail__title">{story.title}</span>
+            <span class="rail__place">{story.place}</span>
+          </span>
+        </a>
+      </li>
+    ))}
+  </ol>
+
+  <ul class="rail__pages">
+    {pages.map((page) => (
+      <li>
+        <a href={page.href} aria-current={page.current ? 'page' : undefined} rel={page.external ? 'noopener' : undefined}>
+          {page.label}{page.external && <span aria-hidden="true"> ↗</span>}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <a class="rail__email" href="mailto:corbin@heist.studio">corbin@heist.studio</a>
+</nav>
+
+<!-- Phone and tablet: a slim bar; the same list opens in a native disclosure. -->
+<header class="mbar">
+  <a href="/" class="wordmark" aria-label="Heist Studio, home">
+    <span>HEIST</span>
+    <span class="wordmark__accent">STUDIO</span>
+  </a>
+  <details class="mbar__menu">
+    <summary>Stories <span aria-hidden="true">+</span></summary>
+    <div class="mbar__panel">
+      <ol class="rail__stories">
+        {stories.map((story) => (
+          <li>
+            <a href={story.href} aria-current={story.current ? 'page' : undefined}>
+              <span class="rail__num tabular">{story.num}</span>
+              <span class="rail__story">
+                <span class="rail__title">{story.title}</span>
+                <span class="rail__place">{story.place}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <ul class="rail__pages">
+        {pages.map((page) => (
+          <li><a href={page.href} rel={page.external ? 'noopener' : undefined}>{page.label}{page.external && <span aria-hidden="true"> ↗</span>}</a></li>
+        ))}
+      </ul>
+    </div>
+  </details>
+</header>
+
+<style>
+  .wordmark {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    color: var(--fx-paper);
+  }
+
+  .wordmark__accent {
+    color: var(--hs-moss);
+  }
+
+  .rail__label,
+  .rail__num,
+  .rail__place,
+  .rail__pages a,
+  .rail__email,
+  .mbar summary {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* ── Rail (desktop) ── */
+
+  .rail {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .rail {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 50;
+      width: var(--rail-w);
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 1.5rem 1.75rem;
+      background: var(--fx-black);
+      border-right: 1px solid var(--color-border-subtle);
+      overflow-y: auto;
+    }
+  }
+
+  .rail__label {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 10px;
+    color: var(--color-text-faint);
+  }
+
+  .rail__label:hover {
+    color: var(--color-text-muted);
+  }
+
+  .rail__stories li + li {
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .rail__stories a {
+    display: grid;
+    grid-template-columns: 2.2em 1fr;
+    gap: 0.5rem;
+    padding: 0.85rem 0 0.85rem 0.6rem;
+    margin-left: -0.6rem;
+    border-left: 2px solid transparent;
+    transition: border-color 160ms ease;
+  }
+
+  .rail__num {
+    padding-top: 0.25em;
+    font-size: 10px;
+    color: var(--color-text-faint);
+  }
+
+  .rail__story {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+  }
+
+  .rail__title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--color-text-muted);
+    transition: color 160ms ease;
+  }
+
+  .rail__place {
+    font-size: 9.5px;
+    line-height: 1.4;
+    color: var(--color-text-faint);
+  }
+
+  .rail__stories a:hover .rail__title {
+    color: var(--fx-paper);
+  }
+
+  .rail__stories a[aria-current='page'] {
+    border-left-color: var(--hs-moss);
+  }
+
+  .rail__stories a[aria-current='page'] .rail__title {
+    color: var(--fx-paper);
+  }
+
+  .rail__stories a[aria-current='page'] .rail__num {
+    color: var(--hs-moss);
+  }
+
+  .rail__pages {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .rail__pages a {
+    display: block;
+    padding-block: 0.45rem;
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  .rail__pages a:hover,
+  .rail__pages a[aria-current='page'] {
+    color: var(--fx-paper);
+  }
+
+  .rail__email {
+    margin-top: auto;
+    padding-top: 2rem;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: none;
+    color: var(--color-text-faint);
+  }
+
+  .rail__email:hover {
+    color: var(--hs-moss);
+  }
+
+  /* ── Mobile bar ── */
+
+  .mbar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--container-padding);
+    background: rgb(16 15 15 / 0.94);
+    border-bottom: 1px solid var(--color-border-subtle);
+    backdrop-filter: blur(10px);
+  }
+
+  .mbar .wordmark {
+    font-size: 15px;
+  }
+
+  .mbar summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    min-height: 44px;
+    padding-inline: 0.9em;
+    font-size: 11px;
+    color: var(--fx-paper);
+    border: 1px solid rgb(255 252 240 / 0.3);
+    cursor: pointer;
+  }
+
+  .mbar summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .mbar__menu[open] summary {
+    border-color: var(--hs-moss);
+  }
+
+  .mbar__menu[open] summary span {
+    rotate: 45deg;
+  }
+
+  .mbar__panel {
+    position: fixed;
+    top: var(--header-h);
+    inset-inline: 0;
+    max-height: calc(100dvh - var(--header-h));
+    overflow-y: auto;
+    padding: 0.5rem var(--container-padding) 2rem;
+    background: var(--fx-black);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .mbar__panel .rail__stories a {
+    margin-left: 0;
+    padding-left: 0.6rem;
+  }
+
+  @media (min-width: 1024px) {
+    .mbar {
+      display: none;
+    }
+  }
+</style>
