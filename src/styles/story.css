@@ -170,7 +170,8 @@ html:has([data-story]) {
 
 /* full: edge to edge, the frames that carry the story */
 .story-body > .story-figure--full {
-  width: 100%;
+  width: calc(100% + var(--rail-offset));
+  margin-left: calc(-1 * var(--rail-offset));
   scroll-snap-align: center;
 }
 
@@ -181,7 +182,7 @@ html:has([data-story]) {
 }
 
 .story-figure--full .story-caption {
-  padding-inline: var(--container-padding);
+  padding-inline: calc(var(--rail-offset) + var(--container-padding)) var(--container-padding);
 }
 
 /* inset: a narrower plate for portraits and details */
@@ -337,7 +338,7 @@ html:has([data-story]) {
 .story-next__body {
   position: absolute;
   z-index: 1;
-  left: clamp(1.5rem, 4.5vw, 4rem);
+  left: calc(var(--rail-offset) + clamp(1.5rem, 4.5vw, 4rem));
   bottom: clamp(2rem, 6svh, 4rem);
   display: flex;
   flex-direction: column;

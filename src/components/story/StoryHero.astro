@@ -26,7 +26,7 @@ const { photo, title, summary, overline, facts = [], chapters = [], cta, transit
 const Heading = headingLevel;
 ---
 
-<section class="hero" data-hero>
+<section class="hero bleed" data-hero>
   <div class="hero__media" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>
     <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="100vw" loading="eager" fetchpriority="high" />
   </div>
@@ -206,7 +206,7 @@ const Heading = headingLevel;
     .hero__body {
       position: absolute;
       z-index: 1;
-      left: clamp(1.5rem, 4.5vw, 4rem);
+      left: calc(var(--rail-offset) + clamp(1.5rem, 4.5vw, 4rem));
       bottom: clamp(2rem, 7svh, 4.5rem);
       width: min(820px, 62vw);
       padding: 0;
@@ -228,7 +228,7 @@ const Heading = headingLevel;
       display: block;
       position: absolute;
       z-index: 1;
-      left: 50%;
+      left: calc(50% + var(--rail-offset) / 2);
       bottom: 1.5rem;
       translate: -50% 0;
     }

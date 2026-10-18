@@ -18,7 +18,7 @@ const { title, description, image, type, noindex, location } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" data-nav="rail">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,6 +31,10 @@ const { title, description, image, type, noindex, location } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
       rel="stylesheet"
     />
+    <!-- Apply the visitor's navigation choice (rail or bar) before the first paint. -->
+    <script is:inline>
+      try { if (localStorage.getItem('nav') === 'bar') document.documentElement.dataset.nav = 'bar'; } catch (e) {}
+    </script>
     <slot name="head" />
     <SEO title={title} description={description} image={image} type={type} noindex={noindex} location={location} />
     <script is:inline defer src="https://analytics.heist.studio/script.js" data-website-id="c305a664-d222-41eb-937a-8309bf7208f0" data-domains="heist.studio"></script>
@@ -48,22 +52,15 @@ const { title, description, image, type, noindex, location } = Astro.props;
 </html>
 
 <style is:global>
-  /* Phone and tablet: a 56px top bar. Desktop: a left rail and no top bar. */
-  :root {
-    --header-h: 56px;
-    --rail-w: 15rem;
-    --rail-offset: 0px;
+  /* The layout variables (--rail-offset, --header-h) live in SiteNav. The content is padded clear of
+     the rail; full-bleed photographs extend under the glass with .bleed. */
+  .site-content {
+    padding-left: var(--rail-offset);
   }
 
-  @media (min-width: 1024px) {
-    :root {
-      --header-h: 0px;
-      --rail-offset: var(--rail-w);
-    }
-
-    .site-content {
-      margin-left: var(--rail-w);
-    }
+  .bleed {
+    margin-left: calc(-1 * var(--rail-offset));
+    width: calc(100% + var(--rail-offset));
   }
 
   /* Cross-document view transitions: the index cover grows into the story hero where the browser supports it. */

@@ -29,27 +29,48 @@ test.describe('smoke tests', () => {
   test('the desktop rail lists the stories as one flat list and marks the current page', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/about/');
-    const rail = page.locator('nav.rail');
+    const rail = page.locator('.sitenav__rail');
     await expect(rail).toBeVisible();
-    await expect(rail.locator('.rail__stories a')).toHaveCount(stories.length);
-    await expect(rail.locator('.rail__pages a[aria-current="page"]')).toHaveText('About');
+    await expect(rail.locator('.sitenav__stories a')).toHaveCount(stories.length);
+    await expect(page.locator('.sitenav__pages--main a[aria-current="page"]')).toHaveText('About');
     for (const [index, path] of stories.entries()) {
-      await expect(rail.locator('.rail__stories a').nth(index)).toHaveAttribute('href', path);
+      await expect(rail.locator('.sitenav__stories a').nth(index)).toHaveAttribute('href', path);
     }
   });
 
   test('the rail highlights the story being read', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/work/ksar/');
-    await expect(page.locator('nav.rail a[aria-current="page"] .rail__title')).toHaveText('Ksar Tamnougalt');
+    await expect(page.locator('.sitenav__rail a[aria-current="page"] .sitenav__title')).toHaveText('Ksar Tamnougalt');
+  });
+
+  test('the rail minimises into a top bar, remembers it, and expands again', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+    const toggle = page.locator('[data-nav-toggle]');
+    await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    await toggle.click();
+    await expect(page.locator('html')).toHaveAttribute('data-nav', 'bar');
+    await expect(page.locator('.sitenav__rail')).toBeHidden();
+    await page.locator('.sitenav__menu summary').click();
+    await expect(page.locator('.sitenav__panel .sitenav__stories a')).toHaveCount(stories.length);
+
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-nav', 'bar');
+    await expect(page.locator('[data-nav-toggle]')).toHaveAttribute('aria-pressed', 'true');
+
+    await page.locator('[data-nav-toggle]').click();
+    await expect(page.locator('html')).toHaveAttribute('data-nav', 'rail');
+    await expect(page.locator('.sitenav__rail')).toBeVisible();
   });
 
   test('on a phone the Stories menu opens the same list', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');
-    await expect(page.locator('nav.rail')).toBeHidden();
-    await page.locator('.mbar summary').click();
-    await expect(page.locator('.mbar__panel .rail__stories a')).toHaveCount(stories.length);
+    await expect(page.locator('.sitenav__rail')).toBeHidden();
+    await expect(page.locator('[data-nav-toggle]')).toBeHidden();
+    await page.locator('.sitenav__menu summary').click();
+    await expect(page.locator('.sitenav__panel .sitenav__stories a')).toHaveCount(stories.length);
   });
 
   test('a story shows its facts, chapters, frame counter, and next story', async ({ page }) => {
