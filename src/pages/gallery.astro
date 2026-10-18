@@ -26,10 +26,9 @@ const frames = stories.flatMap((story) => {
 
 <SiteLayout title="Gallery · Heist Studio" description={`Every photograph in the selected stories: ${frames.length} frames.`}>
   <section class="gallery">
-    <header class="gallery__head">
-      <h1 class="mono-label">Gallery</h1>
-      <p class="mono-label tabular">{frames.length} frames · {stories.length} stories</p>
-    </header>
+    <!-- The navigation marks this page; the heading is for screen readers only. -->
+    <h1 class="visually-hidden">Gallery</h1>
+    <p class="gallery__count mono-label tabular">{frames.length} frames · {stories.length} stories</p>
 
     <ul class="gallery__wall">
       {frames.map((frame) => (
@@ -49,17 +48,8 @@ const frames = stories.flatMap((story) => {
     padding: clamp(2rem, 5vw, 3.5rem) var(--container-padding) 0;
   }
 
-  .gallery__head {
-    display: flex;
-    justify-content: space-between;
-    gap: var(--space-md);
-    padding-bottom: var(--space-sm);
-    margin-bottom: var(--space-lg);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .gallery__head h1 {
-    font-weight: 400;
+  .gallery__count {
+    margin-bottom: var(--space-md);
   }
 
   /* Justified rows: every frame keeps its full proportions (no crop), each row has one height,
