@@ -10,6 +10,7 @@ import {
   splitFrontmatter,
   storyUrl,
   compareStories,
+  storyFrames,
   formatCoords,
   validateStory,
   STORY_PHOTOS_DIR,
@@ -120,5 +121,15 @@ describe('formatCoords', () => {
   it('formats decimal degrees with hemispheres', () => {
     expect(formatCoords({ lat: 31.2667, lon: -5.9833 })).toBe('31°16′N 5°59′W');
     expect(formatCoords({ lat: -50.917, lon: -72.4 })).toBe('50°55′S 72°24′W');
+  });
+});
+
+describe('storyFrames', () => {
+  it('counts the cover as frame 01 when the body does not show it', () => {
+    expect(storyFrames('<Image id="b" />\n<Pair ids={["c", "d"]} />', 'a')).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  it('keeps the body order when the body shows the cover', () => {
+    expect(storyFrames('<Image id="b" />\n<Image id="a" />', 'a')).toEqual(['b', 'a']);
   });
 });

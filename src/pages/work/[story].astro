@@ -4,7 +4,7 @@ import StoryLayout from '@layouts/StoryLayout.astro';
 import Image from '@components/story/Image.astro';
 import Pair from '@components/story/Pair.astro';
 import Quote from '@components/story/Quote.astro';
-import { compareStories, loadManifest, orderedImageIds, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, loadManifest, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
 
 export async function getStaticPaths() {
   // STORIES_INCLUDE_DRAFTS=1 builds draft stories for a local preview. Production builds omit them.
@@ -24,7 +24,7 @@ export async function getStaticPaths() {
 
 const { story, number, prev, next } = Astro.props;
 const photos = loadManifest(story.id);
-const order = orderedImageIds(story.body ?? '');
+const order = storyFrames(story.body ?? '', story.data.cover);
 Astro.locals.story = { slug: story.id, photos, numbers: new Map(order.map((id, index) => [id, index + 1])) };
 const { Content, headings } = await render(story);
 ---

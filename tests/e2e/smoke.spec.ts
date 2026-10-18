@@ -78,7 +78,8 @@ test.describe('smoke tests', () => {
     await expect(page.locator('.hero__facts')).toContainText('31°16′N 5°59′W');
     await expect(page.locator('.hero__facts')).toContainText('35');
     await expect(page.locator('.hero__chapters li')).toHaveCount(5);
-    await expect(page.locator('[data-frame]').first()).toHaveAttribute('data-frame', '1');
+    // The title card shows the cover as frame 01, so the body starts at frame 02.
+    await expect(page.locator('[data-frame]').first()).toHaveAttribute('data-frame', '2');
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await expect(page.locator('[data-story-frame]')).toHaveText('35');
     await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/ksar/');

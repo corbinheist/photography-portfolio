@@ -198,8 +198,10 @@ const Heading = headingLevel;
       content: '';
       position: absolute;
       inset: 0;
+      /* The bottom of the photograph dissolves into the page, so the hero flows into what follows. */
       background:
-        linear-gradient(to top right, rgb(16 15 15 / 0.88) 0%, rgb(16 15 15 / 0.45) 38%, transparent 68%),
+        linear-gradient(to bottom, transparent 58%, rgb(16 15 15 / 0.7) 82%, var(--fx-black) 100%),
+        linear-gradient(to top right, rgb(16 15 15 / 0.8) 0%, rgb(16 15 15 / 0.35) 38%, transparent 68%),
         linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%);
       pointer-events: none;
     }

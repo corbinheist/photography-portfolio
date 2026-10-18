@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import SiteLayout from '@layouts/SiteLayout.astro';
-import { compareStories, orderedImageIds, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
 
 const portraitBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait';
 const portraitLqip = 'data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=';
@@ -25,7 +25,7 @@ const ledger: LedgerEntry[] = stories
     date: story.data.date.replace('-', '.'),
     place: `${story.data.place} · ${story.data.title}`,
     note: story.data.summary,
-    count: `${orderedImageIds(story.body ?? '').length} frames`,
+    count: `${storyFrames(story.body ?? '', story.data.cover).length} frames`,
     href: storyUrl(story.id),
   }))
   .sort((a, b) => b.date.localeCompare(a.date));
@@ -137,7 +137,7 @@ const contacts = [
           <div class="overline overline--accent">Ledger · 2023 — present</div>
           <h2 class="ledger-title">Where the camera has come along.</h2>
         </div>
-        <div class="ledger-stats">{stories.length} stories · {stories.reduce((sum, story) => sum + orderedImageIds(story.body ?? '').length, 0)} frames</div>
+        <div class="ledger-stats">{stories.length} stories · {stories.reduce((sum, story) => sum + storyFrames(story.body ?? '', story.data.cover).length, 0)} frames</div>
       </div>
 
       <div class="ledger-rows">

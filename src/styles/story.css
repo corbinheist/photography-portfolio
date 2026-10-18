@@ -92,7 +92,7 @@ html:has([data-story]) {
 /* ── Body: one text column, figures at three sizes ── */
 
 .story-body {
-  padding-block: clamp(4rem, 9vw, 7rem) var(--space-2xl);
+  padding-block: clamp(1.5rem, 4vw, 3rem) var(--space-2xl);
   counter-reset: chapter;
 }
 
@@ -115,6 +115,11 @@ html:has([data-story]) {
 .story-body > ol {
   padding-left: 1.2em;
   list-style: disc;
+}
+
+/* The story begins where the title card fades out: no extra pause before the first block. */
+.story-body > :first-child {
+  margin-top: 0;
 }
 
 /* A chapter: a long pause, a mono number, a Vollkorn title. */

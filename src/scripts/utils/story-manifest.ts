@@ -168,3 +168,12 @@ export function compareStories(
 ): number {
   return b.data.date.localeCompare(a.data.date) || a.data.order - b.data.order;
 }
+
+/**
+ * The photographs a story shows, in reading order. The cover opens the story in the title card,
+ * so it is frame 01 unless the body shows it again later.
+ */
+export function storyFrames(mdx: string, cover: string): string[] {
+  const ordered = orderedImageIds(mdx);
+  return ordered.includes(cover) ? ordered : [cover, ...ordered];
+}
