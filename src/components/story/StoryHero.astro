@@ -65,9 +65,18 @@ const Heading = headingLevel;
 </section>
 
 <style>
+  /* Text colours follow the context: on phones the title sits on the page (theme ink);
+     on desktop it sits on the photograph's dark scrim (paper), in both themes. */
   .hero {
     position: relative;
-    background: var(--fx-black);
+    background: var(--color-bg);
+    --hero-ink: var(--color-text);
+    --hero-ink-soft: var(--color-text);
+    --hero-ink-muted: var(--color-text-muted);
+    --hero-ink-faint: var(--color-text-faint);
+    --hero-line: var(--color-border);
+    --hero-line-strong: var(--color-border);
+    --hero-accent: var(--color-accent);
   }
 
   .hero__media :global(.photo-wrap),
@@ -87,7 +96,7 @@ const Heading = headingLevel;
 
   .hero__overline {
     font-size: 12px;
-    color: rgb(255 252 240 / 0.72);
+    color: var(--hero-ink-muted);
   }
 
   .hero__title {
@@ -97,7 +106,7 @@ const Heading = headingLevel;
     font-size: clamp(2.75rem, 7vw, 6.5rem);
     line-height: 0.95;
     letter-spacing: -0.02em;
-    color: var(--fx-paper);
+    color: var(--hero-ink);
     max-width: 13ch;
     text-wrap: balance;
   }
@@ -109,7 +118,7 @@ const Heading = headingLevel;
     font-size: var(--text-lg);
     font-weight: 300;
     line-height: 1.5;
-    color: rgb(255 252 240 / 0.86);
+    color: var(--hero-ink-soft);
   }
 
   .hero__facts {
@@ -118,12 +127,12 @@ const Heading = headingLevel;
     gap: var(--space-sm) clamp(1.5rem, 3vw, 3rem);
     margin-top: var(--space-lg);
     padding-top: var(--space-md);
-    border-top: 1px solid rgb(255 252 240 / 0.2);
+    border-top: 1px solid var(--hero-line);
   }
 
   .hero__facts dt {
     font-size: 10px;
-    color: rgb(255 252 240 / 0.5);
+    color: var(--hero-ink-faint);
   }
 
   .hero__facts dd {
@@ -131,11 +140,11 @@ const Heading = headingLevel;
     font-family: var(--font-mono);
     font-size: 13px;
     letter-spacing: 0.06em;
-    color: var(--fx-paper);
+    color: var(--hero-ink);
   }
 
   .hero__facts dd.is-measured {
-    color: var(--hs-moss);
+    color: var(--hero-accent);
   }
 
   .hero__cta {
@@ -143,14 +152,14 @@ const Heading = headingLevel;
     margin-top: var(--space-lg);
     padding: 0.9em 1.3em;
     font-size: 12px;
-    color: var(--fx-paper);
-    border: 1px solid rgb(255 252 240 / 0.45);
+    color: var(--hero-ink);
+    border: 1px solid var(--hero-line-strong);
     transition: border-color 160ms ease, color 160ms ease;
   }
 
   .hero__cta:hover {
-    border-color: var(--hs-moss);
-    color: var(--hs-moss);
+    border-color: var(--hero-accent);
+    color: var(--hero-accent);
   }
 
   .hero__chapters {
@@ -161,7 +170,7 @@ const Heading = headingLevel;
   .hero__begin {
     display: none;
     font-size: 11px;
-    color: rgb(255 252 240 / 0.6);
+    color: var(--color-text-faint);
   }
 
   /* Mobile: the whole photograph, then the title on black. No landscape is cropped. */
@@ -176,6 +185,13 @@ const Heading = headingLevel;
   /* Desktop: the title is set on the photograph. */
   @media (min-width: 768px) {
     .hero {
+      --hero-ink: var(--fx-paper);
+      --hero-ink-soft: rgb(255 252 240 / 0.86);
+      --hero-ink-muted: rgb(255 252 240 / 0.74);
+      --hero-ink-faint: rgb(255 252 240 / 0.56);
+      --hero-line: rgb(255 252 240 / 0.2);
+      --hero-line-strong: rgb(255 252 240 / 0.45);
+      --hero-accent: var(--hs-moss);
       height: 100svh;
       min-height: 620px;
       overflow: hidden;
@@ -201,7 +217,7 @@ const Heading = headingLevel;
       inset: 0;
       /* The bottom of the photograph dissolves into the page, so the hero flows into what follows. */
       background:
-        linear-gradient(to bottom, transparent 58%, rgb(16 15 15 / 0.7) 82%, var(--fx-black) 100%),
+        linear-gradient(to bottom, transparent 56%, rgb(16 15 15 / 0.7) 78%, rgb(16 15 15 / 0.74) 88%, var(--color-bg) 100%),
         linear-gradient(to top right, rgb(16 15 15 / 0.8) 0%, rgb(16 15 15 / 0.35) 38%, transparent 68%),
         linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%),
         radial-gradient(ellipse 38% 32% at 100% 0%, rgb(16 15 15 / 0.6), transparent);
@@ -212,7 +228,7 @@ const Heading = headingLevel;
       position: absolute;
       z-index: 1;
       left: calc(var(--rail-offset) + var(--container-padding));
-      bottom: clamp(2rem, 7svh, 4.5rem);
+      bottom: clamp(3rem, 12svh, 7rem);
       /* Wide enough for the headline to breathe; with chapters, it stops short of the chapter list. */
       width: min(1080px, 100vw - var(--rail-offset) - 2 * var(--container-padding));
       padding: 0;

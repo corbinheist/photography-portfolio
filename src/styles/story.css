@@ -32,7 +32,7 @@ html:has([data-story]) {
   align-items: center;
   gap: var(--space-md);
   padding-inline: var(--container-padding);
-  background: rgb(16 15 15 / 0.9);
+  background: var(--glass-bg-strong);
   border-bottom: 1px solid var(--color-border-subtle);
   backdrop-filter: blur(10px);
   font-family: var(--font-mono);
@@ -75,7 +75,7 @@ html:has([data-story]) {
 }
 
 .story-bar__pct {
-  color: var(--hs-moss);
+  color: var(--color-accent);
 }
 
 .story-bar__progress {
@@ -84,7 +84,7 @@ html:has([data-story]) {
   bottom: -1px;
   height: 2px;
   width: 100%;
-  background: var(--hs-moss);
+  background: var(--color-accent);
   transform-origin: left;
   transform: scaleX(var(--progress, 0));
 }
@@ -142,7 +142,7 @@ html:has([data-story]) {
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--hs-moss);
+  color: var(--color-accent);
 }
 
 .story-body > h3 {
@@ -230,7 +230,7 @@ html:has([data-story]) {
 }
 
 .story-caption__num {
-  color: var(--hs-moss);
+  color: var(--color-accent);
 }
 
 .story-caption__exif {
@@ -308,7 +308,7 @@ html:has([data-story]) {
   margin-top: var(--space-xs);
   font-family: var(--font-mono);
   font-size: 15px;
-  color: var(--hs-moss);
+  color: var(--color-accent);
 }
 
 .story-next {
@@ -351,6 +351,11 @@ html:has([data-story]) {
   max-width: min(760px, 80vw);
 }
 
+/* Set on the photograph's dark scrim, so the label stays paper in both themes. */
+.story-next__body .mono-label {
+  color: rgb(255 252 240 / 0.72);
+}
+
 .story-next__title {
   font-family: var(--font-heading);
   font-size: clamp(2.25rem, 5vw, 4.5rem);
@@ -380,7 +385,7 @@ html:has([data-story]) {
 }
 
 .story-pager a:hover {
-  color: var(--hs-moss);
+  color: var(--color-accent);
 }
 
 @media (max-width: 767px) {
