@@ -45,6 +45,13 @@ function buildSrcset(format: 'avif' | 'webp'): string {
 const avifSrcset = buildSrcset('avif');
 const webpSrcset = buildSrcset('webp');
 const fallbackSrc = buildPhotoUrl(url, width, 1080);
+
+// The placeholder while the photograph loads: the tiny LQIP drawn through an SVG Gaussian blur,
+// so it is a soft image at any size (a plain upscale of a 20px image shows blocks). It is inline,
+// so it appears at once even on a slow connection.
+const blur = Math.round(Math.max(width, height) / 30);
+const placeholderSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" preserveAspectRatio="none"><filter id="b" color-interpolation-filters="sRGB"><feGaussianBlur stdDeviation="${blur}"/><feComponentTransfer><feFuncA type="discrete" tableValues="1 1"/></feComponentTransfer></filter><image width="100%" height="100%" preserveAspectRatio="none" href="${lqip}" filter="url(#b)"/></svg>`;
+const placeholder = `url('data:image/svg+xml;charset=utf-8,${encodeURIComponent(placeholderSvg)}')`;
 ---
 
 <div class:list={['photo-wrap', className]} {...(lightboxIndex !== undefined ? { 'data-lightbox-index': lightboxIndex } : {})}>
@@ -59,8 +66,9 @@ const fallbackSrc = buildPhotoUrl(url, width, 1080);
       loading={loading}
       fetchpriority={fetchpriority}
       decoding="async"
-      style={`background-image: url(${lqip}); background-size: cover;`}
+      style={`--placeholder: ${placeholder}`}
       class="photo-img"
+      onload="this.dataset.loaded=''"
     />
   </picture>
 </div>
@@ -74,8 +82,31 @@ const fallbackSrc = buildPhotoUrl(url, width, 1080);
   .photo-img {
     width: 100%;
     object-fit: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: opacity 0.4s ease;
+    background: var(--placeholder) center / cover no-repeat;
+  }
+
+  /* While the photograph loads, a faint sheen moves across the soft placeholder. */
+  .photo-img:not([data-loaded]) {
+    background-image: linear-gradient(100deg, transparent 38%, rgb(255 252 240 / 0.12) 50%, transparent 62%), var(--placeholder);
+    background-size: 250% 100%, cover;
+    background-position: 130% 0, center;
+    animation: photo-sheen 1.8s ease-in-out infinite;
+  }
+
+  /* Loaded: drop the placeholder and stop the animation. */
+  .photo-img[data-loaded] {
+    background: none;
+  }
+
+  @keyframes photo-sheen {
+    to { background-position: -130% 0, center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .photo-img:not([data-loaded]) {
+      animation: none;
+      background-image: var(--placeholder);
+      background-size: cover;
+    }
   }
 </style>

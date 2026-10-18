@@ -80,6 +80,15 @@ test.describe('smoke tests', () => {
     await expect(page.locator('figure.gallery__frame img[alt^="Two riders gallop horses"]')).toHaveCount(1);
   });
 
+  test('photographs show a blurred placeholder until they load, then drop it', async ({ page }) => {
+    await page.goto('/gallery/');
+    const first = page.locator('.photo-img').first();
+    // Every photograph carries an inline SVG blur placeholder.
+    expect(await page.locator('.photo-img[style*="--placeholder: url(\'data:image/svg+xml"]').count()).toBe(await page.locator('.photo-img').count());
+    await expect(first).toHaveAttribute('data-loaded', '');
+    expect(await first.evaluate((el) => getComputedStyle(el).backgroundImage)).toBe('none');
+  });
+
   test('the navigation links to the gallery', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/');
