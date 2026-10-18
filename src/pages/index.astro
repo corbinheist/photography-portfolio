@@ -11,7 +11,7 @@ const published = (await getCollection('stories', (story) => !story.data.draft))
 // Featured stories lead: the hero and the numbered index. The others list under "More stories".
 const stories = published
   .filter((story) => story.data.featured)
-  .map((story, index) => {
+  .map((story, index, featured) => {
     const manifest = loadManifest(story.id);
     const order = storyFrames(story.body ?? '', story.data.cover);
     const cover = resolvePhoto(story.id, manifest, story.data.cover);
@@ -20,7 +20,8 @@ const stories = published
     return {
       story,
       href: storyUrl(story.id),
-      number: String(index + 1).padStart(2, '0'),
+      // Numbered from the oldest (№ 01); the list shows the newest first.
+      number: String(featured.length - index).padStart(2, '0'),
       frames: order.length,
       cover,
       thumb: resolvePhoto(story.id, manifest, thumbId),

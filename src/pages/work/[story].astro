@@ -11,7 +11,8 @@ export async function getStaticPaths() {
   const includeDrafts = process.env.STORIES_INCLUDE_DRAFTS === '1';
   const stories = (await getCollection('stories', (entry) => includeDrafts || !entry.data.draft))
     .sort(compareStories);
-  // Featured stories are numbered. Previous and next stay within a story's own tier.
+  // Featured stories are numbered from the oldest (№ 01) to the newest; they list newest first.
+  // Previous and next stay within a story's own tier.
   return stories.map((story) => {
     const tier = stories.filter((other) => other.data.featured === story.data.featured);
     const index = tier.indexOf(story);
@@ -19,7 +20,7 @@ export async function getStaticPaths() {
       params: { story: story.id },
       props: {
         story,
-        number: story.data.featured ? index + 1 : undefined,
+        number: story.data.featured ? tier.length - index : undefined,
         prev: index > 0 ? tier[index - 1] : undefined,
         next: index < tier.length - 1 ? tier[index + 1] : undefined,
       },
