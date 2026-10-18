@@ -27,7 +27,7 @@ const { photo, title, summary, overline, facts = [], chapters = [], cta, transit
 const Heading = headingLevel;
 ---
 
-<section class="hero bleed" data-hero>
+<section class:list={['hero bleed', { 'hero--chapters': chapters.length > 0 }]} data-hero>
   <div class="hero__media" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>
     <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="100vw" loading="eager" fetchpriority="high" />
   </div>
@@ -104,7 +104,8 @@ const Heading = headingLevel;
 
   .hero__summary {
     margin-top: var(--space-md);
-    max-width: 44ch;
+    max-width: 72ch;
+    text-wrap: pretty;
     font-size: var(--text-lg);
     font-weight: 300;
     line-height: 1.5;
@@ -202,7 +203,8 @@ const Heading = headingLevel;
       background:
         linear-gradient(to bottom, transparent 58%, rgb(16 15 15 / 0.7) 82%, var(--fx-black) 100%),
         linear-gradient(to top right, rgb(16 15 15 / 0.8) 0%, rgb(16 15 15 / 0.35) 38%, transparent 68%),
-        linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%);
+        linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%),
+        radial-gradient(ellipse 38% 32% at 100% 0%, rgb(16 15 15 / 0.6), transparent);
       pointer-events: none;
     }
 
@@ -211,7 +213,8 @@ const Heading = headingLevel;
       z-index: 1;
       left: calc(var(--rail-offset) + var(--container-padding));
       bottom: clamp(2rem, 7svh, 4.5rem);
-      width: min(820px, 62vw);
+      /* Wide enough for the headline to breathe; with chapters, it stops short of the chapter list. */
+      width: min(1080px, 100vw - var(--rail-offset) - 2 * var(--container-padding));
       padding: 0;
     }
 
@@ -242,8 +245,9 @@ const Heading = headingLevel;
       display: block;
       position: absolute;
       z-index: 1;
-      right: clamp(1.5rem, 4.5vw, 4rem);
-      bottom: clamp(2rem, 7svh, 4.5rem);
+      /* Top right, in the open sky of the frame, so the title, headline, and facts keep the full width. */
+      right: var(--container-padding);
+      top: calc(var(--header-h) + clamp(2rem, 7svh, 4.5rem));
       max-width: 22rem;
     }
 
