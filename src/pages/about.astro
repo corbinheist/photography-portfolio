@@ -1,7 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import SiteLayout from '@layouts/SiteLayout.astro';
-import { orderedImageIds, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, orderedImageIds, storyUrl } from '@scripts/utils/story-manifest';
 
 const portraitBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait';
 const portraitLqip = 'data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=';
@@ -10,7 +10,7 @@ const ksarBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/he
 const ksarLqip = 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA==';
 
 // ── The ledger lists the published stories, newest first ──
-const stories = (await getCollection('stories', (story) => !story.data.draft)).sort((a, b) => a.data.order - b.data.order);
+const stories = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
 
 type LedgerEntry = {
   date: string;
@@ -26,7 +26,7 @@ const ledger: LedgerEntry[] = stories
     place: `${story.data.place} · ${story.data.title}`,
     note: story.data.summary,
     count: `${orderedImageIds(story.body ?? '').length} frames`,
-    href: storyUrl(story.id, story.data.url),
+    href: storyUrl(story.id),
   }))
   .sort((a, b) => b.date.localeCompare(a.date));
 

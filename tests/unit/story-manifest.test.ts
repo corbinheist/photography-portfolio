@@ -9,6 +9,8 @@ import {
   resolvePhoto,
   splitFrontmatter,
   storyUrl,
+  compareStories,
+  formatCoords,
   validateStory,
   STORY_PHOTOS_DIR,
 } from '../../src/scripts/utils/story-manifest';
@@ -90,8 +92,33 @@ describe('validateStory', () => {
 });
 
 describe('storyUrl', () => {
-  it('defaults to /work/<slug>/ and honours the override', () => {
+  it('puts every story at /work/<slug>/', () => {
     expect(storyUrl('tokyo')).toBe('/work/tokyo/');
-    expect(storyUrl('nomads', '/work/morocco/nomads-essay/')).toBe('/work/morocco/nomads-essay/');
+  });
+});
+
+describe('compareStories', () => {
+  const story = (date: string, order: number) => ({ data: { date, order } });
+
+  it('puts the newest story first', () => {
+    const sorted = [story('2024-06', 1), story('2026-04', 1), story('2025-08', 1)].sort(compareStories);
+    expect(sorted.map((s) => s.data.date)).toEqual(['2026-04', '2025-08', '2024-06']);
+  });
+
+  it('puts a dated day above the same month without a day', () => {
+    const sorted = [story('2025-11', 1), story('2025-11-12', 9)].sort(compareStories);
+    expect(sorted.map((s) => s.data.date)).toEqual(['2025-11-12', '2025-11']);
+  });
+
+  it('falls back to order for the same date', () => {
+    const sorted = [story('2025-11', 5), story('2025-11', 1), story('2025-11', 2)].sort(compareStories);
+    expect(sorted.map((s) => s.data.order)).toEqual([1, 2, 5]);
+  });
+});
+
+describe('formatCoords', () => {
+  it('formats decimal degrees with hemispheres', () => {
+    expect(formatCoords({ lat: 31.2667, lon: -5.9833 })).toBe('31°16′N 5°59′W');
+    expect(formatCoords({ lat: -50.917, lon: -72.4 })).toBe('50°55′S 72°24′W');
   });
 });

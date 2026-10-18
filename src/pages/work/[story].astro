@@ -4,15 +4,15 @@ import StoryLayout from '@layouts/StoryLayout.astro';
 import Image from '@components/story/Image.astro';
 import Pair from '@components/story/Pair.astro';
 import Quote from '@components/story/Quote.astro';
-import { loadManifest, orderedImageIds, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, loadManifest, orderedImageIds, storyUrl } from '@scripts/utils/story-manifest';
 
 export async function getStaticPaths() {
   // STORIES_INCLUDE_DRAFTS=1 builds draft stories for a local preview. Production builds omit them.
   const includeDrafts = process.env.STORIES_INCLUDE_DRAFTS === '1';
   const stories = (await getCollection('stories', (entry) => includeDrafts || !entry.data.draft))
-    .sort((a, b) => a.data.order - b.data.order);
+    .sort(compareStories);
   return stories.map((story, index) => ({
-    params: { story: storyUrl(story.id, story.data.url).replace(/^\/work\/|\/$/g, '') },
+    params: { story: story.id },
     props: {
       story,
       number: index + 1,

@@ -86,7 +86,7 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
     </footer>
 
     {next && nextCover && (
-      <a class="story-next" href={storyUrl(next.id, next.data.url)}>
+      <a class="story-next" href={storyUrl(next.id)}>
         <Photo url={nextCover.url} width={nextCover.width} height={nextCover.height} lqip={nextCover.lqip} alt={nextCover.alt} sizes="100vw" />
         <span class="story-next__body">
           <span class="mono-label">Next · N° {String(number + 1).padStart(2, '0')}</span>
@@ -97,7 +97,7 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
     )}
 
     <nav class="story-pager" aria-label="More stories">
-      {prev ? <a href={storyUrl(prev.id, prev.data.url)}><span aria-hidden="true">←</span> Previous · {prev.data.title}</a> : <span></span>}
+      {prev ? <a href={storyUrl(prev.id)}><span aria-hidden="true">←</span> Previous · {prev.data.title}</a> : <span></span>}
       <a href="/#work">All work <span aria-hidden="true">↑</span></a>
     </nav>
   </article>

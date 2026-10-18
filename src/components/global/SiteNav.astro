@@ -1,15 +1,15 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
-import { storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, storyUrl } from '@scripts/utils/story-manifest';
 
 const settings = await getEntry('settings', 'settings');
 const journal = settings?.data.substackUrl ?? 'https://corbinheist.substack.com';
 const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 
 const stories = (await getCollection('stories', (story) => !story.data.draft))
-  .sort((a, b) => a.data.order - b.data.order)
+  .sort(compareStories)
   .map((story, index) => {
-    const href = storyUrl(story.id, story.data.url);
+    const href = storyUrl(story.id);
     return { href, title: story.data.title, place: story.data.place, num: String(index + 1).padStart(2, '0'), current: path === href };
   });
 

@@ -98,8 +98,8 @@ export function validateStory(slug: string, frontmatter: Record<string, unknown>
 }
 
 /** The public URL of a story: the frontmatter `url` override, or `/work/<slug>/`. */
-export function storyUrl(slug: string, override?: string): string {
-  return override ?? `/work/${slug}/`;
+export function storyUrl(slug: string): string {
+  return `/work/${slug}/`;
 }
 
 /** Resolve an image id against the manifest that the story route put in `Astro.locals`. */
@@ -156,4 +156,15 @@ export function exifLine(photo: StoryPhoto): string | undefined {
   if (!exif) return undefined;
   const parts = [exif.camera, exif.focalLength, exif.aperture, exif.shutter].filter(Boolean);
   return parts.length ? parts.join(' · ') : undefined;
+}
+
+/**
+ * Story order: newest first. Dates compare as strings, so "2025-11-12" sorts above "2025-11".
+ * Stories with the same date fall back to `order`, lowest first.
+ */
+export function compareStories(
+  a: { data: { date: string; order: number } },
+  b: { data: { date: string; order: number } },
+): number {
+  return b.data.date.localeCompare(a.data.date) || a.data.order - b.data.order;
 }

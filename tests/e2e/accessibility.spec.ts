@@ -1,7 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
-const routes = ['/', '/about/', '/work/morocco/nomads-essay/', '/work/japan/tokyo-kissaten/'];
+const routes = ['/', '/about/', '/work/nomads/', '/work/tokyo-kissaten/'];
 
 async function audit(page: Page) {
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -31,13 +31,13 @@ test.describe('accessibility', () => {
 
   test('stories disable snap for reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('/work/morocco/wise-essay/');
+    await page.goto('/work/bougmez/');
     await expect(page.locator('html')).toHaveCSS('scroll-snap-type', 'none');
   });
 
   test('stories disable snap in short effective viewports', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 500 });
-    await page.goto('/work/morocco/wise-essay/');
+    await page.goto('/work/bougmez/');
     await expect(page.locator('html')).toHaveCSS('scroll-snap-type', 'none');
   });
 });

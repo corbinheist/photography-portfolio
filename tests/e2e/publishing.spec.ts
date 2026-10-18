@@ -16,7 +16,7 @@ test.describe('publishing controls', () => {
     const sitemap = await request.get(sitemapPath);
     expect(sitemap.ok()).toBe(true);
     const xml = await sitemap.text();
-    expect(xml).toContain('https://heist.studio/work/morocco/nomads-essay/');
+    expect(xml).toContain('https://heist.studio/work/nomads/');
     expect(xml).not.toContain('/pitch/');
   });
 
@@ -26,10 +26,10 @@ test.describe('publishing controls', () => {
   });
 
   test('essays expose canonical sharing and structured metadata', async ({ page }) => {
-    await page.goto('/work/morocco/wise-essay');
+    await page.goto('/work/bougmez/');
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://heist.studio/work/morocco/wise-essay/',
+      'https://heist.studio/work/bougmez/',
     );
     await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'article');
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', /^https:\/\/.*-1600\.webp$/);

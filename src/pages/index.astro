@@ -4,10 +4,10 @@ import SiteLayout from '@layouts/SiteLayout.astro';
 import Photo from '@components/photo/Photo.astro';
 import StoryHero from '@components/story/StoryHero.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
-import { formatStoryDate, loadManifest, orderedImageIds, resolvePhoto, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, formatStoryDate, loadManifest, orderedImageIds, resolvePhoto, storyUrl } from '@scripts/utils/story-manifest';
 
 const stories = (await getCollection('stories', (story) => !story.data.draft))
-  .sort((a, b) => a.data.order - b.data.order)
+  .sort(compareStories)
   .map((story, index) => {
     const manifest = loadManifest(story.id);
     const order = orderedImageIds(story.body ?? '');
@@ -16,7 +16,7 @@ const stories = (await getCollection('stories', (story) => !story.data.draft))
     const thumbId = index === 0 ? order.find((id) => id !== story.data.cover) ?? story.data.cover : story.data.cover;
     return {
       story,
-      href: storyUrl(story.id, story.data.url),
+      href: storyUrl(story.id),
       number: String(index + 1).padStart(2, '0'),
       frames: order.length,
       cover,

@@ -6,21 +6,25 @@ export default defineConfig({
   output: 'static',
   site: 'https://heist.studio',
   redirects: {
-    // The Lofoten album moved to a story with a slug that does not contain "test".
+    // Stories are flat: one story, one URL at /work/<slug>/. The old essay and album URLs redirect.
+    '/work/morocco/nomads-essay': '/work/nomads/',
+    '/work/morocco/ksar-essay': '/work/ksar/',
+    '/work/morocco/wise-essay': '/work/bougmez/',
+    '/work/morocco/morocco': '/work/morocco/',
+    '/work/japan/tokyo-kissaten': '/work/tokyo-kissaten/',
     '/work/norway/norway-test': '/work/lofoten-oslo/',
-    // The region index, the region pages, the gallery, and the blog were removed (STU-23, STU-24).
+    '/work/patagonia/briefing': '/',
+    // The region index, the region pages, the gallery, and the blog were removed.
     '/work': '/',
     '/work/france': '/',
     '/work/italy': '/',
     '/work/japan': '/',
     '/work/montana': '/',
-    '/work/morocco': '/',
     '/work/north-carolina': '/',
     '/work/norway': '/',
     '/work/patagonia': '/',
     '/work/pnw': '/',
     '/work/uk': '/',
-    '/work/patagonia/briefing': '/',
     '/gallery': '/',
     '/blog': 'https://corbinheist.substack.com',
   },
