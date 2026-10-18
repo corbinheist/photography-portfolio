@@ -1,0 +1,468 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import { compareStories, storyUrl } from '@scripts/utils/story-manifest';
+
+const settings = await getEntry('settings', 'settings');
+const journal = settings?.data.substackUrl ?? 'https://corbinheist.substack.com';
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+
+const stories = (await getCollection('stories', (story) => !story.data.draft))
+  .sort(compareStories)
+  .map((story, index) => {
+    const href = storyUrl(story.id);
+    return { href, title: story.data.title, place: story.data.place, num: String(index + 1).padStart(2, '0'), current: path === href };
+  });
+
+const pages = [
+  { href: '/gallery/', label: 'Gallery', current: path.startsWith('/gallery') },
+  { href: '/about/', label: 'About', current: path.startsWith('/about') },
+  { href: journal, label: 'Journal', external: true },
+  { href: '/about/#contact', label: 'Contact' },
+];
+---
+
+<!--
+  One navigation, two layouts. Desktop: a glass rail on the left (data-nav="rail") that the
+  visitor can minimise into a top bar (data-nav="bar"). Phone and tablet: always the bar.
+-->
+<nav class="sitenav" aria-label="Site">
+  <a href="/" class="wordmark" aria-label="Heist Studio, home" aria-current={path === '/' ? 'page' : undefined}>
+    <span>HEIST</span>
+    <span class="wordmark__accent">STUDIO</span>
+  </a>
+
+  <div class="sitenav__rail">
+    <a href="/#work" class="sitenav__label">Selected stories <span class="tabular">{String(stories.length).padStart(2, '0')}</span></a>
+    <ol class="sitenav__stories">
+      {stories.map((story) => (
+        <li>
+          <a href={story.href} aria-current={story.current ? 'page' : undefined}>
+            <span class="sitenav__num tabular">{story.num}</span>
+            <span class="sitenav__story">
+              <span class="sitenav__title">{story.title}</span>
+              <span class="sitenav__place">{story.place}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <details class="sitenav__menu">
+    <summary>Stories <span class="sitenav__caret" aria-hidden="true">▾</span></summary>
+    <div class="sitenav__panel">
+      <ol class="sitenav__stories">
+        {stories.map((story) => (
+          <li>
+            <a href={story.href} aria-current={story.current ? 'page' : undefined}>
+              <span class="sitenav__num tabular">{story.num}</span>
+              <span class="sitenav__story">
+                <span class="sitenav__title">{story.title}</span>
+                <span class="sitenav__place">{story.place}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <ul class="sitenav__pages sitenav__pages--panel">
+        {pages.map((page) => (
+          <li><a href={page.href} rel={page.external ? 'noopener' : undefined}>{page.label}{page.external && <span aria-hidden="true"> ↗</span>}</a></li>
+        ))}
+      </ul>
+    </div>
+  </details>
+
+  <ul class="sitenav__pages sitenav__pages--main">
+    {pages.map((page) => (
+      <li>
+        <a href={page.href} aria-current={page.current ? 'page' : undefined} rel={page.external ? 'noopener' : undefined}>
+          {page.label}{page.external && <span aria-hidden="true"> ↗</span>}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <a class="sitenav__email" href="mailto:corbin@heist.studio">corbin@heist.studio</a>
+
+  <button class="sitenav__toggle" type="button" data-nav-toggle aria-label="Minimise the side navigation into a top bar" aria-pressed="false">
+    <span class="sitenav__toggle-icon" aria-hidden="true"></span>
+  </button>
+</nav>
+
+<script>
+  // Switch between the rail and the bar. The view transition morphs one into the other.
+  const root = document.documentElement;
+  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function label() {
+    if (!toggle) return;
+    const bar = root.dataset.nav === 'bar';
+    toggle.setAttribute('aria-label', bar ? 'Expand the top bar into the side navigation' : 'Minimise the side navigation into a top bar');
+    toggle.setAttribute('aria-pressed', String(bar));
+  }
+
+  toggle?.addEventListener('click', () => {
+    const next = root.dataset.nav === 'bar' ? 'rail' : 'bar';
+    const apply = () => {
+      root.dataset.nav = next;
+      try { localStorage.setItem('nav', next); } catch { /* storage can be blocked; the toggle still works */ }
+      label();
+    };
+    if ('startViewTransition' in document && !reduced.matches) document.startViewTransition(apply);
+    else apply();
+  });
+
+  label();
+</script>
+
+<style is:global>
+  /* Layout variables. Phone and tablet: a 56px top bar. Desktop: the rail by default, or the bar. */
+  :root {
+    --rail-w: 15rem;
+    --bar-h: 56px;
+    --header-h: var(--bar-h);
+    --rail-offset: 0px;
+  }
+
+  @media (min-width: 1024px) {
+    html:not([data-nav='bar']) {
+      --header-h: 0px;
+      --rail-offset: var(--rail-w);
+    }
+  }
+
+  ::view-transition-group(sitenav),
+  ::view-transition-group(wordmark),
+  ::view-transition-group(root) {
+    animation-duration: 220ms;
+    animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  ::view-transition-old(sitenav),
+  ::view-transition-new(sitenav) {
+    height: 100%;
+    animation-duration: 160ms;
+  }
+</style>
+
+<style>
+  .sitenav {
+    view-transition-name: sitenav;
+    position: fixed;
+    z-index: 50;
+    /* Glass: the photographs show through. */
+    background: rgb(16 15 15 / 0.6);
+    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  }
+
+  .wordmark {
+    view-transition-name: wordmark;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    font-family: var(--font-heading);
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    color: var(--fx-paper);
+  }
+
+  .wordmark__accent {
+    color: var(--hs-moss);
+  }
+
+  .sitenav__label,
+  .sitenav__num,
+  .sitenav__place,
+  .sitenav__pages a,
+  .sitenav__email,
+  .sitenav__menu summary {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* ── Bar (phone and tablet always; desktop when minimised) ── */
+
+  .sitenav {
+    inset: 0 0 auto;
+    height: var(--bar-h);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding-inline: var(--container-padding);
+    border-bottom: 1px solid rgb(255 252 240 / 0.08);
+  }
+
+  .sitenav .wordmark {
+    font-size: 15px;
+  }
+
+  .sitenav__rail,
+  .sitenav__email,
+  .sitenav__pages--main,
+  .sitenav__toggle {
+    display: none;
+  }
+
+  .sitenav__menu {
+    margin-left: auto;
+  }
+
+  .sitenav__menu summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+    min-height: 40px;
+    padding-inline: 0.9em;
+    font-size: 11px;
+    color: var(--fx-paper);
+    border: 1px solid rgb(255 252 240 / 0.3);
+    cursor: pointer;
+  }
+
+  .sitenav__menu summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sitenav__menu[open] summary {
+    border-color: var(--hs-moss);
+  }
+
+  .sitenav__caret {
+    transition: rotate 160ms ease;
+  }
+
+  .sitenav__menu[open] .sitenav__caret {
+    rotate: 180deg;
+  }
+
+  .sitenav__panel {
+    position: fixed;
+    top: var(--bar-h);
+    inset-inline: 0;
+    max-height: calc(100dvh - var(--bar-h));
+    overflow-y: auto;
+    padding: 0.5rem var(--container-padding) 1.5rem;
+    background: rgb(16 15 15 / 0.94);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* ── Shared list styles ── */
+
+  .sitenav__label {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgb(255 252 240 / 0.14);
+    font-size: 10px;
+    color: rgb(255 252 240 / 0.62);
+  }
+
+  .sitenav__label:hover {
+    color: var(--fx-paper);
+  }
+
+  .sitenav__stories li + li {
+    border-top: 1px solid rgb(255 252 240 / 0.08);
+  }
+
+  .sitenav__stories a {
+    display: grid;
+    grid-template-columns: 2.2em 1fr;
+    gap: 0.5rem;
+    padding: 0.8rem 0 0.8rem 0.6rem;
+    border-left: 2px solid transparent;
+    transition: border-color 160ms ease;
+  }
+
+  .sitenav__num {
+    padding-top: 0.25em;
+    font-size: 10px;
+    color: rgb(255 252 240 / 0.62);
+  }
+
+  .sitenav__story {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+  }
+
+  .sitenav__title {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    line-height: 1.2;
+    color: rgb(255 252 240 / 0.84);
+    transition: color 160ms ease;
+  }
+
+  .sitenav__place {
+    font-size: 9.5px;
+    line-height: 1.4;
+    color: rgb(255 252 240 / 0.62);
+  }
+
+  .sitenav__stories a:hover .sitenav__title,
+  .sitenav__stories a[aria-current='page'] .sitenav__title {
+    color: var(--fx-paper);
+  }
+
+  .sitenav__stories a[aria-current='page'] {
+    border-left-color: var(--hs-moss);
+  }
+
+  .sitenav__stories a[aria-current='page'] .sitenav__num {
+    color: var(--hs-moss);
+  }
+
+  .sitenav__pages a {
+    display: block;
+    padding-block: 0.45rem;
+    font-size: 11px;
+    color: rgb(255 252 240 / 0.8);
+    transition: color 160ms ease;
+  }
+
+  .sitenav__pages a:hover,
+  .sitenav__pages a[aria-current='page'] {
+    color: var(--fx-paper);
+  }
+
+  .sitenav__pages--panel {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .sitenav__email:hover {
+    color: var(--hs-moss);
+  }
+
+  /* ── Desktop ── */
+
+  @media (min-width: 1024px) {
+    .sitenav__toggle {
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
+      border: 1px solid rgb(255 252 240 / 0.25);
+      background: transparent;
+      color: var(--fx-paper);
+      cursor: pointer;
+      transition: border-color 160ms ease;
+    }
+
+    .sitenav__toggle:hover {
+      border-color: var(--hs-moss);
+    }
+
+    /* A chevron that points where the navigation will go: left (to the bar), or down (to the rail). */
+    .sitenav__toggle-icon {
+      width: 8px;
+      height: 8px;
+      border-left: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      rotate: 45deg;
+      translate: 1px 0;
+    }
+
+    /* Bar on desktop: the wordmark, Stories, the pages, and the expand button. */
+    :global(html[data-nav='bar']) .sitenav__pages--main {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    :global(html[data-nav='bar']) .sitenav__menu {
+      position: relative;
+    }
+
+    :global(html[data-nav='bar']) .sitenav__panel {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: auto;
+      width: 22rem;
+      padding-inline: 1.25rem;
+      border: 1px solid var(--color-border);
+    }
+
+    :global(html[data-nav='bar']) .sitenav__pages--panel {
+      display: none;
+    }
+
+    :global(html[data-nav='bar']) .sitenav__toggle-icon {
+      rotate: -45deg;
+      translate: 0 -2px;
+    }
+
+    /* Rail on desktop (the default). */
+    :global(html:not([data-nav='bar'])) .sitenav {
+      inset: 0 auto 0 0;
+      width: var(--rail-w);
+      height: auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 2rem 1.5rem 1.75rem;
+      border-bottom: 0;
+      border-right: 1px solid rgb(255 252 240 / 0.1);
+      overflow-y: auto;
+    }
+
+    :global(html:not([data-nav='bar'])) .sitenav .wordmark {
+      font-size: 18px;
+    }
+
+    :global(html:not([data-nav='bar'])) .sitenav__rail {
+      display: block;
+      margin-top: 3rem;
+    }
+
+    :global(html:not([data-nav='bar'])) .sitenav__menu {
+      display: none;
+    }
+
+    :global(html:not([data-nav='bar'])) .sitenav__pages--main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgb(255 252 240 / 0.14);
+    }
+
+    :global(html:not([data-nav='bar'])) .sitenav__stories a {
+      margin-left: -0.6rem;
+    }
+
+    :global(html:not([data-nav='bar'])) .sitenav__email {
+      display: block;
+      margin-top: auto;
+      padding-top: 2rem;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      color: rgb(255 252 240 / 0.62);
+    }
+
+    :global(html:not([data-nav='bar'])) .sitenav__toggle {
+      position: absolute;
+      top: 1.85rem;
+      right: 1.25rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sitenav__caret,
+    .sitenav__title,
+    .sitenav__stories a {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,282 @@
+---
+import Photo from '@components/photo/Photo.astro';
+import type { StoryPhoto } from '@scripts/utils/story-manifest';
+
+interface Fact {
+  label: string;
+  value: string;
+  /** A measured value (coordinates, counts) renders in the accent colour. */
+  measured?: boolean;
+}
+
+interface Props {
+  photo: StoryPhoto;
+  title: string;
+  /** Optional: the homepage hero shows only the title and the call to action. */
+  summary?: string;
+  overline: string;
+  facts?: Fact[];
+  chapters?: { slug: string; text: string }[];
+  cta?: { href: string; label: string };
+  /** Shared with the index thumbnail so the cover grows into the hero on navigation. */
+  transitionName?: string;
+  headingLevel?: 'h1' | 'h2';
+}
+
+const { photo, title, summary, overline, facts = [], chapters = [], cta, transitionName, headingLevel = 'h1' } = Astro.props;
+const Heading = headingLevel;
+---
+
+<section class:list={['hero bleed', { 'hero--chapters': chapters.length > 0 }]} data-hero>
+  <div class="hero__media" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>
+    <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="100vw" loading="eager" fetchpriority="high" />
+  </div>
+
+  <div class="hero__body">
+    <p class="hero__overline">{overline}</p>
+    <Heading class="hero__title">{title}</Heading>
+    {summary && <p class="hero__summary">{summary}</p>}
+
+    {facts.length > 0 && (
+      <dl class="hero__facts">
+        {facts.map((fact) => (
+          <div>
+            <dt>{fact.label}</dt>
+            <dd class:list={['tabular', { 'is-measured': fact.measured }]}>{fact.value}</dd>
+          </div>
+        ))}
+      </dl>
+    )}
+
+    {cta && <a class="hero__cta" href={cta.href}>{cta.label} <span aria-hidden="true">→</span></a>}
+  </div>
+
+  {chapters.length > 0 && (
+    <nav class="hero__chapters" aria-label="Chapters">
+      <ol>
+        {chapters.map((chapter, index) => (
+          <li><a href={`#${chapter.slug}`}><span class="tabular">{String(index + 1).padStart(2, '0')}</span> {chapter.text}</a></li>
+        ))}
+      </ol>
+    </nav>
+  )}
+
+  {!cta && <a class="hero__begin" href="#story-body">Begin <span aria-hidden="true">↓</span></a>}
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    background: var(--fx-black);
+  }
+
+  .hero__media :global(.photo-wrap),
+  .hero__media :global(img) {
+    width: 100%;
+  }
+
+  .hero__overline,
+  .hero__facts dt,
+  .hero__cta,
+  .hero__begin,
+  .hero__chapters {
+    font-family: var(--font-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .hero__overline {
+    font-size: 12px;
+    color: rgb(255 252 240 / 0.72);
+  }
+
+  .hero__title {
+    margin-top: 0.35em;
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-size: clamp(2.75rem, 7vw, 6.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--fx-paper);
+    max-width: 13ch;
+    text-wrap: balance;
+  }
+
+  .hero__summary {
+    margin-top: var(--space-md);
+    max-width: 72ch;
+    text-wrap: pretty;
+    font-size: var(--text-lg);
+    font-weight: 300;
+    line-height: 1.5;
+    color: rgb(255 252 240 / 0.86);
+  }
+
+  .hero__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) clamp(1.5rem, 3vw, 3rem);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 1px solid rgb(255 252 240 / 0.2);
+  }
+
+  .hero__facts dt {
+    font-size: 10px;
+    color: rgb(255 252 240 / 0.5);
+  }
+
+  .hero__facts dd {
+    margin-top: 0.4em;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: var(--fx-paper);
+  }
+
+  .hero__facts dd.is-measured {
+    color: var(--hs-moss);
+  }
+
+  .hero__cta {
+    display: inline-block;
+    margin-top: var(--space-lg);
+    padding: 0.9em 1.3em;
+    font-size: 12px;
+    color: var(--fx-paper);
+    border: 1px solid rgb(255 252 240 / 0.45);
+    transition: border-color 160ms ease, color 160ms ease;
+  }
+
+  .hero__cta:hover {
+    border-color: var(--hs-moss);
+    color: var(--hs-moss);
+  }
+
+  .hero__chapters {
+    display: none;
+    font-size: 11px;
+  }
+
+  .hero__begin {
+    display: none;
+    font-size: 11px;
+    color: rgb(255 252 240 / 0.6);
+  }
+
+  /* Mobile: the whole photograph, then the title on black. No landscape is cropped. */
+  .hero__media {
+    padding-top: var(--header-h);
+  }
+
+  .hero__body {
+    padding: var(--space-lg) var(--container-padding) var(--space-xl);
+  }
+
+  /* Desktop: the title is set on the photograph. */
+  @media (min-width: 768px) {
+    .hero {
+      height: 100svh;
+      min-height: 620px;
+      overflow: hidden;
+    }
+
+    .hero__media {
+      position: absolute;
+      inset: 0;
+      padding-top: 0;
+    }
+
+    .hero__media :global(.photo-wrap),
+    .hero__media :global(picture),
+    .hero__media :global(img) {
+      display: block;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      /* The bottom of the photograph dissolves into the page, so the hero flows into what follows. */
+      background:
+        linear-gradient(to bottom, transparent 58%, rgb(16 15 15 / 0.7) 82%, var(--fx-black) 100%),
+        linear-gradient(to top right, rgb(16 15 15 / 0.8) 0%, rgb(16 15 15 / 0.35) 38%, transparent 68%),
+        linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%),
+        radial-gradient(ellipse 38% 32% at 100% 0%, rgb(16 15 15 / 0.6), transparent);
+      pointer-events: none;
+    }
+
+    .hero__body {
+      position: absolute;
+      z-index: 1;
+      left: calc(var(--rail-offset) + var(--container-padding));
+      bottom: clamp(2rem, 7svh, 4.5rem);
+      /* Wide enough for the headline to breathe; with chapters, it stops short of the chapter list. */
+      width: min(1080px, 100vw - var(--rail-offset) - 2 * var(--container-padding));
+      padding: 0;
+    }
+
+    .hero__overline {
+      white-space: nowrap;
+    }
+
+    .hero__body > * {
+      animation: hero-rise 900ms var(--ease-out-expo) both;
+    }
+
+    .hero__title { animation-delay: 80ms; }
+    .hero__summary { animation-delay: 160ms; }
+    .hero__facts, .hero__cta { animation-delay: 240ms; }
+
+    .hero__begin {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      left: calc(50% + var(--rail-offset) / 2);
+      bottom: 1.5rem;
+      translate: -50% 0;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .hero__chapters {
+      display: block;
+      position: absolute;
+      z-index: 1;
+      /* Top right, in the open sky of the frame, so the title, headline, and facts keep the full width. */
+      right: var(--container-padding);
+      top: calc(var(--header-h) + clamp(2rem, 7svh, 4.5rem));
+      max-width: 22rem;
+    }
+
+    .hero__chapters li + li {
+      margin-top: 0.7em;
+    }
+
+    .hero__chapters a {
+      color: rgb(255 252 240 / 0.7);
+      transition: color 160ms ease;
+    }
+
+    .hero__chapters a:hover {
+      color: var(--fx-paper);
+    }
+
+    .hero__chapters span {
+      color: var(--hs-moss);
+      margin-right: 0.6em;
+    }
+  }
+
+  @keyframes hero-rise {
+    from { opacity: 0; translate: 0 18px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__body > * {
+      animation: none;
+    }
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
-import PageLayout from '@layouts/PageLayout.astro';
+import SiteLayout from '@layouts/SiteLayout.astro';
+import { compareStories, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
 
 const portraitBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/about-portrait';
 const portraitLqip = 'data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASoUAB4APzmGt1QvKKUjMBgMAeAnCUAYdYr+Fp2APb7irYm+cmTiXdOQ+EAcwAD+78d/MK1gVhexQksPU/TNAIU/Ob6QR82qumtFoBOXmmA2NkiAzOkq37OJrL002KoObJFcJDqO8OGkq4rmuVGUaNaEckpA1RFUAAA=';
@@ -8,11 +9,8 @@ const portraitLqip = 'data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAAAwBQCdASo
 const ksarBase = 'https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/heist-ksar-essay-001-cnh_3628';
 const ksarLqip = 'data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAADQAwCdASoUAA0APzmGulOvKKWisAgB4CcJZgCdABVMf5fTxeZtJAAA/Sg8oHK1A2k1PN6bRmq/0twRB0hsT7ynLd+uVaEXUfAdpaxNpMuQbcf6TMUZQH8Q6jGWfJQDFIAAAA==';
 
-// ── Build dynamic ledger from collections, albums, and essays ──
-const allCollections = await getCollection('photoCollections');
-const allAlbums = await getCollection('albums');
-const allEssayEntries = await getCollection('essays');
-const essayById = new Map(allEssayEntries.map((e) => [e.id, e]));
+// ── The ledger lists the published stories, newest first ──
+const stories = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
 
 type LedgerEntry = {
   date: string;
@@ -22,66 +20,15 @@ type LedgerEntry = {
   href: string;
 };
 
-const ledger: LedgerEntry[] = [];
-
-for (const collection of allCollections) {
-  const essayIds = collection.data.essays ?? [];
-
-  // Derive earliest album date for the collection (used as fallback)
-  let collectionDate: string | null = null;
-  for (const albumId of collection.data.archiveAlbums) {
-    const album = allAlbums.find((a) => a.id === albumId);
-    if (album?.data.date) {
-      collectionDate = album.data.date;
-      break;
-    }
-  }
-
-  // Each archived album becomes a ledger entry
-  for (const albumId of collection.data.archiveAlbums) {
-    const album = allAlbums.find((a) => a.id === albumId);
-    if (!album || album.data.draft) continue;
-
-    const date = album.data.date || collectionDate;
-    if (!date) continue; // skip albums with no date at all
-
-    const location = album.data.location || collection.data.title;
-    ledger.push({
-      date: date.replace('-', '.'),
-      place: `${collection.data.title} · ${location}`,
-      note: album.data.description || collection.data.description || album.data.title,
-      count: `${album.data.photos.length} frames`,
-      href: `/work/${collection.id}/${albumId}`,
-    });
-  }
-
-  // Each essay becomes a ledger entry
-  for (const essayId of essayIds) {
-    const essay = essayById.get(essayId);
-    if (!essay) continue;
-    const date = collectionDate;
-    if (!date) continue;
-
-    const slug = essay.id.replace(new RegExp(`^${collection.id}-`), '');
-    ledger.push({
-      date: date.replace('-', '.'),
-      place: `${collection.data.title} · ${essay.data.title}`,
-      note: essay.data.description || collection.data.description || essay.data.title,
-      count: `${essay.data.photos.length} frames`,
-      href: `/work/${collection.id}/${slug}`,
-    });
-  }
-}
-
-// Sort newest first
-ledger.sort((a, b) => b.date.localeCompare(a.date));
-
-// Compute stats
-const collectionsWithContent = allCollections.filter(
-  (c) => c.data.archiveAlbums.length > 0 || (c.data.essays?.length ?? 0) > 0,
-);
-const totalEssays = allCollections.reduce((n, c) => n + (c.data.essays?.length ?? 0), 0);
-const totalRegions = allCollections.filter((c) => c.data.map).length;
+const ledger: LedgerEntry[] = stories
+  .map((story) => ({
+    date: story.data.date.replace('-', '.'),
+    place: `${story.data.place} · ${story.data.title}`,
+    note: story.data.summary,
+    count: `${storyFrames(story.body ?? '', story.data.cover).length} frames`,
+    href: storyUrl(story.id),
+  }))
+  .sort((a, b) => b.date.localeCompare(a.date));
 
 const kit = [
   { label: 'Body · primary', value: 'Canon R5 Mark II' },
@@ -101,15 +48,14 @@ const contacts = [
 ];
 ---
 
-<PageLayout title="About" description="I live at the foot of Rattlesnake Mountain. The camera comes because I'm going anyway.">
+<SiteLayout title="About" description="I live at the foot of Rattlesnake Mountain. The camera comes because I'm going anyway.">
 
   {/* Slug bar */}
   <div class="slug-bar">
-    <span>File · 001</span>
     <span>Subject · Heist, Corbin</span>
     <span>Lat 47.4896 · Lon −121.7854</span>
     <span>Elev 158m</span>
-    <span>Updated · April 2026</span>
+    <span>Updated · {new Date().toLocaleString('en-GB', { month: 'long', year: 'numeric' })}</span>
   </div>
 
   {/* Hero grid */}
@@ -191,7 +137,7 @@ const contacts = [
           <div class="overline overline--accent">Ledger · 2023 — present</div>
           <h2 class="ledger-title">Where the camera has come along.</h2>
         </div>
-        <div class="ledger-stats">{totalRegions} regions · {collectionsWithContent.length} collections · {totalEssays} essays</div>
+        <div class="ledger-stats">{stories.length} stories · {stories.reduce((sum, story) => sum + storyFrames(story.body ?? '', story.data.cover).length, 0)} frames</div>
       </div>
 
       <div class="ledger-rows">
@@ -243,7 +189,7 @@ const contacts = [
   </section>
 
   {/* Correspondence + Kit */}
-  <section class="contact-section">
+  <section class="contact-section" id="contact">
     <div class="contact-grid">
       <div>
         <div class="overline overline--accent">Correspondence</div>
@@ -254,6 +200,10 @@ const contacts = [
           Write when it does.
           I'll either write back or I won't. Both are honest answers.
         </p>
+        <div class="commissions">
+          <div class="overline overline--accent">Commissions</div>
+          <p>I take a small number of commissions each year: documentary work with people whose work is outdoors. Write with the place, the dates, and what the pictures are for.</p>
+        </div>
         <div class="contact-rows">
           {contacts.map((c) => (
             <a href={c.href} target={c.href.startsWith('mailto') ? undefined : '_blank'} rel={c.href.startsWith('mailto') ? undefined : 'noopener'} class="contact-row">
@@ -280,7 +230,7 @@ const contacts = [
     </div>
   </section>
 
-</PageLayout>
+</SiteLayout>
 
 <style>
   /* ── Shared overline ── */
@@ -741,5 +691,17 @@ const contacts = [
     .contact-row__value {
       font-size: 13px;
     }
+  }
+
+  .commissions {
+    margin-block: var(--space-lg);
+    padding: var(--space-md) 0;
+    border-block: 1px solid var(--color-border-subtle);
+  }
+
+  .commissions p {
+    margin-top: var(--space-xs);
+    color: var(--color-text);
+    max-width: 52ch;
   }
 </style>

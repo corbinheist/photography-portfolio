@@ -1,0 +1,34 @@
+---
+import Photo from '@components/photo/Photo.astro';
+import { exifLine, frameAnchor, storyPhoto } from '@scripts/utils/story-manifest';
+
+interface Props {
+  id: string;
+  caption?: string;
+  /** full: edge to edge. wide (default): inside the page margins. inset: a narrower plate. */
+  size?: 'full' | 'wide' | 'inset';
+  /** Append the camera and settings from the manifest EXIF. Never typed by hand. */
+  exif?: boolean;
+}
+
+const { id, caption, size: requested, exif = false } = Astro.props;
+const photo = storyPhoto(Astro.locals, id);
+// Portraits default to the inset plate and landscapes to wide, so a story has rhythm without markup.
+const size = requested ?? (photo.height > photo.width ? 'inset' : 'wide');
+const frame = Astro.locals.story?.numbers.get(id);
+const meta = exif ? exifLine(photo) : undefined;
+const anchor = frameAnchor(Astro.locals, id);
+const ratio = photo.width / photo.height;
+const sizes = size === 'full' ? '100vw' : size === 'inset' ? 'min(100vw, 720px)' : `min(100vw, ${Math.round(ratio * 90)}vh)`;
+---
+
+<figure class:list={['story-figure', `story-figure--${size}`]} style={`--ratio: ${ratio}`} data-frame={frame} id={anchor}>
+  <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes={sizes} />
+  {(caption || meta || frame) && (
+    <figcaption class="story-caption">
+      {frame && <span class="story-caption__num tabular">{String(frame).padStart(2, '0')}</span>}
+      {caption && <span>{caption}</span>}
+      {meta && <span class="story-caption__exif">{meta}</span>}
+    </figcaption>
+  )}
+</figure>

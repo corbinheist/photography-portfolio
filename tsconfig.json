@@ -11,5 +11,5 @@
       "@data/*": ["src/data/*"]
     }
   },
-  "exclude": ["dist"]
+  "exclude": ["dist", "decks"]
 }

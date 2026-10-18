@@ -3,8 +3,6 @@ name: Build & Deploy
 on:
   push:
     branches: [main]
-  repository_dispatch:
-    types: [substack-update]
   workflow_dispatch:
 
 jobs:
@@ -29,16 +27,9 @@ jobs:
       - name: Validate content references
         run: pnpm validate:content
 
-      - name: Fetch Substack RSS feed
-        continue-on-error: true
-        run: pnpm fetch-rss
-        env:
-          SUBSTACK_RSS_URL: ${{ secrets.SUBSTACK_RSS_URL }}
-
       - name: Type check & build
         run: pnpm build
         env:
-          SUBSTACK_RSS_URL: ${{ secrets.SUBSTACK_RSS_URL }}
           SITE_URL: ${{ secrets.SITE_URL }}
           PUBLIC_MAPTILER_KEY: ${{ secrets.PUBLIC_MAPTILER_KEY }}
 

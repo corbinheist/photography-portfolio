@@ -10,7 +10,7 @@ const limits = {
   mapFreeReferencedJavaScript: 50_000,
 };
 
-const mapFreePages = ['index.html', 'about/index.html', 'blog/index.html', 'gallery/index.html'];
+const mapFreePages = ['index.html', 'about/index.html', 'work/nomads/index.html'];
 
 async function walk(directory: string): Promise<string[]> {
   const files: string[] = [];
@@ -26,8 +26,12 @@ function formatBytes(bytes: number) {
   return `${(bytes / 1024).toFixed(1)} KiB`;
 }
 
+// The decks project (decks/) builds into pitch/ after the site build. It has
+// its own bundles, so this budget measures the site output only.
+const decksDir = path.join(distDir, 'pitch');
+
 const measured = await Promise.all(
-  (await walk(distDir)).map(async (filename) => ({
+  (await walk(distDir)).filter((filename) => !filename.startsWith(decksDir + path.sep)).map(async (filename) => ({
     filename,
     relative: path.relative(distDir, filename),
     bytes: (await stat(filename)).size,

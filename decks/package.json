@@ -1,0 +1,19 @@
+{
+  "name": "heist-studio-decks",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.6",
+    "astro": "^5.17.1",
+    "gsap": "^3.14.2",
+    "maplibre-gl": "^5.21.1",
+    "typescript": "^5.9.3"
+  }
+}
