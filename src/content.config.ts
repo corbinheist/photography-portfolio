@@ -34,6 +34,8 @@ const stories = defineCollection({
     /** Tiebreak for stories with the same date (lowest first). The date sets the order: newest first. */
     order: z.number(),
     draft: z.boolean().default(false),
+    /** Featured stories lead the site and are numbered. Others list under "More stories". */
+    featured: z.boolean().default(true),
     client: z.string().optional(),
     theme: z.enum(['korman']).optional(),
     credits: z.array(z.object({ role: z.string(), name: z.string() })).default([]),

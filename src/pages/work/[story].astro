@@ -11,15 +11,20 @@ export async function getStaticPaths() {
   const includeDrafts = process.env.STORIES_INCLUDE_DRAFTS === '1';
   const stories = (await getCollection('stories', (entry) => includeDrafts || !entry.data.draft))
     .sort(compareStories);
-  return stories.map((story, index) => ({
-    params: { story: story.id },
-    props: {
-      story,
-      number: index + 1,
-      prev: index > 0 ? stories[index - 1] : undefined,
-      next: index < stories.length - 1 ? stories[index + 1] : undefined,
-    },
-  }));
+  // Featured stories are numbered. Previous and next stay within a story's own tier.
+  return stories.map((story) => {
+    const tier = stories.filter((other) => other.data.featured === story.data.featured);
+    const index = tier.indexOf(story);
+    return {
+      params: { story: story.id },
+      props: {
+        story,
+        number: story.data.featured ? index + 1 : undefined,
+        prev: index > 0 ? tier[index - 1] : undefined,
+        next: index < tier.length - 1 ? tier[index + 1] : undefined,
+      },
+    };
+  });
 }
 
 const { story, number, prev, next } = Astro.props;
