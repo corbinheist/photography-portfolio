@@ -105,18 +105,51 @@ const pages = [
   toggle?.addEventListener('click', () => {
     const next = root.dataset.nav === 'bar' ? 'rail' : 'bar';
     const apply = () => {
+      // The arriving navigation gets its own transition name, so the leaving rail and the
+      // arriving bar fade in place instead of one translucent panel stretching across the page.
+      if (root.dataset.navSwitching !== undefined) root.dataset.navSwitching = 'in';
       root.dataset.nav = next;
       try { localStorage.setItem('nav', next); } catch { /* storage can be blocked; the toggle still works */ }
       label();
     };
-    if ('startViewTransition' in document && !reduced.matches) document.startViewTransition(apply);
-    else apply();
+    if ('startViewTransition' in document && !reduced.matches) {
+      // Only the navigation may move. The cover photographs carry view-transition names for
+      // page-to-page navigation; during this switch they would be lifted above their overlay
+      // and text, and snap back at the end (a blink). Strip them for the switch.
+      root.dataset.navSwitching = 'out';
+      const transition = document.startViewTransition(apply);
+      transition.finished.finally(() => delete root.dataset.navSwitching);
+    } else apply();
   });
 
   label();
 </script>
 
 <style is:global>
+  /* Registered, so the layout offsets animate: when the rail and the bar switch, the page content
+     glides to its new position in one piece instead of cross-fading between two positions. */
+  @property --rail-offset {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+  }
+
+  @property --header-h {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+  }
+
+  html {
+    transition: --rail-offset 220ms cubic-bezier(0.2, 0, 0, 1), --header-h 220ms cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      transition: none;
+    }
+  }
+
   /* Layout variables. Phone and tablet: a 56px top bar. Desktop: the rail by default, or the bar. */
   :root {
     --rail-w: 15rem;
@@ -132,17 +165,62 @@ const pages = [
     }
   }
 
-  ::view-transition-group(sitenav),
-  ::view-transition-group(wordmark),
-  ::view-transition-group(root) {
+  /* During the rail and bar switch, only the navigation transitions (see the toggle script). */
+  html[data-nav-switching] .hero__media,
+  html[data-nav-switching] .ledger__thumb {
+    view-transition-name: none !important;
+  }
+
+  /* The leaving navigation (rail or bar) and the arriving one are separate layers: each fades
+     in its own place. Only the wordmark glides between the two positions. */
+  html[data-nav-switching='out'] .sitenav {
+    view-transition-name: nav-out;
+  }
+
+  html[data-nav-switching='in'] .sitenav {
+    view-transition-name: nav-in;
+  }
+
+  ::view-transition-old(nav-out) {
+    animation: nav-fade-out 160ms cubic-bezier(0.4, 0, 1, 1) both;
+  }
+
+  ::view-transition-new(nav-in) {
+    animation: nav-fade-in 220ms cubic-bezier(0, 0, 0.2, 1) both;
+  }
+
+  @keyframes nav-fade-out {
+    to { opacity: 0; }
+  }
+
+  @keyframes nav-fade-in {
+    from { opacity: 0; }
+  }
+
+  ::view-transition-group(wordmark) {
     animation-duration: 220ms;
     animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
   }
 
-  ::view-transition-old(sitenav),
-  ::view-transition-new(sitenav) {
-    height: 100%;
-    animation-duration: 160ms;
+  /* The wordmark glides and scales as one image; a cross-fade would show it twice. */
+  html[data-nav-switching]::view-transition-old(wordmark) {
+    animation: none;
+    opacity: 0;
+  }
+
+  html[data-nav-switching]::view-transition-new(wordmark) {
+    animation: none;
+  }
+
+  /* During the switch the page shows only its live state, which glides (see --rail-offset);
+     a frozen copy of the old layout would show the text twice. */
+  html[data-nav-switching]::view-transition-old(root) {
+    animation: none;
+    opacity: 0;
+  }
+
+  html[data-nav-switching]::view-transition-new(root) {
+    animation: none;
   }
 </style>
 
