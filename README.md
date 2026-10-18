@@ -47,7 +47,7 @@ A story is two files: `src/content/stories/<slug>.mdx` and its photo manifest `s
 title: Cold Hands
 place: Cerro Guido, Chile
 region: Patagonia                      # optional
-coords: { lat: -50.917, lon: -72.4 }   # optional; shown as 50°55′S 72°24′W
+coordinates: { latitude: -50.917, longitude: -72.4 }   # optional; shown as 50°55′S 72°24′W
 elevation_m: 1060                      # optional
 date: "2026-04"                        # "YYYY", "YYYY-MM", or "YYYY-MM-DD"
 summary: The headline text under the title.

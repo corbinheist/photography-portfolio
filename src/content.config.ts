@@ -41,7 +41,7 @@ const stories = defineCollection({
     credits: z.array(z.object({ role: z.string(), name: z.string() })).default([]),
     /** Optional measured facts. Each one shows in the title card only when it is set. */
     region: z.string().optional(),
-    coords: z.object({ lat: z.number().min(-90).max(90), lon: z.number().min(-180).max(180) }).optional(),
+    coordinates: z.object({ latitude: z.number().min(-90).max(90), longitude: z.number().min(-180).max(180) }).optional(),
     elevation_m: z.number().optional(),
   }),
 });

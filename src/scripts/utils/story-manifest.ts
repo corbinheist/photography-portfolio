@@ -129,14 +129,14 @@ export function orderedImageIds(mdx: string): string[] {
 }
 
 /** Format decimal degrees as 31°16′N 5°59′W. */
-export function formatCoords({ lat, lon }: { lat: number; lon: number }): string {
+export function formatCoordinates({ latitude, longitude }: { latitude: number; longitude: number }): string {
   const part = (value: number, positive: string, negative: string) => {
     const abs = Math.abs(value);
     const degrees = Math.floor(abs);
     const minutes = Math.round((abs - degrees) * 60);
     return `${degrees}°${String(minutes).padStart(2, '0')}′${value >= 0 ? positive : negative}`;
   };
-  return `${part(lat, 'N', 'S')} ${part(lon, 'E', 'W')}`;
+  return `${part(latitude, 'N', 'S')} ${part(longitude, 'E', 'W')}`;
 }
 
 /** The cameras and lenses that the EXIF of the given photographs names, most used first. */
