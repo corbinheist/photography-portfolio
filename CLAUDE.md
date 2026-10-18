@@ -20,6 +20,8 @@ Read `README.md` first: it describes the site, the story format, and publishing.
 
 ## Gotchas
 
+- Rail titles and places stay on one line. If a new story's title or place ends in an ellipsis in the rail, raise `--rail-w` in `SiteNav.astro`.
+
 - YAML dates must be quoted (`date: "2025-11"`).
 - Astro scoped styles need `:global(...)` to reach child component markup.
 - Do not use `<template>` for JSON data; use `<script type="application/json" set:html={…}>`.
