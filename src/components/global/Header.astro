@@ -16,10 +16,10 @@ const essayById = new Map(allEssays.map((e) => [e.id, e]));
 const currentPath = Astro.url.pathname;
 
 const navLinks = [
-  { num: '01', href: '/gallery', label: 'Gallery', match: '/gallery' },
   { num: '02', href: '/work', label: 'Field', match: '/work', hasChildren: true },
-  { num: '03', href: '/blog', label: 'Journal', match: '/blog' },
-  { num: '04', href: '/about', label: 'About', match: '/about' },
+  { num: '03', href: '/gallery', label: 'Gallery', match: '/gallery' },
+  { num: '04', href: '/blog', label: 'Journal', match: '/blog' },
+  { num: '05', href: '/about', label: 'About', match: '/about' },
 ];
 ---
 
