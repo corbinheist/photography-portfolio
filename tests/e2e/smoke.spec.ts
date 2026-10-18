@@ -4,6 +4,7 @@ const stories = [
   '/work/morocco/nomads-essay/',
   '/work/morocco/ksar-essay/',
   '/work/morocco/wise-essay/',
+  '/work/cold-hands/',
   '/work/morocco/morocco/',
   '/work/japan/tokyo-kissaten/',
   '/work/lofoten-oslo/',
