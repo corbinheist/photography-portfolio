@@ -57,20 +57,30 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Deploy to droplet
+      # Upload to a staging folder first, then mirror it onto the live folder. The mirror
+      # (rsync --delete) removes files the build no longer produces; a plain copy left them public.
+      - name: Upload to the staging folder
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           source: dist/*
-          target: /var/www/portfolio/
+          target: portfolio-next
           strip_components: 1
+          rm: true
 
-      - name: Reload Nginx
+      - name: Publish the staging folder and reload nginx
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DROPLET_HOST }}
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
-          script: sudo systemctl reload nginx
+          script: |
+            set -eu
+            NEXT="$HOME/portfolio-next"
+            # Stop before touching the live site if the upload is incomplete.
+            test -f "$NEXT/index.html"
+            rsync -a --delete "$NEXT/" /var/www/portfolio/
+            rm -rf "$NEXT"
+            sudo systemctl reload nginx

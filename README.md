@@ -118,7 +118,7 @@ The scripts read these from the shell environment.
 
 ## Deployment
 
-`.github/workflows/deploy.yml` runs on every push to `main`: install, unit tests, content validation, build (site and decks), Playwright e2e against the build, then copy `dist/` to the droplet and reload nginx. Pull requests have no CI; run `pnpm build`, `pnpm exec vitest run`, and `pnpm test:e2e:built` before merge.
+`.github/workflows/deploy.yml` runs on every push to `main`: install, unit tests, content validation, build (site and decks), Playwright e2e against the build, then upload `dist/` to a staging folder (`~/portfolio-next`) on the droplet, mirror it onto `/var/www/portfolio` with `rsync -a --delete` (so removed pages disappear), and reload nginx. The mirror step stops before touching the live site if the upload has no `index.html`. The droplet needs `rsync`. Pull requests have no CI; run `pnpm build`, `pnpm exec vitest run`, and `pnpm test:e2e:built` before merge.
 
 Repository secrets: `DROPLET_HOST`, `DROPLET_USER`, `DROPLET_SSH_KEY`, `SITE_URL`, `PUBLIC_MAPTILER_KEY`.
 
