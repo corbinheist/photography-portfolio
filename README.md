@@ -247,17 +247,14 @@ Full-viewport, snap-scroll photo essays live alongside album pages under `/work/
 | `EssaySlideImageText` | 55/45 image-text split (`flip` reverses to 45/55) |
 | `EssaySlideDiptych` | Two images side-by-side (landscape or portrait) |
 | `EssaySlideTriptych` | Three images side-by-side |
-| `EssaySlideMiniGallery` | Masonry grid within a single slide |
 | `EssaySlideText` | Text-only slide (centered or left-aligned) |
 | `EssaySlideQuote` | Pull-quote slide |
-| `EssaySlideColophon` | Closing credits/colophon slide |
 | `EssaySlideFlow` | Prose section for longer narrative passages |
 | `EssaySequence` | Orientation-adaptive wrapper (landscape vs portrait sequences) |
 | `EssayPlaceholder` | Placeholder for essays under construction |
 
 All slide styles are in `src/styles/essay.css`. Navigation (arrow keys, nav dots, progress bar) is handled by `src/scripts/essay-nav.ts`.
 
-See `/essays/example` for a kitchen-sink demo of every slide type.
 
 ## Image Pipeline
 
@@ -376,7 +373,6 @@ photography-portfolio/
 ├── src/
 │   ├── components/
 │   │   ├── blog/               # BlogCard, BlogSection
-│   │   ├── brand/              # HeistMask (wordmark/branding)
 │   │   ├── essay/              # EssaySlide* components, EssaySequence, EssayPlaceholder
 │   │   ├── global/             # Header, Footer, SideRail, CommandPalette, ThemeToggle, SEO, SubscribeForm, SubscribeBanner
 │   │   ├── home/               # HeroBriefing, DispatchCallout, ManifestSection, EssaysPreview, ColophonTeaser, etc.
