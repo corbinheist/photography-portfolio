@@ -192,11 +192,12 @@ const Heading = headingLevel;
       --hero-line: rgb(255 252 240 / 0.2);
       --hero-line-strong: rgb(255 252 240 / 0.45);
       --hero-accent: var(--hs-moss);
-      /* The photograph runs past the fold by --hero-tail, and its last --hero-fade dissolves into the
-         page. The fade starts above the fold, so the first screen already shows the photograph
-         giving way, and it completes over a long scroll instead of a short band. */
-      --hero-tail: clamp(10rem, 30svh, 20rem);
-      --hero-fade: clamp(16rem, 52svh, 34rem);
+      /* The photograph runs a short way past the fold (--hero-tail), and its last --hero-fade
+         dissolves into the page. The dissolve starts slowly, so the first screen keeps the photograph
+         almost whole, and most of the fade happens below the fold. The tail is short because a
+         taller box crops more of a landscape frame. */
+      --hero-tail: clamp(5rem, 14svh, 9rem);
+      --hero-fade: clamp(12rem, 34svh, 22rem);
       --hero-fade-start: calc(100% - var(--hero-fade));
       height: calc(100svh + var(--hero-tail));
       min-height: calc(620px + var(--hero-tail));
@@ -223,26 +224,26 @@ const Heading = headingLevel;
       inset: 0;
       /* The bottom of the photograph dissolves into the page, so the hero flows into what follows. */
       background:
-        /* The dissolve: the page colour rises over the fade on a smoothstep curve. */
+        /* The dissolve: the page colour rises over the fade on an ease-in curve. */
         linear-gradient(
           to bottom,
           transparent var(--hero-fade-start),
-          color-mix(in srgb, var(--color-bg) 3%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.125),
-          color-mix(in srgb, var(--color-bg) 16%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.25),
-          color-mix(in srgb, var(--color-bg) 32%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.375),
-          color-mix(in srgb, var(--color-bg) 50%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.5),
-          color-mix(in srgb, var(--color-bg) 68%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.625),
-          color-mix(in srgb, var(--color-bg) 84%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.75),
-          color-mix(in srgb, var(--color-bg) 97%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.875),
+          color-mix(in srgb, var(--color-bg) 2%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.125),
+          color-mix(in srgb, var(--color-bg) 6%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.25),
+          color-mix(in srgb, var(--color-bg) 14%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.375),
+          color-mix(in srgb, var(--color-bg) 26%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.5),
+          color-mix(in srgb, var(--color-bg) 42%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.625),
+          color-mix(in srgb, var(--color-bg) 62%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.75),
+          color-mix(in srgb, var(--color-bg) 84%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.875),
           var(--color-bg) 100%
         ),
-        /* The scrim under the text, which thins out as the dissolve takes over. */
+        /* The scrim under the text only; it is gone before the photograph meets the page. */
         linear-gradient(
           to bottom,
-          transparent 34%,
-          rgb(16 15 15 / 0.7) calc(var(--hero-fade-start) - 4%),
-          rgb(16 15 15 / 0.62) calc(var(--hero-fade-start) + var(--hero-fade) * 0.3),
-          rgb(16 15 15 / 0.2) 100%
+          transparent 46%,
+          rgb(16 15 15 / 0.6) calc(var(--hero-fade-start) - 2%),
+          rgb(16 15 15 / 0.35) calc(var(--hero-fade-start) + var(--hero-fade) * 0.4),
+          transparent 100%
         ),
         linear-gradient(to top right, rgb(16 15 15 / 0.8) 0%, rgb(16 15 15 / 0.35) 38%, transparent 68%),
         linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%),
