@@ -26,8 +26,10 @@ test.describe('smoke tests', () => {
 
   test('the homepage lists every published story', async ({ page }) => {
     await page.goto('/');
-    for (const path of stories) {
+    for (const [index, path] of stories.entries()) {
       await expect(page.locator(`.ledger a[href="${path}"]`)).toHaveCount(1);
+      // Numbered from the oldest: the newest (first) story has the highest number.
+      await expect(page.locator('.ledger__num').nth(index)).toHaveText(`№ ${String(stories.length - index).padStart(2, '0')}`);
     }
     for (const [index, path] of moreStories.entries()) {
       await expect(page.locator(`.ledger a[href="${path}"]`)).toHaveCount(0);
@@ -129,6 +131,8 @@ test.describe('smoke tests', () => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await expect(page.locator('[data-story-frame]')).toHaveText('35');
     await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/ksar/');
+    await expect(page.locator('.hero__overline')).toContainText('№ 02');
+    await expect(page.locator('.story-next .mono-label')).toHaveText('Next · № 01');
   });
 
   test('J moves to the next photograph', async ({ page }) => {

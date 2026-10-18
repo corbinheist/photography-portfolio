@@ -12,7 +12,8 @@ const item = (story: (typeof published)[number], num?: string) => {
   return { href, title: story.data.title, place: story.data.place, num, current: path === href };
 };
 // Featured stories are numbered; the others list under "More stories".
-const stories = published.filter((story) => story.data.featured).map((story, index) => item(story, String(index + 1).padStart(2, '0')));
+// Numbered from the oldest (№ 01); listed newest first.
+const stories = published.filter((story) => story.data.featured).map((story, index, featured) => item(story, String(featured.length - index).padStart(2, '0')));
 const more = published.filter((story) => !story.data.featured).map((story) => item(story));
 
 const pages = [
