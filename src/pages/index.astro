@@ -70,7 +70,7 @@ const more = published
       {stories.map(({ story, href, number, frames, thumb }, index) => (
         <li>
           <a href={href} class="ledger__row">
-            <span class="ledger__num mono-label tabular">№ {number}</span>
+            <span class="ledger__num mono-label tabular"><span class="numero">№</span> {number}</span>
             <span class="ledger__thumb" style={index > 0 ? `view-transition-name: cover-${story.id}` : undefined}>
               <Photo url={thumb.url} width={thumb.width} height={thumb.height} lqip={thumb.lqip} alt={thumb.alt} sizes="(max-width: 767px) 100vw, 360px" />
             </span>
