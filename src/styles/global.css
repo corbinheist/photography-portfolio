@@ -314,3 +314,11 @@ p {
   white-space: nowrap;
   border-width: 0;
 }
+
+/* The numero sign. A monospace face fits "№" into one character cell, which compresses it, so the
+   sign is set in the proportional body face inside mono labels. */
+.numero {
+  font-family: var(--font-body);
+  font-weight: 400;
+  letter-spacing: 0;
+}

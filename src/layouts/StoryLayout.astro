@@ -65,7 +65,7 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
 
     <div class="story-bar" aria-label="Story position">
       <a class="story-bar__back" href="/#work"><span aria-hidden="true">←</span> All work</a>
-      <p class="story-bar__title">{num && <><span class="tabular">№ {num}</span> · </>}{title}<span class="story-bar__chapter" data-story-chapter></span></p>
+      <p class="story-bar__title">{num && <><span class="tabular"><span class="numero">№</span> {num}</span> · </>}{title}<span class="story-bar__chapter" data-story-chapter></span></p>
       <p class="story-bar__frame tabular">Frame <span data-story-frame>01</span> / {String(frames).padStart(2, '0')}<span class="story-bar__pct"> · <span data-story-pct>0</span>%</span></p>
       <span class="story-bar__progress" data-story-progress></span>
     </div>
@@ -90,7 +90,7 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
       <a class="story-next bleed" href={storyUrl(next.id)}>
         <Photo url={nextCover.url} width={nextCover.width} height={nextCover.height} lqip={nextCover.lqip} alt={nextCover.alt} sizes="100vw" />
         <span class="story-next__body">
-          <span class="mono-label">{number !== undefined ? `Next · № ${String(number - 1).padStart(2, '0')}` : 'Next'}</span>
+          <span class="mono-label">{number !== undefined ? <>Next · <span class="numero">№</span> {String(number - 1).padStart(2, '0')}</> : 'Next'}</span>
           <span class="story-next__title">{next.data.title}</span>
           <span class="story-next__summary">{next.data.summary}</span>
         </span>

@@ -33,7 +33,7 @@ const Heading = headingLevel;
   </div>
 
   <div class="hero__body">
-    <p class="hero__overline">{overline}</p>
+    <p class="hero__overline">{overline.split('№').map((part, i) => (i === 0 ? part : <><span class="numero">№</span>{part}</>))}</p>
     <Heading class="hero__title">{title}</Heading>
     {summary && <p class="hero__summary">{summary}</p>}
 
