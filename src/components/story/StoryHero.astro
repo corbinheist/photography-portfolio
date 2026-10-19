@@ -17,7 +17,7 @@ interface Props {
   overline: string;
   facts?: Fact[];
   chapters?: { slug: string; text: string }[];
-  cta?: { href: string; label: string };
+  cta?: { href: string; label: string; ariaLabel?: string };
   /** Shared with the index thumbnail so the cover grows into the hero on navigation. */
   transitionName?: string;
   headingLevel?: 'h1' | 'h2';
@@ -48,7 +48,7 @@ const Heading = headingLevel;
       </dl>
     )}
 
-    {cta && <a class="hero__cta" href={cta.href}>{cta.label} <span aria-hidden="true">→</span></a>}
+    {cta && <a class="hero__cta" href={cta.href} aria-label={cta.ariaLabel}>{cta.label} <span aria-hidden="true">→</span></a>}
   </div>
 
   {chapters.length > 0 && (
