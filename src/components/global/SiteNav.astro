@@ -254,11 +254,18 @@ const pages = [
     view-transition-name: sitenav;
     position: fixed;
     z-index: 50;
-    /* The top bar is solid, the same surface as the story bar below it, so the two read as one
-       panel whatever scrolls behind them. The rail (below) is glass. */
-    background: var(--color-bg);
   }
 
+  .sitenav {
+    background: var(--glass-bg);
+    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  }
+
+  /* Glass: the photographs show through. On a story, in the top-bar layout, the bar grows down
+     behind the story bar as that bar appears (the same scroll range), so the two are one pane of
+     glass. A separate layer cannot do this: view-transition-name makes .sitenav a backdrop root,
+     so a child layer would blur only the navigation itself. */
   .wordmark {
     view-transition-name: wordmark;
     display: flex;
@@ -296,6 +303,28 @@ const pages = [
     gap: 1.5rem;
     padding-inline: var(--container-padding);
     border-bottom: 1px solid var(--glass-line);
+  }
+
+  :global(html:has([data-story])) .sitenav {
+    animation: sitenav-extend linear both;
+    animation-timeline: scroll(root);
+    animation-range: 70svh 95svh;
+  }
+
+  /* The content keeps its place in the top --bar-h; the extra height is padding behind the story bar. */
+  @keyframes sitenav-extend {
+    to {
+      height: calc(var(--bar-h) + var(--story-bar-h));
+      padding-bottom: var(--story-bar-h);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html:has([data-story])) .sitenav {
+      animation: none;
+      height: calc(var(--bar-h) + var(--story-bar-h));
+      padding-bottom: var(--story-bar-h);
+    }
   }
 
   .sitenav .wordmark {
@@ -558,10 +587,12 @@ const pages = [
       border-bottom: 0;
       border-right: 1px solid var(--glass-line);
       overflow-y: auto;
-      /* Glass: the photographs show through the rail. */
-      background: var(--glass-bg);
-      backdrop-filter: blur(18px) saturate(1.15);
-      -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    }
+
+    /* The rail does not extend: the story bar sits beside it, with its own glass. */
+    :global(html:not([data-nav='bar']):has([data-story])) .sitenav {
+      animation: none;
+      padding-bottom: 1.75rem;
     }
 
     :global(html:not([data-nav='bar'])) .sitenav .wordmark {
