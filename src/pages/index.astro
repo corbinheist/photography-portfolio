@@ -4,7 +4,7 @@ import SiteLayout from '@layouts/SiteLayout.astro';
 import Photo from '@components/photo/Photo.astro';
 import StoryHero from '@components/story/StoryHero.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
-import { compareStories, formatStoryDate, loadManifest, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, formatStoryDate, loadManifest, placeName, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
 
 const published = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
 
@@ -54,7 +54,12 @@ const more = published
       title={lead.story.data.title}
       summary={lead.story.data.summary}
       overline={[`№ ${lead.number}`, lead.story.data.place, formatStoryDate(lead.story.data.date), `${lead.frames} frames`].join(' · ')}
-      cta={{ href: lead.href, label: 'Open the story' }}
+      cta={{
+        href: lead.href,
+        // The call to action names the place the story goes to; the accessible name adds the title.
+        label: `Go to ${placeName(lead.story.data.place)}`,
+        ariaLabel: `Go to ${placeName(lead.story.data.place)}: ${lead.story.data.title}`,
+      }}
       transitionName={`cover-${lead.story.id}`}
       headingLevel="h2"
     />

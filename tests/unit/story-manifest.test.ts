@@ -12,6 +12,7 @@ import {
   compareStories,
   storyFrames,
   formatCoordinates,
+  placeName,
   validateStory,
   STORY_PHOTOS_DIR,
 } from '../../src/scripts/utils/story-manifest';
@@ -131,5 +132,15 @@ describe('storyFrames', () => {
 
   it('keeps the body order when the body shows the cover', () => {
     expect(storyFrames('<Image id="b" />\n<Image id="a" />', 'a')).toEqual(['b', 'a']);
+  });
+});
+
+describe('placeName', () => {
+  it('drops the country', () => {
+    expect(placeName('Cerro Guido, Chile')).toBe('Cerro Guido');
+    expect(placeName('Aït Bougmez, Morocco')).toBe('Aït Bougmez');
+  });
+  it('keeps a place that has no country', () => {
+    expect(placeName('Lofoten')).toBe('Lofoten');
   });
 });

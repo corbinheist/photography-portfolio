@@ -208,3 +208,8 @@ export function loadGalleryExtras(root = process.cwd()): GalleryExtra[] {
   if (!result.success) throw new Error(`${GALLERY_EXTRAS_FILE}: ${result.error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join('; ')}`);
   return result.data;
 }
+
+/** The place without its country: "Cerro Guido, Chile" gives "Cerro Guido". */
+export function placeName(place: string): string {
+  return place.split(',')[0].trim();
+}

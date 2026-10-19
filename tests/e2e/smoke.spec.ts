@@ -24,6 +24,14 @@ test.describe('smoke tests', () => {
     });
   }
 
+  test('the homepage call to action names the lead story place', async ({ page }) => {
+    await page.goto('/');
+    const cta = page.locator('.hero__cta');
+    await expect(cta).toHaveText(/^Go to Cerro Guido/);
+    await expect(cta).toHaveAttribute('href', '/work/cold-hands/');
+    await expect(cta).toHaveAccessibleName('Go to Cerro Guido: Cold Hands');
+  });
+
   test('the homepage lists every published story', async ({ page }) => {
     await page.goto('/');
     for (const [index, path] of stories.entries()) {
