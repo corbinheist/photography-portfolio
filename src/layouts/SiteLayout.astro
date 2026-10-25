@@ -12,13 +12,15 @@ interface Props {
   type?: 'website' | 'article';
   noindex?: boolean;
   location?: string;
+  /** The desktop navigation before the visitor chooses: the rail, or the top bar. Stories start with the bar, so the photographs have the full width. */
+  navDefault?: 'rail' | 'bar';
 }
 
-const { title, description, image, type, noindex, location } = Astro.props;
+const { title, description, image, type, noindex, location, navDefault = 'rail' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-nav="rail">
+<html lang="en" data-nav={navDefault}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,7 +35,7 @@ const { title, description, image, type, noindex, location } = Astro.props;
     />
     <!-- Apply the visitor's navigation choice (rail or bar) and theme choice (paper or ink) before the first paint. -->
     <script is:inline>
-      try { if (localStorage.getItem('nav') === 'bar') document.documentElement.dataset.nav = 'bar'; } catch (e) {}
+      try { var nav = localStorage.getItem('nav'); if (nav === 'bar' || nav === 'rail') document.documentElement.dataset.nav = nav; } catch (e) {}
       try { if (localStorage.getItem('theme') === 'ink') document.documentElement.dataset.theme = 'ink'; } catch (e) {}
     </script>
     <slot name="head" />

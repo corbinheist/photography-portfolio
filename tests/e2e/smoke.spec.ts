@@ -103,9 +103,20 @@ test.describe('smoke tests', () => {
     await expect(page.locator('.sitenav__pages--main a').first()).toHaveText('Gallery');
   });
 
-  test('the rail highlights the story being read', async ({ page }) => {
+  test('a story starts with the top bar, and the Stories menu marks the story being read', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/work/ksar/');
+    await expect(page.locator('html')).toHaveAttribute('data-nav', 'bar');
+    await expect(page.locator('.sitenav__rail')).toBeHidden();
+    await page.locator('.sitenav__menu summary').click();
+    await expect(page.locator('.sitenav__panel a[aria-current="page"] .sitenav__title')).toHaveText('Ksar Tamnougalt');
+  });
+
+  test('a visitor who chose the rail keeps it on a story', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.addInitScript(() => localStorage.setItem('nav', 'rail'));
+    await page.goto('/work/ksar/');
+    await expect(page.locator('.sitenav__rail')).toBeVisible();
     await expect(page.locator('.sitenav__rail a[aria-current="page"] .sitenav__title')).toHaveText('Ksar Tamnougalt');
   });
 

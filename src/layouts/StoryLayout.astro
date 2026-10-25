@@ -50,7 +50,7 @@ const facts = [
 const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data.cover);
 ---
 
-<SiteLayout title={`${title} · Heist Studio`} description={summary} image={buildPhotoUrl(coverPhoto.url, coverPhoto.width, 1600)} type="article" location={place}>
+<SiteLayout title={`${title} · Heist Studio`} description={summary} image={buildPhotoUrl(coverPhoto.url, coverPhoto.width, 1600)} type="article" location={place} navDefault="bar">
   <article class="story" data-story data-story-theme={theme}>
     <StoryHero
       photo={coverPhoto}
