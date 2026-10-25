@@ -32,17 +32,23 @@ test.describe('smoke tests', () => {
     await expect(cta).toHaveAccessibleName('Go to Cerro Guido: Cold Hands');
   });
 
-  test('the homepage lists every published story', async ({ page }) => {
+  test('the homepage shows one plate per other story, then the contents of every story', async ({ page }) => {
     await page.goto('/');
-    for (const [index, path] of stories.entries()) {
-      await expect(page.locator(`.ledger a[href="${path}"]`)).toHaveCount(1);
-      // Numbered from the oldest: the newest (first) story has the highest number.
-      await expect(page.locator('.ledger__num').nth(index)).toHaveText(`№ ${String(stories.length - index).padStart(2, '0')}`);
+    const all = [...stories, ...moreStories];
+    // The lead story is the hero; every other story has one plate, in order.
+    await expect(page.locator('.plate')).toHaveCount(all.length - 1);
+    for (const [index, path] of all.slice(1).entries()) {
+      await expect(page.locator('.plate').nth(index)).toHaveAttribute('href', path);
     }
-    for (const [index, path] of moreStories.entries()) {
-      await expect(page.locator(`.ledger a[href="${path}"]`)).toHaveCount(0);
-      await expect(page.locator('.more__card').nth(index)).toHaveAttribute('href', path);
+    // The contents list every story; featured stories are numbered from the oldest.
+    await expect(page.locator('.contents__row')).toHaveCount(all.length);
+    for (const [index, path] of all.entries()) {
+      await expect(page.locator('.contents__row').nth(index)).toHaveAttribute('href', path);
+      const expected = index < stories.length ? `№ ${String(stories.length - index).padStart(2, '0')}` : '';
+      await expect(page.locator('.contents__num').nth(index)).toHaveText(expected);
     }
+    // No index thumbnails, summaries, or frame counts.
+    await expect(page.locator('.ledger, .more')).toHaveCount(0);
   });
 
   test('the desktop rail lists the stories as one flat list and marks the current page', async ({ page }) => {
