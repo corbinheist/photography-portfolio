@@ -1,6 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { GALLERY_EXTRAS_FILE, loadGalleryExtras, loadManifest, splitFrontmatter, storyUrl, validateStory, STORY_PHOTOS_DIR } from '../src/scripts/utils/story-manifest';
+import { fullBleedIds, GALLERY_EXTRAS_FILE, loadGalleryExtras, loadManifest, MAX_FULL_BLEEDS, splitFrontmatter, storyUrl, validateStory, STORY_PHOTOS_DIR } from '../src/scripts/utils/story-manifest';
 
 type Diagnostic = { level: 'error' | 'warning'; code: string; message: string };
 
@@ -33,6 +33,10 @@ for (const filename of storyFiles) {
     continue;
   }
   for (const problem of validateStory(slug, data, body, manifest)) error('story.reference-invalid', problem);
+
+  // A warning while the stories are brought to the limit one at a time (STU-59); then an error.
+  const bleeds = fullBleedIds(body);
+  if (bleeds.length > MAX_FULL_BLEEDS) warning('story.full-bleed-limit', `${slug}: ${bleeds.length} full-bleed photographs; the limit is ${MAX_FULL_BLEEDS} (${bleeds.join(', ')})`);
 
   const route = storyUrl(slug).replace(/\/$/, '');
   if (redirectSources.has(route)) error('story.route-collision', `${slug}: ${route} is also a redirect source in astro.config.mjs`);

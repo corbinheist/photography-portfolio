@@ -4,6 +4,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   extractImageIds,
+  fullBleedIds,
   loadManifest,
   parseManifest,
   resolvePhoto,
@@ -72,6 +73,13 @@ describe('extractImageIds', () => {
 <Pair ids={["d", 'e']} captions={["x", "y"]} />
 `;
     expect(extractImageIds(mdx)).toEqual(['a', 'b', 'c', 'd', 'e']);
+  });
+});
+
+describe('fullBleedIds', () => {
+  it('finds the full-bleed images in any attribute order and quote style', () => {
+    const mdx = '<Image size="full" id="a" />\n<Image id="b" />\n<Image id=\'c\' size={"full"} caption="x" />\n<Image id="d" size="wide" />';
+    expect(fullBleedIds(mdx)).toEqual(['a', 'c']);
   });
 });
 
