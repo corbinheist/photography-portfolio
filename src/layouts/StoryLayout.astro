@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { getEntry } from 'astro:content';
 import SiteLayout from './SiteLayout.astro';
 import StoryHero from '@components/story/StoryHero.astro';
+import Lightbox from '@components/story/Lightbox.astro';
 import Photo from '@components/photo/Photo.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
 import {
@@ -56,6 +57,7 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
       coords={coords || undefined}
       margin={[place, when]}
       transitionName={`cover-${story.id}`}
+      frame={Astro.locals.story?.numbers.get(cover)}
     />
 
     <div class="story-body" id="story-body">
@@ -85,6 +87,8 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
       </a>
     )}
 
+    <Lightbox />
+
     <nav class="story-pager" aria-label="More stories">
       {prev ? <a href={storyUrl(prev.id)}><span aria-hidden="true">←</span> Previous · {prev.data.title}</a> : <span></span>}
       <a href="/#work">All work <span aria-hidden="true">↑</span></a>
@@ -93,6 +97,8 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
 
   <script>
     import { initStoryNav } from '@scripts/story-nav';
+    import { initLightbox } from '@scripts/lightbox';
     initStoryNav();
+    initLightbox();
   </script>
 </SiteLayout>

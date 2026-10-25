@@ -1,0 +1,123 @@
+---
+/**
+ * The full-screen view of a story photograph. The page's own markup is the data: the lightbox
+ * reads every numbered frame (the hero and the body) when it opens. See src/scripts/lightbox.ts.
+ */
+---
+
+<dialog class="lightbox" data-lightbox aria-label="Photograph">
+  <div class="lightbox__stage" data-lightbox-stage></div>
+  <div class="lightbox__bar">
+    <p class="lightbox__info">
+      <span class="lightbox__num tabular" data-lightbox-num></span>
+      <span data-lightbox-caption></span>
+    </p>
+    <div class="lightbox__controls">
+      <button type="button" data-lightbox-prev aria-label="Previous photograph">←</button>
+      <button type="button" data-lightbox-next aria-label="Next photograph">→</button>
+      <button type="button" data-lightbox-close aria-label="Close">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<style is:global>
+  /* Full bleed: the photograph takes the whole screen above a thin bar, at its own proportions,
+     never cropped. No text sits on the photograph. */
+  .lightbox {
+    --lightbox-bar: 3.25rem;
+    width: 100vw;
+    max-width: none;
+    height: 100svh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+
+  .lightbox[open] {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .lightbox::backdrop {
+    background: var(--color-bg);
+  }
+
+  html:has(.lightbox[open]) {
+    overflow: hidden;
+  }
+
+  .lightbox__stage {
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .lightbox__stage picture {
+    display: contents;
+  }
+
+  /* Higher specificity than Photo's scoped .photo-img rules on the cloned image. */
+  .lightbox .lightbox__stage img {
+    width: auto;
+    height: auto;
+    max-width: 100vw;
+    max-height: calc(100svh - var(--lightbox-bar));
+    object-fit: contain;
+    background: none;
+  }
+
+  .lightbox__bar {
+    height: var(--lightbox-bar);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--container-padding);
+    font-size: var(--type-margin);
+    color: var(--color-text-muted);
+  }
+
+  .lightbox__info {
+    display: flex;
+    gap: 1.2em;
+    max-width: none;
+  }
+
+  .lightbox__num {
+    color: var(--color-text);
+  }
+
+  .lightbox__controls {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  .lightbox__controls button {
+    padding: 0.35em 0.8em;
+    border: 1px solid var(--color-border);
+    background: none;
+    color: var(--color-text);
+    font-size: var(--type-margin);
+    cursor: pointer;
+    transition: border-color 160ms ease, color 160ms ease;
+  }
+
+  .lightbox__controls button:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .lightbox__controls button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  /* A photograph that opens the lightbox. */
+  [data-lightbox-open] {
+    cursor: zoom-in;
+  }
+</style>

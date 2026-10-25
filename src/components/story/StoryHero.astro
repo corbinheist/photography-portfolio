@@ -17,16 +17,18 @@ interface Props {
   /** Shared with the index thumbnail so the cover grows into the hero on navigation. */
   transitionName?: string;
   headingLevel?: 'h1' | 'h2';
+  /** The cover's frame number in a story; the lightbox opens it in sequence. */
+  frame?: number;
 }
 
-const { photo, title, summary, overline, coords, margin = [], cta, transitionName, headingLevel = 'h1' } = Astro.props;
+const { photo, title, summary, overline, coords, margin = [], cta, transitionName, headingLevel = 'h1', frame } = Astro.props;
 const Heading = headingLevel;
 // The story number leads the overline ("№ 02 · place · date"). It is the page's seal.
 const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
 ---
 
 <section class="hero" data-hero>
-  <div class="hero__media" style={`--ratio: ${photo.width / photo.height}${transitionName ? `; view-transition-name: ${transitionName}` : ''}`}>
+  <div class="hero__media" data-frame={frame} style={`--ratio: ${photo.width / photo.height}${transitionName ? `; view-transition-name: ${transitionName}` : ''}`}>
     <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 899px) 100vw, 90vw" loading="eager" fetchpriority="high" />
     {coords && <p class="hero__coords tabular">{coords}</p>}
   </div>

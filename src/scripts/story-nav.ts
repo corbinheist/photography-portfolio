@@ -23,6 +23,7 @@ export function initStoryNav(): void {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
   document.addEventListener('keydown', (event) => {
     if (event.metaKey || event.ctrlKey || event.altKey) return;
+    if (document.querySelector('dialog[open]')) return;
     const target = event.target as HTMLElement;
     if (target.closest('input, textarea, select, [contenteditable]')) return;
     const step = event.key === 'j' ? 1 : event.key === 'k' ? -1 : 0;

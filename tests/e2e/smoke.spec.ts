@@ -167,7 +167,8 @@ test.describe('smoke tests', () => {
     await expect(page.locator('.story-credits')).toContainText('35 frames');
     await expect(page.locator('.hero__chapters')).toHaveCount(0);
     // The title card shows the cover as frame 01, so the body starts at frame 02.
-    await expect(page.locator('[data-frame]').first()).toHaveAttribute('data-frame', '2');
+    await expect(page.locator('.hero__media')).toHaveAttribute('data-frame', '1');
+    await expect(page.locator('.story-body [data-frame]').first()).toHaveAttribute('data-frame', '2');
     await expect(page.locator('[data-frame]').last()).toHaveAttribute('data-frame', '35');
     await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/ksar/');
     await expect(page.locator('.hero__overline')).toContainText('№ 02');
@@ -180,6 +181,42 @@ test.describe('smoke tests', () => {
     const before = await page.evaluate(() => window.scrollY);
     await page.keyboard.press('j');
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
+  });
+
+  test('a click opens a photograph full screen; arrows move; Escape closes', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/work/nomads/');
+    const lightbox = page.locator('[data-lightbox]');
+    const num = page.locator('[data-lightbox-num]');
+    await page.locator('.story-body [data-frame="3"] .photo-wrap').click();
+    await expect(lightbox).toBeVisible();
+    await expect(num).toHaveText('03 / 35');
+    await expect(lightbox.locator('img')).toHaveCount(1);
+    await page.keyboard.press('ArrowRight');
+    await expect(num).toHaveText('04 / 35');
+    await page.keyboard.press('j');
+    await expect(num).toHaveText('05 / 35');
+    await page.keyboard.press('ArrowLeft');
+    await expect(num).toHaveText('04 / 35');
+    // The page behind does not scroll while the view is open.
+    const scrolled = await page.evaluate(() => window.scrollY);
+    await page.keyboard.press('k');
+    expect(await page.evaluate(() => window.scrollY)).toBe(scrolled);
+    await page.keyboard.press('Escape');
+    await expect(lightbox).toBeHidden();
+  });
+
+  test('the hero opens as frame 01, and Enter opens a focused photograph', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/work/nomads/');
+    await page.locator('.hero__media .photo-wrap').click();
+    await expect(page.locator('[data-lightbox-num]')).toHaveText('01 / 35');
+    await expect(page.locator('[data-lightbox-prev]')).toBeDisabled();
+    await page.locator('[data-lightbox-close]').click();
+    await expect(page.locator('[data-lightbox]')).toBeHidden();
+    await page.locator('.story-body [data-frame="2"] .photo-wrap').focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('[data-lightbox-num]')).toHaveText('02 / 35');
   });
 
   for (const [from, to] of [
