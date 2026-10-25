@@ -1,37 +1,47 @@
 ---
 import SiteLayout from '@layouts/SiteLayout.astro';
-import Container from '@components/ui/Container.astro';
-import Button from '@components/ui/Button.astro';
 ---
 
 <SiteLayout title="Not Found" noindex>
-  <Container>
-    <section class="not-found">
-      <h1>404</h1>
-      <p>This page doesn't exist.</p>
-      <Button href="/">Back Home</Button>
-    </section>
-  </Container>
+  <section class="not-found">
+    <h1>404</h1>
+    <p>This page doesn't exist.</p>
+    <a href="/">Back home <span aria-hidden="true">→</span></a>
+  </section>
 </SiteLayout>
 
 <style>
   .not-found {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 200px);
-    text-align: center;
     gap: var(--space-md);
+    min-height: calc(100svh - 200px);
+    padding-inline: calc(var(--container-padding) + (100% - 2 * var(--container-padding)) / 12);
   }
 
   .not-found h1 {
+    font-family: var(--font-heading);
     font-size: var(--type-title);
-    font-weight: 200;
+    font-weight: 400;
     color: var(--color-text-muted);
   }
 
   .not-found p {
     color: var(--color-text-muted);
+  }
+
+  .not-found a {
+    align-self: flex-start;
+    font-size: var(--type-margin);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.3em;
+    transition: color 160ms ease, border-color 160ms ease;
+  }
+
+  .not-found a:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
   }
 </style>

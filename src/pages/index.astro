@@ -4,7 +4,7 @@ import SiteLayout from '@layouts/SiteLayout.astro';
 import Photo from '@components/photo/Photo.astro';
 import StoryHero from '@components/story/StoryHero.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
-import { compareStories, formatStoryDate, loadManifest, placeName, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, formatCoordinates, formatStoryDate, loadManifest, placeName, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
 
 const published = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
 
@@ -29,6 +29,11 @@ const stories = published
   });
 
 const [lead] = stories;
+// The lead story's coordinates and elevation run down the hero's edge, as on a story.
+const leadCoords = lead && [
+  lead.story.data.coordinates && formatCoordinates(lead.story.data.coordinates),
+  lead.story.data.elevation_m !== undefined && `${lead.story.data.elevation_m.toLocaleString('en-GB')} m`,
+].filter(Boolean).join(' · ');
 
 const more = published
   .filter((story) => !story.data.featured)
@@ -47,13 +52,16 @@ const more = published
   title="Heist Studio · Corbin Heist"
   description="Documentary photography of people and the work they do outdoors."
   image={lead && buildPhotoUrl(lead.cover.url, lead.cover.width, 1600)}
+  navDefault="bar"
 >
   {lead && (
     <StoryHero
       photo={lead.cover}
       title={lead.story.data.title}
       summary={lead.story.data.summary}
-      overline={[`№ ${lead.number}`, lead.story.data.place, formatStoryDate(lead.story.data.date), `${lead.frames} frames`].join(' · ')}
+      overline={`№ ${lead.number}`}
+      margin={[lead.story.data.place, formatStoryDate(lead.story.data.date)]}
+      coords={leadCoords || undefined}
       cta={{
         href: lead.href,
         // The call to action names the place the story goes to; the accessible name adds the title.
@@ -62,6 +70,7 @@ const more = published
       }}
       transitionName={`cover-${lead.story.id}`}
       headingLevel="h2"
+      bleed
     />
   )}
 
@@ -259,7 +268,7 @@ const more = published
   }
 
   .outro {
-    max-width: calc(41rem + 2 * var(--container-padding));
+    max-width: calc(32.5rem + 2 * var(--container-padding));
     padding: clamp(5rem, 10vw, 8rem) var(--container-padding) 0;
   }
 
@@ -279,7 +288,6 @@ const more = published
     margin-top: var(--space-md);
     font-variant-numeric: tabular-nums;
     font-size: var(--type-margin);
-    letter-spacing: 0.04em;
     color: var(--color-text);
     border-bottom: 1px solid currentColor;
   }

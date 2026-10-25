@@ -68,16 +68,44 @@ test.describe('smoke tests', () => {
     await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/oslo/');
   });
 
-  test('the gallery shows every frame and links each one to its place in the story', async ({ page }) => {
+  test('the gallery shows every frame as shot, and a click opens it full bleed', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/gallery/');
     const frames = page.locator('.gallery__frame');
     expect(await frames.count()).toBeGreaterThan(100);
-    // Nomads frame 07 links to its anchor, and the anchor exists on the story page.
-    const link = page.locator('.gallery__frame[href="/work/nomads/#frame-07"]');
-    await expect(link).toHaveCount(1);
-    await link.click();
-    await expect(page).toHaveURL(/\/work\/nomads\/#frame-07$/);
-    await expect(page.locator('#frame-07')).toHaveAttribute('data-frame', '7');
+    // No dimming and no caption on the photograph.
+    await expect(page.locator('.gallery__frame img').first()).toHaveCSS('opacity', '1');
+    await frames.nth(4).locator('.photo-wrap').click();
+    const lightbox = page.locator('[data-lightbox]');
+    await expect(lightbox).toHaveAttribute('data-frame', '5');
+    await page.keyboard.press('ArrowRight');
+    await expect(lightbox).toHaveAttribute('data-frame', '6');
+    await page.keyboard.press('Escape');
+    await expect(lightbox).toBeHidden();
+  });
+
+  test('the homepage starts with the top bar and a full-bleed hero', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+    await expect(page.locator('html')).toHaveAttribute('data-nav', 'bar');
+    const box = await page.locator('.hero__media img').boundingBox();
+    expect(box?.x).toBe(0);
+    expect(box?.width).toBeGreaterThan(1380);
+    expect(Math.round(box?.height ?? 0)).toBe(900 - 56);
+    await expect(page.locator('.hero__overline')).toHaveText('№ 04');
+    // The coordinates run top to bottom in the paper strip beside the photograph.
+    const coords = page.locator('.hero__coords');
+    await expect(coords).toHaveText('50°55′S 72°24′W');
+    await expect(coords).toHaveCSS('writing-mode', 'vertical-rl');
+    expect((await coords.boundingBox())?.x).toBeGreaterThanOrEqual((box?.x ?? 0) + (box?.width ?? 0));
+  });
+
+  test('the next story is a plate on paper, with its text under it', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/work/nomads/');
+    const img = await page.locator('.story-next img').boundingBox();
+    const title = await page.locator('.story-next__title').boundingBox();
+    expect((title?.y ?? 0)).toBeGreaterThan((img?.y ?? 0) + (img?.height ?? 0));
   });
 
   test('the gallery keeps the gallery-only frames, without a story link', async ({ page }) => {
@@ -130,7 +158,7 @@ test.describe('smoke tests', () => {
 
   test('the rail minimises into a top bar, remembers it, and expands again', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto('/');
+    await page.goto('/about/');
     const toggle = page.locator('[data-nav-toggle]');
     await expect(toggle).toHaveAttribute('aria-pressed', 'false');
     await toggle.click();

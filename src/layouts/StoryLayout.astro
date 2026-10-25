@@ -77,8 +77,8 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
     </footer>
 
     {next && nextCover && (
-      <a class="story-next bleed" href={storyUrl(next.id)}>
-        <Photo url={nextCover.url} width={nextCover.width} height={nextCover.height} lqip={nextCover.lqip} alt={nextCover.alt} sizes="100vw" />
+      <a class="story-next" href={storyUrl(next.id)} style={`--ratio: ${nextCover.width / nextCover.height}`}>
+        <Photo url={nextCover.url} width={nextCover.width} height={nextCover.height} lqip={nextCover.lqip} alt={nextCover.alt} sizes="(max-width: 899px) 100vw, 60vw" />
         <span class="story-next__body">
           <span class="label">{number !== undefined ? <>Next · № {String(number - 1).padStart(2, '0')}</> : 'Next'}</span>
           <span class="story-next__title">{next.data.title}</span>

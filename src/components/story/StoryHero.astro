@@ -19,15 +19,17 @@ interface Props {
   headingLevel?: 'h1' | 'h2';
   /** The cover's frame number in a story; the lightbox opens it in sequence. */
   frame?: number;
+  /** Edge to edge across the content area, filling the first screen (the homepage). */
+  bleed?: boolean;
 }
 
-const { photo, title, summary, overline, coords, margin = [], cta, transitionName, headingLevel = 'h1', frame } = Astro.props;
+const { photo, title, summary, overline, coords, margin = [], cta, transitionName, headingLevel = 'h1', frame, bleed = false } = Astro.props;
 const Heading = headingLevel;
 // The story number leads the overline ("№ 02 · place · date"). It is the page's seal.
 const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
 ---
 
-<section class="hero" data-hero>
+<section class:list={['hero', { 'hero--bleed': bleed }]} data-hero>
   <div class="hero__media" data-frame={frame} style={`--ratio: ${photo.width / photo.height}${transitionName ? `; view-transition-name: ${transitionName}` : ''}`}>
     <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 899px) 100vw, 90vw" loading="eager" fetchpriority="high" />
     {coords && <p class="hero__coords tabular">{coords}</p>}
@@ -176,6 +178,59 @@ const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
       grid-column: 1 / 7;
       grid-row: 2;
       margin-top: 0;
+    }
+  }
+  /* The homepage: the photograph runs edge to edge across the content area and fills the first
+     screen, cropped to fit. The text follows on paper below it, never on the photograph. */
+  .hero--bleed {
+    padding-inline: 0;
+    padding-top: var(--header-h);
+  }
+
+  .hero--bleed .hero__media :global(img) {
+    width: 100%;
+    height: calc(100svh - var(--header-h));
+    object-fit: cover;
+  }
+
+  .hero--bleed .hero__coords,
+  .hero--bleed .hero__body {
+    padding-inline: var(--container-padding);
+  }
+
+  @media (min-width: 900px) {
+    .hero.hero--bleed {
+      display: block;
+      max-width: none;
+      padding-top: var(--header-h);
+    }
+
+    /* The photograph runs off the left edge; a thin strip of paper on the right carries the
+       coordinates, top to bottom, so no text sits on the photograph. */
+    .hero--bleed .hero__media {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+    }
+
+    .hero--bleed .hero__media :global(.photo-wrap) {
+      flex: 1 1 auto;
+      width: auto;
+      min-width: 0;
+    }
+
+    .hero--bleed .hero__coords {
+      flex: none;
+      padding: 0 0.75rem;
+    }
+
+    .hero--bleed .hero__media :global(img) {
+      height: calc(100svh - var(--header-h));
+    }
+
+    .hero--bleed .hero__body {
+      max-width: var(--container-max);
+      margin-top: var(--space-xl);
     }
   }
 </style>
