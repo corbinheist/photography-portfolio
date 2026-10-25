@@ -294,7 +294,6 @@ const pages = [
     flex-shrink: 0;
     font-family: var(--font-heading);
     font-size: 18px;
-    letter-spacing: 0.08em;
     line-height: 1;
     color: var(--nav-ink);
   }
@@ -310,9 +309,7 @@ const pages = [
   .sitenav__theme,
   .sitenav__email,
   .sitenav__menu summary {
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    font-variant-numeric: tabular-nums;
   }
 
   /* ── Bar (phone and tablet always; desktop when minimised) ── */
@@ -466,10 +463,8 @@ const pages = [
     margin-top: 1.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--color-border);
-    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
     font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
     color: var(--nav-ink-faint);
   }
 
@@ -629,9 +624,8 @@ const pages = [
       display: block;
       margin-top: auto;
       padding-top: 2rem;
-      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
       font-size: 10px;
-      letter-spacing: 0.06em;
       color: var(--nav-ink-faint);
     }
 

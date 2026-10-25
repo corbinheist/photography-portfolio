@@ -81,7 +81,7 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
       <a class="story-next bleed" href={storyUrl(next.id)}>
         <Photo url={nextCover.url} width={nextCover.width} height={nextCover.height} lqip={nextCover.lqip} alt={nextCover.alt} sizes="100vw" />
         <span class="story-next__body">
-          <span class="mono-label">{number !== undefined ? <>Next · <span class="numero">№</span> {String(number - 1).padStart(2, '0')}</> : 'Next'}</span>
+          <span class="label">{number !== undefined ? <>Next · № {String(number - 1).padStart(2, '0')}</> : 'Next'}</span>
           <span class="story-next__title">{next.data.title}</span>
           <span class="story-next__summary">{next.data.summary}</span>
         </span>

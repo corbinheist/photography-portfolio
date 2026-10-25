@@ -30,7 +30,7 @@ const { title, description, image, type, noindex, location, navDefault = 'rail' 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
       rel="stylesheet"
     />
     <!-- Apply the visitor's navigation choice (rail or bar) and theme choice (paper or ink) before the first paint. -->
@@ -98,7 +98,7 @@ const { title, description, image, type, noindex, location, navDefault = 'rail' 
     padding: 0.6em 1em;
     background: var(--fx-paper);
     color: var(--fx-black);
-    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
     font-size: 12px;
     transform: translateY(-200%);
   }
@@ -120,11 +120,9 @@ const { title, description, image, type, noindex, location, navDefault = 'rail' 
     border: 0;
   }
 
-  .mono-label {
-    font-family: var(--font-mono);
+  .label {
+    font-variant-numeric: tabular-nums;
     font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
     color: var(--color-text-faint);
   }
 

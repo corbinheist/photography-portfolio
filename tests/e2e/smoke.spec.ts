@@ -162,7 +162,7 @@ test.describe('smoke tests', () => {
     await expect(page.locator('[data-frame]').last()).toHaveAttribute('data-frame', '35');
     await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/ksar/');
     await expect(page.locator('.hero__overline')).toContainText('№ 02');
-    await expect(page.locator('.story-next .mono-label')).toHaveText('Next · № 01');
+    await expect(page.locator('.story-next .label')).toHaveText('Next · № 01');
   });
 
   test('J moves to the next photograph', async ({ page }) => {

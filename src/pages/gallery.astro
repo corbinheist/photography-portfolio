@@ -39,7 +39,7 @@ const frames = [...storyGroups, ...extraGroups].sort(compareStories).flatMap((gr
   <section class="gallery">
     <!-- The navigation marks this page; the heading is for screen readers only. -->
     <h1 class="visually-hidden">Gallery</h1>
-    <p class="gallery__count mono-label tabular">{frames.length} frames · {stories.length} stories</p>
+    <p class="gallery__count label tabular">{frames.length} frames · {stories.length} stories</p>
 
     <ul class="gallery__wall">
       {frames.map((frame) => (
@@ -47,12 +47,12 @@ const frames = [...storyGroups, ...extraGroups].sort(compareStories).flatMap((gr
           {frame.href ? (
             <a href={frame.href} class="gallery__frame">
               <Photo url={frame.photo.url} width={frame.photo.width} height={frame.photo.height} lqip={frame.photo.lqip} alt={frame.photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
-              <span class="gallery__label mono-label">{frame.label}</span>
+              <span class="gallery__label label">{frame.label}</span>
             </a>
           ) : (
             <figure class="gallery__frame">
               <Photo url={frame.photo.url} width={frame.photo.width} height={frame.photo.height} lqip={frame.photo.lqip} alt={frame.photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
-              <figcaption class="gallery__label mono-label">{frame.label}</figcaption>
+              <figcaption class="gallery__label label">{frame.label}</figcaption>
             </figure>
           )}
         </li>

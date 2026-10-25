@@ -152,7 +152,6 @@ ol {
   /* Typography — fluid clamp scales */
   --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-heading: 'Vollkorn', serif;
-  --font-mono: 'IBM Plex Mono', monospace;
 
   --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
   --text-sm: clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem);
@@ -317,12 +316,4 @@ p {
 /* The seal: the story number, the only accent at rest on a page. Green is for focus and hover. */
 .seal {
   color: var(--color-seal);
-}
-
-/* The numero sign. A monospace face fits "№" into one character cell, which compresses it, so the
-   sign is set in the proportional body face inside mono labels. */
-.numero {
-  font-family: var(--font-body);
-  font-weight: 400;
-  letter-spacing: 0;
 }

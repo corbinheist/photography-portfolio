@@ -68,23 +68,23 @@ const more = published
   <section id="work" class="ledger" aria-labelledby="work-heading">
     <h1 class="visually-hidden">Heist Studio, documentary photography by Corbin Heist</h1>
     <header class="ledger__head">
-      <h2 id="work-heading" class="mono-label">Selected stories</h2>
-      <p class="mono-label tabular">{stories.length} stories · {stories.reduce((sum, s) => sum + s.frames, 0)} frames</p>
+      <h2 id="work-heading" class="label">Selected stories</h2>
+      <p class="label tabular">{stories.length} stories · {stories.reduce((sum, s) => sum + s.frames, 0)} frames</p>
     </header>
     <ol>
       {stories.map(({ story, href, number, frames, thumb }, index) => (
         <li>
           <a href={href} class="ledger__row">
-            <span class="ledger__num mono-label tabular"><span class="numero">№</span> {number}</span>
+            <span class="ledger__num label tabular">№ {number}</span>
             <span class="ledger__thumb" style={index > 0 ? `view-transition-name: cover-${story.id}` : undefined}>
               <Photo url={thumb.url} width={thumb.width} height={thumb.height} lqip={thumb.lqip} alt={thumb.alt} sizes="(max-width: 767px) 100vw, 360px" />
             </span>
             <span class="ledger__text">
               <span class="ledger__title">{story.data.title}</span>
               <span class="ledger__summary">{story.data.summary}</span>
-              {story.data.client && <span class="ledger__client mono-label">Commission · {story.data.client}</span>}
+              {story.data.client && <span class="ledger__client label">Commission · {story.data.client}</span>}
             </span>
-            <span class="ledger__facts mono-label tabular">
+            <span class="ledger__facts label tabular">
               <span>{story.data.place}</span>
               <span>{formatStoryDate(story.data.date)}</span>
               <span class="ledger__frames">{frames} frames</span>
@@ -98,8 +98,8 @@ const more = published
   {more.length > 0 && (
     <section class="more" aria-labelledby="more-heading">
       <header class="ledger__head">
-        <h2 id="more-heading" class="mono-label">More stories</h2>
-        <p class="mono-label tabular">{more.length} stories · {more.reduce((sum, s) => sum + s.frames, 0)} frames</p>
+        <h2 id="more-heading" class="label">More stories</h2>
+        <p class="label tabular">{more.length} stories · {more.reduce((sum, s) => sum + s.frames, 0)} frames</p>
       </header>
       <ul class="more__grid">
         {more.map(({ story, href, frames, cover }) => (
@@ -109,7 +109,7 @@ const more = published
                 <Photo url={cover.url} width={cover.width} height={cover.height} lqip={cover.lqip} alt={cover.alt} sizes="(max-width: 767px) 100vw, 33vw" />
               </span>
               <span class="more__title">{story.data.title}</span>
-              <span class="mono-label tabular">{story.data.place} · {formatStoryDate(story.data.date)} · <span class="ledger__frames">{frames} frames</span></span>
+              <span class="label tabular">{story.data.place} · {formatStoryDate(story.data.date)} · <span class="ledger__frames">{frames} frames</span></span>
             </a>
           </li>
         ))}
@@ -277,7 +277,7 @@ const more = published
   .outro__email {
     display: inline-block;
     margin-top: var(--space-md);
-    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
     font-size: 15px;
     letter-spacing: 0.04em;
     color: var(--color-text);

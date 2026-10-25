@@ -34,7 +34,7 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
   </div>
 
   <div class="hero__body">
-    <p class="hero__overline">{numbered ? <><span class="seal"><span class="numero">№</span> {numbered[1]}</span>{numbered[2]}</> : overline}</p>
+    <p class="hero__overline">{numbered ? <><span class="seal">№ {numbered[1]}</span>{numbered[2]}</> : overline}</p>
     <Heading class="hero__title">{title}</Heading>
     {summary && <p class="hero__summary">{summary}</p>}
 
@@ -69,9 +69,7 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
   .hero__overline,
   .hero__facts dt,
   .hero__cta {
-    font-family: var(--font-mono);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
   }
 
   .hero__overline {
@@ -117,9 +115,8 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
 
   .hero__facts dd {
     margin-top: 0.4em;
-    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
     font-size: 13px;
-    letter-spacing: 0.06em;
     color: var(--color-text);
   }
 
