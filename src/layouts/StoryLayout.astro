@@ -24,12 +24,11 @@ interface Props {
   /** Featured stories only. */
   number?: number;
   frames: number;
-  chapters: { slug: string; text: string }[];
   prev?: Story;
   next?: Story;
 }
 
-const { story, photos, number, frames, chapters, prev, next } = Astro.props;
+const { story, photos, number, frames, prev, next } = Astro.props;
 const { title, place, date, summary, cover, client, theme, credits, region, coordinates, elevation_m } = story.data;
 const coverPhoto = resolvePhoto(story.id, photos, cover);
 const settings = await getEntry('settings', 'settings');
@@ -59,7 +58,6 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
       summary={summary}
       overline={[num && `№ ${num}`, place, when].filter(Boolean).join(' · ')}
       facts={facts}
-      chapters={chapters}
       transitionName={`cover-${story.id}`}
     />
 

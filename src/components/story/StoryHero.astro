@@ -16,18 +16,17 @@ interface Props {
   summary?: string;
   overline: string;
   facts?: Fact[];
-  chapters?: { slug: string; text: string }[];
   cta?: { href: string; label: string; ariaLabel?: string };
   /** Shared with the index thumbnail so the cover grows into the hero on navigation. */
   transitionName?: string;
   headingLevel?: 'h1' | 'h2';
 }
 
-const { photo, title, summary, overline, facts = [], chapters = [], cta, transitionName, headingLevel = 'h1' } = Astro.props;
+const { photo, title, summary, overline, facts = [], cta, transitionName, headingLevel = 'h1' } = Astro.props;
 const Heading = headingLevel;
 ---
 
-<section class:list={['hero bleed', { 'hero--chapters': chapters.length > 0 }]} data-hero>
+<section class="hero bleed" data-hero>
   <div class="hero__media" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>
     <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="100vw" loading="eager" fetchpriority="high" />
   </div>
@@ -50,16 +49,6 @@ const Heading = headingLevel;
 
     {cta && <a class="hero__cta" href={cta.href} aria-label={cta.ariaLabel}>{cta.label} <span aria-hidden="true">→</span></a>}
   </div>
-
-  {chapters.length > 0 && (
-    <nav class="hero__chapters" aria-label="Chapters">
-      <ol>
-        {chapters.map((chapter, index) => (
-          <li><a href={`#${chapter.slug}`}><span class="tabular">{String(index + 1).padStart(2, '0')}</span> {chapter.text}</a></li>
-        ))}
-      </ol>
-    </nav>
-  )}
 
   {!cta && <a class="hero__begin" href="#story-body">Begin <span aria-hidden="true">↓</span></a>}
 </section>
@@ -87,8 +76,7 @@ const Heading = headingLevel;
   .hero__overline,
   .hero__facts dt,
   .hero__cta,
-  .hero__begin,
-  .hero__chapters {
+  .hero__begin {
     font-family: var(--font-mono);
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -160,11 +148,6 @@ const Heading = headingLevel;
   .hero__cta:hover {
     border-color: var(--hero-accent);
     color: var(--hero-accent);
-  }
-
-  .hero__chapters {
-    display: none;
-    font-size: 11px;
   }
 
   .hero__begin {
@@ -256,7 +239,7 @@ const Heading = headingLevel;
       z-index: 1;
       left: calc(var(--rail-offset) + var(--container-padding));
       bottom: calc(var(--hero-tail) + clamp(3rem, 12svh, 7rem));
-      /* Wide enough for the headline to breathe; with chapters, it stops short of the chapter list. */
+      /* Wide enough for the headline to breathe. */
       width: min(1080px, 100vw - var(--rail-offset) - 2 * var(--container-padding));
       padding: 0;
     }
@@ -281,36 +264,6 @@ const Heading = headingLevel;
       bottom: calc(var(--hero-tail) + 1.5rem);
       color: var(--hero-ink-faint);
       translate: -50% 0;
-    }
-  }
-
-  @media (min-width: 1100px) {
-    .hero__chapters {
-      display: block;
-      position: absolute;
-      z-index: 1;
-      /* Top right, in the open sky of the frame, so the title, headline, and facts keep the full width. */
-      right: var(--container-padding);
-      top: calc(var(--header-h) + clamp(2rem, 7svh, 4.5rem));
-      max-width: 22rem;
-    }
-
-    .hero__chapters li + li {
-      margin-top: 0.7em;
-    }
-
-    .hero__chapters a {
-      color: rgb(255 252 240 / 0.7);
-      transition: color 160ms ease;
-    }
-
-    .hero__chapters a:hover {
-      color: var(--fx-paper);
-    }
-
-    .hero__chapters span {
-      color: var(--hs-moss);
-      margin-right: 0.6em;
     }
   }
 

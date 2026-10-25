@@ -32,9 +32,9 @@ const { story, number, prev, next } = Astro.props;
 const photos = loadManifest(story.id);
 const order = storyFrames(story.body ?? '', story.data.cover);
 Astro.locals.story = { slug: story.id, photos, numbers: new Map(order.map((id, index) => [id, index + 1])), anchored: new Set() };
-const { Content, headings } = await render(story);
+const { Content } = await render(story);
 ---
 
-<StoryLayout story={story} photos={photos} number={number} frames={order.length} chapters={headings.filter((h) => h.depth === 2)} prev={prev} next={next}>
+<StoryLayout story={story} photos={photos} number={number} frames={order.length} prev={prev} next={next}>
   <Content components={{ Image, Pair, Quote }} />
 </StoryLayout>

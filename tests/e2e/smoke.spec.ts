@@ -138,14 +138,14 @@ test.describe('smoke tests', () => {
     await expect(page.locator('.sitenav__panel .sitenav__stories a')).toHaveCount(stories.length);
   });
 
-  test('a story shows its facts, chapters, frame counter, and next story', async ({ page }) => {
+  test('a story shows its facts, frame numbers, and next story', async ({ page }) => {
     await page.goto('/work/nomads/');
     await expect(page.locator('.hero__facts')).toContainText('31°16′N 5°59′W');
     await expect(page.locator('.hero__facts')).toContainText('35');
     // Labels are spelled out, never abbreviated.
     await expect(page.locator('.hero__facts dt')).toContainText(['Place', 'Region', 'Coordinates', 'Date', 'Frames']);
     await expect(page.locator('.hero__facts')).not.toContainText('Coords');
-    await expect(page.locator('.hero__chapters li')).toHaveCount(5);
+    await expect(page.locator('.hero__chapters')).toHaveCount(0);
     // The title card shows the cover as frame 01, so the body starts at frame 02.
     await expect(page.locator('[data-frame]').first()).toHaveAttribute('data-frame', '2');
     await expect(page.locator('[data-frame]').last()).toHaveAttribute('data-frame', '35');
