@@ -76,7 +76,7 @@ export function extractImageIds(mdx: string): string[] {
   return ids;
 }
 
-/** Full-bleed photographs in a story body. One is the limit: the plates sit on paper. */
+/** Full-bleed photographs in a story body. One is the limit (Act II); the hero is the other. */
 export const MAX_FULL_BLEEDS = 1;
 
 /** Find every image id that the MDX body sets edge to edge (`<Image size="full">`). */

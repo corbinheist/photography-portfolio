@@ -100,6 +100,22 @@ test.describe('smoke tests', () => {
     expect((await coords.boundingBox())?.x).toBeGreaterThanOrEqual((box?.x ?? 0) + (box?.width ?? 0));
   });
 
+  test('a story hero runs full bleed with its coordinates in the strip, as on the homepage', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/work/nomads/');
+    const box = await page.locator('.hero__media img').boundingBox();
+    expect(box?.x).toBe(0);
+    expect(box?.width).toBeGreaterThan(1380);
+    expect(Math.round(box?.height ?? 0)).toBe(900 - 56);
+    const coords = page.locator('.hero__coords');
+    await expect(coords).toHaveText('31°16′N 5°59′W');
+    await expect(coords).toHaveCSS('writing-mode', 'vertical-rl');
+    // A story without coordinates runs fully edge to edge.
+    await page.goto('/work/oslo/');
+    await expect(page.locator('.hero__coords')).toHaveCount(0);
+    expect((await page.locator('.hero__media img').boundingBox())?.width).toBe(1440);
+  });
+
   test('the next story is a plate on paper, with its text under it', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/work/nomads/');

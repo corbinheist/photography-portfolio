@@ -58,6 +58,7 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
       margin={[place, when]}
       transitionName={`cover-${story.id}`}
       frame={Astro.locals.story?.numbers.get(cover)}
+      bleed
     />
 
     <div class="story-body" id="story-body">
