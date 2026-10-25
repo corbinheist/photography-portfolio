@@ -129,6 +129,9 @@ ol {
   --color-accent-muted: var(--hs-forest);
   --color-on-accent:    var(--fx-paper);
 
+  /* The seal (hanko): the one accent at rest, the story number. Kiln: 6.2:1 on paper. */
+  --color-seal: var(--hs-kiln);
+
   --color-warm:       var(--hs-oxide);
   --color-warm-deep:  var(--hs-saddle);
   --color-warm-light: var(--hs-rust);
@@ -208,6 +211,9 @@ ol {
   --color-accent-deep:  var(--hs-forest);
   --color-accent-muted: var(--hs-bottle);
   --color-on-accent:    var(--fx-black);
+
+  /* Kiln measures 2.99:1 on ink; Flexoki red-300 measures 6.3:1. */
+  --color-seal: #E8705F;
 
   --color-warm:       var(--hs-rust);
   --color-warm-deep:  var(--hs-oxide);
@@ -303,6 +309,11 @@ p {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* The seal: the story number, the only accent at rest on a page. Green is for focus and hover. */
+.seal {
+  color: var(--color-seal);
 }
 
 /* The numero sign. A monospace face fits "№" into one character cell, which compresses it, so the

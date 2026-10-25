@@ -5,7 +5,7 @@ import type { StoryPhoto } from '@scripts/utils/story-manifest';
 interface Fact {
   label: string;
   value: string;
-  /** A measured value (coordinates, counts) renders in the accent colour. */
+  /** A measured value (coordinates, counts), set in tabular figures. */
   measured?: boolean;
 }
 
@@ -24,6 +24,8 @@ interface Props {
 
 const { photo, title, summary, overline, facts = [], cta, transitionName, headingLevel = 'h1' } = Astro.props;
 const Heading = headingLevel;
+// The story number leads the overline ("№ 02 · place · date"). It is the page's seal.
+const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
 ---
 
 <section class="hero" data-hero>
@@ -32,7 +34,7 @@ const Heading = headingLevel;
   </div>
 
   <div class="hero__body">
-    <p class="hero__overline">{overline.split('№').map((part, i) => (i === 0 ? part : <><span class="numero">№</span>{part}</>))}</p>
+    <p class="hero__overline">{numbered ? <><span class="seal"><span class="numero">№</span> {numbered[1]}</span>{numbered[2]}</> : overline}</p>
     <Heading class="hero__title">{title}</Heading>
     {summary && <p class="hero__summary">{summary}</p>}
 
@@ -119,10 +121,6 @@ const Heading = headingLevel;
     font-size: 13px;
     letter-spacing: 0.06em;
     color: var(--color-text);
-  }
-
-  .hero__facts dd.is-measured {
-    color: var(--color-accent);
   }
 
   /* A text link, not a button. */

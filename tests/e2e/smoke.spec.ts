@@ -199,6 +199,18 @@ test.describe('smoke tests', () => {
     await expect.poll(background).toBe('rgb(16, 15, 15)');
   });
 
+  for (const route of ['/', '/work/nomads/']) {
+    test(`${route} carries one seal: the story number in kiln, or red-300 on ink`, async ({ page }) => {
+      await page.goto(route);
+      const seal = page.locator('.seal');
+      await expect(seal).toHaveCount(1);
+      await expect(seal).toContainText('№');
+      await expect(seal).toHaveCSS('color', 'rgb(175, 48, 41)');
+      await page.evaluate(() => { document.documentElement.dataset.theme = 'ink'; });
+      await expect(seal).toHaveCSS('color', 'rgb(232, 112, 95)');
+    });
+  }
+
   test('the theme toggle remembers ink across a reload and a navigation', async ({ page }) => {
     const theme = () => page.evaluate(() => document.documentElement.dataset.theme ?? 'paper');
     const toggle = page.locator('[data-theme-toggle]:visible').first();

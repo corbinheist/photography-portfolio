@@ -71,7 +71,7 @@ html:has([data-story]) {
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-text-muted);
 }
 
 .story-body > h3 {
@@ -159,7 +159,7 @@ html:has([data-story]) {
 }
 
 .story-caption__num {
-  color: var(--color-accent);
+  color: var(--color-text-muted);
 }
 
 .story-caption__exif {
@@ -219,12 +219,16 @@ html:has([data-story]) {
   line-height: 1.3;
 }
 
+.story-end__ask a:hover {
+  color: var(--color-accent);
+}
+
 .story-end__ask a {
   display: block;
   margin-top: var(--space-xs);
   font-family: var(--font-mono);
   font-size: 15px;
-  color: var(--color-accent);
+  color: var(--color-text);
 }
 
 .story-next {
