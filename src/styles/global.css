@@ -23,11 +23,10 @@ html {
 body {
   min-height: 100dvh;
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  font-size: var(--type-body);
   line-height: 1.6;
   color: var(--color-text);
   background-color: var(--color-bg);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 img,
@@ -68,7 +67,7 @@ ol {
 :root {
   /* ═══════════════════════════════════════
      FLEXOKI BASE
-     Warm paper-to-black scale by Steph Ango
+     Warm paper-to-black scale by Steph Ango. Each name holds the Flexoki value of the same name.
      ═══════════════════════════════════════ */
   --fx-paper:    #FFFCF0;
   --fx-black:    #100F0F;
@@ -78,12 +77,13 @@ ol {
   --fx-base-200: #CECDC3;
   --fx-base-300: #B7B5AC;
   --fx-base-400: #9F9D96;
-  --fx-base-500: #6F6E69;
-  --fx-base-600: #575653;
-  --fx-base-700: #403E3C;
-  --fx-base-800: #343331;
-  --fx-base-850: #282726;
-  --fx-base-900: #1C1B1A;
+  --fx-base-500: #878580;
+  --fx-base-600: #6F6E69;
+  --fx-base-700: #575653;
+  --fx-base-800: #403E3C;
+  --fx-base-850: #343331;
+  --fx-base-900: #282726;
+  --fx-base-950: #1C1B1A;
 
   /* ═══════════════════════════════════════
      HEIST STUDIO PALETTE
@@ -112,40 +112,39 @@ ol {
   --hs-kiln-light: #D14D41;
 
   /* ═══════════════════════════════════════
-     SEMANTIC TOKENS · DARK (DEFAULT)
+     SEMANTIC TOKENS · PAPER (DEFAULT)
+     The page is uncoated stock and the photographs are plates on it. Never pure white.
      ═══════════════════════════════════════ */
-  --color-bg:          var(--fx-black);
-  --color-surface:     var(--fx-base-900);
-  --color-elevated:    var(--fx-base-850);
-  --color-surface-alt: var(--fx-base-800);
+  --color-bg:          var(--fx-paper);
+  --color-surface:     var(--fx-base-50);
+  --color-elevated:    var(--fx-base-50);
+  --color-surface-alt: var(--fx-base-100);
 
-  --color-text:       var(--fx-base-100);
-  --color-text-muted: var(--fx-base-300);
-  --color-text-faint: var(--fx-base-400);
+  --color-text:       var(--fx-base-950);
+  --color-text-muted: var(--fx-base-700);
+  --color-text-faint: var(--fx-base-600);
 
-  --color-accent:       var(--hs-moss);
-  --color-accent-hover: var(--hs-sage);
-  --color-accent-deep:  var(--hs-forest);
-  --color-accent-muted: var(--hs-bottle);
-  --color-on-accent:    var(--fx-black);
+  --color-accent:       var(--hs-bottle);
+  --color-accent-hover: var(--hs-racing);
+  --color-accent-deep:  var(--hs-racing);
+  --color-accent-muted: var(--hs-forest);
+  --color-on-accent:    var(--fx-paper);
 
-  --color-warm:       var(--hs-rust);
-  --color-warm-deep:  var(--hs-oxide);
-  --color-warm-light: var(--hs-ember);
+  /* The seal (hanko): the one accent at rest, the story number. Kiln: 6.2:1 on paper. */
+  --color-seal: var(--hs-kiln);
 
-  --color-border:        var(--fx-base-700);
-  --color-border-subtle: var(--fx-base-850);
+  --color-warm:       var(--hs-oxide);
+  --color-warm-deep:  var(--hs-saddle);
+  --color-warm-light: var(--hs-rust);
 
-  /* Navigation glass (the rail and the bar) and its text. */
-  --glass-bg: rgb(16 15 15 / 0.6);
-  --story-bar-h: 44px;
-  --glass-bg-strong: rgb(16 15 15 / 0.94);
-  --glass-line: rgb(255 252 240 / 0.1);
-  --glass-line-strong: rgb(255 252 240 / 0.28);
-  --nav-ink: var(--fx-paper);
-  --nav-ink-muted: rgb(255 252 240 / 0.82);
-  --nav-ink-faint: rgb(255 252 240 / 0.62);
-  color-scheme: dark;
+  --color-border:        var(--fx-base-200);
+  --color-border-subtle: var(--fx-base-100);
+
+  /* Navigation text. */
+  --nav-ink: var(--fx-base-950);
+  --nav-ink-muted: var(--fx-base-800);
+  --nav-ink-faint: var(--fx-base-700);
+  color-scheme: light;
 
   /* Backward-compatible aliases */
   --color-interactive:       var(--color-accent);
@@ -154,16 +153,13 @@ ol {
   /* Typography — fluid clamp scales */
   --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-heading: 'Vollkorn', serif;
-  --font-mono: 'IBM Plex Mono', monospace;
 
-  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
-  --text-sm: clamp(0.8125rem, 0.75rem + 0.3vw, 0.9375rem);
-  --text-base: clamp(0.9375rem, 0.875rem + 0.3vw, 1.0625rem);
-  --text-lg: clamp(1.125rem, 1rem + 0.5vw, 1.3125rem);
-  --text-xl: clamp(1.375rem, 1.15rem + 1vw, 1.75rem);
-  --text-2xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
-  --text-3xl: clamp(2.25rem, 1.6rem + 2.5vw, 3.75rem);
-  --text-4xl: clamp(3rem, 2rem + 4vw, 6rem);
+  /* Four sizes: Vollkorn titles, Vollkorn act headings, Plex Sans body, and Plex Sans marginalia.
+     Hierarchy comes from position and space, not from more sizes. */
+  --type-title: clamp(2.5rem, 1.6rem + 3.5vw, 4.5rem);
+  --type-heading: clamp(1.6rem, 1.3rem + 1.2vw, 2.4rem);
+  --type-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --type-margin: 0.8125rem;
 
   /* Spacing */
   --space-xs: clamp(0.25rem, 0.2rem + 0.25vw, 0.5rem);
@@ -173,6 +169,9 @@ ol {
   --space-xl: clamp(2rem, 1.5rem + 2.5vw, 4rem);
   --space-2xl: clamp(3rem, 2rem + 4vw, 6rem);
   --space-3xl: clamp(4rem, 3rem + 5vw, 8rem);
+
+  /* Ma: the empty field between acts. Used only at an act break, never inside an act. */
+  --ma: 100svh;
 
   /* Layout */
   --container-max: 1440px;
@@ -196,44 +195,41 @@ ol {
   --z-lightbox: 300;
 }
 
-/* Light theme */
-/* Light theme: follows the visitor's system setting. No script, so no flash. */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-bg:          var(--fx-paper);
-    --color-surface:     var(--fx-base-50);
-    --color-elevated:    #fff;
-    --color-surface-alt: var(--fx-base-100);
+/* Ink theme: an opt-in choice on <html data-theme="ink">. The site does not follow the system
+   setting; paper is the default for every visitor. */
+:root[data-theme='ink'] {
+  --color-bg:          var(--fx-black);
+  --color-surface:     var(--fx-base-950);
+  --color-elevated:    var(--fx-base-900);
+  --color-surface-alt: var(--fx-base-850);
 
-    --color-text:       var(--fx-base-900);
-    --color-text-muted: var(--fx-base-600);
-    --color-text-faint: var(--fx-base-500);
+  --color-text:       var(--fx-base-100);
+  --color-text-muted: var(--fx-base-300);
+  --color-text-faint: var(--fx-base-400);
 
-    --color-accent:       var(--hs-bottle);
-    --color-accent-hover: var(--hs-racing);
-    --color-accent-deep:  var(--hs-racing);
-    --color-accent-muted: var(--hs-forest);
-    --color-on-accent:    var(--fx-paper);
+  --color-accent:       var(--hs-moss);
+  --color-accent-hover: var(--hs-sage);
+  --color-accent-deep:  var(--hs-forest);
+  --color-accent-muted: var(--hs-bottle);
+  --color-on-accent:    var(--fx-black);
 
-    --color-warm:       var(--hs-oxide);
-    --color-warm-deep:  var(--hs-saddle);
-    --color-warm-light: var(--hs-rust);
+  /* Kiln measures 2.99:1 on ink; Flexoki red-300 measures 6.3:1. */
+  --color-seal: #E8705F;
 
-    --color-border:        var(--fx-base-200);
-    --color-border-subtle: var(--fx-base-100);
+  --color-warm:       var(--hs-rust);
+  --color-warm-deep:  var(--hs-oxide);
+  --color-warm-light: var(--hs-ember);
 
-    --color-interactive:       var(--color-accent);
-    --color-interactive-hover: var(--color-accent-hover);
+  --color-border:        var(--fx-base-800);
+  --color-border-subtle: var(--fx-base-900);
 
-    --glass-bg: rgb(255 252 240 / 0.74);
-    --glass-bg-strong: rgb(255 252 240 / 0.96);
-    --glass-line: rgb(16 15 15 / 0.1);
-    --glass-line-strong: rgb(16 15 15 / 0.28);
-    --nav-ink: var(--fx-base-900);
-    --nav-ink-muted: var(--fx-base-700);
-    --nav-ink-faint: var(--fx-base-600);
-    color-scheme: light;
-  }
+  --color-interactive:       var(--color-accent);
+  --color-interactive-hover: var(--color-accent-hover);
+
+  --nav-ink: var(--fx-paper);
+  --nav-ink-muted: rgb(255 252 240 / 0.82);
+  --nav-ink-faint: rgb(255 252 240 / 0.62);
+  color-scheme: dark;
 }
 
 /* ==========================================
@@ -252,10 +248,10 @@ h6 {
   letter-spacing: -0.02em;
 }
 
-h1 { font-size: var(--text-4xl); }
-h2 { font-size: var(--text-3xl); }
-h3 { font-size: var(--text-2xl); }
-h4 { font-size: var(--text-xl); }
+h1 { font-size: var(--type-title); }
+h2 { font-size: var(--type-title); }
+h3 { font-size: var(--type-heading); }
+h4 { font-size: var(--type-heading); }
 
 p {
   max-width: 65ch;
@@ -316,10 +312,7 @@ p {
   border-width: 0;
 }
 
-/* The numero sign. A monospace face fits "№" into one character cell, which compresses it, so the
-   sign is set in the proportional body face inside mono labels. */
-.numero {
-  font-family: var(--font-body);
-  font-weight: 400;
-  letter-spacing: 0;
+/* The seal: the story number, the only accent at rest on a page. Green is for focus and hover. */
+.seal {
+  color: var(--color-seal);
 }

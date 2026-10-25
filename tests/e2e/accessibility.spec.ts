@@ -20,16 +20,28 @@ async function audit(page: Page) {
 
 test.describe('accessibility', () => {
   for (const route of routes) {
-    for (const colorScheme of ['dark', 'light'] as const) {
+    for (const theme of ['paper', 'ink'] as const) {
       for (const [device, width, height] of [['desktop', 1440, 900], ['mobile', 390, 844]] as const) {
-        test(`${route} has no automated WCAG A/AA violations on ${device} in ${colorScheme}`, async ({ page }) => {
-          await page.emulateMedia({ colorScheme });
+        test(`${route} has no automated WCAG A/AA violations on ${device} in ${theme}`, async ({ page }) => {
+          // Set the theme before the first paint, as a stored choice is applied, so no colour transition runs.
+          if (theme === 'ink') await page.addInitScript(() => { document.documentElement.dataset.theme = 'ink'; });
           await page.setViewportSize({ width, height });
           await page.goto(route);
           await audit(page);
         });
       }
     }
+  }
+
+  for (const theme of ['paper', 'ink'] as const) {
+    test(`the open lightbox has no automated WCAG A/AA violations in ${theme}`, async ({ page }) => {
+      if (theme === 'ink') await page.addInitScript(() => { document.documentElement.dataset.theme = 'ink'; });
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto('/work/nomads/');
+      await page.locator('.story-body [data-frame="3"] .photo-wrap').click();
+      await expect(page.locator('[data-lightbox]')).toBeVisible();
+      await audit(page);
+    });
   }
 
   test('stories disable snap for reduced motion', async ({ page }) => {

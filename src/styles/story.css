@@ -18,103 +18,6 @@ html:has([data-story]) {
   scroll-snap-align: start;
 }
 
-/* ── Sticky story bar: appears once the title card has scrolled away ── */
-
-.story-bar {
-  position: fixed;
-  /* Above the navigation, whose glass extends behind this bar in the top-bar layout. */
-  z-index: 51;
-  top: var(--header-h);
-  left: var(--rail-offset);
-  right: 0;
-  height: var(--story-bar-h);
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: var(--space-md);
-  padding-inline: var(--container-padding);
-  /* The same glass as the navigation, so the bar and the navigation read as one panel. */
-  background: var(--glass-bg);
-  border-bottom: 1px solid var(--color-border-subtle);
-  backdrop-filter: blur(18px) saturate(1.15);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-  animation: bar-in linear both;
-  animation-timeline: scroll(root);
-  animation-range: 70svh 95svh;
-}
-
-/* In the top-bar layout the navigation's glass extends behind the story bar (SiteNav.astro), so
-   the bar draws no glass of its own. Beside the rail, the bar has its own glass. */
-html[data-nav='bar'] .story-bar {
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-top: 1px solid var(--glass-line);
-}
-
-/* An open Stories menu covers the bar. */
-html:has(.sitenav details[open]) .story-bar {
-  z-index: 40;
-}
-
-@media (max-width: 1023px) {
-  .story-bar {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-top: 1px solid var(--glass-line);
-  }
-}
-
-@keyframes bar-in {
-  from { opacity: 0; translate: 0 -8px; visibility: hidden; }
-  to { opacity: 1; translate: 0 0; visibility: visible; }
-}
-
-.story-bar a {
-  color: var(--color-text-muted);
-}
-
-.story-bar a:hover {
-  color: var(--color-text);
-}
-
-.story-bar__title {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-align: center;
-  color: var(--color-text-muted);
-}
-
-.story-bar__chapter {
-  color: var(--color-text);
-}
-
-.story-bar__frame {
-  color: var(--color-text);
-}
-
-.story-bar__pct {
-  color: var(--color-accent);
-}
-
-.story-bar__progress {
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  height: 2px;
-  width: 100%;
-  background: var(--color-accent);
-  transform-origin: left;
-  transform: scaleX(var(--progress, 0));
-}
-
 /* ── Body: one text column, figures at three sizes ── */
 
 .story-body {
@@ -124,7 +27,7 @@ html:has(.sitenav details[open]) .story-bar {
 
 .story-body > *,
 .story-end {
-  width: min(41rem, 100% - 2 * var(--container-padding));
+  width: min(32.5rem, 100% - 2 * var(--container-padding));
   margin-inline: auto;
 }
 
@@ -132,7 +35,7 @@ html:has(.sitenav details[open]) .story-bar {
 .story-body > ul,
 .story-body > ol {
   margin-bottom: var(--space-md);
-  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  font-size: var(--type-body);
   line-height: 1.7;
   color: var(--color-text);
 }
@@ -148,34 +51,34 @@ html:has(.sitenav details[open]) .story-bar {
   margin-top: 0;
 }
 
-/* A chapter: a long pause, a mono number, a Vollkorn title. */
+/* An act: one empty screen (ma), then a small numeral and the title. The cut is hard: no divider,
+   no animation. Inside an act the blocks keep their ordinary gap. The first act follows the hero. */
 .story-body > h2 {
   counter-increment: chapter;
-  margin-block: clamp(6rem, 12vw, 10rem) var(--space-lg);
+  margin-block: var(--ma) var(--space-lg);
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  font-size: var(--type-heading);
   line-height: 1.08;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
 .story-body > h2::before {
-  content: 'Chapter ' counter(chapter, decimal-leading-zero);
+  content: counter(chapter, upper-roman);
   display: block;
-  margin-bottom: var(--space-sm);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-accent);
+  margin-bottom: var(--space-md);
+  font-family: var(--font-heading);
+  font-size: var(--type-body);
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
 }
 
 .story-body > h3 {
   margin-block: var(--space-2xl) var(--space-sm);
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  font-size: var(--type-heading);
   line-height: 1.15;
 }
 
@@ -195,7 +98,7 @@ html:has(.sitenav details[open]) .story-bar {
   margin-inline: auto;
 }
 
-.story-figure--wide img {
+.story-body .story-figure--wide img {
   width: min(100%, 90svh * var(--ratio));
 }
 
@@ -221,8 +124,50 @@ html:has(.sitenav details[open]) .story-bar {
   width: min(720px, 100% - 2 * var(--container-padding));
 }
 
-.story-figure--inset img {
+/* .story-body raises the specificity above Photo's scoped width: 100%, so the height cap applies. */
+.story-body .story-figure--inset img {
   width: min(100%, 80svh * var(--ratio));
+}
+
+/* From 900px an inset stands off-centre: one twelfth of the page in from the left edge, then from
+   the right, in turn. The caption hangs beside the plate, in the empty side, level with its foot.
+   The order comes from the page, never from the MDX. */
+@media (min-width: 900px) {
+  .story-body > .story-figure--inset {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-md);
+    width: calc(100% - 2 * var(--container-padding));
+    max-width: var(--container-max);
+    padding-inline: calc(100% / 12);
+  }
+
+  /* The wrapper is the plate: as wide as the photograph, at most half the row and 80svh high. */
+  .story-figure--inset .photo-wrap {
+    flex: none;
+    width: min(50%, 80svh * var(--ratio));
+    margin-inline: 0;
+  }
+
+  .story-body .story-figure--inset img {
+    width: 100%;
+    margin-inline: 0;
+  }
+
+  .story-figure--inset .story-caption {
+    flex-direction: column;
+    max-width: 16rem;
+    margin-top: 0;
+  }
+
+  .story-body > .story-figure--inset:nth-child(even of .story-figure--inset) {
+    flex-direction: row-reverse;
+  }
+
+  .story-body > .story-figure--inset:nth-child(even of .story-figure--inset) .story-caption {
+    align-items: flex-end;
+    text-align: right;
+  }
 }
 
 .story-body > .story-pair {
@@ -249,32 +194,18 @@ html:has(.sitenav details[open]) .story-bar {
   flex-wrap: wrap;
   gap: 0.3em 1.2em;
   margin-top: var(--space-sm);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-margin);
   color: var(--color-text-faint);
 }
 
 .story-caption__num {
-  color: var(--color-accent);
+  color: var(--color-text-muted);
 }
 
 .story-caption__exif {
   color: var(--color-text-faint);
   opacity: 0.75;
-}
-
-/* Photographs come up out of the dark as they enter. Subtle: the frame is already there. */
-@supports (animation-timeline: view()) {
-  .story-figure img {
-    animation: frame-up linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 40%;
-  }
-
-  @keyframes frame-up {
-    from { opacity: 0.4; }
-  }
 }
 
 /* ── Quote ── */
@@ -286,7 +217,7 @@ html:has(.sitenav details[open]) .story-bar {
 .story-quote blockquote {
   font-family: var(--font-heading);
   font-style: italic;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: var(--type-heading);
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
@@ -311,10 +242,8 @@ html:has(.sitenav details[open]) .story-bar {
 }
 
 .story-credits dt {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-margin);
   color: var(--color-text-faint);
 }
 
@@ -325,74 +254,66 @@ html:has(.sitenav details[open]) .story-bar {
 .story-end__ask {
   margin-top: var(--space-xl);
   font-family: var(--font-heading);
-  font-size: var(--text-xl);
+  font-size: var(--type-heading);
   line-height: 1.3;
+}
+
+.story-end__ask a:hover {
+  color: var(--color-accent);
 }
 
 .story-end__ask a {
   display: block;
   margin-top: var(--space-xs);
-  font-family: var(--font-mono);
-  font-size: 15px;
-  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-margin);
+  color: var(--color-text);
 }
 
+/* The next story: a plate on paper, the text under it. No text on the photograph. */
 .story-next {
-  position: relative;
   display: block;
-  height: 72svh;
-  min-height: 420px;
-  overflow: hidden;
+  width: min(100% - 2 * var(--container-padding), var(--container-max));
+  margin: var(--space-2xl) auto 0;
 }
 
-.story-next .photo-wrap,
-.story-next picture,
+.story-next .photo-wrap {
+  width: min(100%, 70svh * var(--ratio));
+}
+
+.story-body ~ .story-next img,
 .story-next img {
-  display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: scale 1.2s var(--ease-out-expo);
-}
-
-.story-next:hover img {
-  scale: 1.02;
-}
-
-.story-next::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top right, rgb(16 15 15 / 0.88), rgb(16 15 15 / 0.3) 50%, transparent 75%);
+  height: auto;
 }
 
 .story-next__body {
-  position: absolute;
-  z-index: 1;
-  left: calc(var(--rail-offset) + var(--container-padding));
-  bottom: clamp(2rem, 6svh, 4rem);
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  max-width: min(760px, 80vw);
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+  max-width: 32.5rem;
 }
 
-/* Set on the photograph's dark scrim, so the label stays paper in both themes. */
-.story-next__body .mono-label {
-  color: rgb(255 252 240 / 0.72);
+.story-next__body .label {
+  color: var(--color-text-muted);
 }
 
 .story-next__title {
   font-family: var(--font-heading);
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
-  line-height: 0.98;
+  font-size: var(--type-heading);
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  color: var(--fx-paper);
+  color: var(--color-text);
+  transition: color 160ms ease;
+}
+
+.story-next:hover .story-next__title {
+  color: var(--color-accent);
 }
 
 .story-next__summary {
-  max-width: 48ch;
-  color: rgb(255 252 240 / 0.82);
+  color: var(--color-text-muted);
 }
 
 .story-pager {
@@ -400,10 +321,8 @@ html:has(.sitenav details[open]) .story-bar {
   justify-content: space-between;
   gap: var(--space-md);
   padding: var(--space-lg) var(--container-padding);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-margin);
 }
 
 .story-pager a {
@@ -415,32 +334,8 @@ html:has(.sitenav details[open]) .story-bar {
 }
 
 @media (max-width: 767px) {
-  .story-bar {
-    grid-template-columns: auto auto;
-    justify-content: space-between;
-  }
-
-  .story-bar__title,
-  .story-bar__pct {
-    display: none;
-  }
-
   .story-credits div {
     grid-template-columns: 1fr;
     gap: 0.2em;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .story-bar {
-    animation: none;
-  }
-
-  .story-figure img {
-    animation: none;
-  }
-
-  .story-next img {
-    transition: none;
   }
 }

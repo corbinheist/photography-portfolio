@@ -25,7 +25,7 @@ const pages = [
 ---
 
 <!--
-  One navigation, two layouts. Desktop: a glass rail on the left (data-nav="rail") that the
+  One navigation, two layouts. Desktop: a rail on the left (data-nav="rail") that the
   visitor can minimise into a top bar (data-nav="bar"). Phone and tablet: always the bar.
 -->
 <nav class="sitenav" aria-label="Site">
@@ -91,6 +91,7 @@ const pages = [
         {pages.map((page) => (
           <li><a href={page.href} rel={page.external ? 'noopener' : undefined}>{page.label}{page.external && <span aria-hidden="true"> ↗</span>}</a></li>
         ))}
+        <li><button class="sitenav__theme" type="button" data-theme-toggle aria-pressed="false">Ink</button></li>
       </ul>
     </div>
   </details>
@@ -103,6 +104,7 @@ const pages = [
         </a>
       </li>
     ))}
+    <li><button class="sitenav__theme" type="button" data-theme-toggle aria-pressed="false">Ink</button></li>
   </ul>
 
   <a class="sitenav__email" href="mailto:corbin@heist.studio">corbin@heist.studio</a>
@@ -146,6 +148,31 @@ const pages = [
   });
 
   label();
+
+  // Paper or ink. The choice is stored per viewer; the head script in SiteLayout applies it before
+  // the first paint. Each button names the theme it switches to.
+  const themeToggles = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+
+  function themeLabel() {
+    const ink = root.dataset.theme === 'ink';
+    for (const button of themeToggles) {
+      button.textContent = ink ? 'Paper' : 'Ink';
+      button.setAttribute('aria-pressed', String(ink));
+      button.setAttribute('aria-label', ink ? 'Switch to the paper theme' : 'Switch to the ink theme');
+    }
+  }
+
+  for (const button of themeToggles) {
+    button.addEventListener('click', () => {
+      const ink = root.dataset.theme !== 'ink';
+      if (ink) root.dataset.theme = 'ink';
+      else delete root.dataset.theme;
+      try { localStorage.setItem('theme', ink ? 'ink' : 'paper'); } catch { /* storage can be blocked; the toggle still works */ }
+      themeLabel();
+    });
+  }
+
+  themeLabel();
 </script>
 
 <style is:global>
@@ -175,8 +202,9 @@ const pages = [
 
   /* Layout variables. Phone and tablet: a 56px top bar. Desktop: the rail by default, or the bar. */
   :root {
-    /* Wide enough that the longest story title and place stay on one line (measured: 272px). */
-    --rail-w: 18rem;
+    /* Wide enough that the longest story title and place stay on one line. Measured with titles at
+       --type-body: "Nomads of Djebel Saghro" needs 25px more than an 18rem rail gives. */
+    --rail-w: 20rem;
     --bar-h: 56px;
     --header-h: var(--bar-h);
     --rail-offset: 0px;
@@ -191,8 +219,7 @@ const pages = [
 
   /* During the rail and bar switch, only the navigation transitions (see the toggle script). */
   html[data-nav-switching] .hero__media,
-  html[data-nav-switching] .ledger__thumb,
-  html[data-nav-switching] .more__thumb {
+  html[data-nav-switching] .plate__photo {
     view-transition-name: none !important;
   }
 
@@ -257,40 +284,32 @@ const pages = [
   }
 
   .sitenav {
-    background: var(--glass-bg);
-    backdrop-filter: blur(18px) saturate(1.15);
-    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    background: var(--color-bg);
   }
 
-  /* Glass: the photographs show through. On a story, in the top-bar layout, the bar grows down
-     behind the story bar as that bar appears (the same scroll range), so the two are one pane of
-     glass. A separate layer cannot do this: view-transition-name makes .sitenav a backdrop root,
-     so a child layer would blur only the navigation itself. */
   .wordmark {
     view-transition-name: wordmark;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
     font-family: var(--font-heading);
-    font-size: 18px;
-    letter-spacing: 0.08em;
+    font-size: var(--type-body);
     line-height: 1;
     color: var(--nav-ink);
   }
 
   .wordmark__accent {
-    color: var(--color-accent);
+    color: var(--nav-ink-muted);
   }
 
   .sitenav__label,
   .sitenav__num,
   .sitenav__place,
   .sitenav__pages a,
+  .sitenav__theme,
   .sitenav__email,
   .sitenav__menu summary {
-    font-family: var(--font-mono);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
+    font-variant-numeric: tabular-nums;
   }
 
   /* ── Bar (phone and tablet always; desktop when minimised) ── */
@@ -302,33 +321,11 @@ const pages = [
     align-items: center;
     gap: 1.5rem;
     padding-inline: var(--container-padding);
-    border-bottom: 1px solid var(--glass-line);
-  }
-
-  :global(html:has([data-story])) .sitenav {
-    animation: sitenav-extend linear both;
-    animation-timeline: scroll(root);
-    animation-range: 70svh 95svh;
-  }
-
-  /* The content keeps its place in the top --bar-h; the extra height is padding behind the story bar. */
-  @keyframes sitenav-extend {
-    to {
-      height: calc(var(--bar-h) + var(--story-bar-h));
-      padding-bottom: var(--story-bar-h);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :global(html:has([data-story])) .sitenav {
-      animation: none;
-      height: calc(var(--bar-h) + var(--story-bar-h));
-      padding-bottom: var(--story-bar-h);
-    }
+    border-bottom: 1px solid var(--color-border);
   }
 
   .sitenav .wordmark {
-    font-size: 15px;
+    font-size: var(--type-margin);
   }
 
   .sitenav__rail,
@@ -349,9 +346,9 @@ const pages = [
     gap: 0.6em;
     min-height: 40px;
     padding-inline: 0.9em;
-    font-size: 11px;
+    font-size: var(--type-margin);
     color: var(--nav-ink);
-    border: 1px solid var(--glass-line-strong);
+    border: 1px solid var(--color-border);
     cursor: pointer;
   }
 
@@ -360,7 +357,7 @@ const pages = [
   }
 
   .sitenav__menu[open] summary {
-    border-color: var(--color-accent);
+    border-color: var(--nav-ink);
   }
 
   .sitenav__caret {
@@ -378,8 +375,7 @@ const pages = [
     max-height: calc(100dvh - var(--bar-h));
     overflow-y: auto;
     padding: 0.5rem var(--container-padding) 1.5rem;
-    background: var(--glass-bg-strong);
-    backdrop-filter: blur(18px);
+    background: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -389,8 +385,8 @@ const pages = [
     display: flex;
     justify-content: space-between;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--glass-line);
-    font-size: 10px;
+    border-bottom: 1px solid var(--color-border);
+    font-size: var(--type-margin);
     color: var(--nav-ink-faint);
   }
 
@@ -412,7 +408,7 @@ const pages = [
   }
 
   .sitenav__stories li + li {
-    border-top: 1px solid var(--glass-line);
+    border-top: 1px solid var(--color-border);
   }
 
   .sitenav__stories a {
@@ -426,7 +422,7 @@ const pages = [
 
   .sitenav__num {
     padding-top: 0.25em;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--nav-ink-faint);
   }
 
@@ -438,14 +434,14 @@ const pages = [
 
   .sitenav__title {
     font-family: var(--font-heading);
-    font-size: 16px;
+    font-size: var(--type-body);
     line-height: 1.2;
     color: var(--nav-ink-muted);
     transition: color 160ms ease;
   }
 
   .sitenav__place {
-    font-size: 9.5px;
+    font-size: var(--type-margin);
     line-height: 1.4;
     color: var(--nav-ink-faint);
   }
@@ -456,21 +452,19 @@ const pages = [
   }
 
   .sitenav__stories a[aria-current='page'] {
-    border-left-color: var(--color-accent);
+    border-left-color: var(--nav-ink);
   }
 
   .sitenav__stories a[aria-current='page'] .sitenav__num {
-    color: var(--color-accent);
+    color: var(--nav-ink);
   }
 
   .sitenav__sublabel {
     margin-top: 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--glass-line);
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    border-bottom: 1px solid var(--color-border);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--type-margin);
     color: var(--nav-ink-faint);
   }
 
@@ -479,7 +473,7 @@ const pages = [
     padding: 0.45rem 0 0.45rem 0.6rem;
     border-left: 2px solid transparent;
     font-family: var(--font-heading);
-    font-size: 14px;
+    font-size: var(--type-margin);
     color: var(--nav-ink-muted);
     transition: color 160ms ease;
   }
@@ -490,20 +484,30 @@ const pages = [
   }
 
   .sitenav__more a[aria-current='page'] {
-    border-left-color: var(--color-accent);
+    border-left-color: var(--nav-ink);
   }
 
-  .sitenav__pages a {
+  .sitenav__pages a,
+  .sitenav__theme {
     display: block;
     padding-block: 0.45rem;
-    font-size: 11px;
+    font-size: var(--type-margin);
     color: var(--nav-ink-muted);
     transition: color 160ms ease;
   }
 
   .sitenav__pages a:hover,
-  .sitenav__pages a[aria-current='page'] {
+  .sitenav__pages a[aria-current='page'],
+  .sitenav__theme:hover {
     color: var(--nav-ink);
+  }
+
+  .sitenav__theme {
+    padding-inline: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: pointer;
   }
 
   .sitenav__pages--panel {
@@ -525,7 +529,7 @@ const pages = [
       width: 32px;
       height: 32px;
       flex-shrink: 0;
-      border: 1px solid var(--glass-line-strong);
+      border: 1px solid var(--color-border);
       background: transparent;
       color: var(--nav-ink);
       cursor: pointer;
@@ -585,18 +589,12 @@ const pages = [
       gap: 0;
       padding: 2rem 1.5rem 1.75rem;
       border-bottom: 0;
-      border-right: 1px solid var(--glass-line);
+      border-right: 1px solid var(--color-border);
       overflow-y: auto;
     }
 
-    /* The rail does not extend: the story bar sits beside it, with its own glass. */
-    :global(html:not([data-nav='bar']):has([data-story])) .sitenav {
-      animation: none;
-      padding-bottom: 1.75rem;
-    }
-
     :global(html:not([data-nav='bar'])) .sitenav .wordmark {
-      font-size: 18px;
+      font-size: var(--type-body);
     }
 
     :global(html:not([data-nav='bar'])) .sitenav__rail {
@@ -614,7 +612,7 @@ const pages = [
       gap: 0.15rem;
       margin-top: 2rem;
       padding-top: 1rem;
-      border-top: 1px solid var(--glass-line);
+      border-top: 1px solid var(--color-border);
     }
 
     :global(html:not([data-nav='bar'])) .sitenav__stories a,
@@ -626,9 +624,8 @@ const pages = [
       display: block;
       margin-top: auto;
       padding-top: 2rem;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.06em;
+      font-variant-numeric: tabular-nums;
+      font-size: var(--type-margin);
       color: var(--nav-ink-faint);
     }
 

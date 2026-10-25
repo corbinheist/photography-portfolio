@@ -1,0 +1,91 @@
+/**
+ * Lightbox: a click (or Enter/Space) on a numbered photograph opens it full bleed in a <dialog>.
+ * The side nudges, the arrow keys, and J/K move between frames; a click anywhere else, or Escape,
+ * closes it. The frames come from the page: every [data-frame] element in a story, or in any
+ * element marked [data-lightbox-scope] (the About page), ordered by frame number, one per number.
+ */
+export function initLightbox(): void {
+  const article = document.querySelector<HTMLElement>('[data-story], [data-lightbox-scope]');
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+  if (!article || !dialog) return;
+
+  const stage = dialog.querySelector<HTMLElement>('[data-lightbox-stage]')!;
+  const prev = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
+  const next = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
+  const close = dialog.querySelector<HTMLButtonElement>('[data-lightbox-close]')!;
+
+  // One entry per frame number. The cover can appear in the hero and in the body; the first wins.
+  const byNumber = new Map<number, HTMLElement>();
+  for (const el of article.querySelectorAll<HTMLElement>('[data-frame]')) {
+    const n = Number(el.dataset.frame);
+    if (n && !byNumber.has(n) && el.querySelector('picture')) byNumber.set(n, el);
+  }
+  const frames = [...byNumber.entries()].sort((a, b) => a[0] - b[0]).map(([n, el]) => ({ n, el }));
+  if (frames.length === 0) return;
+  const total = String(frames.length).padStart(2, '0');
+
+  let current = 0;
+
+  function show(index: number): void {
+    current = Math.min(frames.length - 1, Math.max(0, index));
+    const { n, el } = frames[current];
+
+    // Clone the frame's own <picture>, so the browser picks a source for the full screen.
+    const picture = el.querySelector('picture')!.cloneNode(true) as HTMLPictureElement;
+    for (const source of picture.querySelectorAll('source')) source.sizes = '100vw';
+    const img = picture.querySelector('img')!;
+    img.sizes = '100vw';
+    img.loading = 'eager';
+    img.removeAttribute('fetchpriority');
+    img.removeAttribute('style');
+    stage.replaceChildren(picture);
+
+    // No text on screen: the frame number and the alt text are the dialog's accessible name.
+    const number = String(n).padStart(2, '0');
+    dialog!.dataset.frame = String(n);
+    dialog!.setAttribute('aria-label', `Photograph ${number} of ${total}${img.alt ? `: ${img.alt}` : ''}`);
+    prev.hidden = current === 0;
+    next.hidden = current === frames.length - 1;
+  }
+
+  function open(index: number): void {
+    show(index);
+    if (!dialog!.open) dialog!.showModal();
+  }
+
+  // Each photograph opens its own frame: a click, or Enter/Space on the focused photograph.
+  frames.forEach(({ n, el }, index) => {
+    const target = el.querySelector<HTMLElement>('.photo-wrap, picture') ?? el;
+    target.dataset.lightboxOpen = '';
+    target.tabIndex = 0;
+    target.setAttribute('role', 'button');
+    target.setAttribute('aria-label', `Open photograph ${String(n).padStart(2, '0')} full screen`);
+    target.addEventListener('click', () => open(index));
+    target.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        open(index);
+      }
+    });
+  });
+
+  prev.addEventListener('click', () => show(current - 1));
+  next.addEventListener('click', () => show(current + 1));
+  close.addEventListener('click', () => dialog.close());
+
+  // A click anywhere but a nudge closes the view: the photograph, the field, the edges.
+  dialog.addEventListener('click', (event) => {
+    if ((event.target as HTMLElement).closest('.lightbox__nudge, .lightbox__close')) return;
+    dialog.close();
+  });
+
+  dialog.addEventListener('keydown', (event) => {
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
+    const step = event.key === 'ArrowRight' || event.key === 'j' ? 1 : event.key === 'ArrowLeft' || event.key === 'k' ? -1 : 0;
+    if (!step) return;
+    event.preventDefault();
+    show(current + step);
+  });
+
+  dialog.addEventListener('close', () => stage.replaceChildren());
+}

@@ -12,28 +12,31 @@ interface Props {
   type?: 'website' | 'article';
   noindex?: boolean;
   location?: string;
+  /** The desktop navigation before the visitor chooses: the rail, or the top bar. Stories start with the bar, so the photographs have the full width. */
+  navDefault?: 'rail' | 'bar';
 }
 
-const { title, description, image, type, noindex, location } = Astro.props;
+const { title, description, image, type, noindex, location, navDefault = 'rail' } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" data-nav="rail">
+<html lang="en" data-nav={navDefault}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="light" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
       rel="stylesheet"
     />
-    <!-- Apply the visitor's navigation choice (rail or bar) before the first paint. -->
+    <!-- Apply the visitor's navigation choice (rail or bar) and theme choice (paper or ink) before the first paint. -->
     <script is:inline>
-      try { if (localStorage.getItem('nav') === 'bar') document.documentElement.dataset.nav = 'bar'; } catch (e) {}
+      try { var nav = localStorage.getItem('nav'); if (nav === 'bar' || nav === 'rail') document.documentElement.dataset.nav = nav; } catch (e) {}
+      try { if (localStorage.getItem('theme') === 'ink') document.documentElement.dataset.theme = 'ink'; } catch (e) {}
     </script>
     <slot name="head" />
     <SEO title={title} description={description} image={image} type={type} noindex={noindex} location={location} />
@@ -53,7 +56,7 @@ const { title, description, image, type, noindex, location } = Astro.props;
 
 <style is:global>
   /* The layout variables (--rail-offset, --header-h) live in SiteNav. The content is padded clear of
-     the rail; full-bleed photographs extend under the glass with .bleed. */
+     the rail; full-bleed photographs extend under the rail with .bleed. */
   .site-content {
     padding-left: var(--rail-offset);
   }
@@ -95,8 +98,8 @@ const { title, description, image, type, noindex, location } = Astro.props;
     padding: 0.6em 1em;
     background: var(--fx-paper);
     color: var(--fx-black);
-    font-family: var(--font-mono);
-    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    font-size: var(--type-margin);
     transform: translateY(-200%);
   }
 
@@ -117,11 +120,9 @@ const { title, description, image, type, noindex, location } = Astro.props;
     border: 0;
   }
 
-  .mono-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+  .label {
+    font-variant-numeric: tabular-nums;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
   }
 

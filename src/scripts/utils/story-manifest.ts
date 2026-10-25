@@ -76,6 +76,20 @@ export function extractImageIds(mdx: string): string[] {
   return ids;
 }
 
+/** Full-bleed photographs in a story body. One is the limit (Act II); the hero is the other. */
+export const MAX_FULL_BLEEDS = 1;
+
+/** Find every image id that the MDX body sets edge to edge (`<Image size="full">`). */
+export function fullBleedIds(mdx: string): string[] {
+  const ids: string[] = [];
+  for (const match of mdx.matchAll(/<Image\b[^>]*>/g)) {
+    if (!/\bsize\s*=\s*(?:"full"|'full'|\{\s*["']full["']\s*\})/.test(match[0])) continue;
+    const id = match[0].match(/\bid\s*=\s*(?:"([^"]*)"|'([^']*)'|\{\s*["']([^"']*)["']\s*\})/);
+    if (id) ids.push(id[1] ?? id[2] ?? id[3]);
+  }
+  return ids;
+}
+
 /** Split an MDX file into its YAML frontmatter object and its body. */
 export function splitFrontmatter(mdx: string): { data: Record<string, unknown>; body: string } {
   const match = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/.exec(mdx);
@@ -91,8 +105,12 @@ export function validateStory(slug: string, frontmatter: Record<string, unknown>
   }
   const cover = frontmatter.cover;
   if (typeof cover !== 'string' || !manifest.has(cover)) problems.push(`${slug}: cover "${String(cover)}" is not in the manifest`);
+  const seen = new Set<string>();
   for (const id of extractImageIds(body)) {
     if (!manifest.has(id)) problems.push(`${slug}: image id "${id}" is not in the manifest`);
+    // A repeat gives one photograph two frame numbers, so the count and the sequence go wrong.
+    if (seen.has(id)) problems.push(`${slug}: image id "${id}" appears more than once`);
+    seen.add(id);
   }
   return problems;
 }

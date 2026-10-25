@@ -2,81 +2,59 @@
 import Photo from '@components/photo/Photo.astro';
 import type { StoryPhoto } from '@scripts/utils/story-manifest';
 
-interface Fact {
-  label: string;
-  value: string;
-  /** A measured value (coordinates, counts) renders in the accent colour. */
-  measured?: boolean;
-}
-
 interface Props {
   photo: StoryPhoto;
   title: string;
   /** Optional: the homepage hero shows only the title and the call to action. */
   summary?: string;
-  overline: string;
-  facts?: Fact[];
-  chapters?: { slug: string; text: string }[];
+  /** The story number ("№ 02"), the page's seal. The homepage passes its own line. */
+  overline?: string;
+  /** Coordinates and elevation, set vertically on the plate edge from 900px. */
+  coords?: string;
+  /** At most two short marginal lines in the text field: the place, then the month and year. */
+  margin?: string[];
   cta?: { href: string; label: string; ariaLabel?: string };
   /** Shared with the index thumbnail so the cover grows into the hero on navigation. */
   transitionName?: string;
   headingLevel?: 'h1' | 'h2';
+  /** The cover's frame number in a story; the lightbox opens it in sequence. */
+  frame?: number;
+  /** Edge to edge across the content area, filling the first screen (the homepage). */
+  bleed?: boolean;
 }
 
-const { photo, title, summary, overline, facts = [], chapters = [], cta, transitionName, headingLevel = 'h1' } = Astro.props;
+const { photo, title, summary, overline, coords, margin = [], cta, transitionName, headingLevel = 'h1', frame, bleed = false } = Astro.props;
 const Heading = headingLevel;
+// The story number leads the overline ("№ 02 · place · date"). It is the page's seal.
+const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
 ---
 
-<section class:list={['hero bleed', { 'hero--chapters': chapters.length > 0 }]} data-hero>
-  <div class="hero__media" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>
-    <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="100vw" loading="eager" fetchpriority="high" />
+<section class:list={['hero', { 'hero--bleed': bleed }]} data-hero>
+  <div class="hero__media" data-frame={frame} style={`--ratio: ${photo.width / photo.height}${transitionName ? `; view-transition-name: ${transitionName}` : ''}`}>
+    <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 899px) 100vw, 90vw" loading="eager" fetchpriority="high" />
+    {coords && <p class="hero__coords tabular">{coords}</p>}
   </div>
 
   <div class="hero__body">
-    <p class="hero__overline">{overline.split('№').map((part, i) => (i === 0 ? part : <><span class="numero">№</span>{part}</>))}</p>
+    {overline && <p class="hero__overline">{numbered ? <><span class="seal">№ {numbered[1]}</span>{numbered[2]}</> : overline}</p>}
     <Heading class="hero__title">{title}</Heading>
     {summary && <p class="hero__summary">{summary}</p>}
 
-    {facts.length > 0 && (
-      <dl class="hero__facts">
-        {facts.map((fact) => (
-          <div>
-            <dt>{fact.label}</dt>
-            <dd class:list={['tabular', { 'is-measured': fact.measured }]}>{fact.value}</dd>
-          </div>
-        ))}
-      </dl>
+    {margin.length > 0 && (
+      <p class="hero__margin">{margin.map((line) => <span>{line}</span>)}</p>
     )}
 
     {cta && <a class="hero__cta" href={cta.href} aria-label={cta.ariaLabel}>{cta.label} <span aria-hidden="true">→</span></a>}
   </div>
-
-  {chapters.length > 0 && (
-    <nav class="hero__chapters" aria-label="Chapters">
-      <ol>
-        {chapters.map((chapter, index) => (
-          <li><a href={`#${chapter.slug}`}><span class="tabular">{String(index + 1).padStart(2, '0')}</span> {chapter.text}</a></li>
-        ))}
-      </ol>
-    </nav>
-  )}
-
-  {!cta && <a class="hero__begin" href="#story-body">Begin <span aria-hidden="true">↓</span></a>}
 </section>
 
 <style>
-  /* Text colours follow the context: on phones the title sits on the page (theme ink);
-     on desktop it sits on the photograph's dark scrim (paper), in both themes. */
+  /* One plate on paper, as large as the first screen allows, never cropped. The text never sits on
+     the photograph: it follows the plate. From 900px the plate fills the first screen, set to the
+     right with the coordinates down its edge, and the text starts under it on the left. */
   .hero {
-    position: relative;
+    padding: calc(var(--header-h) + var(--space-lg)) var(--container-padding) var(--space-2xl);
     background: var(--color-bg);
-    --hero-ink: var(--color-text);
-    --hero-ink-soft: var(--color-text);
-    --hero-ink-muted: var(--color-text-muted);
-    --hero-ink-faint: var(--color-text-faint);
-    --hero-line: var(--color-border);
-    --hero-line-strong: var(--color-border);
-    --hero-accent: var(--color-accent);
   }
 
   .hero__media :global(.photo-wrap),
@@ -85,242 +63,174 @@ const Heading = headingLevel;
   }
 
   .hero__overline,
-  .hero__facts dt,
-  .hero__cta,
-  .hero__begin,
-  .hero__chapters {
-    font-family: var(--font-mono);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+  .hero__cta {
+    font-variant-numeric: tabular-nums;
   }
 
   .hero__overline {
-    font-size: 12px;
-    color: var(--hero-ink-muted);
+    font-size: var(--type-margin);
+    color: var(--color-text-muted);
   }
 
   .hero__title {
     margin-top: 0.35em;
     font-family: var(--font-heading);
     font-weight: 400;
-    font-size: clamp(2.75rem, 7vw, 6.5rem);
-    line-height: 0.95;
+    font-size: var(--type-title);
+    line-height: 0.98;
     letter-spacing: -0.02em;
-    color: var(--hero-ink);
+    color: var(--color-text);
     max-width: 13ch;
     text-wrap: balance;
   }
 
   .hero__summary {
     margin-top: var(--space-md);
-    max-width: 72ch;
+    max-width: 40ch;
     text-wrap: pretty;
-    font-size: var(--text-lg);
+    font-size: var(--type-body);
     font-weight: 300;
     line-height: 1.5;
-    color: var(--hero-ink-soft);
+    color: var(--color-text);
   }
 
-  .hero__facts {
+  /* Marginalia: small, muted, at most three lines on the first screen. */
+  .hero__margin,
+  .hero__coords {
+    font-size: var(--type-margin);
+    line-height: 1.5;
+    color: var(--color-text-muted);
+  }
+
+  .hero__margin {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm) clamp(1.5rem, 3vw, 3rem);
+    flex-direction: column;
     margin-top: var(--space-lg);
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--hero-line);
   }
 
-  .hero__facts dt {
-    font-size: 10px;
-    color: var(--hero-ink-faint);
+  .hero__coords {
+    margin-top: var(--space-sm);
   }
 
-  .hero__facts dd {
-    margin-top: 0.4em;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    color: var(--hero-ink);
-  }
-
-  .hero__facts dd.is-measured {
-    color: var(--hero-accent);
-  }
-
+  /* A text link, not a button. */
   .hero__cta {
     display: inline-block;
     margin-top: var(--space-lg);
-    padding: 0.9em 1.3em;
-    font-size: 12px;
-    color: var(--hero-ink);
-    border: 1px solid var(--hero-line-strong);
+    font-size: var(--type-margin);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.3em;
     transition: border-color 160ms ease, color 160ms ease;
   }
 
   .hero__cta:hover {
-    border-color: var(--hero-accent);
-    color: var(--hero-accent);
-  }
-
-  .hero__chapters {
-    display: none;
-    font-size: 11px;
-  }
-
-  .hero__begin {
-    display: none;
-    font-size: 11px;
-    color: var(--color-text-faint);
-  }
-
-  /* Mobile: the whole photograph, then the title on black. No landscape is cropped. */
-  .hero__media {
-    padding-top: var(--header-h);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
   .hero__body {
-    padding: var(--space-lg) var(--container-padding) var(--space-xl);
+    margin-top: var(--space-lg);
   }
 
-  /* Desktop: the title is set on the photograph. */
-  @media (min-width: 768px) {
+  @media (min-width: 900px) {
     .hero {
-      --hero-ink: var(--fx-paper);
-      --hero-ink-soft: rgb(255 252 240 / 0.86);
-      --hero-ink-muted: rgb(255 252 240 / 0.74);
-      --hero-ink-faint: rgb(255 252 240 / 0.56);
-      --hero-line: rgb(255 252 240 / 0.2);
-      --hero-line-strong: rgb(255 252 240 / 0.45);
-      --hero-accent: var(--hs-moss);
-      /* The photograph runs a short way past the fold (--hero-tail), and its last --hero-fade
-         dissolves into the page. The dissolve starts slowly, so the first screen keeps the photograph
-         almost whole, and most of the fade happens below the fold. The tail is short because a
-         taller box crops more of a landscape frame. */
-      --hero-tail: clamp(5rem, 14svh, 9rem);
-      --hero-fade: clamp(12rem, 34svh, 22rem);
-      --hero-fade-start: calc(100% - var(--hero-fade));
-      height: calc(100svh + var(--hero-tail));
-      min-height: calc(620px + var(--hero-tail));
-      overflow: hidden;
+      --hero-h: calc(100svh - var(--header-h) - 1.5rem);
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--space-md);
+      row-gap: var(--space-xl);
+      align-items: start;
+      max-width: var(--container-max);
+      margin-inline: auto;
+      padding-top: calc(var(--header-h) + 0.75rem);
     }
 
     .hero__media {
-      position: absolute;
-      inset: 0;
-      padding-top: 0;
+      grid-column: 1 / -1;
+      grid-row: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      gap: var(--space-sm);
     }
 
-    .hero__media :global(.photo-wrap),
-    .hero__media :global(picture),
+    /* The plate takes the first screen's height at its own proportions. A frame too wide for the row
+       takes the row's width instead, so nothing is cropped or letterboxed. --ratio comes from the
+       photograph's dimensions. */
+    .hero__media :global(.photo-wrap) {
+      flex: none;
+      width: min(100% - 2.5rem, var(--hero-h) * var(--ratio));
+    }
+
     .hero__media :global(img) {
-      display: block;
-      height: 100%;
-      object-fit: cover;
+      width: 100%;
+      height: auto;
     }
 
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      /* The bottom of the photograph dissolves into the page, so the hero flows into what follows. */
-      background:
-        /* The dissolve: the page colour rises over the fade on an ease-in curve. */
-        linear-gradient(
-          to bottom,
-          transparent var(--hero-fade-start),
-          color-mix(in srgb, var(--color-bg) 2%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.125),
-          color-mix(in srgb, var(--color-bg) 6%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.25),
-          color-mix(in srgb, var(--color-bg) 14%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.375),
-          color-mix(in srgb, var(--color-bg) 26%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.5),
-          color-mix(in srgb, var(--color-bg) 42%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.625),
-          color-mix(in srgb, var(--color-bg) 62%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.75),
-          color-mix(in srgb, var(--color-bg) 84%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.875),
-          var(--color-bg) 100%
-        ),
-        /* The scrim under the text only; it is gone before the photograph meets the page. */
-        linear-gradient(
-          to bottom,
-          transparent 46%,
-          rgb(16 15 15 / 0.6) calc(var(--hero-fade-start) - 2%),
-          rgb(16 15 15 / 0.35) calc(var(--hero-fade-start) + var(--hero-fade) * 0.4),
-          transparent 100%
-        ),
-        linear-gradient(to top right, rgb(16 15 15 / 0.8) 0%, rgb(16 15 15 / 0.35) 38%, transparent 68%),
-        linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%),
-        radial-gradient(ellipse 38% 32% at 100% 0%, rgb(16 15 15 / 0.6), transparent);
-      pointer-events: none;
+    .hero__coords {
+      flex: none;
+      margin-top: 0;
+      writing-mode: vertical-rl;
     }
 
+    /* Under the plate, on the left: the number, the title, the summary, and the marginalia. */
     .hero__body {
-      position: absolute;
-      z-index: 1;
-      left: calc(var(--rail-offset) + var(--container-padding));
-      bottom: calc(var(--hero-tail) + clamp(3rem, 12svh, 7rem));
-      /* Wide enough for the headline to breathe; with chapters, it stops short of the chapter list. */
-      width: min(1080px, 100vw - var(--rail-offset) - 2 * var(--container-padding));
-      padding: 0;
+      grid-column: 1 / 7;
+      grid-row: 2;
+      margin-top: 0;
     }
+  }
+  /* The homepage: the photograph runs edge to edge across the content area and fills the first
+     screen, cropped to fit. The text follows on paper below it, never on the photograph. */
+  .hero--bleed {
+    padding-inline: 0;
+    padding-top: var(--header-h);
+  }
 
-    .hero__overline {
-      white-space: nowrap;
-    }
+  .hero--bleed .hero__media :global(img) {
+    width: 100%;
+    height: calc(100svh - var(--header-h));
+    object-fit: cover;
+  }
 
-    .hero__body > * {
-      animation: hero-rise 900ms var(--ease-out-expo) both;
-    }
+  .hero--bleed .hero__coords,
+  .hero--bleed .hero__body {
+    padding-inline: var(--container-padding);
+  }
 
-    .hero__title { animation-delay: 80ms; }
-    .hero__summary { animation-delay: 160ms; }
-    .hero__facts, .hero__cta { animation-delay: 240ms; }
-
-    .hero__begin {
+  @media (min-width: 900px) {
+    .hero.hero--bleed {
       display: block;
-      position: absolute;
-      z-index: 1;
-      left: calc(50% + var(--rail-offset) / 2);
-      bottom: calc(var(--hero-tail) + 1.5rem);
-      color: var(--hero-ink-faint);
-      translate: -50% 0;
-    }
-  }
-
-  @media (min-width: 1100px) {
-    .hero__chapters {
-      display: block;
-      position: absolute;
-      z-index: 1;
-      /* Top right, in the open sky of the frame, so the title, headline, and facts keep the full width. */
-      right: var(--container-padding);
-      top: calc(var(--header-h) + clamp(2rem, 7svh, 4.5rem));
-      max-width: 22rem;
+      max-width: none;
+      padding-top: var(--header-h);
     }
 
-    .hero__chapters li + li {
-      margin-top: 0.7em;
+    /* The photograph runs off the left edge; a thin strip of paper on the right carries the
+       coordinates, top to bottom, so no text sits on the photograph. */
+    .hero--bleed .hero__media {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
     }
 
-    .hero__chapters a {
-      color: rgb(255 252 240 / 0.7);
-      transition: color 160ms ease;
+    .hero--bleed .hero__media :global(.photo-wrap) {
+      flex: 1 1 auto;
+      width: auto;
+      min-width: 0;
     }
 
-    .hero__chapters a:hover {
-      color: var(--fx-paper);
+    .hero--bleed .hero__coords {
+      flex: none;
+      padding: 0 0.75rem;
     }
 
-    .hero__chapters span {
-      color: var(--hs-moss);
-      margin-right: 0.6em;
+    .hero--bleed .hero__media :global(img) {
+      height: calc(100svh - var(--header-h));
     }
-  }
 
-  @keyframes hero-rise {
-    from { opacity: 0; translate: 0 18px; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero__body > * {
-      animation: none;
+    .hero--bleed .hero__body {
+      max-width: var(--container-max);
+      margin-top: var(--space-xl);
     }
   }
 </style>

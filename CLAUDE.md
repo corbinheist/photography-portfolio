@@ -2,6 +2,8 @@
 
 Read `README.md` first: it describes the site, the story format, and publishing.
 
+**Design language:** before any design or front-end change, read the Linear document "heist.studio Design Language" (Studio team): https://linear.app/corbinheist/document/heiststudio-design-language-d3b57f1b1c0f. It is authoritative. A component that disagrees with it is a defect. To change a rule, update the document in the same change and add a change-log line.
+
 ## Workflow
 
 - Branch and PR for every change (`stu-NN-…` from the Linear issue, team STU). Squash-merge.

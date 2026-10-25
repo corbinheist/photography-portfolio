@@ -2,25 +2,23 @@
 import { getCollection } from 'astro:content';
 import SiteLayout from '@layouts/SiteLayout.astro';
 import Photo from '@components/photo/Photo.astro';
-import { compareStories, formatStoryDate, loadGalleryExtras, loadManifest, orderedImageIds, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
+import Lightbox from '@components/story/Lightbox.astro';
+import { compareStories, formatStoryDate, loadGalleryExtras, loadManifest, resolvePhoto, storyFrames } from '@scripts/utils/story-manifest';
 
 // Every photograph from every published story, plus the gallery-only photographs
 // (src/data/gallery-extras.yaml). Newest first by date; a story's frames stay in reading order.
-// A story frame links to its place in the story; a gallery-only frame is not a link.
+// A click opens a photograph full bleed in the lightbox; the arrows move through the whole wall.
 const stories = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
 
-type Frame = { key: string; photo: { url: string; width: number; height: number; lqip: string; alt: string }; href?: string; label: string };
+type Frame = { key: string; photo: { url: string; width: number; height: number; lqip: string; alt: string }; label: string };
 
 const storyGroups = stories.map((story) => {
   const manifest = loadManifest(story.id);
-  const inBody = new Set(orderedImageIds(story.body ?? ''));
   const frames: Frame[] = storyFrames(story.body ?? '', story.data.cover).map((id, index) => {
     const num = String(index + 1).padStart(2, '0');
     return {
       key: `${story.id}-${id}`,
       photo: resolvePhoto(story.id, manifest, id),
-      // A cover that only opens the story (in the title card) links to the top of the story.
-      href: inBody.has(id) ? `${storyUrl(story.id)}#frame-${num}` : storyUrl(story.id),
       label: `${story.data.title} · ${num}`,
     };
   });
@@ -36,29 +34,29 @@ const frames = [...storyGroups, ...extraGroups].sort(compareStories).flatMap((gr
 ---
 
 <SiteLayout title="Gallery · Heist Studio" description={`Every photograph on heist.studio: ${frames.length} frames.`}>
-  <section class="gallery">
+  <section class="gallery" data-lightbox-scope>
     <!-- The navigation marks this page; the heading is for screen readers only. -->
     <h1 class="visually-hidden">Gallery</h1>
-    <p class="gallery__count mono-label tabular">{frames.length} frames · {stories.length} stories</p>
+    <p class="gallery__count label tabular">{frames.length} frames · {stories.length} stories</p>
 
     <ul class="gallery__wall">
-      {frames.map((frame) => (
+      {frames.map((frame, index) => (
         <li style={`--ratio: ${frame.photo.width / frame.photo.height}`}>
-          {frame.href ? (
-            <a href={frame.href} class="gallery__frame">
-              <Photo url={frame.photo.url} width={frame.photo.width} height={frame.photo.height} lqip={frame.photo.lqip} alt={frame.photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
-              <span class="gallery__label mono-label">{frame.label}</span>
-            </a>
-          ) : (
-            <figure class="gallery__frame">
-              <Photo url={frame.photo.url} width={frame.photo.width} height={frame.photo.height} lqip={frame.photo.lqip} alt={frame.photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
-              <figcaption class="gallery__label mono-label">{frame.label}</figcaption>
-            </figure>
-          )}
+          <figure class="gallery__frame" data-frame={index + 1}>
+            <Photo url={frame.photo.url} width={frame.photo.width} height={frame.photo.height} lqip={frame.photo.lqip} alt={frame.photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
+            <figcaption class="visually-hidden">{frame.label}</figcaption>
+          </figure>
         </li>
       ))}
     </ul>
+
+    <Lightbox />
   </section>
+
+  <script>
+    import { initLightbox } from '@scripts/lightbox';
+    initLightbox();
+  </script>
 </SiteLayout>
 
 <style>
@@ -103,43 +101,9 @@ const frames = [...storyGroups, ...extraGroups].sort(compareStories).flatMap((gr
     display: block;
   }
 
+  /* The photographs as shot: no dimming, no caption on the photograph. */
   .gallery__frame :global(img) {
     width: 100%;
     height: auto;
-    opacity: 0.9;
-    transition: opacity 240ms ease;
-  }
-
-  .gallery__label {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding: 1.6rem 0.75rem 0.6rem;
-    background: linear-gradient(to top, rgb(16 15 15 / 0.85), transparent);
-    color: var(--fx-paper);
-    opacity: 0;
-    transition: opacity 200ms ease;
-  }
-
-  .gallery__frame:hover :global(img),
-  .gallery__frame:focus-visible :global(img) {
-    opacity: 1;
-  }
-
-  .gallery__frame:hover .gallery__label,
-  .gallery__frame:focus-visible .gallery__label {
-    opacity: 1;
-  }
-
-  @media (hover: none) {
-    .gallery__frame :global(img) { opacity: 1; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .gallery__frame :global(img),
-    .gallery__label {
-      transition: none;
-    }
   }
 </style>

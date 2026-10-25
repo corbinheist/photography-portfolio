@@ -1,0 +1,138 @@
+---
+/**
+ * The full-screen view of a story photograph. The page's own markup is the data: the lightbox
+ * reads every numbered frame (the hero and the body) when it opens. See src/scripts/lightbox.ts.
+ */
+---
+
+<dialog class="lightbox" data-lightbox aria-label="Photograph">
+  <!-- For keyboard and screen-reader users. Hidden until it has keyboard focus; Escape also closes. -->
+  <button type="button" class="lightbox__close" data-lightbox-close autofocus>Close</button>
+  <div class="lightbox__stage" data-lightbox-stage></div>
+  <button type="button" class="lightbox__nudge lightbox__nudge--prev" data-lightbox-prev aria-label="Previous photograph"><span aria-hidden="true">&lt;</span></button>
+  <button type="button" class="lightbox__nudge lightbox__nudge--next" data-lightbox-next aria-label="Next photograph"><span aria-hidden="true">&gt;</span></button>
+</dialog>
+
+<style is:global>
+  /* Full bleed: the photograph alone, as large as the screen allows, never cropped. The only
+     controls are two quiet nudges; each one's target is the full height of its side. A click
+     anywhere else, or Escape, closes the view. */
+  .lightbox {
+    width: 100vw;
+    max-width: none;
+    height: 100svh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+    cursor: zoom-out;
+  }
+
+  .lightbox[open] {
+    display: grid;
+  }
+
+  .lightbox::backdrop {
+    background: var(--color-bg);
+  }
+
+  html:has(.lightbox[open]) {
+    overflow: hidden;
+  }
+
+  .lightbox__stage {
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .lightbox__stage picture {
+    display: contents;
+  }
+
+  /* Higher specificity than Photo's scoped .photo-img rules on the cloned image. */
+  .lightbox .lightbox__stage img {
+    width: auto;
+    height: auto;
+    max-width: 100vw;
+    max-height: 100svh;
+    object-fit: contain;
+    background: none;
+  }
+
+  /* The nudges: a full-height strip on each side, transparent, with a small mark near the edge.
+     The mark inverts what is under it, so it reads on paper, on ink, and on the photograph. */
+  .lightbox__nudge {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: max(4.5rem, 14vw);
+    display: flex;
+    align-items: center;
+    padding: 0 var(--container-padding);
+    border: 0;
+    background: transparent;
+    color: #fff;
+    mix-blend-mode: difference;
+    font-size: var(--type-heading);
+    font-family: var(--font-body);
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .lightbox__nudge--prev {
+    left: 0;
+    justify-content: flex-start;
+  }
+
+  .lightbox__nudge--next {
+    right: 0;
+    justify-content: flex-end;
+  }
+
+  .lightbox__nudge span {
+    opacity: 0.45;
+    transition: opacity 160ms ease;
+  }
+
+  .lightbox__nudge:hover span,
+  .lightbox__nudge:focus-visible span {
+    opacity: 0.95;
+  }
+
+  .lightbox__nudge:focus-visible {
+    outline: none;
+  }
+
+  .lightbox__nudge[hidden] {
+    display: none;
+  }
+
+  .lightbox__close {
+    position: fixed;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    z-index: 1;
+    padding: 0.35em 0.8em;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: var(--type-margin);
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .lightbox__close:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* A photograph that opens the lightbox. */
+  [data-lightbox-open] {
+    cursor: zoom-in;
+  }
+</style>

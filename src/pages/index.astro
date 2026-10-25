@@ -4,56 +4,48 @@ import SiteLayout from '@layouts/SiteLayout.astro';
 import Photo from '@components/photo/Photo.astro';
 import StoryHero from '@components/story/StoryHero.astro';
 import { buildPhotoUrl } from '@scripts/utils/photo-widths';
-import { compareStories, formatStoryDate, loadManifest, placeName, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
+import { compareStories, formatCoordinates, formatStoryDate, loadManifest, placeName, resolvePhoto, storyFrames, storyUrl } from '@scripts/utils/story-manifest';
 
+// The homepage reads like a story: the lead story's cover (jo), one plate per other story (ha),
+// and a quiet contents list (kyū). Featured stories are numbered from the oldest (№ 01).
 const published = (await getCollection('stories', (story) => !story.data.draft)).sort(compareStories);
+const featuredCount = published.filter((story) => story.data.featured).length;
 
-// Featured stories lead: the hero and the numbered index. The others list under "More stories".
-const stories = published
-  .filter((story) => story.data.featured)
-  .map((story, index, featured) => {
+const entries = published
+  .sort((a, b) => Number(b.data.featured ?? false) - Number(a.data.featured ?? false))
+  .map((story, index) => {
     const manifest = loadManifest(story.id);
-    const order = storyFrames(story.body ?? '', story.data.cover);
-    const cover = resolvePhoto(story.id, manifest, story.data.cover);
-    // The lead story's hero already shows its cover, so its index row uses the next photograph.
-    const thumbId = index === 0 ? order.find((id) => id !== story.data.cover) ?? story.data.cover : story.data.cover;
+    const { coordinates, elevation_m } = story.data;
     return {
       story,
       href: storyUrl(story.id),
-      // Numbered from the oldest (№ 01); the list shows the newest first.
-      number: String(featured.length - index).padStart(2, '0'),
-      frames: order.length,
-      cover,
-      thumb: resolvePhoto(story.id, manifest, thumbId),
-    };
-  });
-
-const [lead] = stories;
-
-const more = published
-  .filter((story) => !story.data.featured)
-  .map((story) => {
-    const manifest = loadManifest(story.id);
-    return {
-      story,
-      href: storyUrl(story.id),
+      number: story.data.featured ? String(featuredCount - index).padStart(2, '0') : undefined,
       frames: storyFrames(story.body ?? '', story.data.cover).length,
       cover: resolvePhoto(story.id, manifest, story.data.cover),
+      year: story.data.date.slice(0, 4),
+      coords: [coordinates && formatCoordinates(coordinates), elevation_m !== undefined && `${elevation_m.toLocaleString('en-GB')} m`].filter(Boolean).join(' · '),
     };
   });
+
+const [lead, ...plates] = entries;
 ---
 
 <SiteLayout
   title="Heist Studio · Corbin Heist"
   description="Documentary photography of people and the work they do outdoors."
   image={lead && buildPhotoUrl(lead.cover.url, lead.cover.width, 1600)}
+  navDefault="bar"
 >
+  <h1 class="visually-hidden">Heist Studio, documentary photography by Corbin Heist</h1>
+
   {lead && (
     <StoryHero
       photo={lead.cover}
       title={lead.story.data.title}
       summary={lead.story.data.summary}
-      overline={[`№ ${lead.number}`, lead.story.data.place, formatStoryDate(lead.story.data.date), `${lead.frames} frames`].join(' · ')}
+      overline={lead.number && `№ ${lead.number}`}
+      margin={[lead.story.data.place, formatStoryDate(lead.story.data.date)]}
+      coords={lead.coords || undefined}
       cta={{
         href: lead.href,
         // The call to action names the place the story goes to; the accessible name adds the title.
@@ -62,60 +54,45 @@ const more = published
       }}
       transitionName={`cover-${lead.story.id}`}
       headingLevel="h2"
+      bleed
     />
   )}
 
-  <section id="work" class="ledger" aria-labelledby="work-heading">
-    <h1 class="visually-hidden">Heist Studio, documentary photography by Corbin Heist</h1>
-    <header class="ledger__head">
-      <h2 id="work-heading" class="mono-label">Selected stories</h2>
-      <p class="mono-label tabular">{stories.length} stories · {stories.reduce((sum, s) => sum + s.frames, 0)} frames</p>
-    </header>
+  {/* Ha: one plate per story, off-centre, alternating sides. Each plate opens its story. */}
+  <section id="work" class="plates" aria-label="Stories">
+    {plates.map(({ story, href, number, cover, year, coords }) => (
+      <a href={href} class="plate" style={`--ratio: ${cover.width / cover.height}`}>
+        <span class="plate__media">
+          <span class="plate__photo" style={`view-transition-name: cover-${story.id}`}>
+            <Photo url={cover.url} width={cover.width} height={cover.height} lqip={cover.lqip} alt={cover.alt} sizes="(max-width: 899px) 100vw, 66vw" />
+          </span>
+          {coords && <span class="plate__coords tabular">{coords}</span>}
+        </span>
+        <span class="plate__text">
+          {number && <span class="plate__num tabular">№ {number}</span>}
+          <span class="plate__title">{story.data.title}</span>
+          <span class="plate__place">{story.data.place} · {year}</span>
+        </span>
+      </a>
+    ))}
+  </section>
+
+  {/* Kyū: the contents, quiet. One hairline row per story. */}
+  <section class="contents" aria-labelledby="contents-heading">
+    <h2 id="contents-heading" class="label">Contents</h2>
     <ol>
-      {stories.map(({ story, href, number, frames, thumb }, index) => (
+      {entries.map(({ href, number, story, year }) => (
         <li>
-          <a href={href} class="ledger__row">
-            <span class="ledger__num mono-label tabular"><span class="numero">№</span> {number}</span>
-            <span class="ledger__thumb" style={index > 0 ? `view-transition-name: cover-${story.id}` : undefined}>
-              <Photo url={thumb.url} width={thumb.width} height={thumb.height} lqip={thumb.lqip} alt={thumb.alt} sizes="(max-width: 767px) 100vw, 360px" />
-            </span>
-            <span class="ledger__text">
-              <span class="ledger__title">{story.data.title}</span>
-              <span class="ledger__summary">{story.data.summary}</span>
-              {story.data.client && <span class="ledger__client mono-label">Commission · {story.data.client}</span>}
-            </span>
-            <span class="ledger__facts mono-label tabular">
-              <span>{story.data.place}</span>
-              <span>{formatStoryDate(story.data.date)}</span>
-              <span class="ledger__frames">{frames} frames</span>
-            </span>
+          <a href={href} class="contents__row">
+            <span class="contents__num tabular">{number && `№ ${number}`}</span>
+            <span class="contents__title">{story.data.title}</span>
+            <span class="contents__place">{story.data.place}</span>
+            <span class="contents__year tabular">{year}</span>
           </a>
         </li>
       ))}
     </ol>
   </section>
-
-  {more.length > 0 && (
-    <section class="more" aria-labelledby="more-heading">
-      <header class="ledger__head">
-        <h2 id="more-heading" class="mono-label">More stories</h2>
-        <p class="mono-label tabular">{more.length} stories · {more.reduce((sum, s) => sum + s.frames, 0)} frames</p>
-      </header>
-      <ul class="more__grid">
-        {more.map(({ story, href, frames, cover }) => (
-          <li>
-            <a href={href} class="more__card">
-              <span class="more__thumb" style={`view-transition-name: cover-${story.id}`}>
-                <Photo url={cover.url} width={cover.width} height={cover.height} lqip={cover.lqip} alt={cover.alt} sizes="(max-width: 767px) 100vw, 33vw" />
-              </span>
-              <span class="more__title">{story.data.title}</span>
-              <span class="mono-label tabular">{story.data.place} · {formatStoryDate(story.data.date)} · <span class="ledger__frames">{frames} frames</span></span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
 
   <section class="outro">
     <p class="outro__line">I live at the foot of Rattlesnake Mountain, in the Snoqualmie Valley. The camera comes because I'm going anyway.</p>
@@ -125,159 +102,187 @@ const more = published
 </SiteLayout>
 
 <style>
-  .ledger {
-    padding: clamp(1.5rem, 3vw, 2.5rem) var(--container-padding) 0;
+  /* ── Plates ── */
+  .plates {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+    max-width: var(--container-max);
+    margin: var(--space-3xl) auto 0;
+    padding-inline: var(--container-padding);
   }
 
-  .ledger__head {
+  .plate {
+    display: block;
+  }
+
+  .plate__media {
     display: flex;
-    justify-content: space-between;
-    gap: var(--space-md);
+    flex-direction: column;
+  }
+
+  .plate__photo {
+    display: block;
+  }
+
+  .plate__photo :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
+  .plate__coords,
+  .plate__place,
+  .plate__num {
+    font-size: var(--type-margin);
+    color: var(--color-text-muted);
+  }
+
+  .plate__coords {
+    margin-top: var(--space-sm);
+  }
+
+  .plate__text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-md);
+  }
+
+  .plate__title {
+    font-family: var(--font-heading);
+    font-size: var(--type-heading);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+    transition: color 160ms ease;
+  }
+
+  .plate:hover .plate__title {
+    color: var(--color-accent);
+  }
+
+  @media (min-width: 900px) {
+    /* A plate is at most two thirds of the row and 80svh high, one twelfth in from the left
+       edge, then from the right, in turn. The coordinates run down its outer edge. */
+    .plate {
+      width: fit-content;
+      max-width: 100%;
+      margin-left: calc(100% / 12);
+    }
+
+    .plate:nth-child(even) {
+      margin-left: auto;
+      margin-right: calc(100% / 12);
+    }
+
+    .plate__media {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+
+    .plate:nth-child(even) .plate__media {
+      flex-direction: row-reverse;
+    }
+
+    .plate__photo {
+      width: min(66.667vw - 2 * var(--container-padding), 80svh * var(--ratio));
+    }
+
+    .plate__coords {
+      margin-top: 0;
+      writing-mode: vertical-rl;
+    }
+
+    .plate:nth-child(even) .plate__text {
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+
+  /* ── Contents ── */
+  .contents {
+    max-width: var(--container-max);
+    margin: var(--space-3xl) auto 0;
+    padding-inline: var(--container-padding);
+  }
+
+  .contents h2,
+  .contents ol {
+    max-width: 56rem;
+  }
+
+  .contents h2 {
     padding-bottom: var(--space-sm);
     border-bottom: 1px solid var(--color-border);
   }
 
-  .ledger__head h2 {
-    font-weight: 400;
+  .contents li {
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .ledger li {
-    border-bottom: 1px solid var(--color-border-subtle);
-  }
-
-  .ledger__row {
+  .contents__row {
     display: grid;
-    grid-template-columns: 7ch minmax(220px, 360px) 1fr 22ch;
-    gap: clamp(1rem, 2.5vw, 2.5rem);
-    align-items: start;
-    padding-block: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: 5ch 1fr;
+    gap: 0.2em var(--space-md);
+    padding-block: 0.9em;
+    align-items: baseline;
   }
 
-  .ledger__num {
-    padding-top: 0.35em;
-  }
-
-  .ledger__thumb :global(img) {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    opacity: 0.88;
-    transition: opacity 240ms ease;
-  }
-
-  .ledger__text {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-  }
-
-  .ledger__title {
-    font-family: var(--font-heading);
-    font-size: clamp(1.6rem, 2.6vw, 2.4rem);
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-    transition: color 200ms ease;
-  }
-
-  .ledger__summary {
-    max-width: 52ch;
+  .contents__num,
+  .contents__place,
+  .contents__year {
+    font-size: var(--type-margin);
     color: var(--color-text-muted);
   }
 
-  .ledger__client {
-    margin-top: var(--space-xs);
-    color: var(--color-warm);
-  }
-
-  .ledger__facts {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5em;
-    text-align: right;
-    padding-top: 0.35em;
-  }
-
-  .ledger__frames {
-    color: var(--color-accent);
-  }
-
-  .ledger__row:hover .ledger__thumb :global(img) {
-    opacity: 1;
-  }
-
-  .ledger__row:hover .ledger__title {
-    color: var(--color-accent);
-  }
-
-  @media (max-width: 899px) {
-    .ledger__row {
-      grid-template-columns: 1fr;
-      gap: var(--space-sm);
-    }
-
-    .ledger__num { order: 2; padding-top: 0; }
-    .ledger__thumb { order: 1; }
-    .ledger__text { order: 3; }
-
-    .ledger__facts {
-      order: 4;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 0 1.2em;
-      text-align: left;
-    }
-  }
-
-  .more {
-    padding: clamp(4rem, 8vw, 6rem) var(--container-padding) 0;
-  }
-
-  .more__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
-    gap: var(--space-xl) var(--space-lg);
-    padding-top: var(--space-lg);
-  }
-
-  .more__card {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-xs);
-  }
-
-  .more__thumb :global(img) {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-    opacity: 0.88;
-    transition: opacity 240ms ease;
-  }
-
-  .more__title {
-    margin-top: var(--space-xs);
+  .contents__title {
     font-family: var(--font-heading);
-    font-size: var(--text-xl);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    transition: color 200ms ease;
+    font-size: var(--type-body);
+    color: var(--color-text);
+    transition: color 160ms ease;
   }
 
-  .more__card:hover .more__thumb :global(img) {
-    opacity: 1;
+  .contents__place {
+    grid-column: 2;
   }
 
-  .more__card:hover .more__title {
+  .contents__year {
+    display: none;
+  }
+
+  .contents__row:hover .contents__title {
     color: var(--color-accent);
   }
 
+  @media (min-width: 900px) {
+    .contents {
+      padding-left: calc(var(--container-padding) + (100% - 2 * var(--container-padding)) / 12);
+    }
+
+    .contents__row {
+      grid-template-columns: 5ch minmax(0, 1.4fr) minmax(0, 1fr) 5ch;
+    }
+
+    .contents__place {
+      grid-column: auto;
+    }
+
+    .contents__year {
+      display: block;
+      text-align: right;
+    }
+  }
+
+  /* ── Close ── */
   .outro {
-    max-width: calc(41rem + 2 * var(--container-padding));
-    padding: clamp(5rem, 10vw, 8rem) var(--container-padding) 0;
+    max-width: calc(32.5rem + 2 * var(--container-padding));
+    padding: var(--space-3xl) var(--container-padding) 0;
   }
 
   .outro__line {
     font-family: var(--font-heading);
-    font-size: var(--text-xl);
+    font-size: var(--type-heading);
     line-height: 1.35;
   }
 
@@ -289,14 +294,12 @@ const more = published
   .outro__email {
     display: inline-block;
     margin-top: var(--space-md);
-    font-family: var(--font-mono);
-    font-size: 15px;
-    letter-spacing: 0.04em;
-    color: var(--color-accent);
+    font-size: var(--type-margin);
+    color: var(--color-text);
     border-bottom: 1px solid currentColor;
   }
 
   .outro__email:hover {
-    color: var(--color-warm);
+    color: var(--color-accent);
   }
 </style>
