@@ -31,9 +31,10 @@ const { title, description, image, type, noindex, location } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Vollkorn:ital,wght@0,400;0,500;1,400&display=swap"
       rel="stylesheet"
     />
-    <!-- Apply the visitor's navigation choice (rail or bar) before the first paint. -->
+    <!-- Apply the visitor's navigation choice (rail or bar) and theme choice (paper or ink) before the first paint. -->
     <script is:inline>
       try { if (localStorage.getItem('nav') === 'bar') document.documentElement.dataset.nav = 'bar'; } catch (e) {}
+      try { if (localStorage.getItem('theme') === 'ink') document.documentElement.dataset.theme = 'ink'; } catch (e) {}
     </script>
     <slot name="head" />
     <SEO title={title} description={description} image={image} type={type} noindex={noindex} location={location} />

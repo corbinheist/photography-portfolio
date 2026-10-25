@@ -91,6 +91,7 @@ const pages = [
         {pages.map((page) => (
           <li><a href={page.href} rel={page.external ? 'noopener' : undefined}>{page.label}{page.external && <span aria-hidden="true"> ↗</span>}</a></li>
         ))}
+        <li><button class="sitenav__theme" type="button" data-theme-toggle aria-pressed="false">Ink</button></li>
       </ul>
     </div>
   </details>
@@ -103,6 +104,7 @@ const pages = [
         </a>
       </li>
     ))}
+    <li><button class="sitenav__theme" type="button" data-theme-toggle aria-pressed="false">Ink</button></li>
   </ul>
 
   <a class="sitenav__email" href="mailto:corbin@heist.studio">corbin@heist.studio</a>
@@ -146,6 +148,31 @@ const pages = [
   });
 
   label();
+
+  // Paper or ink. The choice is stored per viewer; the head script in SiteLayout applies it before
+  // the first paint. Each button names the theme it switches to.
+  const themeToggles = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+
+  function themeLabel() {
+    const ink = root.dataset.theme === 'ink';
+    for (const button of themeToggles) {
+      button.textContent = ink ? 'Paper' : 'Ink';
+      button.setAttribute('aria-pressed', String(ink));
+      button.setAttribute('aria-label', ink ? 'Switch to the paper theme' : 'Switch to the ink theme');
+    }
+  }
+
+  for (const button of themeToggles) {
+    button.addEventListener('click', () => {
+      const ink = root.dataset.theme !== 'ink';
+      if (ink) root.dataset.theme = 'ink';
+      else delete root.dataset.theme;
+      try { localStorage.setItem('theme', ink ? 'ink' : 'paper'); } catch { /* storage can be blocked; the toggle still works */ }
+      themeLabel();
+    });
+  }
+
+  themeLabel();
 </script>
 
 <style is:global>
@@ -286,6 +313,7 @@ const pages = [
   .sitenav__num,
   .sitenav__place,
   .sitenav__pages a,
+  .sitenav__theme,
   .sitenav__email,
   .sitenav__menu summary {
     font-family: var(--font-mono);
@@ -493,7 +521,8 @@ const pages = [
     border-left-color: var(--color-accent);
   }
 
-  .sitenav__pages a {
+  .sitenav__pages a,
+  .sitenav__theme {
     display: block;
     padding-block: 0.45rem;
     font-size: 11px;
@@ -502,8 +531,17 @@ const pages = [
   }
 
   .sitenav__pages a:hover,
-  .sitenav__pages a[aria-current='page'] {
+  .sitenav__pages a[aria-current='page'],
+  .sitenav__theme:hover {
     color: var(--nav-ink);
+  }
+
+  .sitenav__theme {
+    padding-inline: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: pointer;
   }
 
   .sitenav__pages--panel {

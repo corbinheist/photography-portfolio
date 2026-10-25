@@ -188,4 +188,20 @@ test.describe('smoke tests', () => {
     await page.evaluate(() => { document.documentElement.dataset.theme = 'ink'; });
     await expect.poll(background).toBe('rgb(16, 15, 15)');
   });
+
+  test('the theme toggle remembers ink across a reload and a navigation', async ({ page }) => {
+    const theme = () => page.evaluate(() => document.documentElement.dataset.theme ?? 'paper');
+    const toggle = page.locator('[data-theme-toggle]:visible').first();
+    await page.goto('/about/');
+    await expect(toggle).toHaveText('Ink');
+    await toggle.click();
+    expect(await theme()).toBe('ink');
+    await page.reload();
+    expect(await theme()).toBe('ink');
+    await page.goto('/work/nomads/');
+    expect(await theme()).toBe('ink');
+    await expect(toggle).toHaveText('Paper');
+    await toggle.click();
+    expect(await theme()).toBe('paper');
+  });
 });
