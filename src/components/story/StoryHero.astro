@@ -26,9 +26,9 @@ const { photo, title, summary, overline, facts = [], cta, transitionName, headin
 const Heading = headingLevel;
 ---
 
-<section class="hero bleed" data-hero>
+<section class="hero" data-hero>
   <div class="hero__media" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>
-    <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="100vw" loading="eager" fetchpriority="high" />
+    <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 899px) 100vw, 66vw" loading="eager" fetchpriority="high" />
   </div>
 
   <div class="hero__body">
@@ -49,23 +49,14 @@ const Heading = headingLevel;
 
     {cta && <a class="hero__cta" href={cta.href} aria-label={cta.ariaLabel}>{cta.label} <span aria-hidden="true">→</span></a>}
   </div>
-
-  {!cta && <a class="hero__begin" href="#story-body">Begin <span aria-hidden="true">↓</span></a>}
 </section>
 
 <style>
-  /* Text colours follow the context: on phones the title sits on the page (theme ink);
-     on desktop it sits on the photograph's dark scrim (paper), in both themes. */
+  /* One plate on paper. The text never sits on the photograph: on a phone it follows the plate;
+     from 900px the plate stands off-centre on the grid and the text holds the empty field beside it. */
   .hero {
-    position: relative;
+    padding: calc(var(--header-h) + var(--space-lg)) var(--container-padding) var(--space-2xl);
     background: var(--color-bg);
-    --hero-ink: var(--color-text);
-    --hero-ink-soft: var(--color-text);
-    --hero-ink-muted: var(--color-text-muted);
-    --hero-ink-faint: var(--color-text-faint);
-    --hero-line: var(--color-border);
-    --hero-line-strong: var(--color-border);
-    --hero-accent: var(--color-accent);
   }
 
   .hero__media :global(.photo-wrap),
@@ -75,8 +66,7 @@ const Heading = headingLevel;
 
   .hero__overline,
   .hero__facts dt,
-  .hero__cta,
-  .hero__begin {
+  .hero__cta {
     font-family: var(--font-mono);
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -84,43 +74,43 @@ const Heading = headingLevel;
 
   .hero__overline {
     font-size: 12px;
-    color: var(--hero-ink-muted);
+    color: var(--color-text-muted);
   }
 
   .hero__title {
     margin-top: 0.35em;
     font-family: var(--font-heading);
     font-weight: 400;
-    font-size: clamp(2.75rem, 7vw, 6.5rem);
-    line-height: 0.95;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 0.98;
     letter-spacing: -0.02em;
-    color: var(--hero-ink);
+    color: var(--color-text);
     max-width: 13ch;
     text-wrap: balance;
   }
 
   .hero__summary {
     margin-top: var(--space-md);
-    max-width: 72ch;
+    max-width: 40ch;
     text-wrap: pretty;
     font-size: var(--text-lg);
     font-weight: 300;
     line-height: 1.5;
-    color: var(--hero-ink-soft);
+    color: var(--color-text);
   }
 
   .hero__facts {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-sm) clamp(1.5rem, 3vw, 3rem);
+    gap: var(--space-sm) clamp(1.25rem, 2vw, 2rem);
     margin-top: var(--space-lg);
     padding-top: var(--space-md);
-    border-top: 1px solid var(--hero-line);
+    border-top: 1px solid var(--color-border);
   }
 
   .hero__facts dt {
     font-size: 10px;
-    color: var(--hero-ink-faint);
+    color: var(--color-text-muted);
   }
 
   .hero__facts dd {
@@ -128,135 +118,62 @@ const Heading = headingLevel;
     font-family: var(--font-mono);
     font-size: 13px;
     letter-spacing: 0.06em;
-    color: var(--hero-ink);
+    color: var(--color-text);
   }
 
   .hero__facts dd.is-measured {
-    color: var(--hero-accent);
+    color: var(--color-accent);
   }
 
+  /* A text link, not a button. */
   .hero__cta {
     display: inline-block;
     margin-top: var(--space-lg);
-    padding: 0.9em 1.3em;
     font-size: 12px;
-    color: var(--hero-ink);
-    border: 1px solid var(--hero-line-strong);
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.3em;
     transition: border-color 160ms ease, color 160ms ease;
   }
 
   .hero__cta:hover {
-    border-color: var(--hero-accent);
-    color: var(--hero-accent);
-  }
-
-  .hero__begin {
-    display: none;
-    font-size: 11px;
-    color: var(--color-text-faint);
-  }
-
-  /* Mobile: the whole photograph, then the title on black. No landscape is cropped. */
-  .hero__media {
-    padding-top: var(--header-h);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
   .hero__body {
-    padding: var(--space-lg) var(--container-padding) var(--space-xl);
+    margin-top: var(--space-lg);
   }
 
-  /* Desktop: the title is set on the photograph. */
-  @media (min-width: 768px) {
+  @media (min-width: 900px) {
     .hero {
-      --hero-ink: var(--fx-paper);
-      --hero-ink-soft: rgb(255 252 240 / 0.86);
-      --hero-ink-muted: rgb(255 252 240 / 0.74);
-      --hero-ink-faint: rgb(255 252 240 / 0.56);
-      --hero-line: rgb(255 252 240 / 0.2);
-      --hero-line-strong: rgb(255 252 240 / 0.45);
-      --hero-accent: var(--hs-moss);
-      /* The photograph runs a short way past the fold (--hero-tail), and its last --hero-fade
-         dissolves into the page. The dissolve starts slowly, so the first screen keeps the photograph
-         almost whole, and most of the fade happens below the fold. The tail is short because a
-         taller box crops more of a landscape frame. */
-      --hero-tail: clamp(5rem, 14svh, 9rem);
-      --hero-fade: clamp(12rem, 34svh, 22rem);
-      --hero-fade-start: calc(100% - var(--hero-fade));
-      height: calc(100svh + var(--hero-tail));
-      min-height: calc(620px + var(--hero-tail));
-      overflow: hidden;
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--space-md);
+      align-items: end;
+      max-width: var(--container-max);
+      margin-inline: auto;
     }
 
+    /* The plate: columns 5 to 12, at its own proportions, no taller than the screen allows. */
     .hero__media {
-      position: absolute;
-      inset: 0;
-      padding-top: 0;
+      grid-column: 5 / -1;
+      grid-row: 1;
     }
 
-    .hero__media :global(.photo-wrap),
-    .hero__media :global(picture),
     .hero__media :global(img) {
-      display: block;
-      height: 100%;
-      object-fit: cover;
+      width: auto;
+      max-width: 100%;
+      max-height: calc(100svh - var(--header-h) - 2 * var(--space-lg));
+      margin-left: auto;
+      object-fit: contain;
     }
 
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      /* The bottom of the photograph dissolves into the page, so the hero flows into what follows. */
-      background:
-        /* The dissolve: the page colour rises over the fade on an ease-in curve. */
-        linear-gradient(
-          to bottom,
-          transparent var(--hero-fade-start),
-          color-mix(in srgb, var(--color-bg) 2%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.125),
-          color-mix(in srgb, var(--color-bg) 6%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.25),
-          color-mix(in srgb, var(--color-bg) 14%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.375),
-          color-mix(in srgb, var(--color-bg) 26%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.5),
-          color-mix(in srgb, var(--color-bg) 42%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.625),
-          color-mix(in srgb, var(--color-bg) 62%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.75),
-          color-mix(in srgb, var(--color-bg) 84%, transparent) calc(var(--hero-fade-start) + var(--hero-fade) * 0.875),
-          var(--color-bg) 100%
-        ),
-        /* The scrim under the text only; it is gone before the photograph meets the page. */
-        linear-gradient(
-          to bottom,
-          transparent 46%,
-          rgb(16 15 15 / 0.6) calc(var(--hero-fade-start) - 2%),
-          rgb(16 15 15 / 0.35) calc(var(--hero-fade-start) + var(--hero-fade) * 0.4),
-          transparent 100%
-        ),
-        linear-gradient(to top right, rgb(16 15 15 / 0.8) 0%, rgb(16 15 15 / 0.35) 38%, transparent 68%),
-        linear-gradient(to bottom, rgb(16 15 15 / 0.45), transparent 22%),
-        radial-gradient(ellipse 38% 32% at 100% 0%, rgb(16 15 15 / 0.6), transparent);
-      pointer-events: none;
-    }
-
+    /* The empty field: columns 1 to 4, the text set low, level with the foot of the plate. */
     .hero__body {
-      position: absolute;
-      z-index: 1;
-      left: calc(var(--rail-offset) + var(--container-padding));
-      bottom: calc(var(--hero-tail) + clamp(3rem, 12svh, 7rem));
-      /* Wide enough for the headline to breathe. */
-      width: min(1080px, 100vw - var(--rail-offset) - 2 * var(--container-padding));
-      padding: 0;
-    }
-
-    .hero__overline {
-      white-space: nowrap;
-    }
-
-    .hero__begin {
-      display: block;
-      position: absolute;
-      z-index: 1;
-      left: calc(50% + var(--rail-offset) / 2);
-      bottom: calc(var(--hero-tail) + 1.5rem);
-      color: var(--hero-ink-faint);
-      translate: -50% 0;
+      grid-column: 1 / 5;
+      grid-row: 1;
+      margin-top: 0;
     }
   }
-
 </style>
