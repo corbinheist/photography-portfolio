@@ -29,7 +29,7 @@ interface Props {
 }
 
 const { story, photos, number, frames, prev, next } = Astro.props;
-const { title, place, date, summary, cover, client, theme, credits, region, coordinates, elevation_m } = story.data;
+const { title, place, date, summary, cover, client, theme, credits, coordinates, elevation_m } = story.data;
 const coverPhoto = resolvePhoto(story.id, photos, cover);
 const settings = await getEntry('settings', 'settings');
 const num = number !== undefined ? String(number).padStart(2, '0') : undefined;
@@ -37,15 +37,11 @@ const when = formatStoryDate(date);
 const ordered = [...(Astro.locals.story?.numbers.keys() ?? [])].map((id) => photos.get(id)).filter((photo) => photo !== undefined);
 const kit = kitFromExif(ordered);
 
-const facts = [
-  { label: 'Place', value: place },
-  region && { label: 'Region', value: region },
-  coordinates && { label: 'Coordinates', value: formatCoordinates(coordinates), measured: true },
-  elevation_m !== undefined && { label: 'Elevation', value: `${elevation_m.toLocaleString('en-GB')} m`, measured: true },
-  { label: 'Date', value: when },
-  { label: 'Frames', value: String(frames), measured: true },
-  client && { label: 'Client', value: client },
-].filter(Boolean) as { label: string; value: string; measured?: boolean }[];
+// The first screen names each fact once, in the margin. The region folds into the place; the frame
+// count and the client are in the end credits.
+const coords = [coordinates && formatCoordinates(coordinates), elevation_m !== undefined && `${elevation_m.toLocaleString('en-GB')} m`]
+  .filter(Boolean)
+  .join(' · ');
 
 const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data.cover);
 ---
@@ -56,8 +52,9 @@ const nextCover = next && resolvePhoto(next.id, loadManifest(next.id), next.data
       photo={coverPhoto}
       title={title}
       summary={summary}
-      overline={[num && `№ ${num}`, place, when].filter(Boolean).join(' · ')}
-      facts={facts}
+      overline={num && `№ ${num}`}
+      coords={coords || undefined}
+      margin={[place, when]}
       transitionName={`cover-${story.id}`}
     />
 

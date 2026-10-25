@@ -63,7 +63,7 @@ test.describe('smoke tests', () => {
   test('a story that is not featured has no number and links within its own tier', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/work/lofoten/');
-    await expect(page.locator('.hero__overline')).not.toContainText('№');
+    await expect(page.locator('.hero__overline')).toHaveCount(0);
     await expect(page.locator('.sitenav__rail .sitenav__more a[aria-current="page"]')).toHaveText('Lofoten');
     await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/oslo/');
   });
@@ -157,13 +157,14 @@ test.describe('smoke tests', () => {
     await expect(page.locator('.sitenav__panel .sitenav__stories a')).toHaveCount(stories.length);
   });
 
-  test('a story shows its facts, frame numbers, and next story', async ({ page }) => {
+  test('a story shows its marginalia, frame numbers, and next story', async ({ page }) => {
     await page.goto('/work/nomads/');
-    await expect(page.locator('.hero__facts')).toContainText('31°16′N 5°59′W');
-    await expect(page.locator('.hero__facts')).toContainText('35');
-    // Labels are spelled out, never abbreviated.
-    await expect(page.locator('.hero__facts dt')).toContainText(['Place', 'Region', 'Coordinates', 'Date', 'Frames']);
-    await expect(page.locator('.hero__facts')).not.toContainText('Coords');
+    // Each fact once on the first screen: coordinates on the plate edge, place and date in the margin.
+    await expect(page.locator('.hero__coords')).toHaveText('31°16′N 5°59′W');
+    await expect(page.locator('.hero__margin span')).toHaveText(['Djebel Saghro, Morocco', 'November 2025']);
+    await expect(page.locator('.hero__overline')).toHaveText('№ 02');
+    await expect(page.locator('.hero__facts')).toHaveCount(0);
+    await expect(page.locator('.story-credits')).toContainText('35 frames');
     await expect(page.locator('.hero__chapters')).toHaveCount(0);
     // The title card shows the cover as frame 01, so the body starts at frame 02.
     await expect(page.locator('[data-frame]').first()).toHaveAttribute('data-frame', '2');

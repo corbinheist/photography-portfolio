@@ -2,51 +2,42 @@
 import Photo from '@components/photo/Photo.astro';
 import type { StoryPhoto } from '@scripts/utils/story-manifest';
 
-interface Fact {
-  label: string;
-  value: string;
-  /** A measured value (coordinates, counts), set in tabular figures. */
-  measured?: boolean;
-}
-
 interface Props {
   photo: StoryPhoto;
   title: string;
   /** Optional: the homepage hero shows only the title and the call to action. */
   summary?: string;
-  overline: string;
-  facts?: Fact[];
+  /** The story number ("№ 02"), the page's seal. The homepage passes its own line. */
+  overline?: string;
+  /** Coordinates and elevation, set vertically on the plate edge from 900px. */
+  coords?: string;
+  /** At most two short marginal lines in the text field: the place, then the month and year. */
+  margin?: string[];
   cta?: { href: string; label: string; ariaLabel?: string };
   /** Shared with the index thumbnail so the cover grows into the hero on navigation. */
   transitionName?: string;
   headingLevel?: 'h1' | 'h2';
 }
 
-const { photo, title, summary, overline, facts = [], cta, transitionName, headingLevel = 'h1' } = Astro.props;
+const { photo, title, summary, overline, coords, margin = [], cta, transitionName, headingLevel = 'h1' } = Astro.props;
 const Heading = headingLevel;
 // The story number leads the overline ("№ 02 · place · date"). It is the page's seal.
-const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
+const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
 ---
 
 <section class="hero" data-hero>
   <div class="hero__media" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>
     <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 899px) 100vw, 66vw" loading="eager" fetchpriority="high" />
+    {coords && <p class="hero__coords tabular">{coords}</p>}
   </div>
 
   <div class="hero__body">
-    <p class="hero__overline">{numbered ? <><span class="seal">№ {numbered[1]}</span>{numbered[2]}</> : overline}</p>
+    {overline && <p class="hero__overline">{numbered ? <><span class="seal">№ {numbered[1]}</span>{numbered[2]}</> : overline}</p>}
     <Heading class="hero__title">{title}</Heading>
     {summary && <p class="hero__summary">{summary}</p>}
 
-    {facts.length > 0 && (
-      <dl class="hero__facts">
-        {facts.map((fact) => (
-          <div>
-            <dt>{fact.label}</dt>
-            <dd class:list={['tabular', { 'is-measured': fact.measured }]}>{fact.value}</dd>
-          </div>
-        ))}
-      </dl>
+    {margin.length > 0 && (
+      <p class="hero__margin">{margin.map((line) => <span>{line}</span>)}</p>
     )}
 
     {cta && <a class="hero__cta" href={cta.href} aria-label={cta.ariaLabel}>{cta.label} <span aria-hidden="true">→</span></a>}
@@ -67,7 +58,6 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
   }
 
   .hero__overline,
-  .hero__facts dt,
   .hero__cta {
     font-variant-numeric: tabular-nums;
   }
@@ -99,25 +89,22 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
     color: var(--color-text);
   }
 
-  .hero__facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-sm) clamp(1.25rem, 2vw, 2rem);
-    margin-top: var(--space-lg);
-    padding-top: var(--space-md);
-    border-top: 1px solid var(--color-border);
-  }
-
-  .hero__facts dt {
+  /* Marginalia: small, muted, at most three lines on the first screen. */
+  .hero__margin,
+  .hero__coords {
     font-size: var(--type-margin);
+    line-height: 1.5;
     color: var(--color-text-muted);
   }
 
-  .hero__facts dd {
-    margin-top: 0.4em;
-    font-variant-numeric: tabular-nums;
-    font-size: var(--type-margin);
-    color: var(--color-text);
+  .hero__margin {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--space-lg);
+  }
+
+  .hero__coords {
+    margin-top: var(--space-sm);
   }
 
   /* A text link, not a button. */
@@ -150,10 +137,26 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
       margin-inline: auto;
     }
 
-    /* The plate: columns 5 to 12, at its own proportions, no taller than the screen allows. */
+    /* The plate: columns 5 to 12, at its own proportions, no taller than the screen allows. The
+       coordinates run top to bottom up its left edge. */
     .hero__media {
       grid-column: 5 / -1;
       grid-row: 1;
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: flex-end;
+      gap: var(--space-sm);
+    }
+
+    .hero__media :global(.photo-wrap) {
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+
+    .hero__coords {
+      flex: none;
+      margin-top: 0;
+      writing-mode: vertical-rl;
     }
 
     .hero__media :global(img) {
