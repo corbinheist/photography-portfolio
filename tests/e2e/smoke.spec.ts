@@ -224,6 +224,20 @@ test.describe('smoke tests', () => {
     await expect(lightbox).toBeHidden();
   });
 
+  test('the About plates open in the lightbox, and the page has no facts bar or story ledger', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/about/');
+    await expect(page.locator('.slug-bar, .ledger-section, .roles-strip')).toHaveCount(0);
+    await page.locator('.about-portrait picture').click();
+    const lightbox = page.locator('[data-lightbox]');
+    await expect(lightbox).toHaveAttribute('data-frame', '1');
+    await page.keyboard.press('ArrowRight');
+    await expect(lightbox).toHaveAttribute('data-frame', '2');
+    await expect(page.locator('[data-lightbox-next]')).toBeHidden();
+    await page.keyboard.press('Escape');
+    await expect(lightbox).toBeHidden();
+  });
+
   test('the hero opens as frame 01 with no previous nudge, and Enter opens a focused photograph', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/work/nomads/');

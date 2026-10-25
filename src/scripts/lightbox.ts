@@ -1,11 +1,11 @@
 /**
- * Story lightbox: a click (or Enter/Space) on a numbered photograph opens it full bleed in a
- * <dialog>. The side nudges, the arrow keys, and J/K move between frames; a click anywhere else, or
- * Escape, closes it. The frames come from the page: every [data-frame] element in the story,
- * ordered by its frame number, one entry per number.
+ * Lightbox: a click (or Enter/Space) on a numbered photograph opens it full bleed in a <dialog>.
+ * The side nudges, the arrow keys, and J/K move between frames; a click anywhere else, or Escape,
+ * closes it. The frames come from the page: every [data-frame] element in a story, or in any
+ * element marked [data-lightbox-scope] (the About page), ordered by frame number, one per number.
  */
 export function initLightbox(): void {
-  const article = document.querySelector<HTMLElement>('[data-story]');
+  const article = document.querySelector<HTMLElement>('[data-story], [data-lightbox-scope]');
   const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
   if (!article || !dialog) return;
 
@@ -55,7 +55,7 @@ export function initLightbox(): void {
 
   // Each photograph opens its own frame: a click, or Enter/Space on the focused photograph.
   frames.forEach(({ n, el }, index) => {
-    const target = el.querySelector<HTMLElement>('.photo-wrap') ?? el;
+    const target = el.querySelector<HTMLElement>('.photo-wrap, picture') ?? el;
     target.dataset.lightboxOpen = '';
     target.tabIndex = 0;
     target.setAttribute('role', 'button');
