@@ -139,7 +139,6 @@ ol {
 
   /* Navigation glass (the rail and the bar) and its text. */
   --glass-bg: rgb(255 252 240 / 0.74);
-  --story-bar-h: 44px;
   --glass-bg-strong: rgb(255 252 240 / 0.96);
   --glass-line: rgb(16 15 15 / 0.1);
   --glass-line-strong: rgb(16 15 15 / 0.28);

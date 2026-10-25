@@ -18,103 +18,6 @@ html:has([data-story]) {
   scroll-snap-align: start;
 }
 
-/* ── Sticky story bar: appears once the title card has scrolled away ── */
-
-.story-bar {
-  position: fixed;
-  /* Above the navigation, whose glass extends behind this bar in the top-bar layout. */
-  z-index: 51;
-  top: var(--header-h);
-  left: var(--rail-offset);
-  right: 0;
-  height: var(--story-bar-h);
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: var(--space-md);
-  padding-inline: var(--container-padding);
-  /* The same glass as the navigation, so the bar and the navigation read as one panel. */
-  background: var(--glass-bg);
-  border-bottom: 1px solid var(--color-border-subtle);
-  backdrop-filter: blur(18px) saturate(1.15);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-faint);
-  animation: bar-in linear both;
-  animation-timeline: scroll(root);
-  animation-range: 70svh 95svh;
-}
-
-/* In the top-bar layout the navigation's glass extends behind the story bar (SiteNav.astro), so
-   the bar draws no glass of its own. Beside the rail, the bar has its own glass. */
-html[data-nav='bar'] .story-bar {
-  background: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  border-top: 1px solid var(--glass-line);
-}
-
-/* An open Stories menu covers the bar. */
-html:has(.sitenav details[open]) .story-bar {
-  z-index: 40;
-}
-
-@media (max-width: 1023px) {
-  .story-bar {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    border-top: 1px solid var(--glass-line);
-  }
-}
-
-@keyframes bar-in {
-  from { opacity: 0; translate: 0 -8px; visibility: hidden; }
-  to { opacity: 1; translate: 0 0; visibility: visible; }
-}
-
-.story-bar a {
-  color: var(--color-text-muted);
-}
-
-.story-bar a:hover {
-  color: var(--color-text);
-}
-
-.story-bar__title {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  text-align: center;
-  color: var(--color-text-muted);
-}
-
-.story-bar__chapter {
-  color: var(--color-text);
-}
-
-.story-bar__frame {
-  color: var(--color-text);
-}
-
-.story-bar__pct {
-  color: var(--color-accent);
-}
-
-.story-bar__progress {
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  height: 2px;
-  width: 100%;
-  background: var(--color-accent);
-  transform-origin: left;
-  transform: scaleX(var(--progress, 0));
-}
-
 /* ── Body: one text column, figures at three sizes ── */
 
 .story-body {
@@ -415,16 +318,6 @@ html:has(.sitenav details[open]) .story-bar {
 }
 
 @media (max-width: 767px) {
-  .story-bar {
-    grid-template-columns: auto auto;
-    justify-content: space-between;
-  }
-
-  .story-bar__title,
-  .story-bar__pct {
-    display: none;
-  }
-
   .story-credits div {
     grid-template-columns: 1fr;
     gap: 0.2em;
@@ -432,10 +325,6 @@ html:has(.sitenav details[open]) .story-bar {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .story-bar {
-    animation: none;
-  }
-
   .story-figure img {
     animation: none;
   }

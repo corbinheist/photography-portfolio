@@ -148,8 +148,7 @@ test.describe('smoke tests', () => {
     await expect(page.locator('.hero__chapters li')).toHaveCount(5);
     // The title card shows the cover as frame 01, so the body starts at frame 02.
     await expect(page.locator('[data-frame]').first()).toHaveAttribute('data-frame', '2');
-    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await expect(page.locator('[data-story-frame]')).toHaveText('35');
+    await expect(page.locator('[data-frame]').last()).toHaveAttribute('data-frame', '35');
     await expect(page.locator('.story-next')).toHaveAttribute('href', '/work/ksar/');
     await expect(page.locator('.hero__overline')).toContainText('№ 02');
     await expect(page.locator('.story-next .mono-label')).toHaveText('Next · № 01');
