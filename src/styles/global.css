@@ -67,7 +67,7 @@ ol {
 :root {
   /* ═══════════════════════════════════════
      FLEXOKI BASE
-     Warm paper-to-black scale by Steph Ango
+     Warm paper-to-black scale by Steph Ango. Each name holds the Flexoki value of the same name.
      ═══════════════════════════════════════ */
   --fx-paper:    #FFFCF0;
   --fx-black:    #100F0F;
@@ -77,12 +77,13 @@ ol {
   --fx-base-200: #CECDC3;
   --fx-base-300: #B7B5AC;
   --fx-base-400: #9F9D96;
-  --fx-base-500: #6F6E69;
-  --fx-base-600: #575653;
-  --fx-base-700: #403E3C;
-  --fx-base-800: #343331;
-  --fx-base-850: #282726;
-  --fx-base-900: #1C1B1A;
+  --fx-base-500: #878580;
+  --fx-base-600: #6F6E69;
+  --fx-base-700: #575653;
+  --fx-base-800: #403E3C;
+  --fx-base-850: #343331;
+  --fx-base-900: #282726;
+  --fx-base-950: #1C1B1A;
 
   /* ═══════════════════════════════════════
      HEIST STUDIO PALETTE
@@ -119,9 +120,9 @@ ol {
   --color-elevated:    var(--fx-base-50);
   --color-surface-alt: var(--fx-base-100);
 
-  --color-text:       var(--fx-base-900);
-  --color-text-muted: var(--fx-base-600);
-  --color-text-faint: var(--fx-base-500);
+  --color-text:       var(--fx-base-950);
+  --color-text-muted: var(--fx-base-700);
+  --color-text-faint: var(--fx-base-600);
 
   --color-accent:       var(--hs-bottle);
   --color-accent-hover: var(--hs-racing);
@@ -140,9 +141,9 @@ ol {
   --color-border-subtle: var(--fx-base-100);
 
   /* Navigation text. */
-  --nav-ink: var(--fx-base-900);
-  --nav-ink-muted: var(--fx-base-700);
-  --nav-ink-faint: var(--fx-base-600);
+  --nav-ink: var(--fx-base-950);
+  --nav-ink-muted: var(--fx-base-800);
+  --nav-ink-faint: var(--fx-base-700);
   color-scheme: light;
 
   /* Backward-compatible aliases */
@@ -198,9 +199,9 @@ ol {
    setting; paper is the default for every visitor. */
 :root[data-theme='ink'] {
   --color-bg:          var(--fx-black);
-  --color-surface:     var(--fx-base-900);
-  --color-elevated:    var(--fx-base-850);
-  --color-surface-alt: var(--fx-base-800);
+  --color-surface:     var(--fx-base-950);
+  --color-elevated:    var(--fx-base-900);
+  --color-surface-alt: var(--fx-base-850);
 
   --color-text:       var(--fx-base-100);
   --color-text-muted: var(--fx-base-300);
@@ -219,8 +220,8 @@ ol {
   --color-warm-deep:  var(--hs-oxide);
   --color-warm-light: var(--hs-ember);
 
-  --color-border:        var(--fx-base-700);
-  --color-border-subtle: var(--fx-base-850);
+  --color-border:        var(--fx-base-800);
+  --color-border-subtle: var(--fx-base-900);
 
   --color-interactive:       var(--color-accent);
   --color-interactive-hover: var(--color-accent-hover);
