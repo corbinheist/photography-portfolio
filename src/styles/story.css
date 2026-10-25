@@ -98,7 +98,7 @@ html:has([data-story]) {
   margin-inline: auto;
 }
 
-.story-figure--wide img {
+.story-body .story-figure--wide img {
   width: min(100%, 90svh * var(--ratio));
 }
 
@@ -124,8 +124,50 @@ html:has([data-story]) {
   width: min(720px, 100% - 2 * var(--container-padding));
 }
 
-.story-figure--inset img {
+/* .story-body raises the specificity above Photo's scoped width: 100%, so the height cap applies. */
+.story-body .story-figure--inset img {
   width: min(100%, 80svh * var(--ratio));
+}
+
+/* From 900px an inset stands off-centre: one twelfth of the page in from the left edge, then from
+   the right, in turn. The caption hangs beside the plate, in the empty side, level with its foot.
+   The order comes from the page, never from the MDX. */
+@media (min-width: 900px) {
+  .story-body > .story-figure--inset {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-md);
+    width: calc(100% - 2 * var(--container-padding));
+    max-width: var(--container-max);
+    padding-inline: calc(100% / 12);
+  }
+
+  /* The wrapper is the plate: as wide as the photograph, at most half the row and 80svh high. */
+  .story-figure--inset .photo-wrap {
+    flex: none;
+    width: min(50%, 80svh * var(--ratio));
+    margin-inline: 0;
+  }
+
+  .story-body .story-figure--inset img {
+    width: 100%;
+    margin-inline: 0;
+  }
+
+  .story-figure--inset .story-caption {
+    flex-direction: column;
+    max-width: 16rem;
+    margin-top: 0;
+  }
+
+  .story-body > .story-figure--inset:nth-child(even of .story-figure--inset) {
+    flex-direction: row-reverse;
+  }
+
+  .story-body > .story-figure--inset:nth-child(even of .story-figure--inset) .story-caption {
+    align-items: flex-end;
+    text-align: right;
+  }
 }
 
 .story-body > .story-pair {
