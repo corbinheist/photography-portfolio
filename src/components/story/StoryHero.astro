@@ -26,8 +26,8 @@ const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
 ---
 
 <section class="hero" data-hero>
-  <div class="hero__media" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>
-    <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 899px) 100vw, 66vw" loading="eager" fetchpriority="high" />
+  <div class="hero__media" style={`--ratio: ${photo.width / photo.height}${transitionName ? `; view-transition-name: ${transitionName}` : ''}`}>
+    <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 899px) 100vw, 90vw" loading="eager" fetchpriority="high" />
     {coords && <p class="hero__coords tabular">{coords}</p>}
   </div>
 
@@ -45,8 +45,9 @@ const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
 </section>
 
 <style>
-  /* One plate on paper. The text never sits on the photograph: on a phone it follows the plate;
-     from 900px the plate stands off-centre on the grid and the text holds the empty field beside it. */
+  /* One plate on paper, as large as the first screen allows, never cropped. The text never sits on
+     the photograph: it follows the plate. From 900px the plate fills the first screen, set to the
+     right with the coordinates down its edge, and the text starts under it on the left. */
   .hero {
     padding: calc(var(--header-h) + var(--space-lg)) var(--container-padding) var(--space-2xl);
     background: var(--color-bg);
@@ -129,28 +130,37 @@ const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
 
   @media (min-width: 900px) {
     .hero {
+      --hero-h: calc(100svh - var(--header-h) - 1.5rem);
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       column-gap: var(--space-md);
-      align-items: end;
+      row-gap: var(--space-xl);
+      align-items: start;
       max-width: var(--container-max);
       margin-inline: auto;
+      padding-top: calc(var(--header-h) + 0.75rem);
     }
 
-    /* The plate: columns 5 to 12, at its own proportions, no taller than the screen allows. The
-       coordinates run top to bottom up its left edge. */
     .hero__media {
-      grid-column: 5 / -1;
+      grid-column: 1 / -1;
       grid-row: 1;
       display: flex;
-      flex-direction: row-reverse;
-      align-items: flex-end;
+      justify-content: flex-end;
+      align-items: flex-start;
       gap: var(--space-sm);
     }
 
+    /* The plate takes the first screen's height at its own proportions. A frame too wide for the row
+       takes the row's width instead, so nothing is cropped or letterboxed. --ratio comes from the
+       photograph's dimensions. */
     .hero__media :global(.photo-wrap) {
-      flex: 0 1 auto;
-      min-width: 0;
+      flex: none;
+      width: min(100% - 2.5rem, var(--hero-h) * var(--ratio));
+    }
+
+    .hero__media :global(img) {
+      width: 100%;
+      height: auto;
     }
 
     .hero__coords {
@@ -159,18 +169,10 @@ const numbered = overline?.match(/^№\s*(\d+)(.*)$/s);
       writing-mode: vertical-rl;
     }
 
-    .hero__media :global(img) {
-      width: auto;
-      max-width: 100%;
-      max-height: calc(100svh - var(--header-h) - 2 * var(--space-lg));
-      margin-left: auto;
-      object-fit: contain;
-    }
-
-    /* The empty field: columns 1 to 4, the text set low, level with the foot of the plate. */
+    /* Under the plate, on the left: the number, the title, the summary, and the marginalia. */
     .hero__body {
-      grid-column: 1 / 5;
-      grid-row: 1;
+      grid-column: 1 / 7;
+      grid-row: 2;
       margin-top: 0;
     }
   }
