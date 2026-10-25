@@ -180,12 +180,12 @@ test.describe('smoke tests', () => {
     });
   }
 
-  test('the site follows the system light or dark setting', async ({ page }) => {
+  test('paper is the default whatever the system setting, and ink is opt-in', async ({ page }) => {
     const background = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
     await page.emulateMedia({ colorScheme: 'dark' });
     await page.goto('/about/');
-    expect(await background()).toBe('rgb(16, 15, 15)');
-    await page.emulateMedia({ colorScheme: 'light' });
-    await expect.poll(background).toBe('rgb(255, 252, 240)');
+    expect(await background()).toBe('rgb(255, 252, 240)');
+    await page.evaluate(() => { document.documentElement.dataset.theme = 'ink'; });
+    await expect.poll(background).toBe('rgb(16, 15, 15)');
   });
 });

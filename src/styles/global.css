@@ -112,40 +112,41 @@ ol {
   --hs-kiln-light: #D14D41;
 
   /* ═══════════════════════════════════════
-     SEMANTIC TOKENS · DARK (DEFAULT)
+     SEMANTIC TOKENS · PAPER (DEFAULT)
+     The page is uncoated stock and the photographs are plates on it. Never pure white.
      ═══════════════════════════════════════ */
-  --color-bg:          var(--fx-black);
-  --color-surface:     var(--fx-base-900);
-  --color-elevated:    var(--fx-base-850);
-  --color-surface-alt: var(--fx-base-800);
+  --color-bg:          var(--fx-paper);
+  --color-surface:     var(--fx-base-50);
+  --color-elevated:    var(--fx-base-50);
+  --color-surface-alt: var(--fx-base-100);
 
-  --color-text:       var(--fx-base-100);
-  --color-text-muted: var(--fx-base-300);
-  --color-text-faint: var(--fx-base-400);
+  --color-text:       var(--fx-base-900);
+  --color-text-muted: var(--fx-base-600);
+  --color-text-faint: var(--fx-base-500);
 
-  --color-accent:       var(--hs-moss);
-  --color-accent-hover: var(--hs-sage);
-  --color-accent-deep:  var(--hs-forest);
-  --color-accent-muted: var(--hs-bottle);
-  --color-on-accent:    var(--fx-black);
+  --color-accent:       var(--hs-bottle);
+  --color-accent-hover: var(--hs-racing);
+  --color-accent-deep:  var(--hs-racing);
+  --color-accent-muted: var(--hs-forest);
+  --color-on-accent:    var(--fx-paper);
 
-  --color-warm:       var(--hs-rust);
-  --color-warm-deep:  var(--hs-oxide);
-  --color-warm-light: var(--hs-ember);
+  --color-warm:       var(--hs-oxide);
+  --color-warm-deep:  var(--hs-saddle);
+  --color-warm-light: var(--hs-rust);
 
-  --color-border:        var(--fx-base-700);
-  --color-border-subtle: var(--fx-base-850);
+  --color-border:        var(--fx-base-200);
+  --color-border-subtle: var(--fx-base-100);
 
   /* Navigation glass (the rail and the bar) and its text. */
-  --glass-bg: rgb(16 15 15 / 0.6);
+  --glass-bg: rgb(255 252 240 / 0.74);
   --story-bar-h: 44px;
-  --glass-bg-strong: rgb(16 15 15 / 0.94);
-  --glass-line: rgb(255 252 240 / 0.1);
-  --glass-line-strong: rgb(255 252 240 / 0.28);
-  --nav-ink: var(--fx-paper);
-  --nav-ink-muted: rgb(255 252 240 / 0.82);
-  --nav-ink-faint: rgb(255 252 240 / 0.62);
-  color-scheme: dark;
+  --glass-bg-strong: rgb(255 252 240 / 0.96);
+  --glass-line: rgb(16 15 15 / 0.1);
+  --glass-line-strong: rgb(16 15 15 / 0.28);
+  --nav-ink: var(--fx-base-900);
+  --nav-ink-muted: var(--fx-base-700);
+  --nav-ink-faint: var(--fx-base-600);
+  color-scheme: light;
 
   /* Backward-compatible aliases */
   --color-interactive:       var(--color-accent);
@@ -196,44 +197,42 @@ ol {
   --z-lightbox: 300;
 }
 
-/* Light theme */
-/* Light theme: follows the visitor's system setting. No script, so no flash. */
-@media (prefers-color-scheme: light) {
-  :root {
-    --color-bg:          var(--fx-paper);
-    --color-surface:     var(--fx-base-50);
-    --color-elevated:    #fff;
-    --color-surface-alt: var(--fx-base-100);
+/* Ink theme: an opt-in choice on <html data-theme="ink">. The site does not follow the system
+   setting; paper is the default for every visitor. */
+:root[data-theme='ink'] {
+  --color-bg:          var(--fx-black);
+  --color-surface:     var(--fx-base-900);
+  --color-elevated:    var(--fx-base-850);
+  --color-surface-alt: var(--fx-base-800);
 
-    --color-text:       var(--fx-base-900);
-    --color-text-muted: var(--fx-base-600);
-    --color-text-faint: var(--fx-base-500);
+  --color-text:       var(--fx-base-100);
+  --color-text-muted: var(--fx-base-300);
+  --color-text-faint: var(--fx-base-400);
 
-    --color-accent:       var(--hs-bottle);
-    --color-accent-hover: var(--hs-racing);
-    --color-accent-deep:  var(--hs-racing);
-    --color-accent-muted: var(--hs-forest);
-    --color-on-accent:    var(--fx-paper);
+  --color-accent:       var(--hs-moss);
+  --color-accent-hover: var(--hs-sage);
+  --color-accent-deep:  var(--hs-forest);
+  --color-accent-muted: var(--hs-bottle);
+  --color-on-accent:    var(--fx-black);
 
-    --color-warm:       var(--hs-oxide);
-    --color-warm-deep:  var(--hs-saddle);
-    --color-warm-light: var(--hs-rust);
+  --color-warm:       var(--hs-rust);
+  --color-warm-deep:  var(--hs-oxide);
+  --color-warm-light: var(--hs-ember);
 
-    --color-border:        var(--fx-base-200);
-    --color-border-subtle: var(--fx-base-100);
+  --color-border:        var(--fx-base-700);
+  --color-border-subtle: var(--fx-base-850);
 
-    --color-interactive:       var(--color-accent);
-    --color-interactive-hover: var(--color-accent-hover);
+  --color-interactive:       var(--color-accent);
+  --color-interactive-hover: var(--color-accent-hover);
 
-    --glass-bg: rgb(255 252 240 / 0.74);
-    --glass-bg-strong: rgb(255 252 240 / 0.96);
-    --glass-line: rgb(16 15 15 / 0.1);
-    --glass-line-strong: rgb(16 15 15 / 0.28);
-    --nav-ink: var(--fx-base-900);
-    --nav-ink-muted: var(--fx-base-700);
-    --nav-ink-faint: var(--fx-base-600);
-    color-scheme: light;
-  }
+  --glass-bg: rgb(16 15 15 / 0.6);
+  --glass-bg-strong: rgb(16 15 15 / 0.94);
+  --glass-line: rgb(255 252 240 / 0.1);
+  --glass-line-strong: rgb(255 252 240 / 0.28);
+  --nav-ink: var(--fx-paper);
+  --nav-ink-muted: rgb(255 252 240 / 0.82);
+  --nav-ink-faint: rgb(255 252 240 / 0.62);
+  color-scheme: dark;
 }
 
 /* ==========================================
