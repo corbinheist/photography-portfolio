@@ -236,7 +236,7 @@ const contacts = [
   /* ── Shared overline ── */
   .overline {
     font-variant-numeric: tabular-nums;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
     margin-bottom: 10px;
   }
@@ -254,7 +254,7 @@ const contacts = [
     flex-wrap: wrap;
     gap: 16px;
     font-variant-numeric: tabular-nums;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
   }
 
@@ -291,7 +291,7 @@ const contacts = [
 
   .plate-caption {
     font-variant-numeric: tabular-nums;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
     margin-top: 10px;
     display: flex;
@@ -304,7 +304,7 @@ const contacts = [
 
   .hero-headline {
     font-family: var(--font-heading);
-    font-size: clamp(40px, 5.4vw, 62px);
+    font-size: var(--type-title);
     font-weight: 400;
     line-height: 1.04;
     letter-spacing: -0.025em;
@@ -318,7 +318,7 @@ const contacts = [
   }
 
   .body-lg {
-    font-size: 19px;
+    font-size: var(--type-body);
     line-height: 1.7;
     color: var(--color-text);
     margin: 0 0 22px;
@@ -326,7 +326,7 @@ const contacts = [
   }
 
   .body-md {
-    font-size: 17px;
+    font-size: var(--type-body);
     line-height: 1.7;
     color: var(--color-text-muted);
     margin: 0 0 40px;
@@ -352,14 +352,14 @@ const contacts = [
 
   .role-num {
     font-variant-numeric: tabular-nums;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--color-text-muted);
     margin-bottom: 8px;
   }
 
   .role-title {
     font-family: var(--font-heading);
-    font-size: 22px;
+    font-size: var(--type-heading);
     font-weight: 400;
     letter-spacing: -0.01em;
     line-height: 1.1;
@@ -369,7 +369,7 @@ const contacts = [
 
   .role-desc {
     font-variant-numeric: tabular-nums;
-    font-size: 11px;
+    font-size: var(--type-margin);
     line-height: 1.6;
     color: var(--color-text-muted);
     white-space: pre-line;
@@ -399,7 +399,7 @@ const contacts = [
 
   .ledger-title {
     font-family: var(--font-heading);
-    font-size: clamp(28px, 3.4vw, 40px);
+    font-size: var(--type-heading);
     font-weight: 400;
     margin: 0;
     letter-spacing: -0.02em;
@@ -408,7 +408,7 @@ const contacts = [
 
   .ledger-stats {
     font-variant-numeric: tabular-nums;
-    font-size: 11px;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
   }
 
@@ -434,20 +434,20 @@ const contacts = [
 
   .ledger-date {
     font-variant-numeric: tabular-nums;
-    font-size: 12px;
+    font-size: var(--type-margin);
     color: var(--color-text-muted);
   }
 
   .ledger-place {
     font-variant-numeric: tabular-nums;
-    font-size: 12px;
+    font-size: var(--type-margin);
     letter-spacing: 0.04em;
     color: var(--color-text);
   }
 
   .ledger-note {
     font-family: var(--font-heading);
-    font-size: 20px;
+    font-size: var(--type-body);
     font-weight: 400;
     letter-spacing: -0.01em;
     color: var(--color-text-muted);
@@ -455,7 +455,7 @@ const contacts = [
 
   .ledger-count {
     font-variant-numeric: tabular-nums;
-    font-size: 11px;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
     text-align: right;
   }
@@ -491,7 +491,7 @@ const contacts = [
     padding: 14px 2px 0;
     border-top: 1px solid var(--color-border-subtle);
     font-variant-numeric: tabular-nums;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
   }
 
@@ -514,7 +514,7 @@ const contacts = [
 
   .contact-heading {
     font-family: var(--font-heading);
-    font-size: clamp(24px, 2.7vw, 32px);
+    font-size: var(--type-heading);
     font-weight: 400;
     line-height: 1.15;
     letter-spacing: -0.02em;
@@ -524,7 +524,7 @@ const contacts = [
   }
 
   .contact-desc {
-    font-size: 16px;
+    font-size: var(--type-body);
     line-height: 1.7;
     color: var(--color-text-muted);
     margin: 0 0 32px;
@@ -553,27 +553,27 @@ const contacts = [
 
   .contact-row__label {
     font-variant-numeric: tabular-nums;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
   }
 
   .contact-row__value {
     font-variant-numeric: tabular-nums;
-    font-size: 15px;
+    font-size: var(--type-margin);
     color: var(--color-text);
     transition: color var(--duration-fast) ease;
   }
 
   .contact-row__arrow {
     font-variant-numeric: tabular-nums;
-    font-size: 14px;
+    font-size: var(--type-margin);
     color: var(--color-text-muted);
     text-align: right;
   }
 
   .kit-heading {
     font-family: var(--font-heading);
-    font-size: clamp(24px, 2.7vw, 32px);
+    font-size: var(--type-heading);
     font-weight: 400;
     line-height: 1.15;
     letter-spacing: -0.02em;
@@ -596,13 +596,13 @@ const contacts = [
 
   .kit-row__label {
     font-variant-numeric: tabular-nums;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--color-text-faint);
   }
 
   .kit-row__value {
     font-variant-numeric: tabular-nums;
-    font-size: 13px;
+    font-size: var(--type-margin);
     color: var(--color-text);
     letter-spacing: 0.02em;
   }
@@ -627,7 +627,7 @@ const contacts = [
     }
 
     .hero-headline {
-      font-size: clamp(32px, 8vw, 48px);
+      font-size: var(--type-title);
     }
 
     .roles-strip {
@@ -670,7 +670,7 @@ const contacts = [
     }
 
     .contact-row__value {
-      font-size: 13px;
+      font-size: var(--type-margin);
     }
   }
 

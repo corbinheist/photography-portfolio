@@ -73,7 +73,7 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
   }
 
   .hero__overline {
-    font-size: 12px;
+    font-size: var(--type-margin);
     color: var(--color-text-muted);
   }
 
@@ -81,7 +81,7 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
     margin-top: 0.35em;
     font-family: var(--font-heading);
     font-weight: 400;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-size: var(--type-title);
     line-height: 0.98;
     letter-spacing: -0.02em;
     color: var(--color-text);
@@ -93,7 +93,7 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
     margin-top: var(--space-md);
     max-width: 40ch;
     text-wrap: pretty;
-    font-size: var(--text-lg);
+    font-size: var(--type-body);
     font-weight: 300;
     line-height: 1.5;
     color: var(--color-text);
@@ -109,14 +109,14 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
   }
 
   .hero__facts dt {
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--color-text-muted);
   }
 
   .hero__facts dd {
     margin-top: 0.4em;
     font-variant-numeric: tabular-nums;
-    font-size: 13px;
+    font-size: var(--type-margin);
     color: var(--color-text);
   }
 
@@ -124,7 +124,7 @@ const numbered = overline.match(/^№\s*(\d+)(.*)$/s);
   .hero__cta {
     display: inline-block;
     margin-top: var(--space-lg);
-    font-size: 12px;
+    font-size: var(--type-margin);
     color: var(--color-text);
     border-bottom: 1px solid var(--color-border);
     padding-bottom: 0.3em;

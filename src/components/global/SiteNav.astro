@@ -202,8 +202,9 @@ const pages = [
 
   /* Layout variables. Phone and tablet: a 56px top bar. Desktop: the rail by default, or the bar. */
   :root {
-    /* Wide enough that the longest story title and place stay on one line (measured: 272px). */
-    --rail-w: 18rem;
+    /* Wide enough that the longest story title and place stay on one line. Measured with titles at
+       --type-body: "Nomads of Djebel Saghro" needs 25px more than an 18rem rail gives. */
+    --rail-w: 20rem;
     --bar-h: 56px;
     --header-h: var(--bar-h);
     --rail-offset: 0px;
@@ -293,7 +294,7 @@ const pages = [
     flex-direction: column;
     flex-shrink: 0;
     font-family: var(--font-heading);
-    font-size: 18px;
+    font-size: var(--type-body);
     line-height: 1;
     color: var(--nav-ink);
   }
@@ -325,7 +326,7 @@ const pages = [
   }
 
   .sitenav .wordmark {
-    font-size: 15px;
+    font-size: var(--type-margin);
   }
 
   .sitenav__rail,
@@ -346,7 +347,7 @@ const pages = [
     gap: 0.6em;
     min-height: 40px;
     padding-inline: 0.9em;
-    font-size: 11px;
+    font-size: var(--type-margin);
     color: var(--nav-ink);
     border: 1px solid var(--color-border);
     cursor: pointer;
@@ -386,7 +387,7 @@ const pages = [
     justify-content: space-between;
     padding-bottom: 0.75rem;
     border-bottom: 1px solid var(--color-border);
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--nav-ink-faint);
   }
 
@@ -422,7 +423,7 @@ const pages = [
 
   .sitenav__num {
     padding-top: 0.25em;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--nav-ink-faint);
   }
 
@@ -434,14 +435,14 @@ const pages = [
 
   .sitenav__title {
     font-family: var(--font-heading);
-    font-size: 16px;
+    font-size: var(--type-body);
     line-height: 1.2;
     color: var(--nav-ink-muted);
     transition: color 160ms ease;
   }
 
   .sitenav__place {
-    font-size: 9.5px;
+    font-size: var(--type-margin);
     line-height: 1.4;
     color: var(--nav-ink-faint);
   }
@@ -464,7 +465,7 @@ const pages = [
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--color-border);
     font-variant-numeric: tabular-nums;
-    font-size: 10px;
+    font-size: var(--type-margin);
     color: var(--nav-ink-faint);
   }
 
@@ -473,7 +474,7 @@ const pages = [
     padding: 0.45rem 0 0.45rem 0.6rem;
     border-left: 2px solid transparent;
     font-family: var(--font-heading);
-    font-size: 14px;
+    font-size: var(--type-margin);
     color: var(--nav-ink-muted);
     transition: color 160ms ease;
   }
@@ -491,7 +492,7 @@ const pages = [
   .sitenav__theme {
     display: block;
     padding-block: 0.45rem;
-    font-size: 11px;
+    font-size: var(--type-margin);
     color: var(--nav-ink-muted);
     transition: color 160ms ease;
   }
@@ -594,7 +595,7 @@ const pages = [
     }
 
     :global(html:not([data-nav='bar'])) .sitenav .wordmark {
-      font-size: 18px;
+      font-size: var(--type-body);
     }
 
     :global(html:not([data-nav='bar'])) .sitenav__rail {
@@ -625,7 +626,7 @@ const pages = [
       margin-top: auto;
       padding-top: 2rem;
       font-variant-numeric: tabular-nums;
-      font-size: 10px;
+      font-size: var(--type-margin);
       color: var(--nav-ink-faint);
     }
 

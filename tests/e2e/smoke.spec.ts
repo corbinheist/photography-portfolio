@@ -112,6 +112,14 @@ test.describe('smoke tests', () => {
     await expect(page.locator('.sitenav__panel a[aria-current="page"] .sitenav__title')).toHaveText('Ksar Tamnougalt');
   });
 
+  test('rail titles and places fit on one line', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/about/');
+    const clipped = await page.$$eval('.sitenav__rail .sitenav__title, .sitenav__rail .sitenav__place, .sitenav__rail .sitenav__more a',
+      (els) => els.filter((el) => el.scrollWidth > el.clientWidth).map((el) => el.textContent?.trim()));
+    expect(clipped).toEqual([]);
+  });
+
   test('a visitor who chose the rail keeps it on a story', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.addInitScript(() => localStorage.setItem('nav', 'rail'));

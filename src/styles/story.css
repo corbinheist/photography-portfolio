@@ -35,7 +35,7 @@ html:has([data-story]) {
 .story-body > ul,
 .story-body > ol {
   margin-bottom: var(--space-md);
-  font-size: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  font-size: var(--type-body);
   line-height: 1.7;
   color: var(--color-text);
 }
@@ -58,7 +58,7 @@ html:has([data-story]) {
   margin-block: var(--ma) var(--space-lg);
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: clamp(2rem, 3.6vw, 3.25rem);
+  font-size: var(--type-heading);
   line-height: 1.08;
   letter-spacing: -0.02em;
   text-wrap: balance;
@@ -69,7 +69,7 @@ html:has([data-story]) {
   display: block;
   margin-bottom: var(--space-md);
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: var(--type-body);
   letter-spacing: 0.04em;
   color: var(--color-text-muted);
 }
@@ -78,7 +78,7 @@ html:has([data-story]) {
   margin-block: var(--space-2xl) var(--space-sm);
   font-family: var(--font-heading);
   font-weight: 400;
-  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  font-size: var(--type-heading);
   line-height: 1.15;
 }
 
@@ -195,7 +195,7 @@ html:has([data-story]) {
   gap: 0.3em 1.2em;
   margin-top: var(--space-sm);
   font-variant-numeric: tabular-nums;
-  font-size: 12px;
+  font-size: var(--type-margin);
   color: var(--color-text-faint);
 }
 
@@ -217,7 +217,7 @@ html:has([data-story]) {
 .story-quote blockquote {
   font-family: var(--font-heading);
   font-style: italic;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: var(--type-heading);
   line-height: 1.25;
   letter-spacing: -0.01em;
 }
@@ -243,7 +243,7 @@ html:has([data-story]) {
 
 .story-credits dt {
   font-variant-numeric: tabular-nums;
-  font-size: 11px;
+  font-size: var(--type-margin);
   color: var(--color-text-faint);
 }
 
@@ -254,7 +254,7 @@ html:has([data-story]) {
 .story-end__ask {
   margin-top: var(--space-xl);
   font-family: var(--font-heading);
-  font-size: var(--text-xl);
+  font-size: var(--type-heading);
   line-height: 1.3;
 }
 
@@ -266,7 +266,7 @@ html:has([data-story]) {
   display: block;
   margin-top: var(--space-xs);
   font-variant-numeric: tabular-nums;
-  font-size: 15px;
+  font-size: var(--type-margin);
   color: var(--color-text);
 }
 
@@ -312,7 +312,7 @@ html:has([data-story]) {
 
 .story-next__title {
   font-family: var(--font-heading);
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-size: var(--type-title);
   line-height: 0.98;
   letter-spacing: -0.02em;
   color: var(--fx-paper);
@@ -329,7 +329,7 @@ html:has([data-story]) {
   gap: var(--space-md);
   padding: var(--space-lg) var(--container-padding);
   font-variant-numeric: tabular-nums;
-  font-size: 12px;
+  font-size: var(--type-margin);
 }
 
 .story-pager a {
