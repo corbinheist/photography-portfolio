@@ -27,7 +27,7 @@ html:has([data-story]) {
 
 .story-body > *,
 .story-end {
-  width: min(41rem, 100% - 2 * var(--container-padding));
+  width: min(32.5rem, 100% - 2 * var(--container-padding));
   margin-inline: auto;
 }
 
