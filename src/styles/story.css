@@ -51,10 +51,11 @@ html:has([data-story]) {
   margin-top: 0;
 }
 
-/* A chapter: a long pause, a mono number, a Vollkorn title. */
+/* An act: one empty screen (ma), then a small numeral and the title. The cut is hard: no divider,
+   no animation. Inside an act the blocks keep their ordinary gap. The first act follows the hero. */
 .story-body > h2 {
   counter-increment: chapter;
-  margin-block: clamp(6rem, 12vw, 10rem) var(--space-lg);
+  margin-block: var(--ma) var(--space-lg);
   font-family: var(--font-heading);
   font-weight: 400;
   font-size: clamp(2rem, 3.6vw, 3.25rem);
@@ -64,13 +65,12 @@ html:has([data-story]) {
 }
 
 .story-body > h2::before {
-  content: 'Chapter ' counter(chapter, decimal-leading-zero);
+  content: counter(chapter, upper-roman);
   display: block;
-  margin-bottom: var(--space-sm);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  margin-bottom: var(--space-md);
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  letter-spacing: 0.04em;
   color: var(--color-text-muted);
 }
 

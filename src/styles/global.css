@@ -172,6 +172,9 @@ ol {
   --space-2xl: clamp(3rem, 2rem + 4vw, 6rem);
   --space-3xl: clamp(4rem, 3rem + 5vw, 8rem);
 
+  /* Ma: the empty field between acts. Used only at an act break, never inside an act. */
+  --ma: 100svh;
+
   /* Layout */
   --container-max: 1440px;
   --container-padding: clamp(1.25rem, 0.75rem + 3vw, 4rem);
