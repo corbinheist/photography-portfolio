@@ -91,8 +91,12 @@ export function validateStory(slug: string, frontmatter: Record<string, unknown>
   }
   const cover = frontmatter.cover;
   if (typeof cover !== 'string' || !manifest.has(cover)) problems.push(`${slug}: cover "${String(cover)}" is not in the manifest`);
+  const seen = new Set<string>();
   for (const id of extractImageIds(body)) {
     if (!manifest.has(id)) problems.push(`${slug}: image id "${id}" is not in the manifest`);
+    // A repeat gives one photograph two frame numbers, so the count and the sequence go wrong.
+    if (seen.has(id)) problems.push(`${slug}: image id "${id}" appears more than once`);
+    seen.add(id);
   }
   return problems;
 }

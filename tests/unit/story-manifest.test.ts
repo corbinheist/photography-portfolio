@@ -77,13 +77,20 @@ describe('extractImageIds', () => {
 
 describe('validateStory', () => {
   const manifest = parseManifest('tokyo', entry('a') + entry('b', ' '));
-  const { data, body } = splitFrontmatter('---\ntitle: T\ncover: missing\n---\n\n<Image id="a" />\n<Pair ids={["a", "c"]} />\n');
+  const { data, body } = splitFrontmatter('---\ntitle: T\ncover: missing\n---\n\n<Image id="a" />\n<Pair ids={["b", "c"]} />\n');
 
   it('reports an empty alt, a missing cover, and an unknown image id', () => {
     expect(validateStory('tokyo', data, body, manifest)).toEqual([
       'tokyo: manifest entry "b" has an empty alt',
       'tokyo: cover "missing" is not in the manifest',
       'tokyo: image id "c" is not in the manifest',
+    ]);
+  });
+
+  it('reports an image id that appears more than once', () => {
+    const good = parseManifest('tokyo', entry('a') + entry('b'));
+    expect(validateStory('tokyo', { cover: 'a' }, '<Pair ids={["a", "b"]} />\n<Image id="a" />', good)).toEqual([
+      'tokyo: image id "a" appears more than once',
     ]);
   });
 
