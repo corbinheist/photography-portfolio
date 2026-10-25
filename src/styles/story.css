@@ -167,19 +167,6 @@ html:has([data-story]) {
   opacity: 0.75;
 }
 
-/* Photographs come up out of the dark as they enter. Subtle: the frame is already there. */
-@supports (animation-timeline: view()) {
-  .story-figure img {
-    animation: frame-up linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 40%;
-  }
-
-  @keyframes frame-up {
-    from { opacity: 0.4; }
-  }
-}
-
 /* ── Quote ── */
 
 .story-body > .story-quote {
@@ -255,11 +242,6 @@ html:has([data-story]) {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: scale 1.2s var(--ease-out-expo);
-}
-
-.story-next:hover img {
-  scale: 1.02;
 }
 
 .story-next::after {
@@ -321,15 +303,5 @@ html:has([data-story]) {
   .story-credits div {
     grid-template-columns: 1fr;
     gap: 0.2em;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .story-figure img {
-    animation: none;
-  }
-
-  .story-next img {
-    transition: none;
   }
 }

@@ -248,14 +248,6 @@ const Heading = headingLevel;
       white-space: nowrap;
     }
 
-    .hero__body > * {
-      animation: hero-rise 900ms var(--ease-out-expo) both;
-    }
-
-    .hero__title { animation-delay: 80ms; }
-    .hero__summary { animation-delay: 160ms; }
-    .hero__facts, .hero__cta { animation-delay: 240ms; }
-
     .hero__begin {
       display: block;
       position: absolute;
@@ -267,13 +259,4 @@ const Heading = headingLevel;
     }
   }
 
-  @keyframes hero-rise {
-    from { opacity: 0; translate: 0 18px; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero__body > * {
-      animation: none;
-    }
-  }
 </style>
