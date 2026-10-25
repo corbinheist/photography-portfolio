@@ -25,7 +25,7 @@ const pages = [
 ---
 
 <!--
-  One navigation, two layouts. Desktop: a glass rail on the left (data-nav="rail") that the
+  One navigation, two layouts. Desktop: a rail on the left (data-nav="rail") that the
   visitor can minimise into a top bar (data-nav="bar"). Phone and tablet: always the bar.
 -->
 <nav class="sitenav" aria-label="Site">
@@ -284,9 +284,7 @@ const pages = [
   }
 
   .sitenav {
-    background: var(--glass-bg);
-    backdrop-filter: blur(18px) saturate(1.15);
-    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    background: var(--color-bg);
   }
 
   .wordmark {
@@ -326,7 +324,7 @@ const pages = [
     align-items: center;
     gap: 1.5rem;
     padding-inline: var(--container-padding);
-    border-bottom: 1px solid var(--glass-line);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .sitenav .wordmark {
@@ -353,7 +351,7 @@ const pages = [
     padding-inline: 0.9em;
     font-size: 11px;
     color: var(--nav-ink);
-    border: 1px solid var(--glass-line-strong);
+    border: 1px solid var(--color-border);
     cursor: pointer;
   }
 
@@ -380,8 +378,7 @@ const pages = [
     max-height: calc(100dvh - var(--bar-h));
     overflow-y: auto;
     padding: 0.5rem var(--container-padding) 1.5rem;
-    background: var(--glass-bg-strong);
-    backdrop-filter: blur(18px);
+    background: var(--color-bg);
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -391,7 +388,7 @@ const pages = [
     display: flex;
     justify-content: space-between;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--glass-line);
+    border-bottom: 1px solid var(--color-border);
     font-size: 10px;
     color: var(--nav-ink-faint);
   }
@@ -414,7 +411,7 @@ const pages = [
   }
 
   .sitenav__stories li + li {
-    border-top: 1px solid var(--glass-line);
+    border-top: 1px solid var(--color-border);
   }
 
   .sitenav__stories a {
@@ -468,7 +465,7 @@ const pages = [
   .sitenav__sublabel {
     margin-top: 1.5rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--glass-line);
+    border-bottom: 1px solid var(--color-border);
     font-family: var(--font-mono);
     font-size: 10px;
     letter-spacing: 0.14em;
@@ -537,7 +534,7 @@ const pages = [
       width: 32px;
       height: 32px;
       flex-shrink: 0;
-      border: 1px solid var(--glass-line-strong);
+      border: 1px solid var(--color-border);
       background: transparent;
       color: var(--nav-ink);
       cursor: pointer;
@@ -597,7 +594,7 @@ const pages = [
       gap: 0;
       padding: 2rem 1.5rem 1.75rem;
       border-bottom: 0;
-      border-right: 1px solid var(--glass-line);
+      border-right: 1px solid var(--color-border);
       overflow-y: auto;
     }
 
@@ -620,7 +617,7 @@ const pages = [
       gap: 0.15rem;
       margin-top: 2rem;
       padding-top: 1rem;
-      border-top: 1px solid var(--glass-line);
+      border-top: 1px solid var(--color-border);
     }
 
     :global(html:not([data-nav='bar'])) .sitenav__stories a,

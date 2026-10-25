@@ -137,11 +137,7 @@ ol {
   --color-border:        var(--fx-base-200);
   --color-border-subtle: var(--fx-base-100);
 
-  /* Navigation glass (the rail and the bar) and its text. */
-  --glass-bg: rgb(255 252 240 / 0.74);
-  --glass-bg-strong: rgb(255 252 240 / 0.96);
-  --glass-line: rgb(16 15 15 / 0.1);
-  --glass-line-strong: rgb(16 15 15 / 0.28);
+  /* Navigation text. */
   --nav-ink: var(--fx-base-900);
   --nav-ink-muted: var(--fx-base-700);
   --nav-ink-faint: var(--fx-base-600);
@@ -224,10 +220,6 @@ ol {
   --color-interactive:       var(--color-accent);
   --color-interactive-hover: var(--color-accent-hover);
 
-  --glass-bg: rgb(16 15 15 / 0.6);
-  --glass-bg-strong: rgb(16 15 15 / 0.94);
-  --glass-line: rgb(255 252 240 / 0.1);
-  --glass-line-strong: rgb(255 252 240 / 0.28);
   --nav-ink: var(--fx-paper);
   --nav-ink-muted: rgb(255 252 240 / 0.82);
   --nav-ink-faint: rgb(255 252 240 / 0.62);
