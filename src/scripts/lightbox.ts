@@ -1,7 +1,8 @@
 /**
- * Story lightbox: a click (or Enter/Space) on a numbered photograph opens it full screen in a
- * <dialog>. Arrow keys and J/K move between frames; Escape closes. The frames come from the page:
- * every [data-frame] element in the story, ordered by its frame number, one entry per number.
+ * Story lightbox: a click (or Enter/Space) on a numbered photograph opens it full bleed in a
+ * <dialog>. The side nudges, the arrow keys, and J/K move between frames; a click anywhere else, or
+ * Escape, closes it. The frames come from the page: every [data-frame] element in the story,
+ * ordered by its frame number, one entry per number.
  */
 export function initLightbox(): void {
   const article = document.querySelector<HTMLElement>('[data-story]');
@@ -9,8 +10,6 @@ export function initLightbox(): void {
   if (!article || !dialog) return;
 
   const stage = dialog.querySelector<HTMLElement>('[data-lightbox-stage]')!;
-  const num = dialog.querySelector<HTMLElement>('[data-lightbox-num]')!;
-  const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!;
   const prev = dialog.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
   const next = dialog.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
   const close = dialog.querySelector<HTMLButtonElement>('[data-lightbox-close]')!;
@@ -41,12 +40,12 @@ export function initLightbox(): void {
     img.removeAttribute('style');
     stage.replaceChildren(picture);
 
-    num.textContent = `${String(n).padStart(2, '0')} / ${total}`;
-    const text = [...el.querySelectorAll('figcaption > span:not(.story-caption__num)')].map((span) => span.textContent?.trim()).filter(Boolean);
-    caption.textContent = text.join(' · ');
-    dialog!.setAttribute('aria-label', `Photograph ${String(n).padStart(2, '0')} of ${total}${img.alt ? `: ${img.alt}` : ''}`);
-    prev.disabled = current === 0;
-    next.disabled = current === frames.length - 1;
+    // No text on screen: the frame number and the alt text are the dialog's accessible name.
+    const number = String(n).padStart(2, '0');
+    dialog!.dataset.frame = String(n);
+    dialog!.setAttribute('aria-label', `Photograph ${number} of ${total}${img.alt ? `: ${img.alt}` : ''}`);
+    prev.hidden = current === 0;
+    next.hidden = current === frames.length - 1;
   }
 
   function open(index: number): void {
@@ -74,9 +73,10 @@ export function initLightbox(): void {
   next.addEventListener('click', () => show(current + 1));
   close.addEventListener('click', () => dialog.close());
 
-  // A click on the empty field around the photograph closes the view.
+  // A click anywhere but a nudge closes the view: the photograph, the field, the edges.
   dialog.addEventListener('click', (event) => {
-    if (event.target === dialog || event.target === stage) dialog.close();
+    if ((event.target as HTMLElement).closest('.lightbox__nudge, .lightbox__close')) return;
+    dialog.close();
   });
 
   dialog.addEventListener('keydown', (event) => {

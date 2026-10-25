@@ -183,40 +183,59 @@ test.describe('smoke tests', () => {
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before);
   });
 
-  test('a click opens a photograph full screen; arrows move; Escape closes', async ({ page }) => {
+  test('a click opens a photograph full bleed; nudges and keys move; a click or Escape closes', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/work/nomads/');
     const lightbox = page.locator('[data-lightbox]');
-    const num = page.locator('[data-lightbox-num]');
     await page.locator('.story-body [data-frame="3"] .photo-wrap').click();
     await expect(lightbox).toBeVisible();
-    await expect(num).toHaveText('03 / 35');
+    await expect(lightbox).toHaveAttribute('data-frame', '3');
+    // Only the photograph is on screen: no counter, caption, or button bar.
     await expect(lightbox.locator('img')).toHaveCount(1);
+    await expect(page.locator('.lightbox__close')).toHaveCSS('opacity', '0');
+
+    // Each nudge's target is the full height of its side; a click near the top still moves.
+    for (const side of ['prev', 'next']) {
+      const box = await page.locator(`[data-lightbox-${side}]`).boundingBox();
+      expect(box?.y).toBe(0);
+      expect(box?.height).toBe(900);
+    }
+    await page.mouse.click(1430, 20);
+    await expect(lightbox).toHaveAttribute('data-frame', '4');
+    await page.mouse.click(10, 880);
+    await expect(lightbox).toHaveAttribute('data-frame', '3');
+
     await page.keyboard.press('ArrowRight');
-    await expect(num).toHaveText('04 / 35');
+    await expect(lightbox).toHaveAttribute('data-frame', '4');
     await page.keyboard.press('j');
-    await expect(num).toHaveText('05 / 35');
+    await expect(lightbox).toHaveAttribute('data-frame', '5');
     await page.keyboard.press('ArrowLeft');
-    await expect(num).toHaveText('04 / 35');
+    await expect(lightbox).toHaveAttribute('data-frame', '4');
     // The page behind does not scroll while the view is open.
     const scrolled = await page.evaluate(() => window.scrollY);
     await page.keyboard.press('k');
     expect(await page.evaluate(() => window.scrollY)).toBe(scrolled);
+
+    // A click on the photograph closes the view.
+    await page.mouse.click(720, 450);
+    await expect(lightbox).toBeHidden();
+    await page.locator('.story-body [data-frame="3"] .photo-wrap').click();
     await page.keyboard.press('Escape');
     await expect(lightbox).toBeHidden();
   });
 
-  test('the hero opens as frame 01, and Enter opens a focused photograph', async ({ page }) => {
+  test('the hero opens as frame 01 with no previous nudge, and Enter opens a focused photograph', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/work/nomads/');
     await page.locator('.hero__media .photo-wrap').click();
-    await expect(page.locator('[data-lightbox-num]')).toHaveText('01 / 35');
-    await expect(page.locator('[data-lightbox-prev]')).toBeDisabled();
-    await page.locator('[data-lightbox-close]').click();
+    await expect(page.locator('[data-lightbox]')).toHaveAttribute('data-frame', '1');
+    await expect(page.locator('[data-lightbox-prev]')).toBeHidden();
+    await expect(page.locator('[data-lightbox-next]')).toBeVisible();
+    await page.keyboard.press('Escape');
     await expect(page.locator('[data-lightbox]')).toBeHidden();
     await page.locator('.story-body [data-frame="2"] .photo-wrap').focus();
     await page.keyboard.press('Enter');
-    await expect(page.locator('[data-lightbox-num]')).toHaveText('02 / 35');
+    await expect(page.locator('[data-lightbox]')).toHaveAttribute('data-frame', '2');
   });
 
   for (const [from, to] of [
