@@ -17,6 +17,8 @@ import { EVERYDAY_COORDINATE_DECIMALS, type EverydayPhoto } from '../../src/scri
 export interface ExportedFrame {
   id: string;
   uuid: string;
+  /** The original file name, to find the frame in Photos. */
+  name?: string;
   alt: string;
   date: string;
   taken: string;

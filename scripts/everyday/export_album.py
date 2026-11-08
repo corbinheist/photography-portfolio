@@ -11,6 +11,7 @@ The script reads the Photos library. It never changes the library.
 For each still photograph in the album it writes one entry to the frames file:
   id           everyday-<first 8 characters of the Photos uuid>-<6 characters of a version hash>.
                An edit in Photos changes the version, so the CDN never serves a stale variant.
+  name         the original file name (for example R0001234.JPG), to find the frame in Photos.
   alt          the Photos caption (the "Add a Caption" field). Empty means the frame is held back.
   date         the capture date, YYYY-MM-DD, in the time zone of the capture.
   taken        the capture time, ISO 8601, for the sort order.
@@ -57,7 +58,9 @@ def main() -> int:
     args = parser.parse_args()
 
     db = osxphotos.PhotosDB()
-    albums = [album for album in db.album_info if album.title == args.album]
+    # Match the name without surrounding spaces and without case: Photos keeps a typed trailing space.
+    wanted = args.album.strip().casefold()
+    albums = [album for album in db.album_info if album.title.strip().casefold() == wanted]
     if not albums:
         print(f"Album not found in Apple Photos: {args.album!r}", file=sys.stderr)
         return 2
@@ -84,6 +87,7 @@ def main() -> int:
         frame: dict = {
             "id": fid,
             "uuid": photo.uuid,
+            "name": photo.original_filename,
             "alt": (photo.description or "").strip(),
             "date": photo.date.date().isoformat(),
             "taken": photo.date.isoformat(),

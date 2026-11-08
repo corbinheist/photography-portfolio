@@ -122,8 +122,9 @@ async function main() {
   const changed = text !== before;
 
   console.log(`\nPublished: ${plan.photos.length}. Added: ${plan.added.length}, updated: ${plan.updated.length}, removed: ${plan.removed.length}.`);
-  for (const frame of plan.held) console.log(`Held (no caption in Photos): ${frame.date} ${frame.uuid}`);
-  for (const frame of plan.failed) console.error(`Failed: ${frame.date} ${frame.uuid}: ${frame.error}`);
+  if (plan.held.length) console.log(`Held, no caption in Photos (${plan.held.length}):`);
+  for (const frame of plan.held) console.log(`  ${frame.date}  ${frame.name ?? frame.uuid}`);
+  for (const frame of plan.failed) console.error(`Failed: ${frame.date} ${frame.name ?? frame.uuid}: ${frame.error}`);
 
   if (options.dryRun) {
     fs.rmSync(outputDir, { recursive: true, force: true });
