@@ -195,13 +195,29 @@ test.describe('smoke tests', () => {
       }, wide);
       expect(report).toEqual([]);
     };
+    // The last row has the height of the row above (or the largest height at which it fits).
+    const lastRowMatches = async () => {
+      const [last, above, fits] = await page.evaluate(() => {
+        const items = [...document.querySelectorAll<HTMLElement>('.everyday__wall li')];
+        const lastTop = items[items.length - 1].offsetTop;
+        const aboveTop = Math.max(...items.filter((item) => item.offsetTop < lastTop).map((item) => item.offsetTop));
+        const height = (top: number) => items.find((item) => item.offsetTop === top)!.querySelector('img')!.getBoundingClientRect().height;
+        const wall = document.querySelector('.everyday__wall')!.getBoundingClientRect();
+        const lastRight = Math.max(...items.filter((item) => item.offsetTop === lastTop).map((item) => item.querySelector('img')!.getBoundingClientRect().right));
+        return [height(lastTop), height(aboveTop), lastRight <= wall.right + 1];
+      });
+      expect(fits).toBe(true);
+      expect(Math.abs(last - above)).toBeLessThanOrEqual(2);
+    };
     // Each width is a fresh load, as a visitor on that screen gets it.
+    await lastRowMatches();
     await labelsFit(true);
     await page.setViewportSize({ width: 1000, height: 800 });
     await page.reload();
     await labelsFit(true);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.reload();
+    await lastRowMatches();
     await labelsFit(false);
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.reload();
