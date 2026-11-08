@@ -1,0 +1,107 @@
+---
+import SiteLayout from '@layouts/SiteLayout.astro';
+import Photo from '@components/photo/Photo.astro';
+import Lightbox from '@components/story/Lightbox.astro';
+import { formatEverydayDate, loadEveryday } from '@scripts/utils/everyday';
+import { formatCoordinates } from '@scripts/utils/story-manifest';
+
+// The Everyday page: the Apple Photos album EDC, newest first. `pnpm everyday sync` writes the
+// manifest (src/data/everyday.yaml). Justified rows, as in the gallery; a click opens the lightbox.
+// Under each frame, in the margin: the capture date, and the coordinates where the frame has them.
+const frames = loadEveryday().map((photo, index) => ({
+  photo,
+  number: index + 1,
+  date: formatEverydayDate(photo.date),
+  place: photo.coordinates ? formatCoordinates(photo.coordinates) : undefined,
+}));
+---
+
+<SiteLayout title="Everyday · Heist Studio" description="Everyday photographs, newest first, from the iPhone and the Ricoh GR IIIx.">
+  <section class="everyday" data-lightbox-scope>
+    <h1 class="visually-hidden">Everyday</h1>
+
+    {frames.length === 0 ? (
+      <p class="everyday__empty">No photographs yet.</p>
+    ) : (
+      <ul class="everyday__wall">
+        {frames.map(({ photo, number, date, place }) => (
+          <li style={`--ratio: ${photo.width / photo.height}`}>
+            <figure class="everyday__frame" data-frame={number}>
+              <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
+              <figcaption class="everyday__margin label tabular">
+                <span>{date}</span>
+                {place && <span>{place}</span>}
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <Lightbox />
+  </section>
+
+  <script>
+    import { initLightbox } from '@scripts/lightbox';
+    initLightbox();
+  </script>
+</SiteLayout>
+
+<style>
+  .everyday {
+    padding: clamp(2rem, 5vw, 3.5rem) var(--container-padding) 0;
+  }
+
+  .everyday__empty {
+    color: var(--color-text-muted);
+  }
+
+  /* Justified rows, as in the gallery (design language §5.6): every frame keeps its full
+     proportions, each row has one height, and the order reads left to right, newest first. */
+  .everyday__wall {
+    --row-h: 9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .everyday__wall { --row-h: 13rem; gap: 1.75rem 0.75rem; }
+  }
+
+  @media (min-width: 1400px) {
+    .everyday__wall { --row-h: 15rem; }
+  }
+
+  .everyday__wall li {
+    flex-grow: calc(var(--ratio) * 100);
+    flex-basis: calc(var(--ratio) * var(--row-h));
+    min-width: 0;
+  }
+
+  /* Stops the last row from stretching its few frames across the full width. */
+  .everyday__wall::after {
+    content: '';
+    flex-grow: 1000000;
+  }
+
+  .everyday__frame {
+    display: block;
+  }
+
+  /* The photographs as shot: no dimming, no text on the photograph. */
+  .everyday__frame :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
+  /* The margin sits under the plate, on paper: the date, then the coordinates. A value wraps
+     on a narrow frame; it is never cut. */
+  .everyday__margin {
+    margin-top: 0.375rem;
+  }
+
+  .everyday__margin span {
+    display: block;
+  }
+</style>

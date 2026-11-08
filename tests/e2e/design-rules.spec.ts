@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 // The rendered rules of the heist.studio Design Language (Linear, Studio team), checked on every
 // route at desktop and phone widths. A failure names the element that breaks the rule.
-const routes = ['/', '/about/', '/gallery/', '/404/', '/work/nomads/', '/work/cold-hands/', '/work/bougmez/', '/work/ksar/', '/work/tokyo-kissaten/', '/work/lofoten/', '/work/oslo/'];
+const routes = ['/', '/about/', '/gallery/', '/everyday/', '/404/', '/work/nomads/', '/work/cold-hands/', '/work/bougmez/', '/work/ksar/', '/work/tokyo-kissaten/', '/work/lofoten/', '/work/oslo/'];
 
 // Green and oxide: functional colours, never at rest.
 const ACCENTS = ['rgb(27, 107, 58)', 'rgb(92, 195, 126)', 'rgb(46, 139, 87)', 'rgb(15, 61, 36)', 'rgb(163, 228, 186)', 'rgb(188, 82, 21)', 'rgb(218, 112, 44)'];
