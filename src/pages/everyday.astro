@@ -97,14 +97,14 @@ const frames = loadEveryday().map((photo, index) => ({
     height: auto;
   }
 
-  /* The tab: the date and the coordinates on a small piece of paper that touches the photograph's
-     short edge and never covers it. Below 900px every tab sits under its frame (design language 2.8). */
+  /* The tab: the date and the coordinates, quiet, on the paper at the frame's short edge. The text
+     lines up with the photograph's edge and never covers it. Below 900px every tab sits under its
+     frame (design language 2.8). */
   .everyday__tab {
-    display: table;
-    padding: 0.3rem 0.4rem;
-    background: var(--color-surface);
-    color: var(--color-text-muted);
-    line-height: 1.35;
+    display: block;
+    padding-top: 0.25rem;
+    color: var(--color-text-faint);
+    line-height: 1.25;
     white-space: nowrap;
   }
 
@@ -116,7 +116,7 @@ const frames = loadEveryday().map((photo, index) => ({
      bottom, in a column gap wide enough to hold it. */
   @media (min-width: 900px) {
     .everyday__wall {
-      --tab-w: 2.6rem;
+      --tab-w: 2.4rem;
       column-gap: calc(var(--tab-w) + var(--gap));
     }
 
@@ -124,6 +124,7 @@ const frames = loadEveryday().map((photo, index) => ({
       position: absolute;
       top: 0;
       left: 100%;
+      padding: 0 0 0 0.375rem;
       writing-mode: vertical-rl;
     }
   }
