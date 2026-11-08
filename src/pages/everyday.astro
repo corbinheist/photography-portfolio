@@ -9,10 +9,14 @@ import { formatCoordinates } from '@scripts/utils/story-manifest';
 // manifest (src/data/everyday.yaml). A masonry grid; a click opens the lightbox (the photograph alone).
 // Each frame has a small paper tab at its short edge: the capture date, and the coordinates where the
 // frame has them. From 900px a landscape frame carries it on its right side; otherwise it sits under.
+// Equal area: a 3:2 landscape frame fills its column; a narrower frame takes the width that gives it the
+// same area, sqrt(ratio / 1.5) of the column (a 2:3 portrait: two thirds, as tall as the landscape is wide).
+const LANDSCAPE = 1.5;
 const frames = loadEveryday().map((photo, index) => ({
   photo,
   number: index + 1,
   orientation: photo.width >= photo.height ? 'landscape' : 'portrait',
+  share: Math.min(1, Math.sqrt(photo.width / photo.height / LANDSCAPE)),
   date: formatEverydayDate(photo.date),
   coordinates: photo.coordinates ? formatCoordinates(photo.coordinates) : undefined,
 }));
@@ -26,10 +30,10 @@ const frames = loadEveryday().map((photo, index) => ({
       <p class="everyday__empty">No photographs yet.</p>
     ) : (
       <ul class="everyday__wall">
-        {frames.map(({ photo, number, orientation, date, coordinates }) => (
-          <li class={`everyday__item--${orientation}`}>
+        {frames.map(({ photo, number, orientation, share, date, coordinates }) => (
+          <li class={`everyday__item--${orientation}`} style={`--share: ${(share * 100).toFixed(2)}%`}>
             <figure class="everyday__frame" data-frame={number}>
-              <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
+              <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1799px) 33vw, 25vw" />
               <figcaption class="everyday__tab label tabular">
                 <span>{date}</span>
                 {coordinates && <span>{coordinates}</span>}
@@ -58,8 +62,9 @@ const frames = loadEveryday().map((photo, index) => ({
     color: var(--color-text-muted);
   }
 
-  /* Masonry: columns of frames at their full proportions, no crop. The order runs down each
-     column, newest first; the lightbox follows the frame numbers. */
+  /* Masonry: columns of frames at their full proportions, no crop, each frame with the same area
+     (see --share). The order runs down each column, newest first; the lightbox follows the frame
+     numbers. */
   .everyday {
     overflow-x: clip;
   }
@@ -77,7 +82,7 @@ const frames = loadEveryday().map((photo, index) => ({
     .everyday__wall { --gap: 0.75rem; columns: 3; }
   }
 
-  @media (min-width: 1400px) {
+  @media (min-width: 1800px) {
     .everyday__wall { columns: 4; }
   }
 
@@ -89,6 +94,7 @@ const frames = loadEveryday().map((photo, index) => ({
   .everyday__frame {
     position: relative;
     display: block;
+    width: var(--share, 100%);
   }
 
   /* The photographs as shot: no dimming, no text on the photograph. */

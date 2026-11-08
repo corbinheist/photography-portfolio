@@ -182,6 +182,10 @@ test.describe('smoke tests', () => {
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
     };
     await tabsOutside(true);
+    // Equal area: every photograph's area is within 5% of the median.
+    const areas = await page.locator('.everyday__frame img').evaluateAll((imgs) => imgs.map((img) => { const r = img.getBoundingClientRect(); return r.width * r.height; }));
+    const median = [...areas].sort((a, b) => a - b)[Math.floor(areas.length / 2)];
+    for (const area of areas) expect(Math.abs(area / median - 1)).toBeLessThan(0.05);
     await page.setViewportSize({ width: 390, height: 844 });
     await tabsOutside(false);
     await page.setViewportSize({ width: 1440, height: 900 });
