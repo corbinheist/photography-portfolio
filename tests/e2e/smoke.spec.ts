@@ -169,7 +169,26 @@ test.describe('smoke tests', () => {
     const frames = page.locator('.everyday__frame');
     await expect(frames).toHaveCount(everyday.length);
     await expect(frames.first().locator('img')).toHaveAttribute('alt', everyday[0].alt);
-    await expect(frames.first().locator('.everyday__margin span').first()).toBeVisible();
+    // Every frame has a tab (date, then coordinates) at its short edge, outside the photograph:
+    // at 1440px on the right of a landscape frame, under a portrait frame. At 390px every tab is under.
+    await expect(page.locator('.everyday__tab')).toHaveCount(everyday.length);
+    const tabsOutside = async (wide: boolean) => {
+      for (const tab of await page.locator('.everyday__tab').all()) {
+        const photo = (await tab.locator('xpath=..').locator('img').boundingBox())!;
+        const box = (await tab.boundingBox())!;
+        if (wide && photo.width >= photo.height) expect(box.x).toBeGreaterThanOrEqual(photo.x + photo.width - 1);
+        else expect(box.y).toBeGreaterThanOrEqual(photo.y + photo.height - 1);
+      }
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    };
+    await tabsOutside(true);
+    // Equal area: every photograph's area is within 5% of the median.
+    const areas = await page.locator('.everyday__frame img').evaluateAll((imgs) => imgs.map((img) => { const r = img.getBoundingClientRect(); return r.width * r.height; }));
+    const median = [...areas].sort((a, b) => a - b)[Math.floor(areas.length / 2)];
+    for (const area of areas) expect(Math.abs(area / median - 1)).toBeLessThan(0.05);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await tabsOutside(false);
+    await page.setViewportSize({ width: 1440, height: 900 });
     await frames.first().click();
     await expect(page.locator('dialog[data-lightbox]')).toHaveAttribute('open', '');
     await page.keyboard.press('Escape');

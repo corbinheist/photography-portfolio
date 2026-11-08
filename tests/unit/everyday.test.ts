@@ -105,6 +105,17 @@ describe('the Everyday schema', () => {
 });
 
 describe('the image pipeline', () => {
+  it('reports a rotated portrait frame (EXIF orientation 6) as portrait, and writes upright variants', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'everyday-orient-'));
+    const input = path.join(dir, 'portrait.jpg');
+    await sharp({ create: { width: 1200, height: 800, channels: 3, background: '#888' } }).withMetadata({ orientation: 6 }).jpeg().toFile(input);
+    const image = await processImage(input, dir);
+    expect([image.width, image.height]).toEqual([800, 1200]);
+    const variant = await sharp(image.variants[0].path).metadata();
+    expect(variant.height! > variant.width!).toBe(true);
+    fs.rmSync(dir, { recursive: true, force: true });
+  });
+
   it('writes variants without EXIF, so GPS does not leave the Mac', async () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'everyday-exif-'));
     const input = path.join(dir, 'gps.jpg');
