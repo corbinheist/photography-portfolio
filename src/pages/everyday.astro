@@ -52,7 +52,10 @@ const frames = loadEveryday().map((photo, index) => ({
 
   <script>
     import { initLightbox } from '@scripts/lightbox';
+    import { matchLastRow } from '@scripts/last-row';
     initLightbox();
+    const wall = document.querySelector<HTMLElement>('.everyday__wall');
+    if (wall) matchLastRow(wall);
   </script>
 </SiteLayout>
 
