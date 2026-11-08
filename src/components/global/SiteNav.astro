@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry } from 'astro:content';
 import { compareStories, storyUrl } from '@scripts/utils/story-manifest';
+import { loadEveryday } from '@scripts/utils/everyday';
 
 const settings = await getEntry('settings', 'settings');
 const journal = settings?.data.substackUrl ?? 'https://corbinheist.substack.com';
@@ -18,6 +19,8 @@ const more = published.filter((story) => !story.data.featured).map((story) => it
 
 const pages = [
   { href: '/gallery/', label: 'Gallery', current: path.startsWith('/gallery') },
+  // The Everyday page is linked once the sync has published its first frame.
+  ...(loadEveryday().length > 0 ? [{ href: '/everyday/', label: 'Everyday', current: path.startsWith('/everyday') }] : []),
   { href: '/about/', label: 'About', current: path.startsWith('/about') },
   { href: journal, label: 'Journal', external: true },
   { href: '/about/#contact', label: 'Contact' },

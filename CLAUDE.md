@@ -6,7 +6,7 @@ Read `README.md` first: it describes the site, the story format, and publishing.
 
 ## Workflow
 
-- Branch and PR for every change (`stu-NN-…` from the Linear issue, team STU). Squash-merge.
+- Branch and PR for every change (`stu-NN-…` from the Linear issue, team STU). Squash-merge. One exception: the Everyday sync commits `src/data/everyday.yaml` to `main` itself (README, "Everyday page"). Never edit that file by hand.
 - CI runs only on push to `main`, and a merge to `main` deploys the live site. Before a PR merges: `pnpm build`, `pnpm exec vitest run`, `pnpm test:e2e:built`.
 - Throttle heavy local builds when other work runs: `nice -n 15`.
 - If `astro check` runs out of memory: `rm -rf dist .astro node_modules/.astro` and rebuild.

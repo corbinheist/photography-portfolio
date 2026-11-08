@@ -1,5 +1,6 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { EVERYDAY_FILE, loadEveryday } from '../src/scripts/utils/everyday';
 import { fullBleedIds, GALLERY_EXTRAS_FILE, loadGalleryExtras, loadManifest, MAX_FULL_BLEEDS, splitFrontmatter, storyUrl, validateStory, STORY_PHOTOS_DIR } from '../src/scripts/utils/story-manifest';
 
 type Diagnostic = { level: 'error' | 'warning'; code: string; message: string };
@@ -61,12 +62,23 @@ for (const photo of extras) {
   if (!photo.alt.trim()) error('gallery.extra-alt-missing', `${GALLERY_EXTRAS_FILE}: "${photo.id}" has no alt text`);
 }
 
+// The Everyday page: the schema checks alt text, dates, and the coordinate rounding.
+let everyday: ReturnType<typeof loadEveryday> = [];
+try {
+  everyday = loadEveryday(root);
+} catch (cause) {
+  error('everyday.invalid', (cause as Error).message);
+}
+for (const photo of everyday) {
+  if (extraIds.has(photo.id)) error('everyday.duplicate', `${EVERYDAY_FILE}: "${photo.id}" is also a gallery-only photograph`);
+}
+
 for (const diagnostic of diagnostics) {
   const prefix = diagnostic.level === 'error' ? 'ERROR' : 'WARN ';
   console[diagnostic.level === 'error' ? 'error' : 'warn'](`${prefix} ${diagnostic.code} ${diagnostic.message}`);
 }
 
 const errors = diagnostics.filter((item) => item.level === 'error').length;
-console.log(`Validated ${storyFiles.length} stories, ${extras.length} gallery-only photographs, and ${redirectSources.size} redirects.`);
+console.log(`Validated ${storyFiles.length} stories, ${extras.length} gallery-only photographs, ${everyday.length} everyday photographs, and ${redirectSources.size} redirects.`);
 console.log(`${errors} error(s), ${diagnostics.length - errors} warning(s).`);
 if (errors > 0) process.exitCode = 1;

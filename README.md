@@ -81,6 +81,37 @@ Drafts (`draft: true`) build only with `STORIES_INCLUDE_DRAFTS=1`.
 
 **Gallery-only photographs:** a photograph that belongs to no story but should stay in the gallery goes in `src/data/gallery-extras.yaml`, with the same fields as a story manifest entry plus `place` and a quoted `date` (from EXIF). It sorts by date among the stories and is not a link.
 
+## Everyday page
+
+`/everyday/` shows the photographs in the Apple Photos album **EDC**, newest first. The photographs come from the iPhone and the Ricoh GR IIIx through the camera roll. A job on the Mac publishes them. Linear: project "heist.studio Everyday Gallery" (STU-80 to STU-82).
+
+To publish a photograph: add it to the album EDC and give it a caption in Photos ("Add a Caption"). The caption is the alt text. The next sync (once an hour) publishes it.
+
+- A photograph without a caption stays off the page. The sync log lists it until it has a caption.
+- A photograph removed from the album leaves the page on the next sync. Its CDN objects stay.
+- The coordinates are rounded to 2 decimal places (about 1.1 km) before they leave the Mac. The published AVIF and WebP files carry no EXIF (`tests/unit/everyday.test.ts` checks this).
+- An edit in Photos gives the frame a new id, so the CDN never serves the old version.
+- Videos are skipped. A Live Photo publishes its still image.
+- `src/data/everyday.yaml` is written by the sync. Do not edit it by hand.
+
+`pnpm everyday sync --dry-run` shows what a sync would do and writes nothing. `pnpm everyday sync` uploads and writes the manifest. `--publish` also validates the content, commits the manifest to `main`, and pushes, so CI deploys. Only the sync commits to `main` directly; code changes still go through a PR.
+
+### Install the scheduled job (once)
+
+```sh
+git worktree add ~/.local/share/worktrees/photography-portfolio/everyday-sync main
+cd ~/.local/share/worktrees/photography-portfolio/everyday-sync
+cp ~/git/photography-portfolio/.env .     # the DigitalOcean Spaces keys and DO_SPACES_CDN_ENDPOINT
+pnpm install
+pnpm everyday sync --dry-run              # the first run asks for access to Photos
+cp deploy/com.corbin.heist-everyday-sync.plist ~/Library/LaunchAgents/
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.corbin.heist-everyday-sync.plist
+launchctl kickstart gui/$(id -u)/com.corbin.heist-everyday-sync
+tail -f ~/Library/Logs/heist-everyday-sync.log
+```
+
+The job runs `deploy/everyday-sync.sh`: it resets the worktree to `origin/main`, installs, and runs `pnpm everyday sync --publish`. It needs read access to the Photos library, and Automation access to Photos to download originals that are only in iCloud. If the log shows a permission error, grant those to the process it names in System Settings, Privacy and Security.
+
 ## Project structure
 
 ```
@@ -91,13 +122,15 @@ src/
   content/stories/     one MDX file per story
   data/story-photos/   one photo manifest per story
   data/settings.yaml   name, Substack URL, social links
+  data/everyday.yaml   the Everyday frames (written by the sync)
   layouts/             SiteLayout (page frame), StoryLayout (story page)
-  pages/               index, gallery, about, 404, work/[story]
+  pages/               index, gallery, everyday, about, 404, work/[story]
   scripts/story-nav.ts frame counter, chapter, progress, J/K keys
-  scripts/utils/       photo-widths, story-manifest (loader, ordering, frames, coordinates)
+  scripts/utils/       photo-widths, story-manifest (loader, ordering, frames, coordinates), everyday
   styles/              global.css (tokens), story.css
+deploy/                the Everyday sync job (script and launchd agent)
 decks/                 the pitch decks, a separate Astro project built into dist/pitch/
-scripts/               photos, process-images, upload-to-spaces, validate-content, check-build-budget, preview
+scripts/               photos, everyday (and everyday/export_album.py), process-images, upload-to-spaces, validate-content, check-build-budget, preview
 tests/unit/            vitest
 tests/e2e/             Playwright: smoke, accessibility (axe), publishing
 ```
@@ -115,11 +148,11 @@ Copy `.env.example` to `.env`.
 
 | Variable | Used by |
 | -- | -- |
-| `DO_SPACES_KEY`, `DO_SPACES_SECRET`, `DO_SPACES_BUCKET`, `DO_SPACES_REGION`, `DO_SPACES_CDN_ENDPOINT` | `pnpm photos`, `upload-to-spaces` |
+| `DO_SPACES_KEY`, `DO_SPACES_SECRET`, `DO_SPACES_BUCKET`, `DO_SPACES_REGION`, `DO_SPACES_CDN_ENDPOINT` | `pnpm photos`, `pnpm everyday`, `upload-to-spaces` |
 | `PUBLIC_MAPTILER_KEY` | the Japan deck's map (decks only) |
 | `SITE_URL` | CI build |
 
-The scripts read these from the shell environment.
+The scripts read these from the shell environment. `pnpm everyday` also reads `.env`.
 
 ## Deployment
 

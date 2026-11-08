@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { loadEveryday } from '../../src/scripts/utils/everyday';
 
 // Featured stories, newest first: the hero, the numbered index, and the rail's main list.
 const stories = [
@@ -16,7 +17,7 @@ const moreStories = [
 ];
 
 test.describe('smoke tests', () => {
-  for (const path of ['/', '/about/', '/gallery/', ...stories, ...moreStories]) {
+  for (const path of ['/', '/about/', '/gallery/', '/everyday/', ...stories, ...moreStories]) {
     test(`${path} returns 200 and renders main`, async ({ page }) => {
       const response = await page.goto(path);
       expect(response?.status()).toBe(200);
@@ -151,6 +152,28 @@ test.describe('smoke tests', () => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/');
     await expect(page.locator('.sitenav__pages--main a').first()).toHaveText('Gallery');
+  });
+
+  // The committed manifest decides what the Everyday page shows: the sync writes it.
+  test('the Everyday page shows the synced frames with their margin, and the navigation links to it once it has one', async ({ page }) => {
+    const everyday = loadEveryday();
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/everyday/');
+    const link = page.locator('.sitenav__pages--main a', { hasText: 'Everyday' });
+    if (everyday.length === 0) {
+      await expect(page.locator('.everyday__empty')).toHaveText('No photographs yet.');
+      await expect(link).toHaveCount(0);
+      return;
+    }
+    await expect(link).toHaveAttribute('aria-current', 'page');
+    const frames = page.locator('.everyday__frame');
+    await expect(frames).toHaveCount(everyday.length);
+    await expect(frames.first().locator('img')).toHaveAttribute('alt', everyday[0].alt);
+    await expect(frames.first().locator('.everyday__margin span').first()).toBeVisible();
+    await frames.first().click();
+    await expect(page.locator('dialog[data-lightbox]')).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(page.locator('dialog[data-lightbox]')).not.toHaveAttribute('open', '');
   });
 
   test('a story starts with the top bar, and the Stories menu marks the story being read', async ({ page }) => {
