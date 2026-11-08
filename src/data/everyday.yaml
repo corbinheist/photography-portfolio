@@ -1,8 +1,8 @@
 # The Everyday page (/everyday/), newest first.
 # Written by `pnpm everyday sync` from the Apple Photos album EDC. Do not edit by hand:
 # change the caption in Photos instead. The next sync replaces this file.
-- id: everyday-f6a6b475-da7a52
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-f6a6b475-da7a52
+- id: everyday-f6a6b475-910fd6
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-f6a6b475-910fd6
   width: 6000
   height: 4000
   lqip: data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBhmgpgmf4FaEmFoYADyc5kLI7L4ufVDNsvHF11xC8oUUf1c4UtaogzBDJzQAS5+1FUC7NS4IYsMAAA=
@@ -15,11 +15,11 @@
     iso: 200
     date: 2026-10-29
   date: 2026-10-29
-- id: everyday-c9d67abd-53508f
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-c9d67abd-53508f
+- id: everyday-c9d67abd-6ede3a
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-c9d67abd-6ede3a
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAACwAwCdASoUAA0APzmEuVOvKKWisAgB4CcJbACsACBUvj622vjLwAD+6/jKk2AHEOr8v+/Z033UoQEdFTtInkp0+dTpYeI2yK3LtwWUo78JaZJHr5UU8LkJAATh1e0uq9rH7FMSltla09SJjxcQAA==
+  lqip: data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAADwBACdASoUAB4APzmIuFOvKSUisAgB4CcJbACsACHgYVgrSiHmVL2yxLT29pJSOgAA/uvUMU9gilcsKtB0LPAQ8k7qVtozQjRVe9NQ5fLLDCH+3yB5UhDUVvRtOvjvCptmmTqvx6Gxp4JXUq0pfLMoNU3eai9ya/oYfghrp4z0GGXJV8Pr/HZ175eSkgAA
   alt: Everyday photograph, 29 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -29,11 +29,11 @@
     iso: 1000
     date: 2026-10-29
   date: 2026-10-29
-- id: everyday-745911c1-ec195e
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-745911c1-ec195e
+- id: everyday-745911c1-99b4e9
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-745911c1-99b4e9
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJZwAAYf+EmB3ErWFwAPwnjchPckvsBZolZtHjinDYBp04ty82NkPd8Yf0+WuZ4OrwZNC9Fb+5Jjl3ZeAAAA==
+  lqip: data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAACwBACdASoUAB4APzmOv1evKaajqAqp4CcJZwAALGw+aP1/Rlf50O0hjCB5MBOAAP7UZl8qRij5KaQxQxKlxffOO+RjZ4KTICvvEhBbpIZJ8C8rRWABkxN1hmZb8MLDYB46IEe+uTXzUrlLc8dlXKsUK/vfYPTRCIei2klWRJFHfyDObWXAAA==
   alt: Everyday photograph, 24 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -43,11 +43,11 @@
     iso: 200
     date: 2026-10-24
   date: 2026-10-24
-- id: everyday-8b7db8b4-3ab37d
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-8b7db8b4-3ab37d
+- id: everyday-8b7db8b4-737a75
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-8b7db8b4-737a75
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAADwAwCdASoUAA0APzmEuVOvKKWisAgB4CcJaACdABK5WtRlLDe31KhAAP7A+88hoZzOtL8xV1PrRZj9Bi6YU9ClWJ11Nnx1faCsAxKBE4YfxeoW5BaC2p3SG5J0I3umkFNUbsVNTPjkZHslWIPMDdqNVnARKbYRnuimbLSAAAA=
+  lqip: data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAAAQBgCdASoUAB4APzmMvFYvKaYjsBgIAeAnCWwAtPn/5dzJlnfqVHNq5X3iaBMCzPt1n8k2lcFh4gAA/uvYya83xly2fQW41OUU0trUkBwBO7hdHJu7W9YHD9QICj0yipdaQJBY+4ekANr5m2+8XxzGuvTY65tf3fWxePUwnDdIgCpKG4Ou9yhG7Si6/kEqCCqMgSbJiMy6Bar9BPwj8BNAA5QlStNCctuSjN4kFcKuWXAUcAfITNe4gpkFEAAA
   alt: Everyday photograph, 24 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -57,11 +57,11 @@
     iso: 400
     date: 2026-10-24
   date: 2026-10-24
-- id: everyday-0a73ebe1-e4daa3
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-0a73ebe1-e4daa3
+- id: everyday-0a73ebe1-539bbe
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-0a73ebe1-539bbe
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAAAQBACdASoUAA0APzmEuVOvKKWisAgB4CcJbACdMoACwVldiyKWGLtuAAD+6UmK4QNDrItr83sHBN0IxWcUM2d2YgSCAbS1IlFD8OOFdDxsOVXPNIRmufwvb9JpIU+Y0x4Smj3Fgu2X1B2rWH/P/ACdaGAlGrbjcspJkCAA
+  lqip: data:image/webp;base64,UklGRr4AAABXRUJQVlA4ILIAAAAwBQCdASoUAB4APzmEuFOvKKUisAgB4CcJagC90CHeseYSOvKAM3YHFmJbnERZ+bJx0AD+6NhzM1041EgEhIOW3km+HiH/TcOI2Yguzootm/vM24AEOEEbExhRIgu4xvoMSWb6OjbAN3TN20e6rcEG5MMiEHEtN2KIvOw1cttHbXAoN2LYgg5fWbw71LL0+zGQCpZePaL51+OdkLhnXL8KOXweJYNC8s8MiSs+6pBDiAAA
   alt: Everyday photograph, 24 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -71,11 +71,11 @@
     iso: 2500
     date: 2026-10-24
   date: 2026-10-24
-- id: everyday-7a0b4a50-4adc5b
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-7a0b4a50-4adc5b
+- id: everyday-7a0b4a50-dc06a7
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-7a0b4a50-dc06a7
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADQAwCdASoUAA0APzmGulQvKSWjMAgB4CcJYwC06BikBOi13IfFVDAA+vIjeqDGbR48flnH0TGyM6RSly6qf7KmXQMR12FedjgrWe2jIh5QAA==
+  lqip: data:image/webp;base64,UklGRooAAABXRUJQVlA4IH4AAABwBACdASoUAB4APzmKu1YvKSYjsBgIAeAnCUAZEwShYCxQP9KOuMbQC03VgAD9KAnsu5d0z+V1HAYqBRJaeiscWHQKkmW0pvdnicKkG8DKxBtawG65eoz1Zr08QPzNqjFjA1+5guvLFGLCu2SlDksR1HApBvApH5O1ZR/2QAA=
   alt: Everyday photograph, 17 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -85,8 +85,8 @@
     iso: 100
     date: 2026-10-17
   date: 2026-10-17
-- id: everyday-84acfa86-321fd3
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-84acfa86-321fd3
+- id: everyday-84acfa86-4a8034
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-84acfa86-4a8034
   width: 6000
   height: 4000
   lqip: data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAABwAwCdASoUAA0APzmGulQvKSWjMAgB4CcJQBibBDwKIH6GaWAA/uvwFAT4rP0TOMA8BSXKTTyMXRmbLe06dyAA
@@ -99,11 +99,11 @@
     iso: 200
     date: 2026-10-15
   date: 2026-10-15
-- id: everyday-59eb9f4c-437fc6
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-59eb9f4c-437fc6
+- id: everyday-59eb9f4c-99e5e6
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-59eb9f4c-99e5e6
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAACwAwCdASoUAA0APzmIulOvKSWisAgB4CcJagABHZ7vErag1UZRtAD++l6V+hLEguZtfie8J/DgAYHzZAfaY3xwAz1ngvx9agXCdeFhPRTA2LGn+q/WmbCNPEr0PDRbCKlBi4mmLzIqwItpO+dmmXbbXwAAAA==
+  lqip: data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADQBACdASoUAB4APzmUwVmvKicjqAgB4CcJQBgh0AEOrPZjgK2mD0LS+B38JS0G+AD+93QtlVgWlHQ8E+ZZ34pGkTKZIGadIlw6bsCCNoKFViXyennZNN0hLqOzQGmFmBQ9Jqv/iyI3cnEpagtMYE2eG11CTh8mpTQAMX9Q6xWwJzfa2AA=
   alt: Everyday photograph, 15 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -113,11 +113,11 @@
     iso: 200
     date: 2026-10-15
   date: 2026-10-15
-- id: everyday-b030dc60-bbdce1
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-b030dc60-bbdce1
+- id: everyday-b030dc60-575adf
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-b030dc60-575adf
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJbAC/OBYFXyWHrIVaQ3zAAP7o6asjfxt2othpbEfeGqkXHdNlQuAl5YxnHLCIHJzrEIpBYvReHmCoPTs+Eua3gZcSIUdtY9RJcunKEBS5YgELVGEzAAAA
+  lqip: data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAACwBQCdASoUAB4APzmOv1cvKaajqAqp4CcJaADImDTvufjx0fkbN1YQYt870/fUx7HZQSRNkAAA/u6H5QrAdwH4vWTKUHPP3d472ePhLXSKdjtEoTB9p2OAYzOGsbU3C8V4UHEZVO8GeAWY5pTjpfuiVjtcdqfNQPlAJ9yA7M4ObuAPfRA2o9bIvH+ft4VExvOKH0eknLl+TFtOlnVQYXu5CCU7NlMk/KB/4AAA
   alt: Everyday photograph, 11 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -127,11 +127,11 @@
     iso: 200
     date: 2026-10-11
   date: 2026-10-11
-- id: everyday-4447d45e-62f8ef
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-4447d45e-62f8ef
+- id: everyday-4447d45e-0062e7
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-4447d45e-0062e7
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAABwAwCdASoUAA0APzmGulOvKSWisAgB4CcJYwAAPvtfvZSKVEgA/sJ61WAFZKZPhymwAHVALBhzE5az6y6Z8EZS29cZV3mt87irqOgzBHrOcm1Q+ZTr3UaEcBwfUft6yFKskewQvR3QkraQAQAAAA==
+  lqip: data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAABwBQCdASoUAB4APzmOwlcvKaejqAqp4CcJYwDK1SBDgDxoD76sxRxovZKa0AMAZz7of4joAP7wwqavyXqlfYAOzjgOdGKMj0LZBuuJATf1mKLuFZFlKmwnZagZHzYHeylqVLiwrNyZmD8kIOgikLjsXOViF9nkcu3gdRE/9MyPNNO6MZ2cn+J5OUrzRcbsG/UZBeKRgX308F6ZL6GxEfbfo6wsVqEIRP1+nnaAOrv2PixPTnaAAA==
   alt: Everyday photograph, 11 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -141,8 +141,8 @@
     iso: 200
     date: 2026-10-11
   date: 2026-10-11
-- id: everyday-a5724316-561302
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-a5724316-561302
+- id: everyday-a5724316-f7767d
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-a5724316-f7767d
   width: 6000
   height: 4000
   lqip: data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJZgCdACBzdifihSoNsoQAAPib32CfSWxGuqreqhew9EKDKPcFwl0/Q5ZJpcOZc4QKN3lSJrhga2DHqV6K+E6VRW0BFGcH/UAvLS2/1wAAAA==
@@ -155,11 +155,11 @@
     iso: 200
     date: 2026-10-11
   date: 2026-10-11
-- id: everyday-b743f658-520bd8
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-b743f658-520bd8
+- id: everyday-b743f658-379975
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-b743f658-379975
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAACwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJZQDE2BZUHab99D8WEAD+p/STsUJSO9JaQIkfKnD4Ry33f2S/Ew3Mqvqck2Aj8qn9jVExKY3cAAAA
+  lqip: data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAAAQBQCdASoUAB4APzmIuFQvKSUjMAgB4CcJYwDA3Bu07pBmdz6Es99nz+OeeZE0PKqAAP6DGklCK9wQMQIw+Z/JF35W2CyfsnZiP0ruK6qtw8C24XjEmfaCBh39w4mFvSKgofanWz87ZZcA8A0AAA==
   alt: The big dark begins
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -169,11 +169,11 @@
     iso: 1250
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-92cf8b32-a261c0
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-92cf8b32-a261c0
+- id: everyday-92cf8b32-b9b690
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-92cf8b32-b9b690
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAADQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJQBbZA9jKzeG3N1lep4AA96GfH12csI7NnDMDx3MlcOzgMizIT3+1gHM70b+pkhCTYSkIlPQRDn1lgxAAAA==
+  lqip: data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAADwBACdASoUAB4APzmGvVavKCYjsBgIAeAnCUAYz4GC10vGVSxjrDOek7Nwx4ODDrAA/nJV/fZxdG1D5dT55nr6FwTFlkO9gpa0iHINtLMr0AsNA8s/t85DA4WvBflkriC5ATv/DD97ge9PIZUb4EkaqUON4lDuxc6cMXP5WU5gZy1CHWgaYKbggAA=
   alt: SVT Tree Tu
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -183,8 +183,8 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-ed70946d-6fc302
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-ed70946d-6fc302
+- id: everyday-ed70946d-376de3
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-ed70946d-376de3
   width: 4000
   height: 6000
   lqip: data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADQBACdASoUAB4APzmGvVavKCajsBgIAeAnCWwAyywQ8AA3X+PWPaFQzaZoQz6lAAD+2Q2ziFCzYYpDqMHUZnM4nPKHGqUUB3EZWtVeDuy05scGC3GBL0LyQfckPaywgqjY2FtR5nlb9VlpYUQAAA==
@@ -197,8 +197,8 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-1a3ed14d-6171f0
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-1a3ed14d-6171f0
+- id: everyday-1a3ed14d-dcb2a8
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-1a3ed14d-dcb2a8
   width: 6000
   height: 4000
   lqip: data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAwCdASoUAA0APzmGulQvKSWjMAgB4CcJQBibA+TRuUiC9rneCiAA/ZToWpdTzXgy0l6xjEnySrVUg5bDSR9C9VK4kXOpgAAAAA==
@@ -211,11 +211,11 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-1a19588c-91cee6
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-1a19588c-91cee6
+- id: everyday-1a19588c-9d7f42
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-1a19588c-9d7f42
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJYwC7ABorFmRHXGk8SQIAAP7Ipoj/Fbok/9p59Qu1OqMAV0hdI6fGJGQIkkodab2H04P6+Xl7P0gA
+  lqip: data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAABQBQCdASoUAB4APzmIvVavKCYjsBgIAeAnCWUAw3AMd1kSmZ7AhYnnZXnOn0kZnKi8QAAA/c9fXQ6PYMEy1lOf9B3FIJatvdPxqgYqYYjOABEpjYRq60J4ECUZPIP7LKUK+xvdoVVLs+sT58B5U0N21Ga1PQAA
   alt: Everyday photograph, 10 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -225,11 +225,11 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-235fd9c0-e4b340
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-235fd9c0-e4b340
+- id: everyday-235fd9c0-d8b7d5
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-235fd9c0-d8b7d5
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAABQBACdASoUAA0APzmGuVOvKSWisAgB4CcJYwDCgCKbnl/cO+ZQwCLQo6egAP3+nvTT81OOchH3gcJp9RMwM1Unjv+jRcLq9bFZ/StCsoELQrv2QuAAAA==
+  lqip: data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACQBQCdASoUAB4APzmMvFWvKaYjMBgIAeAnCWUAx+QQ355LUHpQV5K2DCU3/RW88rMSjqf6sAD+yEtg6gOgROj2VdP5oyL7pTLsEp0qJ/KNAamtU8+rM6VGyMXbGeuQe324dJHDGcIb5KHIzTV0r8slKfinIaescBrEzZ5VAjFimO9SAAA=
   alt: Everyday photograph, 10 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -239,11 +239,11 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-61734576-44ee62
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-61734576-44ee62
+- id: everyday-61734576-43deb4
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-61734576-43deb4
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAACQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJZQC06BjwueeSrqQAAP6bUH2OhRoczXtI3bsQKTUItnzb79JW0gJhy5b5hcMFeM5TaGPBY9ipNqCpn4AAAA==
+  lqip: data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAACQBACdASoUAB4APzmQvFgvKaWjqAqp4CcJYwAALskk35A1D5MJJcZBwDJyegAA/O8NKBoy/S4ti4rMo6XkrxwIahM4elDqY/CkywyLqufuJuNwKxIXfRRntCvXjFAAwUto8SCQAk5ADipbeYQcuYwZioswE3JZiW6iymg1TFiGPypWidEGEgAA
   alt: Everyday photograph, 10 October 2026
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -253,8 +253,8 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-68f11189-096d13
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-68f11189-096d13
+- id: everyday-68f11189-afacba
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-68f11189-afacba
   width: 6000
   height: 4000
   lqip: data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJagCdMoAB0oEw200PHTIAAMp8NqPXiK2JgyjrhW1wzGGn2GWhgJg26bo/HwS+UaZiOEY4M7S4ayWhFQrjdK0AAAA=
@@ -267,8 +267,8 @@
     iso: 100
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-080e00d7-caf440
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-080e00d7-caf440
+- id: everyday-080e00d7-5000d9
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-080e00d7-5000d9
   width: 6000
   height: 4000
   lqip: data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADQAwCdASoUAA0APzmQvlWvKqajMAgB4CcJZQCo9CHwhPspcO7YH6AA/M7Wc8Y1RbWpDr2lFJQPneaANzYRjEuUgkHddcwEIAA=
@@ -281,8 +281,8 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-26bb29fe-fe00b1
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-26bb29fe-fe00b1
+- id: everyday-26bb29fe-79e247
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-26bb29fe-79e247
   width: 6000
   height: 4000
   lqip: data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAwCdASoUAA0APzmGulQvKSWjMAgB4CcJZQAAW9pV1NhzMYxeAAD440EcMfM60yS4O1t7wD8DnY4LZjm1WxMbWtF3WFe9FEyJwvLIQAA=
@@ -295,11 +295,11 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-36b41525-cfc5a5
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-36b41525-cfc5a5
+- id: everyday-36b41525-cbf1c3
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-36b41525-cbf1c3
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAACQAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYwC7AB88TH7D9e14AP07CO70Zr5ThqAOJ0QDSL4nwmEIdj59M7KXZvMVGzBR+AS1m2I0NM49ucV1VwqzgKBrhPYAAA==
+  lqip: data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADQBACdASoUAB4APzmQvVgvKaYjqAqp4CcJQBllgfsFDbK7zBigeOz1pkrYYBLrAAD+MWGrjfHAlJDbP0tK1rZMOIXCubtsbu++RxliBKOiArED9tyfIyRrXh3f63WCukxrUHjVV036f6gqrGJ/6DfhH747MHILu80OmbI/7osfnZMk2XFI8vHj0HNf4oou5JhMNeVNVfD2AAAA
   alt: South Fork autumn
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
@@ -309,11 +309,11 @@
     iso: 200
     date: 2026-10-10
   date: 2026-10-10
-- id: everyday-61e72990-bcb1c1
-  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-61e72990-bcb1c1
+- id: everyday-61e72990-cb40aa
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-61e72990-cb40aa
   width: 4000
   height: 6000
-  lqip: data:image/webp;base64,UklGRmIAAABXRUJQVlA4IFYAAABwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJZwAAQ46qvX2h2sAA+2szDaThEmqrjABRsU/UjnVxYZ4c/qdG9iUaMuBj18B8lnjdjIpItlXpGAQMHQ+AAA==
+  lqip: data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBQCdASoUAB4APzmQu1UvKqYjMBgIAeAnCUAX52XQVCzSIPg0PE0tGMpKRL0cGWyVwAAA/up1VpPQlHIeXYLXYvsmylWEl4PDjV+4ZOG36honY0EfQnGnSVJQyKnAjJdGF0xcf+EIHGa+JIRpkyazzsc3yT6neSZ6IalGqqwVxcvD25n1NTw4u6m0ieAA
   alt: Golden hour beer at the Local
   exif:
     camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
