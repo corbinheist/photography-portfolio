@@ -52,11 +52,16 @@ def main() -> int:
     parser.add_argument("--out", required=True, type=Path, help="The directory for the exported JPEG files.")
     parser.add_argument("--frames", required=True, type=Path, help="The JSON file to write.")
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="The repository root.")
+    # A launchd job cannot read the "last opened library" preference, so the path is explicit.
+    parser.add_argument("--library", type=Path, default=Path.home() / "Pictures" / "Photos Library.photoslibrary", help="The Photos library.")
     # Local tests only. The scheduled sync does not pass it.
     parser.add_argument("--limit", type=int, default=0, help="Test only: read the newest N frames.")
     args = parser.parse_args()
 
-    db = osxphotos.PhotosDB()
+    if not args.library.exists():
+        print(f"Photos library not found: {args.library}. Pass --library.", file=sys.stderr)
+        return 2
+    db = osxphotos.PhotosDB(dbfile=str(args.library))
     # Match the name without surrounding spaces and without case: Photos keeps a typed trailing space.
     wanted = args.album.strip().casefold()
     albums = [album for album in db.album_info if album.title.strip().casefold() == wanted]
