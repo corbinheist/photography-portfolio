@@ -155,7 +155,7 @@ test.describe('smoke tests', () => {
   });
 
   // The committed manifest decides what the Everyday page shows: the sync writes it.
-  test('the Everyday page shows the synced frames with their margin, and the navigation links to it once it has one', async ({ page }) => {
+  test('the Everyday page shows the synced frames with their labels, and the navigation links to it once it has one', async ({ page }) => {
     const everyday = loadEveryday();
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/everyday/');
@@ -169,26 +169,42 @@ test.describe('smoke tests', () => {
     const frames = page.locator('.everyday__frame');
     await expect(frames).toHaveCount(everyday.length);
     await expect(frames.first().locator('img')).toHaveAttribute('alt', everyday[0].alt);
-    // Every frame has a tab (date, then coordinates) at its short edge, outside the photograph:
-    // at 1440px on the right of a landscape frame, under a portrait frame. At 390px every tab is under.
-    await expect(page.locator('.everyday__tab')).toHaveCount(everyday.length);
-    const tabsOutside = async (wide: boolean) => {
-      for (const tab of await page.locator('.everyday__tab').all()) {
-        const photo = (await tab.locator('xpath=..').locator('img').boundingBox())!;
-        const box = (await tab.boundingBox())!;
-        if (wide && photo.width >= photo.height) expect(box.x).toBeGreaterThanOrEqual(photo.x + photo.width - 1);
-        else expect(box.y).toBeGreaterThanOrEqual(photo.y + photo.height - 1);
-      }
-      expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    // Every frame has a label on its long edge, outside the photograph and never cut: at 1440px under a
+    // landscape frame and on the right of a portrait frame; under every frame below 900px. The label
+    // shortens (full, short, tight) before it wraps.
+    await expect(page.locator('.everyday__label')).toHaveCount(everyday.length);
+    const labelsFit = async (wide: boolean) => {
+      const report = await page.evaluate((wideView) => {
+        const problems: string[] = [];
+        for (const label of document.querySelectorAll<HTMLElement>('.everyday__label')) {
+          const img = label.parentElement!.querySelector('img')!.getBoundingClientRect();
+          const box = label.getBoundingClientRect();
+          const portrait = img.height > img.width;
+          const shown = [...label.children].filter((child) => getComputedStyle(child).display !== 'none');
+          if (shown.length !== 1) problems.push(`${label.textContent}: ${shown.length} forms shown`);
+          if (wideView && portrait) {
+            if (box.left < img.right - 1) problems.push(`${label.textContent}: on the photograph`);
+            for (const part of shown[0].children) if (part.getBoundingClientRect().bottom > img.bottom + 1) problems.push(`${label.textContent}: cut`);
+          } else {
+            if (box.top < img.bottom - 1) problems.push(`${label.textContent}: on the photograph`);
+            for (const part of shown[0].children) if (part.getBoundingClientRect().right > img.right + 1) problems.push(`${label.textContent}: cut`);
+          }
+        }
+        if (document.documentElement.scrollWidth > window.innerWidth) problems.push('horizontal scroll');
+        return problems.map((problem) => `${window.innerWidth}px: ${problem}`);
+      }, wide);
+      expect(report).toEqual([]);
     };
-    await tabsOutside(true);
-    // Equal area: every photograph's area is within 5% of the median.
-    const areas = await page.locator('.everyday__frame img').evaluateAll((imgs) => imgs.map((img) => { const r = img.getBoundingClientRect(); return r.width * r.height; }));
-    const median = [...areas].sort((a, b) => a - b)[Math.floor(areas.length / 2)];
-    for (const area of areas) expect(Math.abs(area / median - 1)).toBeLessThan(0.05);
+    // Each width is a fresh load, as a visitor on that screen gets it.
+    await labelsFit(true);
+    await page.setViewportSize({ width: 1000, height: 800 });
+    await page.reload();
+    await labelsFit(true);
     await page.setViewportSize({ width: 390, height: 844 });
-    await tabsOutside(false);
+    await page.reload();
+    await labelsFit(false);
     await page.setViewportSize({ width: 1440, height: 900 });
+    await page.reload();
     await frames.first().click();
     await expect(page.locator('dialog[data-lightbox]')).toHaveAttribute('open', '');
     await page.keyboard.press('Escape');

@@ -6,19 +6,21 @@ import { formatEverydayDate, loadEveryday } from '@scripts/utils/everyday';
 import { formatCoordinates } from '@scripts/utils/story-manifest';
 
 // The Everyday page: the Apple Photos album EDC, newest first. `pnpm everyday sync` writes the
-// manifest (src/data/everyday.yaml). A masonry grid; a click opens the lightbox (the photograph alone).
-// Each frame has a small paper tab at its short edge: the capture date, and the coordinates where the
-// frame has them. From 900px a landscape frame carries it on its right side; otherwise it sits under.
-// Equal area: a 3:2 landscape frame fills its column; a narrower frame takes the width that gives it the
-// same area, sqrt(ratio / 1.5) of the column (a 2:3 portrait: two thirds, as tall as the landscape is wide).
-const LANDSCAPE = 1.5;
+// manifest (src/data/everyday.yaml). Justified rows, as on the Gallery; a click opens the lightbox
+// (the photograph alone). Each frame's label (the date, then the coordinates where the frame has them)
+// sits on its long edge: under a landscape frame; from 900px, top to bottom on the right of a portrait
+// frame. Below 900px every label sits under its frame (design language 2.8). Where the full label does
+// not fit, it shortens first: the date as 2026-10-03, then the coordinates as decimals (the stored
+// 2-decimal precision). Only the shortest label breaks, at the separator. It is never cut.
 const frames = loadEveryday().map((photo, index) => ({
   photo,
   number: index + 1,
-  orientation: photo.width >= photo.height ? 'landscape' : 'portrait',
-  share: Math.min(1, Math.sqrt(photo.width / photo.height / LANDSCAPE)),
+  ratio: photo.width / photo.height,
   date: formatEverydayDate(photo.date),
   coordinates: photo.coordinates ? formatCoordinates(photo.coordinates) : undefined,
+  decimal: photo.coordinates
+    ? [photo.coordinates.latitude, photo.coordinates.longitude].map((value) => value.toFixed(2).replace('-', '−')).join(', ')
+    : undefined,
 }));
 ---
 
@@ -30,13 +32,14 @@ const frames = loadEveryday().map((photo, index) => ({
       <p class="everyday__empty">No photographs yet.</p>
     ) : (
       <ul class="everyday__wall">
-        {frames.map(({ photo, number, orientation, share, date, coordinates }) => (
-          <li class={`everyday__item--${orientation}`} style={`--share: ${(share * 100).toFixed(2)}%`}>
+        {frames.map(({ photo, number, ratio, date, coordinates, decimal }) => (
+          <li class={ratio >= 1 ? 'everyday__item--landscape' : 'everyday__item--portrait'} style={`--ratio: ${ratio}`}>
             <figure class="everyday__frame" data-frame={number}>
-              <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1799px) 33vw, 25vw" />
-              <figcaption class="everyday__tab label tabular">
-                <span>{date}</span>
-                {coordinates && <span>{coordinates}</span>}
+              <Photo url={photo.url} width={photo.width} height={photo.height} lqip={photo.lqip} alt={photo.alt} sizes="(max-width: 767px) 50vw, (max-width: 1399px) 33vw, 25vw" />
+              <figcaption class:list={['everyday__label label tabular', { 'everyday__label--coords': coordinates }]}>
+                <span class="everyday__full"><span>{date}{coordinates && ' ·'}</span>{coordinates && <> <span>{coordinates}</span></>}</span>
+                <span class="everyday__short"><span>{photo.date}{coordinates && ' ·'}</span>{coordinates && <> <span>{coordinates}</span></>}</span>
+                {decimal && <span class="everyday__tight"><span>{photo.date} ·</span> <span>{decimal}</span></span>}
               </figcaption>
             </figure>
           </li>
@@ -62,39 +65,43 @@ const frames = loadEveryday().map((photo, index) => ({
     color: var(--color-text-muted);
   }
 
-  /* Masonry: columns of frames at their full proportions, no crop, each frame with the same area
-     (see --share). The order runs down each column, newest first; the lightbox follows the frame
-     numbers. */
-  .everyday {
-    overflow-x: clip;
-  }
-
-  /* Masonry: columns of frames at their full proportions, no crop. The order runs down each
-     column, newest first; the lightbox follows the frame numbers. */
+  /* Justified rows, as on the Gallery (design language 5.6): every frame keeps its full proportions,
+     each row has one height, and the order reads left to right, newest first. */
+  /* Phone: 9.75rem keeps every portrait frame at least 104px wide, wider than the decimal
+     coordinates (100px at most). */
   .everyday__wall {
+    --row-h: 9.75rem;
     --gap: 0.5rem;
-    --tab-h: 2.6rem;
-    columns: 2;
-    column-gap: var(--gap);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
   }
 
   @media (min-width: 768px) {
-    .everyday__wall { --gap: 0.75rem; columns: 3; }
+    .everyday__wall { --row-h: 13rem; --gap: 0.75rem; }
   }
 
-  @media (min-width: 1800px) {
-    .everyday__wall { columns: 4; }
+  /* 15.5rem (248px) holds the longest full label (241px) top to bottom beside a portrait frame. */
+  @media (min-width: 1400px) {
+    .everyday__wall { --row-h: 15.5rem; }
   }
 
   .everyday__wall li {
-    break-inside: avoid;
-    margin-bottom: var(--gap);
+    flex-grow: calc(var(--ratio) * 100);
+    flex-basis: calc(var(--ratio) * var(--row-h));
+    min-width: 0;
+  }
+
+  /* Stops the last row from stretching its few frames across the full width. */
+  .everyday__wall::after {
+    content: '';
+    flex-grow: 1000000;
   }
 
   .everyday__frame {
     position: relative;
     display: block;
-    width: var(--share, 100%);
+    container-type: inline-size;
   }
 
   /* The photographs as shot: no dimming, no text on the photograph. */
@@ -103,35 +110,69 @@ const frames = loadEveryday().map((photo, index) => ({
     height: auto;
   }
 
-  /* The tab: the date and the coordinates, quiet, on the paper at the frame's short edge. The text
-     lines up with the photograph's edge and never covers it. Below 900px every tab sits under its
-     frame (design language 2.8). */
-  .everyday__tab {
-    display: block;
+  /* The label: quiet, on the paper, flush with the photograph's edge. Each part keeps together, so a
+     label breaks only between the date and the coordinates. */
+  .everyday__label {
     padding-top: 0.25rem;
     color: var(--color-text-faint);
     line-height: 1.25;
+  }
+
+  .everyday__full > span,
+  .everyday__short > span,
+  .everyday__tight > span {
     white-space: nowrap;
   }
 
-  .everyday__tab span {
-    display: block;
+  .everyday__short,
+  .everyday__tight {
+    display: none;
   }
 
-  /* From 900px a landscape frame's short edge is its right side: the tab stands there, top to
-     bottom, in a column gap wide enough to hold it. */
+  /* A label under its frame shortens where the frame is narrower than it. Measured at the margin size,
+     longest case: full 241px, short 196px, shortest 183px on one line (100px for the decimal line);
+     a date alone is 118px, or 73px as 2026-10-03. */
+  @container (max-width: 15.25rem) {
+    .everyday__label--coords .everyday__full { display: none; }
+    .everyday__label--coords .everyday__short { display: inline; }
+  }
+
+  @container (max-width: 12.5rem) {
+    .everyday__label--coords .everyday__short { display: none; }
+    .everyday__label--coords .everyday__tight { display: inline; }
+  }
+
+  @container (max-width: 7.5rem) {
+    .everyday__label:not(.everyday__label--coords) .everyday__full { display: none; }
+    .everyday__label:not(.everyday__label--coords) .everyday__short { display: inline; }
+  }
+
+  /* From 900px a portrait frame's long edge is its right side: the label runs top to bottom in the
+     gap beside it, and its length is the row height. Lines progress away from the photograph. */
   @media (min-width: 900px) {
     .everyday__wall {
-      --tab-w: 2.4rem;
-      column-gap: calc(var(--tab-w) + var(--gap));
+      column-gap: calc(var(--gap) + 2.25rem);
     }
 
-    .everyday__item--landscape .everyday__tab {
+    .everyday__item--portrait .everyday__label {
       position: absolute;
       top: 0;
       left: 100%;
+      max-height: 100%;
       padding: 0 0 0 0.375rem;
-      writing-mode: vertical-rl;
+      writing-mode: vertical-lr;
     }
+
+    /* 900 to 1399px: the row (208px) holds the short label (196px), not the full one. */
+    .everyday__item--portrait .everyday__label .everyday__full,
+    .everyday__item--portrait .everyday__label .everyday__tight { display: none; }
+    .everyday__item--portrait .everyday__label .everyday__short { display: inline; }
+  }
+
+  /* From 1400px the row (248px) holds the full label. */
+  @media (min-width: 1400px) {
+    .everyday__item--portrait .everyday__label .everyday__full { display: inline; }
+    .everyday__item--portrait .everyday__label .everyday__short,
+    .everyday__item--portrait .everyday__label .everyday__tight { display: none; }
   }
 </style>
