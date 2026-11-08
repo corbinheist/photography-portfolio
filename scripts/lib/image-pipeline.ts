@@ -50,6 +50,7 @@ export function slugify(filename: string): string {
 
 export async function generateLQIP(inputPath: string): Promise<string> {
   const buffer = await sharp(inputPath)
+    .rotate()
     .resize(LQIP_WIDTH)
     .webp({ quality: 20 })
     .toBuffer();
@@ -65,9 +66,12 @@ export async function processImage(inputPath: string, outputRoot: string): Promi
 
   fs.mkdirSync(outputSubdir, { recursive: true });
 
+  // The dimensions as displayed. A camera that shoots portrait can store landscape pixels with an
+  // EXIF orientation of 5 to 8 (rotated 90 degrees); the variants are turned upright, so swap.
   const metadata = await sharp(inputPath).metadata();
-  const originalWidth = metadata.width || 2400;
-  const originalHeight = metadata.height || 1600;
+  const rotated = (metadata.orientation ?? 1) >= 5;
+  const originalWidth = (rotated ? metadata.height : metadata.width) || 2400;
+  const originalHeight = (rotated ? metadata.width : metadata.height) || 1600;
 
   console.log(`Processing: ${filename} (${originalWidth}x${originalHeight})`);
 
@@ -87,7 +91,7 @@ export async function processImage(inputPath: string, outputRoot: string): Promi
       const outputFilename = `${slug}-${targetWidth}.${format}`;
       const outputPath = path.join(outputSubdir, outputFilename);
 
-      const pipeline = sharp(inputPath).resize(targetWidth, null, {
+      const pipeline = sharp(inputPath).rotate().resize(targetWidth, null, {
         withoutEnlargement: true,
       });
 
