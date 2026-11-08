@@ -112,12 +112,12 @@ const frames = loadEveryday().map((photo, index) => ({
   /* The label: quiet, on the paper, flush with the photograph's edge. Each part keeps together, so a
      label breaks only between the date and the coordinates. */
   /* 11px Light: smaller and lighter than the margin size (13px Regular), by Corbin's direction for
-     this label only (design language 5.6b). The colour is the faintest that passes WCAG AA. */
+     this label only (design language 5.6b). The colour is the muted marginalia colour. */
   .everyday__label {
     font-size: 0.6875rem;
     font-weight: 300;
     padding-top: 0.25rem;
-    color: var(--color-text-faint);
+    color: var(--color-text-muted);
     line-height: 1.25;
   }
 
