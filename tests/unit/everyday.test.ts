@@ -3,7 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 import sharp from 'sharp';
 import { describe, expect, it, vi } from 'vitest';
-import { buildEveryday, renderEveryday, type ExportedFrame } from '../../scripts/lib/everyday';
+import { buildEveryday, fallbackAlt, renderEveryday, type ExportedFrame } from '../../scripts/lib/everyday';
 import { processImage } from '../../scripts/lib/image-pipeline';
 import { formatEverydayDate, parseEveryday, type EverydayPhoto } from '../../src/scripts/utils/everyday';
 
@@ -39,10 +39,19 @@ describe('buildEveryday', () => {
     expect(plan.photos[0].url).toBe(`${CDN}/photos/new-1`);
   });
 
-  it('holds back a frame without a caption', async () => {
-    const plan = await buildEveryday([frame('a', { alt: '  ' })], [], CDN, vi.fn());
-    expect(plan.photos).toEqual([]);
-    expect(plan.held.map((item) => item.id)).toEqual(['a']);
+  it('publishes a frame without a caption with the date as its alt text', async () => {
+    const plan = await buildEveryday([frame('a', { alt: '  ' })], [], CDN, vi.fn().mockResolvedValue(processed));
+    expect(plan.photos[0].alt).toBe('Everyday photograph, 8 November 2026');
+    expect(plan.photos[0].alt).toBe(fallbackAlt('2026-11-08'));
+    expect(plan.uncaptioned.map((item) => item.id)).toEqual(['a']);
+  });
+
+  it('replaces the date alt text when a caption is added later, without processing again', async () => {
+    const process = vi.fn();
+    const plan = await buildEveryday([frame('a', { alt: 'A cyclist at a wet crossing' })], [existing('a', { alt: fallbackAlt('2026-11-08') })], CDN, process);
+    expect(process).not.toHaveBeenCalled();
+    expect(plan.updated).toEqual(['a']);
+    expect(plan.photos[0].alt).toBe('A cyclist at a wet crossing');
   });
 
   it('removes a frame that left the album', async () => {

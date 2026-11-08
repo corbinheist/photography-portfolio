@@ -12,11 +12,11 @@ For each still photograph in the album it writes one entry to the frames file:
   id           everyday-<first 8 characters of the Photos uuid>-<6 characters of a version hash>.
                An edit in Photos changes the version, so the CDN never serves a stale variant.
   name         the original file name (for example R0001234.JPG), to find the frame in Photos.
-  alt          the Photos caption (the "Add a Caption" field). Empty means the frame is held back.
+  alt          the Photos caption (the "Add a Caption" field), or empty.
   date         the capture date, YYYY-MM-DD, in the time zone of the capture.
   taken        the capture time, ISO 8601, for the sort order.
   coordinates  latitude and longitude rounded to 2 decimal places, or absent.
-  file         the exported JPEG, relative to the repository root. Absent for a held frame.
+  file         the exported JPEG, relative to the repository root. Absent when the export failed.
 
 A frame is exported only when its JPEG does not exist yet. A JPEG that no album frame uses is deleted.
 """
@@ -52,9 +52,8 @@ def main() -> int:
     parser.add_argument("--out", required=True, type=Path, help="The directory for the exported JPEG files.")
     parser.add_argument("--frames", required=True, type=Path, help="The JSON file to write.")
     parser.add_argument("--root", type=Path, default=Path.cwd(), help="The repository root.")
-    # Local layout tests only. The scheduled sync passes neither flag.
+    # Local tests only. The scheduled sync does not pass it.
     parser.add_argument("--limit", type=int, default=0, help="Test only: read the newest N frames.")
-    parser.add_argument("--export-uncaptioned", action="store_true", help="Test only: export frames that have no caption.")
     args = parser.parse_args()
 
     db = osxphotos.PhotosDB()
@@ -95,34 +94,33 @@ def main() -> int:
         if latitude is not None and longitude is not None:
             frame["coordinates"] = {"latitude": rounded(latitude), "longitude": rounded(longitude)}
 
-        if frame["alt"] or args.export_uncaptioned:
-            target = out / f"{fid}.jpg"
-            if not target.exists():
-                options = ExportOptions(
-                    edited=photo.hasadjustments,
-                    convert_to_jpeg=True,
-                    jpeg_quality=0.95,
-                    download_missing=photo.ismissing or not photo.path,
-                    use_photos_export=photo.ismissing or not photo.path,
-                    live_photo=False,
-                    raw_photo=False,
-                    overwrite=True,
-                )
-                result = PhotoExporter(photo).export(str(out), filename=f"{fid}.jpg", options=options)
-                written = [Path(p) for p in result.exported + result.converted_to_jpeg if Path(p).exists()]
-                jpeg = next((p for p in written if p.suffix.lower() in {".jpg", ".jpeg"}), None)
-                if jpeg is None:
-                    print(f"Export failed for {fid} ({photo.original_filename}): {result.error or 'no JPEG written'}", file=sys.stderr)
-                    frame["error"] = "export failed"
-                else:
-                    if jpeg != target:
-                        jpeg.rename(target)
-                    # Remove anything else the export wrote for this frame (for example a sidecar).
-                    for extra in written:
-                        if extra.exists() and extra != target:
-                            extra.unlink()
-            if target.exists():
-                frame["file"] = str(target.resolve().relative_to(args.root.resolve()))
+        target = out / f"{fid}.jpg"
+        if not target.exists():
+            options = ExportOptions(
+                edited=photo.hasadjustments,
+                convert_to_jpeg=True,
+                jpeg_quality=0.95,
+                download_missing=photo.ismissing or not photo.path,
+                use_photos_export=photo.ismissing or not photo.path,
+                live_photo=False,
+                raw_photo=False,
+                overwrite=True,
+            )
+            result = PhotoExporter(photo).export(str(out), filename=f"{fid}.jpg", options=options)
+            written = [Path(p) for p in result.exported + result.converted_to_jpeg if Path(p).exists()]
+            jpeg = next((p for p in written if p.suffix.lower() in {".jpg", ".jpeg"}), None)
+            if jpeg is None:
+                print(f"Export failed for {fid} ({photo.original_filename}): {result.error or 'no JPEG written'}", file=sys.stderr)
+                frame["error"] = "export failed"
+            else:
+                if jpeg != target:
+                    jpeg.rename(target)
+                # Remove anything else the export wrote for this frame (for example a sidecar).
+                for extra in written:
+                    if extra.exists() and extra != target:
+                        extra.unlink()
+        if target.exists():
+            frame["file"] = str(target.resolve().relative_to(args.root.resolve()))
         frames.append(frame)
 
     # Delete JPEG files that no album frame uses any more.

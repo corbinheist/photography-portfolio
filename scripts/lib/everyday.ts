@@ -3,15 +3,15 @@
  * `buildEveryday` with exported frames and fake processing.
  *
  * The Apple Photos album is the source of truth:
- * - A frame with a caption is published. The caption is the alt text.
- * - A frame without a caption is held back until it has one.
+ * - Every still frame is published. The Photos caption is the alt text. A frame without a caption
+ *   gets a factual alt text from its date (`fallbackAlt`); the caption replaces it when one is added.
  * - A frame removed from the album leaves the manifest. Its CDN objects stay.
  * - An unchanged frame keeps its manifest entry, so it is not processed or uploaded again.
  */
 
 import { stringify } from 'yaml';
 import type { ExifData } from './image-pipeline';
-import { EVERYDAY_COORDINATE_DECIMALS, type EverydayPhoto } from '../../src/scripts/utils/everyday';
+import { EVERYDAY_COORDINATE_DECIMALS, formatEverydayDate, type EverydayPhoto } from '../../src/scripts/utils/everyday';
 
 /** One frame as `scripts/everyday/export_album.py` writes it. */
 export interface ExportedFrame {
@@ -23,7 +23,7 @@ export interface ExportedFrame {
   date: string;
   taken: string;
   coordinates?: { latitude: number; longitude: number };
-  /** The exported JPEG, relative to the repository root. Absent for a held frame. */
+  /** The exported JPEG, relative to the repository root. Absent when the export failed. */
   file?: string;
   error?: string;
 }
@@ -41,13 +41,18 @@ export interface EverydayPlan {
   added: string[];
   removed: string[];
   updated: string[];
-  /** Frames without a caption: they stay off the page. */
-  held: ExportedFrame[];
+  /** Frames without a caption: published with the fallback alt text. */
+  uncaptioned: ExportedFrame[];
   /** Frames that failed to export: they stay off the page, and the run reports a failure. */
   failed: ExportedFrame[];
 }
 
 const round = (value: number) => Number(value.toFixed(EVERYDAY_COORDINATE_DECIMALS));
+
+/** The alt text of a frame without a caption: only facts the sync has, never a guessed subject. */
+export function fallbackAlt(date: string): string {
+  return `Everyday photograph, ${formatEverydayDate(date)}`;
+}
 
 /**
  * Build the new manifest. `process` runs only for frames that the current manifest does not have.
@@ -63,15 +68,13 @@ export async function buildEveryday(
   const photos: EverydayPhoto[] = [];
   const added: string[] = [];
   const updated: string[] = [];
-  const held: ExportedFrame[] = [];
+  const uncaptioned: ExportedFrame[] = [];
   const failed: ExportedFrame[] = [];
 
   for (const frame of frames) {
-    const alt = frame.alt.trim();
-    if (!alt) {
-      held.push(frame);
-      continue;
-    }
+    const caption = frame.alt.trim();
+    if (!caption) uncaptioned.push(frame);
+    const alt = caption || fallbackAlt(frame.date);
     if (frame.error) {
       failed.push(frame);
       continue;
@@ -111,7 +114,7 @@ export async function buildEveryday(
 
   const kept = new Set(photos.map((photo) => photo.id));
   const removed = current.map((photo) => photo.id).filter((id) => !kept.has(id));
-  return { photos, added, removed, updated, held, failed };
+  return { photos, added, removed, updated, uncaptioned, failed };
 }
 
 const HEADER = `# The Everyday page (/everyday/), newest first.

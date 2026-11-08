@@ -85,10 +85,9 @@ Drafts (`draft: true`) build only with `STORIES_INCLUDE_DRAFTS=1`.
 
 `/everyday/` shows the photographs in the Apple Photos album **EDC**, newest first. The photographs come from the iPhone and the Ricoh GR IIIx through the camera roll. A job on the Mac publishes them. Linear: project "heist.studio Everyday Gallery" (STU-80 to STU-82).
 
-To publish a photograph: add it to the album EDC and give it a caption in Photos ("Add a Caption"). The caption is the alt text. The next sync (once an hour) publishes it.
+To publish a photograph: add it to the album EDC. The next sync (once an hour) publishes it.
 
-- A photograph without a caption stays off the page. The sync log lists it until it has a caption.
-- The practice: add the photograph to EDC when you take it, and write the caption later. Once a day, on the first sync at or after 19:00, the job sends a macOS notification when photographs wait for a caption (`REMIND_HOUR` in `deploy/everyday-sync.sh`).
+- The alt text is the Photos caption ("Add a Caption"). A photograph without a caption gets "Everyday photograph, <date>". A caption added later replaces it on the next sync. Real alt text for every frame is deferred to a separate project (STU-83).
 - A photograph removed from the album leaves the page on the next sync. Its CDN objects stay.
 - The coordinates are rounded to 2 decimal places (about 1.1 km) before they leave the Mac. The published AVIF and WebP files carry no EXIF (`tests/unit/everyday.test.ts` checks this).
 - An edit in Photos gives the frame a new id, so the CDN never serves the old version.

@@ -6,16 +6,16 @@
  * 1. Exports the still photographs of the album as JPEG into _raw/everyday/
  *    (scripts/everyday/export_album.py, through uv and osxphotos). The Photos library is not changed.
  * 2. Processes and uploads each new frame (AVIF and WebP, no EXIF in the variants).
- * 3. Writes src/data/everyday.yaml: captioned frames only, newest first, coordinates to 2 decimal places.
+ * 3. Writes src/data/everyday.yaml: every still frame, newest first, coordinates to 2 decimal places.
+ *    The alt text is the Photos caption, or "Everyday photograph, <date>" when there is none.
  * 4. With --publish: checks the content, commits the manifest to main, and pushes. CI deploys.
  *
  * --dry-run   Export and process into a temporary directory. Upload nothing, write nothing.
  * --publish   Commit and push the manifest. The checkout must be on main with a clean tree.
  *             The scheduled job (deploy/everyday-sync.sh) passes this flag.
  *
- * Test only (local layout checks; refused with --publish):
+ * Test only (refused with --publish):
  * --limit <n>        Read the newest n frames of the album.
- * --test-alt         Give an uncaptioned frame the alt text "Test frame, <date>".
  *
  * Env vars: DO_SPACES_CDN_ENDPOINT, and for the upload DO_SPACES_KEY, DO_SPACES_SECRET,
  * DO_SPACES_BUCKET, DO_SPACES_REGION (read from .env).
@@ -30,7 +30,7 @@ import { extractExif, processImage } from './lib/image-pipeline';
 import { getConfig, photoObjectKey, spacesStore, uploadFiles, type UploadItem } from './lib/spaces';
 import { EVERYDAY_FILE, loadEveryday } from '../src/scripts/utils/everyday';
 
-const USAGE = 'Usage: pnpm everyday sync [--dry-run] [--publish] [--album <name>] [--limit <n>] [--test-alt]';
+const USAGE = 'Usage: pnpm everyday sync [--dry-run] [--publish] [--album <name>] [--limit <n>]';
 const root = process.cwd();
 
 function loadDotEnv() {
@@ -49,12 +49,11 @@ function git(...args: string[]): string {
 function parseArgs(argv: string[]) {
   const [command, ...rest] = argv;
   if (command !== 'sync') throw new Error(USAGE);
-  const options = { dryRun: false, publish: false, album: 'EDC', limit: 0, testAlt: false };
+  const options = { dryRun: false, publish: false, album: 'EDC', limit: 0 };
   for (let i = 0; i < rest.length; i++) {
     const arg = rest[i];
     if (arg === '--dry-run') options.dryRun = true;
     else if (arg === '--publish') options.publish = true;
-    else if (arg === '--test-alt') options.testAlt = true;
     else if (arg === '--album') options.album = rest[++i] ?? '';
     else if (arg === '--limit') options.limit = Number(rest[++i]);
     else throw new Error(`Unknown argument "${arg}". ${USAGE}`);
@@ -62,8 +61,8 @@ function parseArgs(argv: string[]) {
   if (!options.album) throw new Error('--album needs a name');
   if (!Number.isInteger(options.limit) || options.limit < 0) throw new Error('--limit needs a whole number');
   if (options.publish && options.dryRun) throw new Error('--publish and --dry-run cannot be used together');
-  if (options.publish && (options.limit || options.testAlt || options.album !== 'EDC')) {
-    throw new Error('--publish publishes the full album EDC only. Remove --limit, --test-alt, and --album.');
+  if (options.publish && (options.limit || options.album !== 'EDC')) {
+    throw new Error('--publish publishes the full album EDC only. Remove --limit and --album.');
   }
   return options;
 }
@@ -91,11 +90,9 @@ async function main() {
   fs.mkdirSync(rawDir, { recursive: true });
   const exportArgs = ['run', '--quiet', 'scripts/everyday/export_album.py', '--album', options.album, '--out', rawDir, '--frames', framesFile, '--root', root];
   if (options.limit) exportArgs.push('--limit', String(options.limit));
-  if (options.testAlt) exportArgs.push('--export-uncaptioned');
   console.log(`Reading the Apple Photos album "${options.album}"...`);
   execFileSync('uv', exportArgs, { cwd: root, stdio: ['ignore', 'inherit', 'inherit'] });
-  let frames = (JSON.parse(fs.readFileSync(framesFile, 'utf8')) as { frames: ExportedFrame[] }).frames;
-  if (options.testAlt) frames = frames.map((frame) => (frame.alt ? frame : { ...frame, alt: `Test frame, ${frame.date}` }));
+  const frames = (JSON.parse(fs.readFileSync(framesFile, 'utf8')) as { frames: ExportedFrame[] }).frames;
 
   // 2. Process the new frames.
   const outputDir = options.dryRun ? fs.mkdtempSync(path.join(os.tmpdir(), 'everyday-')) : path.join(root, '_processed', 'everyday');
@@ -122,8 +119,7 @@ async function main() {
   const changed = text !== before;
 
   console.log(`\nPublished: ${plan.photos.length}. Added: ${plan.added.length}, updated: ${plan.updated.length}, removed: ${plan.removed.length}.`);
-  if (plan.held.length) console.log(`Held, no caption in Photos (${plan.held.length}):`);
-  for (const frame of plan.held) console.log(`  ${frame.date}  ${frame.name ?? frame.uuid}`);
+  if (plan.uncaptioned.length) console.log(`Without a caption (date alt text): ${plan.uncaptioned.length}.`);
   for (const frame of plan.failed) console.error(`Failed: ${frame.date} ${frame.name ?? frame.uuid}: ${frame.error}`);
 
   if (options.dryRun) {
