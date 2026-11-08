@@ -35,9 +35,15 @@ from osxphotos.photoexporter import ExportOptions, PhotoExporter
 COORDINATE_DECIMALS = 2
 
 
+# Raise this when the image pipeline changes its output, so every frame gets new CDN objects.
+# 2: variants of frames with EXIF orientation 5 to 8 are rotated upright (STU-84).
+PIPELINE_VERSION = 2
+
+
 def frame_id(photo: osxphotos.PhotoInfo) -> str:
-    # The version follows the edit state, so a new edit gives a new id and new CDN objects.
-    version_source = f"{photo.uuid}|{photo.hasadjustments}|{photo.date_modified.isoformat() if photo.hasadjustments and photo.date_modified else ''}"
+    # The version follows the edit state and the pipeline, so a new edit or a pipeline change gives a
+    # new id and new CDN objects. The sync never overwrites an object on the CDN.
+    version_source = f"{PIPELINE_VERSION}|{photo.uuid}|{photo.hasadjustments}|{photo.date_modified.isoformat() if photo.hasadjustments and photo.date_modified else ''}"
     version = hashlib.sha256(version_source.encode()).hexdigest()[:6]
     return f"everyday-{photo.uuid[:8].lower()}-{version}"
 
