@@ -6,7 +6,8 @@
 
 Usage: uv run scripts/everyday/export_album.py --album EDC --out _raw/everyday --frames frames.json
 
-The script reads the Photos library. It never changes the library.
+The script reads the Photos library. It never changes the library. Before it reads, it checks the
+time of the last iCloud sync (photos_icloud_sync.py), and opens Photos when the library is behind.
 
 For each still photograph in the album it writes one entry to the frames file:
   id           everyday-<first 8 characters of the Photos uuid>-<6 characters of a version hash>.
@@ -31,6 +32,8 @@ from pathlib import Path
 
 import osxphotos
 from osxphotos.photoexporter import ExportOptions, PhotoExporter
+
+from photos_icloud_sync import ensure_recent_sync
 
 COORDINATE_DECIMALS = 2
 
@@ -67,6 +70,8 @@ def main() -> int:
     if not args.library.exists():
         print(f"Photos library not found: {args.library}. Pass --library.", file=sys.stderr)
         return 2
+    # A library that is behind iCloud gives an old album. Wait for a sync first when it is behind.
+    ensure_recent_sync(args.library)
     db = osxphotos.PhotosDB(dbfile=str(args.library))
     # Match the name without surrounding spaces and without case: Photos keeps a typed trailing space.
     wanted = args.album.strip().casefold()
