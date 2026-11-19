@@ -93,6 +93,8 @@ To publish a photograph: add it to the album EDC. The next sync (once an hour) p
 - An edit in Photos gives the frame a new id, so the CDN never serves the old version.
 - Videos are skipped. A Live Photo publishes its still image.
 - `src/data/everyday.yaml` is written by the sync. Do not edit it by hand.
+- The sync reads the Photos library on the Mac, so a new photograph must first reach the Mac through iCloud. Each run prints the time of the last iCloud sync. When that time is older than the refresh interval of Photos (2 hours) and Photos is not running, the sync opens Photos in the background and waits up to 5 minutes for a sync. Photos stays open. A line that starts with `WARNING` in the log means the run read a library that may be behind iCloud.
+- An export can fail when an edited photograph has synced but its edited image has not downloaded yet. The log shows `export failed`, and the next sync exports the frame.
 
 `pnpm everyday sync --dry-run` shows what a sync would do and writes nothing. `pnpm everyday sync` uploads and writes the manifest. `--publish` also validates the content, commits the manifest to `main`, and pushes, so CI deploys. Only the sync commits to `main` directly; code changes still go through a PR.
 
