@@ -195,19 +195,25 @@ test.describe('smoke tests', () => {
       }, wide);
       expect(report).toEqual([]);
     };
-    // The last row has the height of the row above (or the largest height at which it fits).
+    // The last row has the height of the row above. When the row is too wide at that height, it has
+    // the largest height at which it fits the wall (the sum of the frame widths and the gaps).
     const lastRowMatches = async () => {
-      const [last, above, fits] = await page.evaluate(() => {
+      const [last, above, fitHeight, fits] = await page.evaluate(() => {
         const items = [...document.querySelectorAll<HTMLElement>('.everyday__wall li')];
         const lastTop = items[items.length - 1].offsetTop;
         const aboveTop = Math.max(...items.filter((item) => item.offsetTop < lastTop).map((item) => item.offsetTop));
         const height = (top: number) => items.find((item) => item.offsetTop === top)!.querySelector('img')!.getBoundingClientRect().height;
-        const wall = document.querySelector('.everyday__wall')!.getBoundingClientRect();
-        const lastRight = Math.max(...items.filter((item) => item.offsetTop === lastTop).map((item) => item.querySelector('img')!.getBoundingClientRect().right));
-        return [height(lastTop), height(aboveTop), lastRight <= wall.right + 1];
+        const wall = document.querySelector<HTMLElement>('.everyday__wall')!;
+        const lastItems = items.filter((item) => item.offsetTop === lastTop);
+        const lastRight = Math.max(...lastItems.map((item) => item.querySelector('img')!.getBoundingClientRect().right));
+        const gap = parseFloat(getComputedStyle(wall).columnGap) || 0;
+        const ratios = lastItems.map((item) => parseFloat(item.style.getPropertyValue('--ratio')) || 1);
+        const room = wall.clientWidth - gap * (lastItems.length - 1);
+        const fit = room / ratios.reduce((sum, ratio) => sum + ratio, 0);
+        return [height(lastTop), height(aboveTop), fit, lastRight <= wall.getBoundingClientRect().right + 1] as const;
       });
       expect(fits).toBe(true);
-      expect(Math.abs(last - above)).toBeLessThanOrEqual(2);
+      expect(Math.abs(last - Math.min(above, fitHeight))).toBeLessThanOrEqual(2);
     };
     // Each width is a fresh load, as a visitor on that screen gets it.
     await lastRowMatches();
