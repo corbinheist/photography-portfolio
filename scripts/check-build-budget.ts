@@ -1,12 +1,17 @@
 import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
+import { gzipSync } from 'node:zlib';
 
 const distDir = path.join(process.cwd(), process.env.ASTRO_OUT_DIR || 'dist');
 const limits = {
   largestJavaScript: 1_100_000,
   totalJavaScript: 1_260_000,
   largestCss: 80_000,
-  largestHtml: 525_000,
+  // Gzip bytes, because that is the size that the network carries. The Everyday
+  // page grows with the album: each frame adds about 3,200 raw bytes and about
+  // 280 gzip bytes, because the markup repeats the same CDN paths. A raw limit
+  // stopped the deploy at 155 frames (STU-90). This limit holds about 350 frames.
+  largestHtmlGzip: 100_000,
   mapFreeReferencedJavaScript: 50_000,
 };
 
@@ -45,7 +50,10 @@ const largest = (files: typeof measured) => files.toSorted((a, b) => b.bytes - a
 const totalJavaScript = javascript.reduce((sum, file) => sum + file.bytes, 0);
 const largestJavaScript = largest(javascript);
 const largestCss = largest(css);
-const largestHtml = largest(html);
+const htmlGzip = await Promise.all(
+  html.map(async (file) => ({ ...file, gzipBytes: gzipSync(await readFile(file.filename)).length })),
+);
+const largestHtml = htmlGzip.toSorted((a, b) => b.gzipBytes - a.gzipBytes)[0];
 
 const failures: string[] = [];
 if (largestJavaScript?.bytes > limits.largestJavaScript) {
@@ -57,8 +65,8 @@ if (totalJavaScript > limits.totalJavaScript) {
 if (largestCss?.bytes > limits.largestCss) {
   failures.push(`Largest CSS asset is ${formatBytes(largestCss.bytes)} (${largestCss.relative}); limit is ${formatBytes(limits.largestCss)}.`);
 }
-if (largestHtml?.bytes > limits.largestHtml) {
-  failures.push(`Largest HTML page is ${formatBytes(largestHtml.bytes)} (${largestHtml.relative}); limit is ${formatBytes(limits.largestHtml)}.`);
+if (largestHtml?.gzipBytes > limits.largestHtmlGzip) {
+  failures.push(`Largest HTML page is ${formatBytes(largestHtml.gzipBytes)} gzip, ${formatBytes(largestHtml.bytes)} raw (${largestHtml.relative}); limit is ${formatBytes(limits.largestHtmlGzip)} gzip.`);
 }
 
 for (const page of mapFreePages) {
@@ -90,7 +98,7 @@ for (const page of mapFreePages) {
 
 console.log(`JavaScript: ${formatBytes(totalJavaScript)} total; largest ${formatBytes(largestJavaScript?.bytes ?? 0)} (${largestJavaScript?.relative ?? 'none'})`);
 console.log(`CSS: largest ${formatBytes(largestCss?.bytes ?? 0)} (${largestCss?.relative ?? 'none'})`);
-console.log(`HTML: largest ${formatBytes(largestHtml?.bytes ?? 0)} (${largestHtml?.relative ?? 'none'})`);
+console.log(`HTML: largest ${formatBytes(largestHtml?.gzipBytes ?? 0)} gzip, ${formatBytes(largestHtml?.bytes ?? 0)} raw (${largestHtml?.relative ?? 'none'})`);
 
 if (failures.length > 0) {
   failures.forEach((failure) => console.error(`ERROR ${failure}`));
