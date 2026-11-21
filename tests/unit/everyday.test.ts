@@ -5,6 +5,7 @@ import sharp from 'sharp';
 import { describe, expect, it, vi } from 'vitest';
 import { buildEveryday, fallbackAlt, renderEveryday, type ExportedFrame } from '../../scripts/lib/everyday';
 import { processImage } from '../../scripts/lib/image-pipeline';
+import { fixForFrame, parseLocationLog } from '../../scripts/lib/location-log';
 import { formatEverydayDate, parseEveryday, type EverydayPhoto } from '../../src/scripts/utils/everyday';
 
 const CDN = 'https://cdn.test';
@@ -82,6 +83,77 @@ describe('buildEveryday', () => {
   it('writes a manifest that the page schema accepts', async () => {
     const plan = await buildEveryday([frame('a', { coordinates: { latitude: 1.234, longitude: 5.678 } }), frame('b')], [], CDN, vi.fn().mockResolvedValue(processed));
     expect(parseEveryday(renderEveryday(plan.photos))).toEqual(plan.photos);
+  });
+});
+
+describe('the location log', () => {
+  const LOG = [
+    '2026-11-17T06:02:18+01:0010.12345678901234520.1234567890123455.5TestbyTestland',
+    '2026-11-18T05:15:01+01:00LAT: 10.12981599720546LON: 20.428540480576096ALT: 4.5PLACE: Testby,Testland',
+    '2026-11-18T09:39:16+01:00LAT: 10.12356121450753LON: 20.37443102842437ALT: 33.9PLACE: Testby,Testland',
+    '2026-11-19T05:15:01+01:00LAT: 10.12981042622767LON: 20.428552983028673ALT: -25.8PLACE: Testby,Testland',
+    '2026-11-21T05:15:01+01:00LAT: -33.86LON: -151.2ALT: 20PLACE: Somewhere',
+    '',
+  ].join('\n');
+  const { fixes, unreadable } = parseLocationLog(LOG);
+
+  it('reads the labelled lines and counts a line without labels as not readable', () => {
+    expect(fixes.map((fix) => fix.date)).toEqual(['2026-11-18', '2026-11-18', '2026-11-19', '2026-11-21']);
+    expect(unreadable).toBe(1);
+    expect(fixes[0]).toMatchObject({ latitude: 10.12981599720546, longitude: 20.428540480576096 });
+    expect(fixes[0].time).toBe(Date.parse('2026-11-18T05:15:01+01:00'));
+    expect(fixes[3]).toMatchObject({ latitude: -33.86, longitude: -151.2 });
+  });
+
+  it('rejects a latitude or a longitude outside the valid range', () => {
+    expect(parseLocationLog('2026-11-18T05:15:01+01:00LAT: 91LON: 9ALT: 1PLACE: x')).toEqual({ fixes: [], unreadable: 1 });
+    expect(parseLocationLog('2026-11-18T05:15:01+01:00LAT: 9LON: 181ALT: 1PLACE: x')).toEqual({ fixes: [], unreadable: 1 });
+  });
+
+  it('takes the fix nearest in time on the date of the frame', () => {
+    expect(fixForFrame(fixes, { date: '2026-11-18', taken: '2026-11-18T10:00:00+01:00' })?.longitude).toBe(20.37443102842437);
+    expect(fixForFrame(fixes, { date: '2026-11-18', taken: '2026-11-18T06:00:00+01:00' })?.longitude).toBe(20.428540480576096);
+  });
+
+  it('gives no fix for a date that the log does not have', () => {
+    expect(fixForFrame(fixes, { date: '2026-11-20', taken: '2026-11-20T05:20:00+01:00' })).toBeUndefined();
+    expect(fixForFrame(fixes, { date: '2026-11-17', taken: '2026-11-17T12:00:00+01:00' })).toBeUndefined();
+  });
+
+  it('gives a frame without a location the rounded coordinates of the fix, and marks the source', async () => {
+    const plan = await buildEveryday([frame('a', { date: '2026-11-19', taken: '2026-11-19T00:21:33+01:00' })], [], CDN, vi.fn().mockResolvedValue(processed), fixes);
+    expect(plan.photos[0].coordinates).toEqual({ latitude: 10.13, longitude: 20.43 });
+    expect(plan.photos[0].coordinatesSource).toBe('location-log');
+    expect(plan.located).toEqual(['a']);
+    expect(parseEveryday(renderEveryday(plan.photos))).toEqual(plan.photos);
+  });
+
+  it('keeps the location from Photos when the frame has one', async () => {
+    const plan = await buildEveryday(
+      [frame('a', { date: '2026-11-19', taken: '2026-11-19T00:21:33+01:00', coordinates: { latitude: 30.5, longitude: 40.5 } })],
+      [],
+      CDN,
+      vi.fn().mockResolvedValue(processed),
+      fixes,
+    );
+    expect(plan.photos[0].coordinates).toEqual({ latitude: 30.5, longitude: 40.5 });
+    expect(plan.photos[0]).not.toHaveProperty('coordinatesSource');
+    expect(plan.located).toEqual([]);
+  });
+
+  it('adds the coordinates to a published frame without processing it again', async () => {
+    const process = vi.fn();
+    const plan = await buildEveryday([frame('a', { date: '2026-11-19', taken: '2026-11-19T12:00:00+01:00' })], [existing('a', { date: '2026-11-19' })], CDN, process, fixes);
+    expect(process).not.toHaveBeenCalled();
+    expect(plan.updated).toEqual(['a']);
+    expect(plan.photos[0].coordinates).toEqual({ latitude: 10.13, longitude: 20.43 });
+  });
+
+  it('removes the mark and the coordinates when the log no longer has the date', async () => {
+    const before = existing('a', { date: '2026-11-19', coordinates: { latitude: 10.13, longitude: 20.43 }, coordinatesSource: 'location-log' });
+    const plan = await buildEveryday([frame('a', { date: '2026-11-19', taken: '2026-11-19T12:00:00+01:00' })], [before], CDN, vi.fn(), []);
+    expect(plan.photos[0]).not.toHaveProperty('coordinates');
+    expect(plan.photos[0]).not.toHaveProperty('coordinatesSource');
   });
 });
 

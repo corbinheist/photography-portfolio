@@ -26,6 +26,8 @@ export const everydayPhotoSchema = storyPhotoSchema.extend({
   alt: z.string().trim().min(1, 'every frame needs alt text (the Photos caption)'),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'date must be a quoted "YYYY-MM-DD" string'),
   coordinates: z.object({ latitude: roundedDegree(-90, 90), longitude: roundedDegree(-180, 180) }).optional(),
+  /** Present when the coordinates come from the location log and not from the photograph (STU-91). */
+  coordinatesSource: z.literal('location-log').optional(),
 });
 
 export type EverydayPhoto = z.infer<typeof everydayPhotoSchema>;
