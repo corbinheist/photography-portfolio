@@ -15,6 +15,10 @@
     iso: 3200
     date: 2026-11-20
   date: 2026-11-20
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-c81f82d6-170956
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-c81f82d6-170956
   width: 4000
@@ -29,6 +33,10 @@
     iso: 320
     date: 2026-11-20
   date: 2026-11-20
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-eac7e837-1a419f
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-eac7e837-1a419f
   width: 4000
@@ -43,6 +51,10 @@
     iso: 3200
     date: 2026-11-20
   date: 2026-11-20
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-30567a09-9c2a3e
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-30567a09-9c2a3e
   width: 6000
@@ -57,6 +69,10 @@
     iso: 320
     date: 2026-11-20
   date: 2026-11-20
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-70d7f2a0-b3e685
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-70d7f2a0-b3e685
   width: 4000
@@ -71,6 +87,10 @@
     iso: 400
     date: 2026-11-20
   date: 2026-11-20
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-bccfaa7f-9701a1
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-bccfaa7f-9701a1
   width: 6000
@@ -85,6 +105,10 @@
     iso: 3200
     date: 2026-11-20
   date: 2026-11-20
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-fadf9354-5a5449
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-fadf9354-5a5449
   width: 6000
@@ -99,6 +123,10 @@
     iso: 3200
     date: 2026-11-19
   date: 2026-11-19
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-c14a74f3-4e1252
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-c14a74f3-4e1252
   width: 6000
@@ -113,6 +141,10 @@
     iso: 3200
     date: 2026-11-18
   date: 2026-11-18
+  coordinates:
+    latitude: 63.79
+    longitude: 9.37
+  coordinatesSource: location-log
 - id: everyday-ae3b466d-dc0d54
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-ae3b466d-dc0d54
   width: 4000
@@ -127,6 +159,10 @@
     iso: 250
     date: 2026-11-18
   date: 2026-11-18
+  coordinates:
+    latitude: 63.79
+    longitude: 9.37
+  coordinatesSource: location-log
 - id: everyday-c317f261-e7b0f2
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-c317f261-e7b0f2
   width: 6000
@@ -141,6 +177,10 @@
     iso: 200
     date: 2026-11-18
   date: 2026-11-18
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-b9bbe42a-e3f844
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-b9bbe42a-e3f844
   width: 6000
@@ -155,6 +195,10 @@
     iso: 3200
     date: 2026-11-17
   date: 2026-11-17
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-96a8f4d9-2c7190
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-96a8f4d9-2c7190
   width: 5567
