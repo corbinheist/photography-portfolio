@@ -89,6 +89,7 @@ To publish a photograph: add it to the album EDC. The next sync (once an hour) p
 
 - The alt text is the Photos caption ("Add a Caption"). A photograph without a caption gets "Everyday photograph, <date>". A caption added later replaces it on the next sync. Real alt text for every frame is deferred to a separate project (STU-83).
 - A photograph removed from the album leaves the page on the next sync. Its CDN objects stay.
+- A frame without a location in Photos takes its coordinates from the location log (the file that `EVERYDAY_LOCATION_LOG` in `.env` names, or `--location-log <file>`). Without a file, the sync does not use a location log. An automation on the iPhone appends one fix to the log about once a day. The sync uses only a fix with the same calendar date as the frame, and the fix nearest in time when the date has more than one. A date without a fix gives no coordinates. On a day of travel the coordinates are those of the fix, not of the photograph. The manifest marks these frames with `coordinatesSource: location-log`. When the file cannot be read, the log shows a `WARNING` line and the sync continues (STU-91).
 - The coordinates are rounded to 2 decimal places (about 1.1 km) before they leave the Mac. The published AVIF and WebP files carry no EXIF (`tests/unit/everyday.test.ts` checks this).
 - An edit in Photos gives the frame a new id, so the CDN never serves the old version.
 - Videos are skipped. A Live Photo publishes its still image.
@@ -151,6 +152,7 @@ Copy `.env.example` to `.env`.
 | Variable | Used by |
 | -- | -- |
 | `DO_SPACES_KEY`, `DO_SPACES_SECRET`, `DO_SPACES_BUCKET`, `DO_SPACES_REGION`, `DO_SPACES_CDN_ENDPOINT` | `pnpm photos`, `pnpm everyday`, `upload-to-spaces` |
+| `EVERYDAY_LOCATION_LOG` | `pnpm everyday` (optional): the path of the location log |
 | `PUBLIC_MAPTILER_KEY` | the Japan deck's map (decks only) |
 | `SITE_URL` | CI build |
 

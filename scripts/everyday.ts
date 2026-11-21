@@ -1,24 +1,30 @@
 /**
  * Sync the Everyday page (/everyday/) from the Apple Photos album EDC.
  *
- * Usage: pnpm everyday sync [--dry-run] [--publish] [--album <name>]
+ * Usage: pnpm everyday sync [--dry-run] [--publish] [--album <name>] [--location-log <file>]
  *
  * 1. Exports the still photographs of the album as JPEG into _raw/everyday/
  *    (scripts/everyday/export_album.py, through uv and osxphotos). The Photos library is not changed.
  * 2. Processes and uploads each new frame (AVIF and WebP, no EXIF in the variants).
  * 3. Writes src/data/everyday.yaml: every still frame, newest first, coordinates to 2 decimal places.
  *    The alt text is the Photos caption, or "Everyday photograph, <date>" when there is none.
+ *    A frame without a location in Photos takes its coordinates from the location log, when the log
+ *    has a fix on the date of the frame.
  * 4. With --publish: checks the content, commits the manifest to main, and pushes. CI deploys.
  *
  * --dry-run   Export and process into a temporary directory. Upload nothing, write nothing.
  * --publish   Commit and push the manifest. The checkout must be on main with a clean tree.
  *             The scheduled job (deploy/everyday-sync.sh) passes this flag.
  *
+ * --location-log <file>  The location log. Default: the env var EVERYDAY_LOCATION_LOG. Without a
+ *             file, the sync does not use a location log. When the file cannot be read, the sync
+ *             prints a WARNING line and continues without it.
+ *
  * Test only (refused with --publish):
  * --limit <n>        Read the newest n frames of the album.
  *
  * Env vars: DO_SPACES_CDN_ENDPOINT, and for the upload DO_SPACES_KEY, DO_SPACES_SECRET,
- * DO_SPACES_BUCKET, DO_SPACES_REGION (read from .env).
+ * DO_SPACES_BUCKET, DO_SPACES_REGION, and optionally EVERYDAY_LOCATION_LOG (read from .env).
  */
 
 import { execFileSync } from 'node:child_process';
@@ -27,10 +33,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { buildEveryday, renderEveryday, type ExportedFrame } from './lib/everyday';
 import { extractExif, processImage } from './lib/image-pipeline';
+import { parseLocationLog, type LocationFix } from './lib/location-log';
 import { getConfig, photoObjectKey, spacesStore, uploadFiles, type UploadItem } from './lib/spaces';
 import { EVERYDAY_FILE, loadEveryday } from '../src/scripts/utils/everyday';
 
-const USAGE = 'Usage: pnpm everyday sync [--dry-run] [--publish] [--album <name>] [--limit <n>]';
+const USAGE = 'Usage: pnpm everyday sync [--dry-run] [--publish] [--album <name>] [--location-log <file>] [--limit <n>]';
 const root = process.cwd();
 
 function loadDotEnv() {
@@ -49,22 +56,43 @@ function git(...args: string[]): string {
 function parseArgs(argv: string[]) {
   const [command, ...rest] = argv;
   if (command !== 'sync') throw new Error(USAGE);
-  const options = { dryRun: false, publish: false, album: 'EDC', limit: 0 };
+  const options = { dryRun: false, publish: false, album: 'EDC', limit: 0, locationLog: undefined as string | undefined };
   for (let i = 0; i < rest.length; i++) {
     const arg = rest[i];
     if (arg === '--dry-run') options.dryRun = true;
     else if (arg === '--publish') options.publish = true;
     else if (arg === '--album') options.album = rest[++i] ?? '';
+    else if (arg === '--location-log') options.locationLog = rest[++i] ?? '';
     else if (arg === '--limit') options.limit = Number(rest[++i]);
     else throw new Error(`Unknown argument "${arg}". ${USAGE}`);
   }
   if (!options.album) throw new Error('--album needs a name');
+  if (options.locationLog === '') throw new Error('--location-log needs a file');
   if (!Number.isInteger(options.limit) || options.limit < 0) throw new Error('--limit needs a whole number');
   if (options.publish && options.dryRun) throw new Error('--publish and --dry-run cannot be used together');
   if (options.publish && (options.limit || options.album !== 'EDC')) {
     throw new Error('--publish publishes the full album EDC only. Remove --limit and --album.');
   }
   return options;
+}
+
+/** Read the location log. A file that cannot be read gives no fixes and a WARNING line. */
+function loadLocationLog(file: string | undefined): LocationFix[] {
+  if (!file) {
+    console.log('Location log: none set (EVERYDAY_LOCATION_LOG).');
+    return [];
+  }
+  if (file.startsWith('~/')) file = path.join(os.homedir(), file.slice(2));
+  let text: string;
+  try {
+    text = fs.readFileSync(file, 'utf8');
+  } catch (err) {
+    console.log(`WARNING: the location log cannot be read (${file}): ${err instanceof Error ? err.message : err}. Frames without a location in Photos get no coordinates.`);
+    return [];
+  }
+  const { fixes, unreadable } = parseLocationLog(text);
+  console.log(`Location log: ${fixes.length} fix(es)${unreadable ? `, ${unreadable} line(s) not readable` : ''}.`);
+  return fixes;
 }
 
 async function main() {
@@ -99,12 +127,13 @@ async function main() {
   fs.mkdirSync(outputDir, { recursive: true });
   const uploads: UploadItem[] = [];
   const current = loadEveryday(root);
+  const fixes = loadLocationLog(options.locationLog ?? process.env.EVERYDAY_LOCATION_LOG);
   const plan = await buildEveryday(frames, current, cdnBase, async (frame) => {
     const input = path.join(root, frame.file!);
     const image = await processImage(input, outputDir);
     for (const variant of image.variants) uploads.push({ key: photoObjectKey(image.slug, path.basename(variant.path)), path: variant.path });
     return { width: image.width, height: image.height, lqip: image.lqip, exif: await extractExif(input) };
-  });
+  }, fixes);
 
   // 3. Upload before the manifest changes, so the manifest never names files the CDN lacks.
   if (!options.dryRun && uploads.length > 0) {
@@ -119,6 +148,7 @@ async function main() {
   const changed = text !== before;
 
   console.log(`\nPublished: ${plan.photos.length}. Added: ${plan.added.length}, updated: ${plan.updated.length}, removed: ${plan.removed.length}.`);
+  if (plan.located.length) console.log(`Coordinates from the location log: ${plan.located.length}.`);
   if (plan.uncaptioned.length) console.log(`Without a caption (date alt text): ${plan.uncaptioned.length}.`);
   for (const frame of plan.failed) console.error(`Failed: ${frame.date} ${frame.name ?? frame.uuid}: ${frame.error}`);
 
