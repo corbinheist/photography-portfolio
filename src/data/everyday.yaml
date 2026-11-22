@@ -1,6 +1,222 @@
 # The Everyday page (/everyday/), newest first.
 # Written by `pnpm everyday sync` from the Apple Photos album EDC. Do not edit by hand:
 # change the caption in Photos instead. The next sync replaces this file.
+- id: everyday-45a054ff-bf729c
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-45a054ff-bf729c
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAACQBACdASoUAB4APzmQwFcvKacjqAqp4CcJZQCyzGlhfEH7BtplrZRZsqsYqAAA/vd6CKhKE/lmwB94TeYRWcJCuIXhTRbtpB6gdrSA6VGYoK/QgxwdvOW9OR7WcQEWRVECNn/TdF0Layi6fWR//TO5BZwKYfrrQePivi2vksQbqAAA
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/30s
+    iso: 3200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-300a1f44-8d4cbf
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-300a1f44-8d4cbf
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAAAwBQCdASoUAB4APzmIvVYvKKYjsBgIAeAnCWMAAB4nNnDGR2aq0ZxoG+NIcdoeJPw6UAD+6PETAH0Iw8W5GhSzgYQcJ/pnMEEPaJ/gOAHe+YPh9ZhLM82DQzO9TU9DPLper+VxykqWLGAEHZC1XTPN/TeyNmbORsvTaagoOeF39kPUv9x5neKtGXSx0fmldUDvCPD2HZFOYtLhyeviMxdKeoAAAA==
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/20s
+    iso: 3200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-0c3286f6-3caa66
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-0c3286f6-3caa66
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACwBACdASoUAB4APy2AtVOuqCUisAwB0CWJQBmaA6+FC8md28G05+kFYGH5HxL4AP1E2dUlwIl3o9DeWj0+7zdTgEnXZ6CTQOfVbVPz9g/shtHVypevvRoDVxUc2x9ucx+Xnnbd4VNbzoz2/uWjTi2CwAA=
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/200s
+    iso: 200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-2ace5989-6f627d
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-2ace5989-6f627d
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAACwBACdASoUAB4APzl+ulSvJyWjMBgMAeAnCUAABTkbVkE3K/U7jjrnSQzvQQMAAP7BAcKXstvZj4nW/P7vnMyB7ppZ0neseOF+BBSt4BBQkGWPEfA12r4EVmoQ4NnpyMCsliLuY9t77hwfzeBy68+ucWF2djAAAAA=
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/200s
+    iso: 200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-e1da10d1-4fce6d
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-e1da10d1-4fce6d
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAQBQCdASoUAB4APzmIuVOvKSWisAgB4CcJYgCdMy/B3kJt/ipGEBDQXXULc5nEgcBAAPxT8HqRMSwRqSJcmEeQGKbJWeSBLw2XJoEAqz8c1ToD8VKS3YPCJCcDBsDTkJom4NaEM0BmTIYMC+RMGIJvyC/BEyaPke55zBaohACpMtLqd0EQAA==
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/40s
+    iso: 500
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-a7fdeea7-96b829
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-a7fdeea7-96b829
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAACwBACdASoUAB4APzmUwVmvKicjqAgB4CcJaAC90A3WDDaszrvaykPNN3DxWJXAAPwq8nC8Nwpif6PlPJdM6jLc3jOfkDm9ZQ5jrewC9ZH8T27tO9878EIcXn0NsBu8zrTf2P3wNje6emKzZgAanAepWSWJxFfKcnQqtV4/YdOUA1mzX6gKoAAA
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/200s
+    iso: 200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-7acc5e95-d32cb9
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-7acc5e95-d32cb9
+  width: 6000
+  height: 4000
+  lqip: data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAABQBACdASoUAA0APzmEuVOvKKWisAgB4CcJZACdMoADgezqFuDgz991PybAAP3bnI35sRT7p9lR8snzn2Vtjg0gn0v3mpTvJp9/jCVCH8VbZbAtIbvIG2vEqK5C6uyXwJLMSoklXBqnMfYAAAA=
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/400s
+    iso: 200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-79aa097d-963c7d
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-79aa097d-963c7d
+  width: 6000
+  height: 4000
+  lqip: data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAACQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBOmUAApVTmY72aYAPpyf13+uGwG2ihcjonc8Hw0UkVL/uHntIi4QNzwVPfZnoeHCDQiTgSiRbrdlMKmv32gLnXZSSBFcljvOswz1ypRRWgcvOqNAAAA
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/1600s
+    iso: 200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-b6046108-9ab949
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-b6046108-9ab949
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAACwBQCdASoUAB4APzmGuFOvKSUisAgB4CcJZAC+eoS2Z9+A/N0knu96pxVONQ/ZVWHT6h3K8AAA/rlF4yADOIsrVxZe0D+TCOr37CNzEwTOv8k54dwPwLXsDkZpBEIF15wVwF/hyc9M4Lwq7wqC9jfay+XSACeTCmI/O8OB7R5craL7uHexYjqfrVzsDehKmy5J6ClkOAAAAA==
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/640s
+    iso: 200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-cb91a887-345498
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-cb91a887-345498
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABQBACdASoUAB4APzmIulOvKSWisAgB4CcJZACuHCHK3ImXWhf2RlZGDfJ8AP649SVnozKlKQz3nUCctOP29LCP1r5vO1aR/CPYYRezKFoXI40noJQFiqWNFv8GvY7xFxFIMi77GWl+UuilntRQbV9yHtsk8Als5RdhPGepiieN/Qz/+ZahI518HN3JxURHRF+M+tHuQK5AAA==
+  alt: Everyday photograph, 21 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5
+    shutter: 1/1000s
+    iso: 200
+    date: 2026-11-21
+  date: 2026-11-21
+  coordinates:
+    latitude: 59.91
+    longitude: 10.75
+  coordinatesSource: location-log
+- id: everyday-38763a66-7924f3
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-38763a66-7924f3
+  width: 6000
+  height: 4000
+  lqip: data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAADQAwCdASoUAA0APzmGuVOvKSWisAgB4CcJQBibBDwtwil4eBmDr4AA/uvuPpdZtS8cKQsIIdzkSrdAhhka2eYonZ7UVB4aUW55UAfWTcVXYroYXLwYZSLN8CAAAA==
+  alt: Everyday photograph, 20 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5.6
+    shutter: 1/25s
+    iso: 3200
+    date: 2026-11-20
+  date: 2026-11-20
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
+- id: everyday-1e75536c-ddea21
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-1e75536c-ddea21
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAAAQBQCdASoUAB4APzmEuFOvKKUisAgB4CcJQBYdhDuVR5+t/lsp92HW5ncBQguRz0CAAP7jKX3vaXhQvwKJ6AY/SyfbTV4BAqnsfHdWomsQhyiCjnlJY6Nl+vDsfViuh0ZLS/A4iaPRXKZYfGLN/UifuJPfjIsqT+W92HrAR+lW4c/4X2ApyG2YoB1pERb4xctIDjXG1Mz8oyccSrbdCwa3B+I7QBssoY0CAAAA
+  alt: Everyday photograph, 20 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/5.6
+    shutter: 1/25s
+    iso: 3200
+    date: 2026-11-20
+  date: 2026-11-20
+  coordinates:
+    latitude: 63.8
+    longitude: 9.43
+  coordinatesSource: location-log
 - id: everyday-e5b485bd-df1a2a
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-e5b485bd-df1a2a
   width: 4000
