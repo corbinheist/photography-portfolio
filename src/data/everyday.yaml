@@ -1,6 +1,42 @@
 # The Everyday page (/everyday/), newest first.
 # Written by `pnpm everyday sync` from the Apple Photos album EDC. Do not edit by hand:
 # change the caption in Photos instead. The next sync replaces this file.
+- id: everyday-bebcabc1-c2b525
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-bebcabc1-c2b525
+  width: 6000
+  height: 4000
+  lqip: data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADwAwCdASoUAA0APzmEulOvKKWisAgB4CcJYgC1GoACTNuOoxm4mraYAP4Rb18wybS1EwGOb5MqeOeRqGKOHvQgpE+2m+FsmDC4Fr8U1TFdHIgA
+  alt: Everyday photograph, 23 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/4.5
+    shutter: 1/40s
+    iso: 400
+    date: 2026-11-23
+  date: 2026-11-23
+  coordinates:
+    latitude: 46.46
+    longitude: 7.44
+  coordinatesSource: location-log
+- id: everyday-dd768a6f-a3e8aa
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-dd768a6f-a3e8aa
+  width: 6000
+  height: 4000
+  lqip: data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoUAA0APzmEuVOvKKWisAgB4CcJYgCdFQAAZteqXJxEz09TmAD9mj67CAn80NjbXDE/GT+grNO3czZO/Z3466OyOQRVvJQ2qOvnYI5E30PGld84AigAQhD+zbIAAA==
+  alt: Everyday photograph, 23 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/4.5
+    shutter: 1/25s
+    iso: 3200
+    date: 2026-11-23
+  date: 2026-11-23
+  coordinates:
+    latitude: 46.46
+    longitude: 7.44
+  coordinatesSource: location-log
 - id: everyday-45a054ff-bf729c
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-45a054ff-bf729c
   width: 4000
