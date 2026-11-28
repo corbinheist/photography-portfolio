@@ -1,6 +1,60 @@
 # The Everyday page (/everyday/), newest first.
 # Written by `pnpm everyday sync` from the Apple Photos album EDC. Do not edit by hand:
 # change the caption in Photos instead. The next sync replaces this file.
+- id: everyday-fc525e61-67608b
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-fc525e61-67608b
+  width: 4000
+  height: 6000
+  lqip: data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAAAwBQCdASoUAB4APzmIuVOvKSWisBgMAeAnCWgAt7g0art+3Mq/WhR2eyoPIxBhWlvwgAD+yxoCiiWfwqU/WnWmkrY6xvb6vChweteayrRNhxNWUVg9PU3N3a3wdCpF2/dzoCl0xoIiqIU1j1TB7+Uj5Dz7Cp5jOsG/ZnedE+ixqj/a+zy6i9FUbHjdfXecTaWP9B+Mg6CdZ88mH//w3q5S4AA=
+  alt: Everyday photograph, 27 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/4.5
+    shutter: 1/2000s
+    iso: 200
+    date: 2026-11-27
+  date: 2026-11-27
+  coordinates:
+    latitude: 46.46
+    longitude: 7.44
+  coordinatesSource: location-log
+- id: everyday-c4bd90ba-2e014d
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-c4bd90ba-2e014d
+  width: 6000
+  height: 4000
+  lqip: data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAwCdASoUAA0APzmGuVOvKSWisAgB4CcJYgAATBHkx94CTBymVz9AAP7L6KNm+phh9BB6Wfum2fSY93SgPZJx03NNEKkBeJ7q2l8kLewcRfAlGH5gghI4KAA=
+  alt: Everyday photograph, 27 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/4.5
+    shutter: 1/640s
+    iso: 200
+    date: 2026-11-27
+  date: 2026-11-27
+  coordinates:
+    latitude: 46.46
+    longitude: 7.44
+  coordinatesSource: location-log
+- id: everyday-396a7076-d29fcd
+  url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-396a7076-d29fcd
+  width: 6000
+  height: 4000
+  lqip: data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAABwAwCdASoUAA0APzmEuVOvKKWisAgB4CcJYwDG9B4QFURTGgAA4ngkFl89yxjixOgSk9sdDByAF0Wny96v4Rn9dEBlRVL0YLq7MMMQAAA=
+  alt: Everyday photograph, 27 November 2026
+  exif:
+    camera: RICOH IMAGING COMPANY, LTD.   RICOH GR IIIx HDF
+    focalLength: 26mm
+    aperture: f/4.5
+    shutter: 1/320s
+    iso: 200
+    date: 2026-11-27
+  date: 2026-11-27
+  coordinates:
+    latitude: 46.46
+    longitude: 7.44
+  coordinatesSource: location-log
 - id: everyday-3208dc76-05cf0e
   url: https://heist-studio.sfo3.cdn.digitaloceanspaces.com/photos/everyday-3208dc76-05cf0e
   width: 6000
